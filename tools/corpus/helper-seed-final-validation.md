@@ -1,5 +1,10 @@
 # Independent final seed validation
 
+Historical validation of the pre-INV-4-fix pack (`9203234a…`). It did not run the
+Member 4 shipped-tree check, which later found 405 raw source URLs in the promoted
+seed. Current pack identity and validation supersede this report; see
+`reports/t16-acceptance.md` and `helper-seed-inv4.md`.
+
 Status: **PASS** for the requested independent automated validation. The final child pipeline and two documented seed rebuilds reproduce Cursor's actual parent pack byte for byte on the same Node/SQLite writer runtime. Human review, independent AI source reading, T26 and PR authorization/authentication gates remain open.
 
 Worked only in the isolated `seed-final-validation` child. Ownership is this metadata-only report; imported source, generated seed/reports/verdicts, raw intermediates and frozen copies remain local and uncommitted. The original checkout was read only. No push or PR was performed.

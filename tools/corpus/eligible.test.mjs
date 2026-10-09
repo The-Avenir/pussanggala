@@ -49,6 +49,23 @@ test("happy path: a resolved ride emits route + leg + stops with provenance", ()
   assert.equal(r.dispositions.p1, "included");
 });
 
+test("eligible sources keep offline evidence locators while raw permalinks stay in input", () => {
+  const input = base();
+  const permalink = "https://www.reddit.com/r/HowToGetTherePH/comments/p1/synthetic_title/";
+  input.posts[0].permalink = permalink;
+  input.candidates = [ride("c_p1_0_0")];
+  const result = buildEligible(input);
+  const source = result.tables.source.find((s) => s.post_id === "p1");
+  assert.equal(source.url, null);
+  assert.equal(source.kind, "reddit_thread");
+  assert.ok(source.posted_at);
+  const citation = result.recordSources.find((r) => r.source_id === source.source_id);
+  assert.equal(citation.snapshot_sha256, SNAP);
+  assert.equal(citation.comment_index, 0);
+  assert.equal(input.posts[0].permalink, permalink, "the audit input is not altered");
+  assert.ok(!JSON.stringify(result.tables).includes(permalink));
+});
+
 test("needs_review and rejected candidates never emit records", () => {
   const input = base();
   input.candidates = [

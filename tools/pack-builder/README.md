@@ -94,7 +94,10 @@ columns must be present with `null`. Rules:
   `days_text`, `signboard`, `direction_label`, aliases, note `body`, ...) must be our own
   paraphrase: no 6-consecutive-word sequence shared with any source title, question or
   answer (case/punctuation/whitespace-insensitive), no `u/name`, `@name` or reddit
-  profile links.
+  profile links. Raw source URLs and raw dataset imports/schema references are
+  rejected in every text column, including geometry properties and the manifest.
+  Reddit `source.url` must be null; source IDs, post IDs, dates, snapshot hashes
+  and comment indices preserve offline provenance. Permalinks stay in build inputs.
 
 ### 2. Dispositions (`--dispositions <file>`)
 

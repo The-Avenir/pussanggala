@@ -148,7 +148,9 @@ export function buildEligible({ candidates, places, aliases, ambiguities, posts,
       sources.set(cand.post_id, {
         source_id: mkid("src", "post", cand.post_id),
         kind: "reddit_thread",
-        url: post.permalink ?? null,
+        // Raw permalinks stay in the build-input snapshot. Offline provenance uses
+        // post_id, dates and record_source snapshot/comment locators instead.
+        url: null,
         post_id: cand.post_id,
         posted_at: post.created_utc != null ? isoDate(post.created_utc) : null,
         observed_at: null,

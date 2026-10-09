@@ -4,8 +4,7 @@
  *
  * Scans the shippable source trees — apps/mobile, tools/map-pack, data/seed —
  * for leaked raw Reddit content (verbatim long comment text, Reddit usernames,
- * misplaced Reddit links, raw-dataset imports) and FAILS (exit 1) when found.
- * Canonical SOURCE.url thread provenance is metadata allowed by the documented SOURCE contract.
+ * Reddit permalinks, raw-dataset imports) and FAILS (exit 1) when found.
  *
  * The supplied `howtogetthereph_dataset/` snapshot at the repo root is
  * intentional off-device build input. It is NEVER scanned, so this check
@@ -238,23 +237,6 @@ export function collectFiles(scanDirs) {
   return out.sort();
 }
 
-/** SOURCE.url is citation metadata; all other seed fields retain the leak rules. */
-function maskSeedThreadLinks(text) {
-  let rows;
-  try { rows = JSON.parse(text); } catch { return text; }
-  if (!Array.isArray(rows)) return text;
-  return JSON.stringify(rows.map(row => {
-    if (!row || row.kind !== "reddit_thread" || typeof row.url !== "string"
-      || typeof row.post_id !== "string" || USERNAME_RE.test(row.url)) return row;
-    let url;
-    try { url = new URL(row.url); } catch { return row; }
-    const match = url.pathname.match(new RegExp("^/r/HowToGetTherePH/comments/([a-z0-9]+)/(?:[^/]+/?)?$"));
-    if (url.protocol !== "https:" || !["reddit.com", "www.reddit.com"].includes(url.host)
-      || url.username || url.password || url.search || url.hash || match?.[1] !== row.post_id) return row;
-    return { ...row, url: "[source thread citation]" };
-  }), null, 2);
-}
-
 export function scanFile(absPath) {
   let stat;
   try {
@@ -270,7 +252,6 @@ export function scanFile(absPath) {
     return [];
   }
   if (text.includes("\0")) return [];
-  if (absPath.split(path.sep).join("/").endsWith("/data/seed/eligible/source.json")) text = maskSeedThreadLinks(text);
   const isCodeFile = CODE_EXTS.has(path.extname(absPath).toLowerCase());
   return checkContent(text, isCodeFile).map((f) => ({ file: absPath, ...f }));
 }

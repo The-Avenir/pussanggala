@@ -1,6 +1,6 @@
 # T16 — corpus technical acceptance and handoff
 
-**Technical verdict: ACCEPTANCE PASS (22/22 checks).** The pipeline and cleaned seed handoff completed after the effective review-state gate was integrated on `feat/t14-t16-seed-handoff`, validated parent commit `e9318bd8c55344636619b99a6753ea134e343968`.
+**Technical verdict: ACCEPTANCE PASS (24/24 checks); shipped-tree INV-4 PASS (zero findings).** Validated after the raw-URL shipping fix on `fix-seed-inv4`, based on `44fe8657f7e9a1304cf1f58642a4d0524f2b26c3`.
 
 **T16 remains open:** source-backed T26 evaluation and reviewer sign-off are pending. Technical acceptance does not complete those gates.
 
@@ -10,8 +10,8 @@
 |---|---|
 | pack_id | `pack_ncr-2026-10` |
 | local file | `data/raw/out/pack.sqlite` (gitignored) |
-| pack_sha256 | `9203234afd1b503186b607c28b16d758ae66fa8cd96a586a30c234a973f6bb10` |
-| pack_bytes | 851,968 |
+| pack_sha256 | `3859023cfd63573c1a25f63b567897a7b96a16f98a67b3dce9b6abf34c362e2d` |
+| pack_bytes | 811,008 |
 | parent build runtime | Node `v24.5.0` / SQLite writer `3.50.3` |
 | companions | `data/seed/pack.manifest.json` / `data/seed/pack.sha256` |
 | schema_version | 1 |
@@ -37,16 +37,16 @@ The final pack has **134 legs on 69 routes**, **59 stops**, **91 places**, **271
 
 Answered-post dispositions: **405 included · 91 pending · 497 rejected · 1,193 filtered**, totaling **2,186**.
 
-## Acceptance results (22/22)
+## Acceptance results (24/24)
 
 | Category | Passed | Evidence |
 |---|---:|---|
 | integrity | 3/3 | SQLite integrity/foreign keys/schema version; companion metadata, bytes and checksum; raw snapshot identity, counts and evidence locators |
 | invalid-record | 12/12 | Manifest/disposition reconciliation, record validation and invalid-record mutation fixtures |
 | ambiguity | 4/4 | Pack ambiguity validation and mutation fixtures; ambiguous aliases cannot become unique resolutions |
-| source-content | 3/3 | Pack text scan and mutation fixtures for six-word source copies and explicit handles/profile links (INV-4) |
+| source-content | 5/5 | Pack text scan and mutations for raw source URLs, dataset imports, six-word source copies and handles (INV-4) |
 
-The source-content scan checks six consecutive normalized words and explicit handles/profile links. It cannot establish the absence of shorter copied fragments or bare usernames where source author metadata is absent. No field-verification claim follows from these checks.
+The source-content scan rejects raw URLs, dataset imports/schema references, six consecutive normalized source words and handles/profile links. The same Member 4 shipped-tree checker also validates the staged seed before publication. It cannot establish the absence of shorter copied fragments or bare usernames where source author metadata is absent. No field-verification claim follows from these checks.
 
 ## Reproduction and validation
 
@@ -56,7 +56,7 @@ Run the pipeline from the repository root:
 node tools/corpus/run-pipeline.mjs
 ```
 
-It freezes/validates the pre-cleaned reference, audits and extracts, runs deterministic evidence and heuristic quarantine, resolves places, emits eligible records, builds and accepts the pack, then promotes the cleaned seed. It does not perform actual AI review or human sign-off.
+It freezes/validates the pre-cleaned reference, audits and extracts, runs deterministic evidence and heuristic quarantine, resolves places, emits eligible records, builds and accepts the pack, then validates/promotes the cleaned seed and runs the Member 4 shipped-tree check. It does not perform actual AI review or human sign-off.
 
 To recheck the existing pack without regenerating outputs:
 
@@ -64,13 +64,16 @@ To recheck the existing pack without regenerating outputs:
 node tools/pack-builder/acceptance.mjs --pack data/raw/out/pack.sqlite --raw howtogetthereph_dataset/ncr_routes.json
 ```
 
-Coordinator-confirmed final validation:
+Validation after the INV-4 fix:
 
-- Final `node tools/corpus/run-pipeline.mjs` on Node `v24.5.0` / SQLite `3.50.3`: acceptance **22/22 passed**.
-- Final `node --test tools/pack-builder/*.test.mjs` on that runtime: **55/55 passed**, including the LF/CRLF schema regression and real-seed SQLite/core smoke.
-- Final independent reconciliation: **13/13 assertions passed**; two seed-input rebuilds on the same writer runtime matched the parent SHA and byte size exactly. Seed tables/metadata and builder outputs agree; the explicit `promoted_at` timestamp differs between promotions.
-- Before the final schema-normalization change, `node --test tools/corpus/*.test.mjs tools/pack-builder/*.test.mjs`: **155/155 passed**, with no failures or skips. The final changed pack suite above was rerun; the combined suite was not rerun after normalization.
-- Before that DDL-only change, `npm test -w @pusang-gala/core`: **428/428 passed**; `npm run typecheck -w @pusang-gala/core`: **passed**. These suites were not repeated after normalization.
+- Full pipeline on Node `v24.5.0` / SQLite `3.50.3`: acceptance **24/24 passed** and shipped-tree INV-4 **zero findings**.
+- Latest main corpus/pack CI command on Node `v22.23.3`: **160/160 passed**, including real-seed SQLite/core smoke and publication rollback.
+- Latest main workspace tests on Windows: **641/641 passed**; workspace typecheck passed.
+- Node `v22.23.3` builder-compatible asset-loader checks: **81/81 passed**.
+- Shipped-tree scan: **183 files / zero findings**, plus explicit inventory of **57 asset inputs**; shipping-policy fixtures **21/21 passed**.
+- Rebuilding from promoted seed inputs with Node `v24.5.0` / SQLite `3.50.3` reproduced all four builder outputs byte for byte.
+- Original raw input and frozen reference are unchanged; source IDs, dates, evidence locators and every non-source eligible table are unchanged.
+- The prior 22-check/55-pack-test validation predates this INV-4 fix; its historical report is `tools/corpus/helper-seed-final-validation.md`.
 
 The explicit corpus/pack-builder glob command above works in PowerShell; the root `npm test` covers workspace suites separately.
 
@@ -80,4 +83,4 @@ The explicit corpus/pack-builder glob command above works in PowerShell; the roo
 - Source-backed T26 evaluation and reviewer sign-off remain pending, so T16 stays unchecked.
 - Unsupported coordinates remain unmapped; source-post dates are not verification dates.
 - Pre-cleaned reference: `data/reference/howtogetthereph_dataset-precleaned/`; cleaned handoff: `data/seed/`.
-- No PR has been opened: `gh` authentication is unavailable and the browser is signed out. The branch compare link is not a PR; only Cursor integrates and pushes the parent.
+- The original seed/integration handoff merged in PR #25. The INV-4 follow-up is prepared on `fix-seed-inv4`; repository-hosted checks and review follow publication.

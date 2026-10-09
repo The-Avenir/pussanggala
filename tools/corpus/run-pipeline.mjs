@@ -44,4 +44,5 @@ run("tools/pack-builder/acceptance.mjs", [
   "howtogetthereph_dataset/ncr_routes.json",
 ]);
 run("tools/corpus/promote-seed.mjs");
+run("tools/eval/allowlist-check.mjs");
 console.log("\nPipeline complete.");

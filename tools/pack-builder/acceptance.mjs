@@ -117,9 +117,9 @@ export function runAcceptance({ packPath, companionPath, rawDatasetPath }) {
   if (rawDatasetPath) {
     grams = loadSourceNgrams(rawDatasetPath);
     push("integrity", "raw snapshot identity, counts and evidence locators", checkSourceSnapshot(tables, manifests[0] ?? {}, rawDatasetPath));
-    push("source-content", "pack text: no 6-word source copies or usernames", leakScan(tables, grams, manifests[0]));
+    push("source-content", "pack text: no raw URLs/imports, 6-word source copies or usernames", leakScan(tables, grams, manifests[0]));
   } else {
-    push("source-content", "pack text: no 6-word source copies or usernames", [{ code: "raw_missing", table: null, id: null, detail: "--raw not given; leak scan not run" }]);
+    push("source-content", "pack text: no raw URLs/imports, 6-word source copies or usernames", [{ code: "raw_missing", table: null, id: null, detail: "--raw not given; leak scan not run" }]);
   }
 
   // Fixtures: each mutation of the pack's own records must be rejected with the expected code.
