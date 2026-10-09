@@ -10,3 +10,6 @@ export * from "./contracts/routing";
 export * from "./contracts/cards";
 export * from "./contracts/explanation";
 export * from "./contracts/api";
+export * from "./text/distance";
+export * from "./resolve/resolve";
+export * from "./intent/parse";
