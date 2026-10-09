@@ -90,6 +90,7 @@ Host: Windows x64; Node **v26.11.1**. Device: **none**. Only synthetic pack fixt
 | `node tools/eval/allowlist-check.mjs` | Exit 0: **15/15** detector self-tests; **88** scannable files at this run; no runtime/training raw-content finding. Raw build-input directory intentionally excluded. |
 | `node --test tools/eval/allowlist-check.test.mjs` | Exit 0: **12/12** fixtures passed, including planted-leak rejection. |
 | `git diff --check` | Exit 0. |
+| Hosted `member4-checks`, PR/push runs on `fe4214523bc031140cce83cde1febbfcc9c1d48f` | **Success** in [PR run 37979899038](https://github.com/The-Avenir/pussanggala/actions/runs/37979899038) and [push run 37979889133](https://github.com/The-Avenir/pussanggala/actions/runs/37979889133): Node 22 workspace typecheck/tests, shipped-content scan and detector fixtures. This workflow does not yet run the dedicated T44 command. |
 
 The repository evaluation tests rewrite their tracked report with current timestamps,
 Node version and host timings. Only those test-generated changes from this run were
@@ -99,8 +100,8 @@ conversation or phone-performance numbers as release evidence.
 ## Unresolved gates and integration requirements
 
 - Another member's approval and affected-owner review are still required. Root
-  typecheck passes after dependency installation; shared CI has not yet executed
-  this branch and does not currently register the dedicated T44 command.
+  typecheck passes after dependency installation and hosted shared checks also
+  pass. Shared CI does not currently register the dedicated T44 command.
 - T40/T41 must pin/install native SQLite, supply the app-private writable connection
   and use this single user migration entry point. The declared Expo method surface is
   researched from [official SDK 57 documentation](https://docs.expo.dev/versions/v57.0.0/sdk/sqlite/);
