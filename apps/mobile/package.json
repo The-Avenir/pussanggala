@@ -10,7 +10,7 @@
     "check:ui-assets": "node scripts/check-ui-assets.mjs",
     "test:ui": "expo export --platform web --output-dir dist && node scripts/check-ui.mjs",
     "android": "expo run:android --device",
-    "typecheck": "tsc --noEmit --strict --skipLibCheck --jsx react-jsx --target ES2022 --module ESNext --moduleResolution Bundler --lib ES2022,DOM --allowSyntheticDefaultImports --esModuleInterop --isolatedModules --verbatimModuleSyntax --noUncheckedIndexedAccess --exactOptionalPropertyTypes App.tsx src/core/index.ts",
+    "typecheck": "tsc --ignoreConfig --noEmit --strict --skipLibCheck --jsx react-jsx --target ES2022 --module ESNext --moduleResolution Bundler --lib ES2022,DOM --allowSyntheticDefaultImports --esModuleInterop --isolatedModules --verbatimModuleSyntax --noUncheckedIndexedAccess --exactOptionalPropertyTypes App.tsx src/core/index.ts",
     "test": "npm run check:ui-assets"
   },
   "dependencies": {
