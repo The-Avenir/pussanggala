@@ -1,0 +1,1787 @@
+[
+  {
+    "note_id": "nt_queue-delay-noted-1uorpcg-0-eb1765",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1uorpcg-1-1800ab",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1uorpcg-2-cb9b61",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1w8899o-0-be4365",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1w8899o-2-0efe31",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1w8899o-7-611986",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1udf8f0-5-9f9e68",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1wv3uq4-5-1b8a05",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1ugf2pn-3-68d44e",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1wbbu0k-0-a55067",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vi4kkv-4-e3ea73",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1val44o-2-05c706",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1wc9oxe-1-7b023c",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1w66y5u-0-9d8928",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1w386ph-1-512770",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1w386ph-2-a73567",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1vkmicd-0-aa386c",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tgmac6-2-473ad9",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1tb4ois-0-797133",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1t1lvxw-0-50a191",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1t0nuno-1-16feae",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wrlr97-0-a33c77",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wf57g7-1-61ca4b",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1vizc8e-1-ee0b41",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1v5zc13-0-1e26fb",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1v5zc13-1-512d5d",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v5zc13-3-3d19b6",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1uuzl2r-1-3e0402",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1ush76c-2-f6175f",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1ugo5pb-3-39b6d6",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1udfj89-2-c8251b",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u69cg1-1-f2afbe",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1u69cg1-3-efd18f",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1shebsr-1-d16b9f",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1shebsr-3-9e58cb",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1w9nxdb-2-3ab7e5",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1w724ct-1-fd015e",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vpq45f-2-ea37ae",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v7unyy-1-e8bb5a",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v7unyy-2-089a6c",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v36pv9-2-f53791",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1tqmfp1-2-ed59da",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tlzu3f-2-f05861",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1t00eax-2-adcfdd",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1sqol5e-0-79770c",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1sqol5e-2-6f1ee4",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1w814ay-0-57f4f5",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vtnlm2-0-cfb1c4",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vtj7uw-0-fe4dd8",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1vnwpec-1-be6a7b",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vc9jea-0-25969a",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vc9jea-1-a4f484",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1v6ejd3-0-5e6262",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1v6ejd3-1-0e4fc6",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1ufq8rl-1-b9acb4",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1tz249k-1-c73b5c",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1twd96i-1-9d8895",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_safety-caution-noted-1tfn7g1-1-fd7fcb",
+    "body": "Safety caution noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1siga1r-1-d40248",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1wzivpv-0-141279",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wxccwx-0-c3e9f9",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1wnrdwk-0-4c219d",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1whklgm-0-52a4d2",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1wf7a9b-0-8db61d",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1wccn84-0-c4407b",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1waejth-0-0467d2",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1w4wlph-0-f77700",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vqjc0k-0-fbce32",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1vkl5ik-0-eef637",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vfbx5c-0-b00586",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vahgm7-0-1cea5c",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v2fucz-0-d45e7f",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v0yuk3-0-e68084",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1uyvesx-0-47ecc8",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1usn84k-0-5d4b35",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1uqhcvz-0-266858",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1ufwlv7-0-212e40",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1ucngwh-0-73daca",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1uchpco-0-c589dc",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1uamb7v-0-9e2d89",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u7gx29-0-fd920d",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1u3ivte-0-b54d4c",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tzybst-0-2ef9e2",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tk2ilm-0-8b0327",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1the3cd-0-f71d4d",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1tffffp-0-460189",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1tdp1rx-0-585179",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tdn0fm-0-f97792",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1t5csa4-0-2b5828",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1t2j690-0-489810",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1sudpfe-0-23a97e",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1sslozy-0-d0780d",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1spr6sp-0-c0c227",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1sjh687-0-229c53",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1spmrmy-3-9e34f5",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_safety-caution-noted-1v51wm6-1-bd98d2",
+    "body": "Safety caution noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vapy72-1-8834f7",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u94cv5-1-53297e",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u94cv5-4-a00a53",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wd9ktn-1-38bc7d",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1vtkd7s-2-f560a9",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1vtkd7s-5-a382dd",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1uzow3j-2-e61993",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1uzow3j-3-886c13",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v4c87z-0-03d039",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v4c87z-4-95fc82",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1t37yvy-2-ea1430",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1wxa0xp-0-024e85",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wxa0xp-3-21e5be",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1w5d9aq-1-145eaa",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vv8n55-2-c0bdfc",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u9phvy-0-7e3e06",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u9phvy-1-8d2062",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u9phvy-3-5c4087",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1tglsxp-1-843540",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1tglsxp-2-1e1415",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1tglsxp-3-8e2c21",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1t0obrb-1-120954",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1t0obrb-2-a3b955",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1t0obrb-3-923792",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1sl7s45-1-9275f4",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1wvj052-0-9cadcc",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1wch830-0-abf73d",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1vy2f3q-2-f9a184",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vsmkyy-2-72e6d4",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1vh7cox-0-2cc526",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1vgqov8-0-44b258",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v0ezvl-0-49062f",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v0ezvl-1-9199b0",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1uztq3y-2-3aecf0",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1udbchc-2-a1a4b8",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1u8wryw-1-f2222c",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1tl10hr-2-1aee6a",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tjlkgf-0-deb5fd",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1t88ai2-2-185dab",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1t6xym9-2-59f476",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1sx0uza-1-b8ed3a",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1sx0uza-2-c22f2c",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1sgkhpy-0-1f1f5d",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wwaw9p-1-e84e35",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wcm09b-1-0ebbe1",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1waijgm-0-e3a6b8",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vxs07h-0-ae2528",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1vgzj7w-1-eec1f1",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1v5yw3u-0-dd96e3",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v4wovb-0-a09412",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1uy76zd-0-532145",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1upucag-0-2febd0",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1um5ahd-1-d814a9",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1ujfcfp-1-120a6d",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1uh1ndo-0-f7f758",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1uh1ndo-1-887913",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u8lkkn-0-04742f",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1tl97cm-0-03fc3c",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tcwryf-0-a21815",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1t1sd1o-0-6e1018",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1shl3k0-1-927d6b",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1wy6flm-0-14d21d",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1wx7bmj-0-f99fbc",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1w42ptn-0-7fa9c2",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1w2nv7j-0-536820",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vyjt7r-0-188721",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1vpsjd1-0-f554db",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1vfsapb-0-601f1e",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vfc8fw-0-b8e960",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vbqeta-0-2f7ccc",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v9vram-0-6ef446",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1v8sncw-0-7b6ef8",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v62j9o-0-511715",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1v56h3u-0-8b0376",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v3dha0-0-326caf",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v0f6t7-0-ec0ff9",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1uwb8l6-0-73a913",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1uw3g22-0-f882ab",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1uv2ccl-0-18273f",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1unw28l-0-c49cfd",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1umbmtu-0-a2bdf9",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1uinoge-0-b6d408",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1u87w7w-0-3f8aaf",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u2ewvn-0-0651fe",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tjln5h-0-8441a6",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tbzhq3-0-fa4e63",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1t7mmbz-0-f1c720",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1t1lvpp-0-a18061",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1sy27cw-0-d6b295",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1sor0uz-0-dc69b3",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1sgaidh-0-76e67e",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1vi0dns-2-f42029",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vi0dns-4-3dbdb0",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1ue1p1y-0-44e5cd",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1wx94s9-0-b6992d",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1wx94s9-7-709ea1",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1vo3a4u-1-b89660",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vo3a4u-3-83dcdd",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vo3a4u-5-dcc002",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vewkto-0-cee954",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vewkto-2-b2331c",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vewkto-6-f1e6a6",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_safety-caution-noted-1up76qm-2-64603b",
+    "body": "Safety caution noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_safety-caution-noted-1up76qm-4-734385",
+    "body": "Safety caution noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1slqxtv-1-8d5472",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1slqxtv-5-ba2e24",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wqq2f9-0-d70ae0",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1w61pbn-0-6a3a12",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1vj95cm-1-af953b",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1w8puk8-1-c56b4a",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1v3flcj-0-f3d74d",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1uwq4at-1-8e7716",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1udi8v9-0-465b5c",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u8eysc-1-94d409",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1slrmug-0-ade81e",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1skbqez-0-53aa7f",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1skbqez-1-92d6b0",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1skbqez-2-6399ce",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1wl0tp7-0-d3a969",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wgsy1o-2-302b6f",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vgw63a-0-6d2308",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vgw63a-1-db0083",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vgw63a-2-217e0c",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vfbfvo-0-1d8afb",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vfbfvo-2-f0b12e",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1udbega-1-9f68df",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1udbega-2-16abe5",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1u0coes-0-6e90c9",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u0coes-2-3673fe",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1t9uz1a-2-4fd13a",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_safety-caution-noted-1wn8wkm-1-f08b05",
+    "body": "Safety caution noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1w8w0s2-0-62bfa9",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1w1n46i-1-0a18f7",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vx6n35-0-bd68c4",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1vu7u80-1-3bfcd5",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vi6mzv-0-320fc2",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vf6tse-1-3daf81",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1vd298f-0-4ee3b7",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v8olgc-1-625662",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v4zidv-0-45ec53",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1uoulle-0-e4a3a9",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1umzf0u-0-4308a7",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u2ik8l-0-4a5b4e",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u1olue-1-61cdaf",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tyde3i-0-8c34b1",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tpa7yb-1-023875",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1til0b6-1-e327c7",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tdiy4m-0-2ab8b3",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1t1ieip-1-faee1e",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1syq8qe-0-0c442f",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1sm38j0-0-717d72",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1sgk85h-1-f5cbb2",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wvv6cw-0-a72553",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wsu07b-0-4bfe5a",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wlouox-0-5ff2dd",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1w9owwh-0-6a6316",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vvn8iv-0-60c625",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1vu6w4y-0-dfbbba",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1vq1qss-0-0a33d8",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vp58z3-0-7e6474",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1vl7r3c-0-af5f9e",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vg347y-0-eb7fa6",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_safety-caution-noted-1vfzb3l-0-13640b",
+    "body": "Safety caution noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1vdcqw7-0-6efc10",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v5458v-0-499b41",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1v33cbp-0-c14e03",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v1fsfo-0-c7d720",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1ux2p35-0-579295",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1uuih1x-0-3d386f",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1utobha-0-a1c7cc",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1ugq523-0-88979b",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1ud7ols-0-f0ea5e",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1u73dxx-0-12d6d4",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u2y84x-0-6244c2",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1touvo0-0-6821bb",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1tnx2o9-0-5e14d4",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1tm8clp-0-2cb553",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1t3vsn2-0-eb9b3d",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1spr2wd-0-a4dde4",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1sjuj04-0-1a0dd1",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1sjovbt-0-98d05e",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1ttl2jw-10-ea5bfc",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1uv1cxj-1-e67049",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1sl49hv-0-ad574e",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1sl49hv-2-3e227a",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1sl49hv-9-567790",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1tqzqah-0-376866",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1tqzqah-1-2a1f1a",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1szt17x-3-f8efd0",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1szt17x-6-ab5a43",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1x0q43w-5-a566fc",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vp054y-2-0eef43",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vp010l-0-cce7a6",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vp010l-1-47ddb8",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vp010l-5-fb63f0",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vgzkd6-3-e699a5",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1v3juup-0-8dde7e",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1sq4l6o-3-d5858f",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1sq4l6o-4-1c68a7",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1vbhaao-0-bd9e62",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_safety-caution-noted-1uzy4ip-4-d1403b",
+    "body": "Safety caution noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1ttfzwr-3-792760",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vxpjuc-3-2ab1e2",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vsjlpr-2-fa6171",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vld9m6-0-f830c9",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1vbs1av-2-c99cf3",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1tqkjsb-3-47a699",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1sv4tfe-0-30b78d",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wzpqnk-1-d7f974",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1wcdo1w-1-d2c00e",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1w2sz1e-1-0697f0",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vhsfcg-1-615f26",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1uu6u4h-0-6a0a53",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1ug44ta-1-69a669",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1ug44ta-2-a674c8",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1ue1ok7-1-7d100d",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u9s7uq-0-c4691e",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1tvk8jm-0-f2c478",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1tvk8jm-1-1677f0",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1ttp3r3-0-c97b13",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1sqvnf8-2-5cdedd",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1sn7utt-1-60d77f",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1wujrhi-0-c56bba",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1wujrhi-1-d25690",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wthikp-0-a1b39e",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1wf9zgm-0-966fc9",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v8ik3h-0-93427b",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1uqxrbk-1-280294",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1u2k8px-1-96ed9b",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1ta4fiv-1-0bfe69",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1smx98b-1-5f59a7",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wzpoqf-0-fff557",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1wy3m61-0-95775c",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vnhj67-0-a2b49a",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1viw29y-0-cd9d29",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vexr8b-0-5168b8",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1vbfism-0-a7f9b3",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v55t9f-0-425429",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v2elto-0-ee0f40",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1v03tui-0-cdb8ef",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1uxydlo-0-6567ee",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1uqauk4-0-1ae96d",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1uftley-0-7eecc1",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1uafin6-0-fe7788",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1u8p8fw-0-cc6927",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_queue-delay-noted-1u8i4x1-0-5f660a",
+    "body": "Queue delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1twqwg0-0-a85d8b",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tw6uw9-0-cb2150",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tti90h-0-24bab2",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tn0zij-0-af7c1b",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1teqfdt-0-06c33f",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1tajvyh-0-8cbdbe",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_traffic-delay-noted-1t8uaf4-0-866f5f",
+    "body": "Traffic delay noted.",
+    "kind": "warning"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1t7t3zb-0-651d5a",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1t35g8r-0-9c1504",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1sv4223-0-ca4d06",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1stchm1-0-c47142",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1st9my3-0-2f2b45",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1sqlqc6-0-851f87",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1spjr2f-0-c92184",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  },
+  {
+    "note_id": "nt_transfer-caution-noted-1ska6o7-0-2d387c",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
+  }
+]

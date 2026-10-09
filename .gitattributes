@@ -1,1 +1,3 @@
-* text=auto eol=lf
+# Keep dataset JSON/CSV checksums stable across Windows checkouts (LF).
+howtogetthereph_dataset/** text eol=lf
+data/reference/howtogetthereph_dataset-precleaned/** text eol=lf

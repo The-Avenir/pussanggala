@@ -1,0 +1,14 @@
+{
+  "promoted_at": "2026-10-09T19:10:48.654Z",
+  "source_snapshot_sha256": "d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3",
+  "eligible_dir": "data/seed/eligible",
+  "dispositions": "data/seed/dispositions.json",
+  "run": "data/seed/run.json",
+  "pack_sha256": "b863095e3410808a0f5bc00db5d70ef18dea9c8c344f3fb218354146858828db",
+  "notes": [
+    "Eligible tables only — no raw Reddit wording or usernames (INV-4).",
+    "needs_review candidates were never accepted by agents; they remain quarantined.",
+    "No field-verified badge; source dates are post dates.",
+    "Rebuild pack: node tools/pack-builder/build.mjs --eligible data/seed/eligible --dispositions data/seed/dispositions.json --run data/seed/run.json --raw howtogetthereph_dataset/ncr_routes.json --out data/raw/out"
+  ]
+}

@@ -1,0 +1,182 @@
+[
+  {
+    "walk_id": "wk_st-trinoma-2d6bdf-st-sm-north-edsa-85d0b1-a0698a",
+    "from_stop_id": "st_trinoma-2d6bdf",
+    "to_stop_id": "st_sm-north-edsa-85d0b1",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-ayala-404889-st-ayala-triangle-c4bcc-dee346",
+    "from_stop_id": "st_mrt3-ayala-404889",
+    "to_stop_id": "st_ayala-triangle-c4bcc8",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-lrt1-tayuman-49da1c-st-quiapo-2e7a2a-92f8e2",
+    "from_stop_id": "st_lrt1-tayuman-49da1c",
+    "to_stop_id": "st_quiapo-2e7a2a",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-edsa-corridor-83965b-st-sm-north-edsa-85d-9e6425",
+    "from_stop_id": "st_edsa-corridor-83965b",
+    "to_stop_id": "st_sm-north-edsa-85d0b1",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "excluded"
+  },
+  {
+    "walk_id": "wk_st-one-ayala-c9df31-st-ayala-triangle-c4bcc8-25f16e",
+    "from_stop_id": "st_one-ayala-c9df31",
+    "to_stop_id": "st_ayala-triangle-c4bcc8",
+    "walk_m": null,
+    "walk_min": 20,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-shaw-6856fd-st-sm-megamall-68f140-7319f4",
+    "from_stop_id": "st_mrt3-shaw-6856fd",
+    "to_stop_id": "st_sm-megamall-68f140",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-edsa-corridor-83965b-st-mrt3-taft-avenue--c3c158",
+    "from_stop_id": "st_edsa-corridor-83965b",
+    "to_stop_id": "st_mrt3-taft-avenue-818567",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "excluded"
+  },
+  {
+    "walk_id": "wk_st-lrt1-gil-puyat-34b3b2-st-mrt3-guadalupe-7-b4a0bd",
+    "from_stop_id": "st_lrt1-gil-puyat-34b3b2",
+    "to_stop_id": "st_mrt3-guadalupe-7da74c",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-landmark-makati-75fb4e-st-one-ayala-c9df3-e72fb6",
+    "from_stop_id": "st_landmark-makati-75fb4e",
+    "to_stop_id": "st_one-ayala-c9df31",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-lrt1-gil-puyat-34b3b2-st-lrt1-baclaran-be-2eb34a",
+    "from_stop_id": "st_lrt1-gil-puyat-34b3b2",
+    "to_stop_id": "st_lrt1-baclaran-be7115",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-quezon-avenue-a72dc0-st-sm-north-eds-654da1",
+    "from_stop_id": "st_mrt3-quezon-avenue-a72dc0",
+    "to_stop_id": "st_sm-north-edsa-85d0b1",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-market-market-b9ab79-st-sm-north-edsa-85d-e088ee",
+    "from_stop_id": "st_market-market-b9ab79",
+    "to_stop_id": "st_sm-north-edsa-85d0b1",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-guadalupe-7da74c-st-ateneo-0887b0-6077b1",
+    "from_stop_id": "st_mrt3-guadalupe-7da74c",
+    "to_stop_id": "st_ateneo-0887b0",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-north-avenue-933d3a-st-sm-north-edsa-a97217",
+    "from_stop_id": "st_mrt3-north-avenue-933d3a",
+    "to_stop_id": "st_sm-north-edsa-85d0b1",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-alabang-south-station-6b40a7-st-festival--a69c13",
+    "from_stop_id": "st_alabang-south-station-6b40a7",
+    "to_stop_id": "st_festival-mall-c5f3dc",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-magallanes-f2637a-st-one-ayala-c9df3-deaa58",
+    "from_stop_id": "st_mrt3-magallanes-f2637a",
+    "to_stop_id": "st_one-ayala-c9df31",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-lrt1-gil-puyat-34b3b2-st-mall-of-asia-f38-a832b2",
+    "from_stop_id": "st_lrt1-gil-puyat-34b3b2",
+    "to_stop_id": "st_mall-of-asia-f3838e",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-edsa-crossing-bd45b7-st-mrt3-quezon-avenu-7db6ae",
+    "from_stop_id": "st_edsa-crossing-bd45b7",
+    "to_stop_id": "st_mrt3-quezon-avenue-a72dc0",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-lrt1-carriedo-d82d6f-st-binondo-464761-07e0e9",
+    "from_stop_id": "st_lrt1-carriedo-d82d6f",
+    "to_stop_id": "st_binondo-464761",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-one-ayala-c9df31-st-landmark-makati-75fb4-0ab46d",
+    "from_stop_id": "st_one-ayala-c9df31",
+    "to_stop_id": "st_landmark-makati-75fb4e",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  }
+]

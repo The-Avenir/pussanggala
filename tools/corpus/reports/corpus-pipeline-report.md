@@ -1,4 +1,19 @@
-# Member 1 — corpus and evidence pipeline report (T10–T13)
+# Member 1 — corpus and evidence pipeline report (T10–T16)
+
+**Snapshot** `d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3` (`howtogetthereph_dataset/ncr_routes.json`)
+**Scope** T10–T16 (audit → extract → evidence → places → eligible → pack → acceptance → seed)
+**Status** Regenerated 2026-10-10 on `feat/t14-t16-seed-handoff` via `node tools/corpus/run-pipeline.mjs`.
+T11 is a new conservative `extract.mjs` (~6.6k candidates vs historical 19.7k). T12 part B AI
+verdicts are **not** re-applied (IDs stale). Cleaned handoff: `data/seed/`. Pre-clean reference:
+`data/reference/howtogetthereph_dataset-precleaned/`. Acceptance: **21/21 PASS**.
+
+---
+
+## Historical T10–T13 narrative (below)
+
+The sections below retain the earlier combined narrative for the first pipeline pass.
+Live counts for the current extractor are in `t10-audit.*`, `t12-evidence.*`, `t13-places.*`,
+`t14-eligible.md`, and `t16-acceptance.md`.
 
 **Snapshot** `d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3` (`howtogetthereph_dataset/ncr_routes.json`)
 **Scope** T10 input audit · T11 extraction · T12 evidence pass · T13 canonical places
