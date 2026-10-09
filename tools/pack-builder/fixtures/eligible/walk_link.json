@@ -1,0 +1,11 @@
+[
+  {
+    "walk_id": "wk_market-to-terminal",
+    "from_stop_id": "st_market-rear",
+    "to_stop_id": "st_terminal-bay",
+    "walk_m": 400,
+    "walk_min": 7,
+    "walk_text": "Head past the shops and use the overpass to the terminal.",
+    "eligibility": "ready"
+  }
+]

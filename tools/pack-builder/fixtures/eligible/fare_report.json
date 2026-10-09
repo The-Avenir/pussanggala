@@ -1,0 +1,11 @@
+[
+  {
+    "fare_id": "fr_violet-1a",
+    "leg_id": "lg_violet-1",
+    "amount_min": 12,
+    "amount_max": 15,
+    "currency": "PHP",
+    "basis": "reported_segment",
+    "effective_at": "2025-01-01"
+  }
+]

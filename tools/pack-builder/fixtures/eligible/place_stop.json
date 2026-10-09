@@ -1,0 +1,32 @@
+[
+  {
+    "access_id": "ac_plaza-bay",
+    "place_id": "pl_sample-plaza",
+    "stop_id": "st_plaza-bay",
+    "direction": "both",
+    "walk_m": 100,
+    "walk_min": 2,
+    "walk_text": "Short walk to the clock tower bay.",
+    "eligibility": "ready"
+  },
+  {
+    "access_id": "ac_market-front",
+    "place_id": "pl_example-market",
+    "stop_id": "st_market-front",
+    "direction": "both",
+    "walk_m": 50,
+    "walk_min": 1,
+    "walk_text": "The stop is at the front entrance.",
+    "eligibility": "ready"
+  },
+  {
+    "access_id": "ac_terminal-bay",
+    "place_id": "pl_mock-terminal",
+    "stop_id": "st_terminal-bay",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Use bay three inside the terminal.",
+    "eligibility": "ready"
+  }
+]

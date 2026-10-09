@@ -1,0 +1,191 @@
+{
+  "task": "T12",
+  "part": "A (deterministic pass)",
+  "snapshot_sha256": "d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3",
+  "candidates": 19709,
+  "review_state_by_kind": {
+    "second_passed": {
+      "place": 11295,
+      "ride": 3695,
+      "walk": 1368,
+      "fare": 87,
+      "hours": 101,
+      "service_status": 8,
+      "note": 913
+    },
+    "needs_review": {
+      "place": 0,
+      "ride": 2097,
+      "walk": 64,
+      "fare": 54,
+      "hours": 15,
+      "service_status": 11,
+      "note": 0
+    },
+    "rejected": {
+      "place": 0,
+      "ride": 0,
+      "walk": 0,
+      "fare": 0,
+      "hours": 0,
+      "service_status": 0,
+      "note": 1
+    },
+    "accepted": {
+      "place": 0,
+      "ride": 0,
+      "walk": 0,
+      "fare": 0,
+      "hours": 0,
+      "service_status": 0,
+      "note": 0
+    }
+  },
+  "review_state_totals": {
+    "second_passed": 17467,
+    "needs_review": 2241,
+    "rejected": 1,
+    "accepted": 0
+  },
+  "flag_counts": {
+    "incomplete_connection": 1383,
+    "hedged": 1123,
+    "question_missing": 968,
+    "long_identifier": 689,
+    "value_not_in_source": 438,
+    "fare_unscoped": 23,
+    "conflict": 18,
+    "inactive_service": 11,
+    "fare_open_range": 1,
+    "raw_wording": 1
+  },
+  "flag_counts_by_state": {
+    "incomplete_connection": {
+      "needs_review": 1383
+    },
+    "hedged": {
+      "second_passed": 727,
+      "needs_review": 396
+    },
+    "question_missing": {
+      "second_passed": 667,
+      "needs_review": 301
+    },
+    "long_identifier": {
+      "second_passed": 475,
+      "needs_review": 214
+    },
+    "value_not_in_source": {
+      "needs_review": 438
+    },
+    "fare_unscoped": {
+      "second_passed": 12,
+      "needs_review": 11
+    },
+    "conflict": {
+      "needs_review": 18
+    },
+    "inactive_service": {
+      "needs_review": 11
+    },
+    "fare_open_range": {
+      "second_passed": 1
+    },
+    "raw_wording": {
+      "rejected": 1
+    }
+  },
+  "conflict_pairs": 12,
+  "queue": {
+    "posts": 1194,
+    "items": 2241,
+    "posts_with_route_critical_items": 1189
+  },
+  "reviewer_instructions": [
+    "Open data/raw/t12/review-queue.md (top posts) or review-queue.jsonl (all), follow the permalink and read the cited comment (comment_index = 0-based answers[] position; null = title/question).",
+    "Decide each item in data/raw/t12/reviewed-candidates.jsonl: set review_state to \"accepted\" or \"rejected\" (only the designated human reviewer may do this; agents never set accepted).",
+    "On every decision set reviewer_id to your member ID and reviewed_at to an ISO-8601 UTC timestamp (e.g. 2026-10-12T09:30:00Z); keep evidence_check and append your reason code to review_reason if it changes.",
+    "Conflicting fare/hour reports are not merged: accept each supported report separately (they stay distinct in the pack) and reject only unsupported ones.",
+    "Unresolved route-critical items (ride/walk/service_status) remain quarantined from the pack; suspended/retired services never route.",
+    "Never paste comment wording or usernames into payload fields — paraphrase in your own words (INV-4)."
+  ],
+  "notes": [
+    "Second pass is a text-evidence check, not field verification; no field-verified badge.",
+    "Place/board/alight/from/to grounding accepts ≥0.8 token overlap with the cited text or the post title/question; signboards must match the cited text."
+  ],
+  "part_b": {
+    "seed": 20261009,
+    "sample_size": 415,
+    "supported": 366,
+    "flagged": 49,
+    "per_kind": {
+      "ride": {
+        "sampled": 200,
+        "supported": 192,
+        "flagged": 8,
+        "defect_rate_pct": 4
+      },
+      "walk": {
+        "sampled": 60,
+        "supported": 59,
+        "flagged": 1,
+        "defect_rate_pct": 1.7
+      },
+      "fare": {
+        "sampled": 87,
+        "supported": 58,
+        "flagged": 29,
+        "defect_rate_pct": 33.3
+      },
+      "hours": {
+        "sampled": 60,
+        "supported": 49,
+        "flagged": 11,
+        "defect_rate_pct": 18.3
+      },
+      "service_status": {
+        "sampled": 8,
+        "supported": 8,
+        "flagged": 0,
+        "defect_rate_pct": 0
+      }
+    },
+    "flagged_by_reason_code": {
+      "fare_unscoped": 11,
+      "fare_approximate_as_exact": 4,
+      "fare_open_range_as_exact": 4,
+      "fare_cross_comment_scope_unclear": 3,
+      "fare_hedged": 3,
+      "question_premise_as_hours_fact": 3,
+      "fare_conditional_compressed": 2,
+      "question_premise_unconfirmed": 2,
+      "alight_inferred": 1,
+      "alight_not_stated": 1,
+      "board_place_not_a_place": 1,
+      "direction_text_mismatch": 1,
+      "fare_discount_scope_lost": 1,
+      "fare_is_route_total": 1,
+      "hours_ambiguous_clock_resolved": 1,
+      "hours_guess_hardened": 1,
+      "hours_hearsay_in_question": 1,
+      "hours_hedged_mode_mismatch": 1,
+      "hours_linked_to_wrong_ride": 1,
+      "hours_scope_upstream_terminal": 1,
+      "hours_text_adds_unsourced_detail": 1,
+      "hours_two_values_in_days_text": 1,
+      "incomplete_connection": 1,
+      "ride_fields_from_question_only": 1,
+      "walk_text_adds_unsourced_duration": 1
+    },
+    "effective_review_state_totals": {
+      "second_passed": 17418,
+      "needs_review": 2290,
+      "rejected": 1
+    },
+    "notes": [
+      "This pass only quarantines: it never set accepted or rejected, so the designated human reviewer still owns every queued item.",
+      "The deterministic part-A pass held up well for ride and walk records but was systematically weak on fare and hours value semantics, where almost all defects concentrate.",
+      "The dominant failure modes are open-ended or approximate amounts recorded as exact, fares carrying no ride scope, and clock values hardened out of hedged or asker-supplied statements."
+    ]
+  }
+}

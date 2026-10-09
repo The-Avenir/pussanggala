@@ -1,0 +1,30 @@
+{
+  "task": "T13",
+  "snapshot_sha256": "d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3",
+  "alias_mentions_total": 21326,
+  "distinct_alias_norms": 5125,
+  "canonical_places": 91,
+  "aliases_resolved": 271,
+  "aliases_resolved_with_mentions": 269,
+  "ambiguous_alias_norms": 23,
+  "ambiguous_place_refs": 50,
+  "ambiguous_mentions": 3753,
+  "unresolved_alias_norms": 4833,
+  "unresolved_mentions": 11959,
+  "coverage_pct": 37.29,
+  "places_by_ncr_status": {
+    "accepted": 89,
+    "outside": 0,
+    "ambiguous": 2
+  },
+  "places_by_mapping_status": {
+    "mapped": 0,
+    "unmapped": 91,
+    "needs_review": 0
+  },
+  "notes": [
+    "This repository contains no geodata or licensed coordinate source; lat/lng pass through the gazetteer verbatim and no coordinate is invented.",
+    "Unresolved aliases are not pack-eligible endpoints; T14 cannot route to or from them.",
+    "The dataset's own NCR label or bounding box is never used for ncr_status; membership is the curated city field only."
+  ]
+}

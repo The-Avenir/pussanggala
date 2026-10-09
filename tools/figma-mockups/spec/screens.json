@@ -1,0 +1,312 @@
+{
+  "_about": "Authoritative content spec for the 8 mock-up screens missing from the Figma file 'Pusang Gala / Sunset Playful Mockups'. Derived from docs/app-walkthrough.md. All example values use the single worked journey in walkthrough section 3 (LRT-1 Monumento -> One Ayala). Copy here is final: render it verbatim, do not paraphrase, do not 'improve' it. Wording follows the INV-5 rule that nothing is ever called verified, live or current.",
+  "_schema": {
+    "node types": {
+      "frame": "name, dir(col|row), gap, padding([t,r,b,l] or n), w, h, fill, radius, stroke{color,weight}, align(start|center|end|between), clip, grow, children[]",
+      "text": "style(Display|Title|Heading|Label|Body|Caption), color, align(left|center|right), w, chars",
+      "instance": "component (exact Figma component name), w, h, props{}",
+      "icon": "name (resolves to the existing component 'Pusang Gala/Icon/<name>'), size",
+      "gaile": "pose, w, h  -> instance of the new 'Pusang Gala/Gaile' component set, variant pose=<pose>",
+      "pill": "chars, fill, color, style (small rounded status label, radius 999, padding [4,10])",
+      "chip": "chars, fill, color, stroke (tappable-looking chip, radius 999, padding [8,14])",
+      "spacer": "h"
+    },
+    "colors": "token names from tokens.json colors{}",
+    "notes": "Every w omitted inside a 20px-padded screen content band means full 350. Renderer owns all pixel math; this file owns content, hierarchy, and mascot choice."
+  },
+  "_gailePoseUsage": {
+    "_note": "Pose choice per screen, decided against the artwork. 'walk' is deliberately unused: it belongs to the existing screen 05 Active trip, which is out of scope for this pass.",
+    "readiness": "compass - she is orienting before the trip starts",
+    "clarify": "think - she is asking, not guessing (INV-6)",
+    "response": "pointing - she is explaining the route she found",
+    "tripComplete": "cheer - arrival celebration",
+    "saved": "wave - friendly invitation on an empty list",
+    "profile": "idle - neutral avatar standing in for a signed-out user",
+    "offlineData": "map - she is holding the data she carries",
+    "errors": "binoculars - she looked and could not find it"
+  },
+
+  "screens": [
+    {
+      "id": "readiness",
+      "label": "10 / Readiness check",
+      "subtitle": "Everything ships inside the app.",
+      "walkthrough": "Screen 0",
+      "bands": { "statusBar": true, "appBar": false, "bottomAction": false },
+      "content": [
+        { "type": "frame", "name": "Mascot hero", "w": 350, "h": 235, "fill": "orangeSoft", "radius": 20, "align": "center", "clip": true,
+          "children": [ { "type": "gaile", "pose": "compass", "w": 200, "h": 216 } ] },
+        { "type": "text", "style": "Title", "color": "ink", "align": "center", "chars": "Handa na ba tayo?" },
+        { "type": "text", "style": "Caption", "color": "muted", "align": "center", "chars": "Checking the files already on your phone." },
+        { "type": "spacer", "h": 4 },
+        { "type": "frame", "name": "Readiness list", "dir": "col", "gap": 10, "children": [
+          { "type": "frame", "name": "Route pack", "dir": "row", "gap": 14, "h": 64, "padding": [0,14,0,14], "fill": "surface", "radius": 20, "stroke": { "color": "border", "weight": 1 }, "align": "center", "children": [
+            { "type": "frame", "name": "Icon tile", "w": 40, "h": 40, "fill": "orangeSoft", "radius": 14, "align": "center", "children": [ { "type": "icon", "name": "storage", "size": 20 } ] },
+            { "type": "frame", "name": "Text", "dir": "col", "gap": 2, "grow": true, "children": [
+              { "type": "text", "style": "Label", "color": "ink", "chars": "Route pack" },
+              { "type": "text", "style": "Caption", "color": "muted", "chars": "NCR · reports posted Apr–Oct 2026" } ] },
+            { "type": "pill", "chars": "Ready", "fill": "greenSoft", "color": "green" } ] },
+          { "type": "frame", "name": "AI model", "dir": "row", "gap": 14, "h": 64, "padding": [0,14,0,14], "fill": "surface", "radius": 20, "stroke": { "color": "border", "weight": 1 }, "align": "center", "children": [
+            { "type": "frame", "name": "Icon tile", "w": 40, "h": 40, "fill": "orangeSoft", "radius": 14, "align": "center", "children": [ { "type": "icon", "name": "spark", "size": 20 } ] },
+            { "type": "frame", "name": "Text", "dir": "col", "gap": 2, "grow": true, "children": [
+              { "type": "text", "style": "Label", "color": "ink", "chars": "AI model" },
+              { "type": "text", "style": "Caption", "color": "muted", "chars": "On-device · explanations only" } ] },
+            { "type": "pill", "chars": "Ready", "fill": "greenSoft", "color": "green" } ] },
+          { "type": "frame", "name": "Offline map", "dir": "row", "gap": 14, "h": 64, "padding": [0,14,0,14], "fill": "surface", "radius": 20, "stroke": { "color": "border", "weight": 1 }, "align": "center", "children": [
+            { "type": "frame", "name": "Icon tile", "w": 40, "h": 40, "fill": "orangeSoft", "radius": 14, "align": "center", "children": [ { "type": "icon", "name": "map", "size": 20 } ] },
+            { "type": "frame", "name": "Text", "dir": "col", "gap": 2, "grow": true, "children": [
+              { "type": "text", "style": "Label", "color": "ink", "chars": "Offline map" },
+              { "type": "text", "style": "Caption", "color": "muted", "chars": "Schematic will be used instead" } ] },
+            { "type": "pill", "chars": "Failed", "fill": "orangeSoft", "color": "orange" } ] }
+        ] },
+        { "type": "spacer", "h": 4 },
+        { "type": "text", "style": "Caption", "color": "muted", "align": "center", "chars": "No downloads. Everything ships inside the app." }
+      ]
+    },
+
+    {
+      "id": "clarify",
+      "label": "11 / Which place?",
+      "subtitle": "Ask, never guess.",
+      "walkthrough": "Screen 4a",
+      "bands": { "statusBar": true, "appBar": true, "bottomAction": false },
+      "appBar": { "mascotPose": "idle", "title": "Pusang Gala", "trailingIcon": "gear" },
+      "content": [
+        { "type": "frame", "name": "Conversation behind", "dir": "col", "gap": 10, "opacity": 0.45, "children": [
+          { "type": "frame", "name": "Commuter question", "w": 350, "padding": 17, "fill": "orangeSoft", "radius": 20, "children": [
+            { "type": "text", "style": "Body", "color": "ink", "chars": "Papunta sa SM North galing Monumento" } ] } ] },
+        { "type": "spacer", "h": 8 },
+        { "type": "frame", "name": "Clarification sheet", "dir": "col", "gap": 12, "w": 350, "padding": 18, "fill": "surface", "radius": 20, "stroke": { "color": "border", "weight": 1 }, "children": [
+          { "type": "frame", "name": "Sheet header", "dir": "row", "gap": 12, "align": "center", "children": [
+            { "type": "gaile", "pose": "think", "w": 56, "h": 58 },
+            { "type": "frame", "name": "Text", "dir": "col", "gap": 3, "grow": true, "children": [
+              { "type": "text", "style": "Heading", "color": "ink", "chars": "Alin dito ang SM North?" },
+              { "type": "text", "style": "Caption", "color": "muted", "chars": "Pumili ka para sigurado tayo." } ] } ] },
+          { "type": "frame", "name": "Candidates", "dir": "col", "gap": 8, "children": [
+            { "type": "frame", "name": "SM City North EDSA", "dir": "row", "gap": 12, "padding": 12, "fill": "white", "radius": 16, "stroke": { "color": "border", "weight": 1 }, "align": "center", "children": [
+              { "type": "icon", "name": "pin", "size": 20 },
+              { "type": "frame", "name": "Text", "dir": "col", "gap": 2, "grow": true, "children": [
+                { "type": "text", "style": "Label", "color": "ink", "chars": "SM City North EDSA" },
+                { "type": "text", "style": "Caption", "color": "muted", "chars": "Quezon City · EDSA cor. North Avenue" } ] } ] },
+            { "type": "frame", "name": "SM City Manila", "dir": "row", "gap": 12, "padding": 12, "fill": "white", "radius": 16, "stroke": { "color": "border", "weight": 1 }, "align": "center", "children": [
+              { "type": "icon", "name": "pin", "size": 20 },
+              { "type": "frame", "name": "Text", "dir": "col", "gap": 2, "grow": true, "children": [
+                { "type": "text", "style": "Label", "color": "ink", "chars": "SM City Manila" },
+                { "type": "text", "style": "Caption", "color": "muted", "chars": "Ermita, Manila · near Taft Avenue" } ] } ] },
+            { "type": "frame", "name": "None of these", "dir": "row", "gap": 12, "padding": 12, "fill": "white", "radius": 16, "stroke": { "color": "border", "weight": 1 }, "align": "center", "children": [
+              { "type": "icon", "name": "target", "size": 20 },
+              { "type": "frame", "name": "Text", "dir": "col", "gap": 2, "grow": true, "children": [
+                { "type": "text", "style": "Label", "color": "ink", "chars": "None of these" },
+                { "type": "text", "style": "Caption", "color": "muted", "chars": "Search the places I support" } ] } ] } ] },
+          { "type": "text", "style": "Caption", "color": "muted", "chars": "I never pick for you." } ] }
+      ]
+    },
+
+    {
+      "id": "response",
+      "label": "12 / Response",
+      "subtitle": "Facts on cards. The cat only explains.",
+      "walkthrough": "Screen 5",
+      "bands": { "statusBar": true, "appBar": true, "bottomAction": true },
+      "appBar": { "mascotPose": "idle", "title": "Pusang Gala", "trailingIcon": "gear" },
+      "bottomActionNode": { "type": "frame", "name": "Ask anything input", "dir": "row", "gap": 12, "align": "center", "children": [
+        { "type": "frame", "name": "Question field", "w": 300, "h": 43, "padding": [0,13,0,13], "fill": "white", "radius": 16, "stroke": { "color": "border", "weight": 1 }, "align": "center", "children": [
+          { "type": "text", "style": "Caption", "color": "muted", "chars": "Ask Pusang Gala anything…" } ] },
+        { "type": "icon", "name": "send", "size": 26 } ] },
+      "content": [
+        { "type": "frame", "name": "Commuter question", "w": 350, "padding": 15, "fill": "orangeSoft", "radius": 20, "children": [
+          { "type": "text", "style": "Body", "color": "ink", "chars": "Paano pumunta sa One Ayala galing Monumento?" } ] },
+        { "type": "frame", "name": "Assistant turn", "dir": "row", "gap": 12, "align": "start", "children": [
+          { "type": "gaile", "pose": "pointing", "w": 42, "h": 44 },
+          { "type": "frame", "name": "Route summary card", "dir": "col", "gap": 10, "grow": true, "padding": 14, "fill": "surface", "radius": 20, "stroke": { "color": "border", "weight": 1 }, "children": [
+            { "type": "text", "style": "Label", "color": "ink", "chars": "LRT-1 Monumento → One Ayala" },
+            { "type": "pill", "chars": "Lowest reported fare among 3 options", "fill": "greenSoft", "color": "green" },
+            { "type": "frame", "name": "Leg strip", "dir": "row", "gap": 8, "align": "center", "children": [
+              { "type": "icon", "name": "walk", "size": 18 },
+              { "type": "icon", "name": "bus", "size": 18 },
+              { "type": "icon", "name": "walk", "size": 18 },
+              { "type": "icon", "name": "bus", "size": 18 },
+              { "type": "text", "style": "Caption", "color": "muted", "chars": "Carousel → MRT-3" } ] },
+            { "type": "frame", "name": "Trip summary", "dir": "row", "gap": 12, "children": [
+              { "type": "frame", "name": "Fare", "dir": "col", "gap": 2, "grow": true, "children": [
+                { "type": "text", "style": "Label", "color": "ink", "chars": "₱31–44" },
+                { "type": "text", "style": "Caption", "color": "muted", "chars": "reported fare" } ] },
+              { "type": "frame", "name": "Time", "dir": "col", "gap": 2, "grow": true, "children": [
+                { "type": "text", "style": "Label", "color": "ink", "chars": "45–65 min" },
+                { "type": "text", "style": "Caption", "color": "muted", "chars": "reported time" } ] },
+              { "type": "frame", "name": "Transfers", "dir": "col", "gap": 2, "grow": true, "children": [
+                { "type": "text", "style": "Label", "color": "ink", "chars": "1" },
+                { "type": "text", "style": "Caption", "color": "muted", "chars": "transfer" } ] } ] },
+            { "type": "frame", "name": "Warning", "dir": "row", "gap": 8, "padding": 10, "fill": "orangeSoft", "radius": 14, "align": "center", "children": [
+              { "type": "icon", "name": "info", "size": 16 },
+              { "type": "text", "style": "Caption", "color": "ink", "grow": true, "chars": "Reports disagree on the MRT-3 fare: ₱24 (Feb 2026) · ₱12 (Jul 2026)" } ] },
+            { "type": "text", "style": "Caption", "color": "muted", "chars": "Community reports · posted Jun–Sep 2026" } ] } ] },
+        { "type": "frame", "name": "Explanation", "dir": "row", "gap": 8, "padding": [0,0,0,54], "children": [
+          { "type": "text", "style": "Caption", "color": "muted", "chars": "Pusang Gala is explaining…" } ] },
+        { "type": "frame", "name": "Quick replies", "dir": "row", "gap": 8, "padding": [0,0,0,54], "children": [
+          { "type": "chip", "chars": "Cheaper?", "fill": "white", "color": "ink", "stroke": "border" },
+          { "type": "chip", "chars": "Fewer transfers?", "fill": "white", "color": "ink", "stroke": "border" },
+          { "type": "chip", "chars": "Pauwi?", "fill": "white", "color": "ink", "stroke": "border" } ] },
+        { "type": "spacer", "h": 2 },
+        { "type": "instance", "component": "Pusang Gala/Button", "w": 350, "h": 52, "props": { "label": "Start trip →" } }
+      ]
+    },
+
+    {
+      "id": "tripComplete",
+      "label": "13 / Trip complete",
+      "subtitle": "Close the trip cleanly.",
+      "walkthrough": "Screen 10",
+      "bands": { "statusBar": true, "appBar": false, "bottomAction": true },
+      "bottomActionNode": { "type": "instance", "component": "Pusang Gala/Button", "w": 350, "h": 52, "props": { "label": "Save this route ☆" } },
+      "content": [
+        { "type": "frame", "name": "Mascot hero", "w": 350, "h": 235, "fill": "greenSoft", "radius": 20, "align": "center", "clip": true,
+          "children": [ { "type": "gaile", "pose": "cheer", "w": 212, "h": 220 } ] },
+        { "type": "text", "style": "Display", "color": "ink", "align": "center", "chars": "Nakarating ka!" },
+        { "type": "text", "style": "Label", "color": "ink", "align": "center", "chars": "LRT-1 Monumento → One Ayala" },
+        { "type": "text", "style": "Caption", "color": "muted", "align": "center", "chars": "4 steps · ₱31–44 reported · 52 min" },
+        { "type": "spacer", "h": 4 },
+        { "type": "frame", "name": "Steps taken", "dir": "col", "gap": 10, "w": 350, "padding": 16, "fill": "surface", "radius": 20, "stroke": { "color": "border", "weight": 1 }, "children": [
+          { "type": "text", "style": "Label", "color": "ink", "chars": "Steps taken" },
+          { "type": "frame", "name": "Step 1", "dir": "row", "gap": 10, "align": "center", "children": [
+            { "type": "icon", "name": "walk", "size": 18 },
+            { "type": "text", "style": "Caption", "color": "muted", "grow": true, "chars": "Walk to the Carousel Monumento stop" } ] },
+          { "type": "frame", "name": "Step 2", "dir": "row", "gap": 10, "align": "center", "children": [
+            { "type": "icon", "name": "bus", "size": 18 },
+            { "type": "text", "style": "Caption", "color": "muted", "grow": true, "chars": "EDSA Carousel southbound to North Avenue" } ] },
+          { "type": "frame", "name": "Step 3", "dir": "row", "gap": 10, "align": "center", "children": [
+            { "type": "icon", "name": "bus", "size": 18 },
+            { "type": "text", "style": "Caption", "color": "muted", "grow": true, "chars": "MRT-3 southbound to Ayala" } ] },
+          { "type": "frame", "name": "Step 4", "dir": "row", "gap": 10, "align": "center", "children": [
+            { "type": "icon", "name": "pin", "size": 18 },
+            { "type": "text", "style": "Caption", "color": "muted", "grow": true, "chars": "Arrive at One Ayala" } ] } ] },
+        { "type": "text", "style": "Caption", "color": "muted", "align": "center", "chars": "Plan return trip" }
+      ]
+    },
+
+    {
+      "id": "saved",
+      "label": "14 / Saved & History",
+      "subtitle": "Reuse routes without typing.",
+      "walkthrough": "Screen 11",
+      "bands": { "statusBar": true, "appBar": true, "bottomAction": false },
+      "appBar": { "mascotPose": "idle", "title": "Saved", "trailingIcon": "gear" },
+      "content": [
+        { "type": "text", "style": "Heading", "color": "ink", "chars": "Saved routes" },
+        { "type": "frame", "name": "Papasok sa office", "dir": "row", "gap": 12, "w": 350, "padding": 14, "fill": "surface", "radius": 20, "stroke": { "color": "border", "weight": 1 }, "align": "center", "children": [
+          { "type": "frame", "name": "Icon tile", "w": 40, "h": 40, "fill": "orangeSoft", "radius": 14, "align": "center", "children": [ { "type": "icon", "name": "pin", "size": 20 } ] },
+          { "type": "frame", "name": "Text", "dir": "col", "gap": 2, "grow": true, "children": [
+            { "type": "text", "style": "Label", "color": "ink", "chars": "Papasok sa office" },
+            { "type": "text", "style": "Caption", "color": "muted", "chars": "Monumento → One Ayala · Cheapest · 2 Oct" } ] } ] },
+        { "type": "frame", "name": "Pauwi", "dir": "row", "gap": 12, "w": 350, "padding": 14, "fill": "surface", "radius": 20, "stroke": { "color": "border", "weight": 1 }, "align": "center", "children": [
+          { "type": "frame", "name": "Icon tile", "w": 40, "h": 40, "fill": "orangeSoft", "radius": 14, "align": "center", "children": [ { "type": "icon", "name": "pin", "size": 20 } ] },
+          { "type": "frame", "name": "Text", "dir": "col", "gap": 2, "grow": true, "children": [
+            { "type": "text", "style": "Label", "color": "ink", "chars": "Pauwi" },
+            { "type": "text", "style": "Caption", "color": "muted", "chars": "One Ayala → Monumento · Fewest transfers · 1 Oct" } ] } ] },
+        { "type": "spacer", "h": 4 },
+        { "type": "text", "style": "Heading", "color": "ink", "chars": "History" },
+        { "type": "frame", "name": "History empty", "dir": "row", "gap": 14, "w": 350, "padding": 16, "fill": "orangeSoft", "radius": 20, "align": "center", "children": [
+          { "type": "gaile", "pose": "wave", "w": 72, "h": 74 },
+          { "type": "frame", "name": "Text", "dir": "col", "gap": 3, "grow": true, "children": [
+            { "type": "text", "style": "Label", "color": "ink", "chars": "Wala pa tayong history." },
+            { "type": "text", "style": "Caption", "color": "muted", "chars": "Save a route with ☆ to find it here." } ] } ] },
+        { "type": "spacer", "h": 4 },
+        { "type": "text", "style": "Caption", "color": "muted", "chars": "Saved routes store IDs and dates only. No chat text, no GPS." }
+      ]
+    },
+
+    {
+      "id": "profile",
+      "label": "15 / Profile",
+      "subtitle": "Identity stays on the phone.",
+      "walkthrough": "Screen 12",
+      "bands": { "statusBar": true, "appBar": true, "bottomAction": false },
+      "appBar": { "mascotPose": "idle", "title": "Profile", "trailingIcon": "gear" },
+      "content": [
+        { "type": "frame", "name": "Profile header", "dir": "row", "gap": 16, "w": 350, "padding": 16, "fill": "surface", "radius": 20, "stroke": { "color": "border", "weight": 1 }, "align": "center", "children": [
+          { "type": "frame", "name": "Avatar", "w": 88, "h": 88, "fill": "orangeSoft", "radius": 999, "align": "center", "clip": true,
+            "children": [ { "type": "gaile", "pose": "idle", "w": 72, "h": 74 } ] },
+          { "type": "frame", "name": "Text", "dir": "col", "gap": 3, "grow": true, "children": [
+            { "type": "text", "style": "Title", "color": "ink", "chars": "Commuter" },
+            { "type": "text", "style": "Caption", "color": "muted", "chars": "Not signed in" } ] } ] },
+        { "type": "instance", "component": "Pusang Gala/Button", "w": 350, "h": 52, "props": { "label": "Sign in with Google" } },
+        { "type": "text", "style": "Caption", "color": "muted", "align": "center", "chars": "Sign-in needs internet. You can keep using everything offline." },
+        { "type": "spacer", "h": 4 },
+        { "type": "text", "style": "Heading", "color": "ink", "chars": "Your trips, on this phone" },
+        { "type": "frame", "name": "Stats", "dir": "row", "gap": 12, "children": [
+          { "type": "frame", "name": "Saved", "dir": "col", "gap": 2, "grow": true, "padding": 14, "fill": "orangeSoft", "radius": 20, "children": [
+            { "type": "text", "style": "Title", "color": "ink", "chars": "2" },
+            { "type": "text", "style": "Caption", "color": "muted", "chars": "saved routes" } ] },
+          { "type": "frame", "name": "Taken", "dir": "col", "gap": 2, "grow": true, "padding": 14, "fill": "greenSoft", "radius": 20, "children": [
+            { "type": "text", "style": "Title", "color": "ink", "chars": "7" },
+            { "type": "text", "style": "Caption", "color": "muted", "chars": "trips taken" } ] } ] },
+        { "type": "spacer", "h": 2 },
+        { "type": "instance", "component": "Pusang Gala/Settings row", "w": 350, "h": 74 },
+        { "type": "instance", "component": "Pusang Gala/Settings row", "w": 350, "h": 74 },
+        { "type": "text", "style": "Caption", "color": "muted", "align": "center", "chars": "Your trips and location never leave this phone." }
+      ]
+    },
+
+    {
+      "id": "offlineData",
+      "label": "16 / Offline data",
+      "subtitle": "What is on the phone, and how old it is.",
+      "walkthrough": "Screen 13a",
+      "bands": { "statusBar": true, "appBar": true, "bottomAction": true },
+      "appBar": { "leadingIcon": "back", "title": "Offline data", "trailingIcon": "gear" },
+      "bottomActionNode": { "type": "instance", "component": "Pusang Gala/Button", "w": 350, "h": 52, "props": { "label": "Re-check files" } },
+      "content": [
+        { "type": "frame", "name": "Section header", "dir": "row", "gap": 14, "align": "center", "children": [
+          { "type": "gaile", "pose": "map", "w": 56, "h": 58 },
+          { "type": "frame", "name": "Text", "dir": "col", "gap": 3, "grow": true, "children": [
+            { "type": "text", "style": "Heading", "color": "ink", "chars": "Dala ko lahat ng kailangan natin." },
+            { "type": "text", "style": "Caption", "color": "muted", "chars": "Nothing here needs the internet." } ] } ] },
+        { "type": "frame", "name": "Route pack", "dir": "col", "gap": 8, "w": 350, "padding": 16, "fill": "surface", "radius": 20, "stroke": { "color": "border", "weight": 1 }, "children": [
+          { "type": "frame", "name": "Row", "dir": "row", "gap": 10, "align": "center", "children": [
+            { "type": "text", "style": "Label", "color": "ink", "grow": true, "chars": "Route pack" },
+            { "type": "pill", "chars": "Ready", "fill": "greenSoft", "color": "green" } ] },
+          { "type": "text", "style": "Caption", "color": "muted", "chars": "NCR · reports posted Apr–Oct 2026" } ] },
+        { "type": "frame", "name": "AI model", "dir": "col", "gap": 8, "w": 350, "padding": 16, "fill": "surface", "radius": 20, "stroke": { "color": "border", "weight": 1 }, "children": [
+          { "type": "frame", "name": "Row", "dir": "row", "gap": 10, "align": "center", "children": [
+            { "type": "text", "style": "Label", "color": "ink", "grow": true, "chars": "AI model" },
+            { "type": "pill", "chars": "Ready", "fill": "greenSoft", "color": "green" } ] },
+          { "type": "text", "style": "Caption", "color": "muted", "chars": "Supported on this phone: Yes · explanations only" } ] },
+        { "type": "frame", "name": "Offline map", "dir": "col", "gap": 8, "w": 350, "padding": 16, "fill": "surface", "radius": 20, "stroke": { "color": "border", "weight": 1 }, "children": [
+          { "type": "frame", "name": "Row", "dir": "row", "gap": 10, "align": "center", "children": [
+            { "type": "text", "style": "Label", "color": "ink", "grow": true, "chars": "Offline map" },
+            { "type": "pill", "chars": "Failed", "fill": "orangeSoft", "color": "orange" } ] },
+          { "type": "text", "style": "Caption", "color": "muted", "chars": "Coverage NCR · stop diagram will be used instead" } ] },
+        { "type": "text", "style": "Caption", "color": "muted", "align": "center", "chars": "No download or update button. Everything ships inside the app." }
+      ]
+    },
+
+    {
+      "id": "errors",
+      "label": "17 / Error & recovery",
+      "subtitle": "Every failure says what still works.",
+      "walkthrough": "Screen 14",
+      "bands": { "statusBar": true, "appBar": true, "bottomAction": false },
+      "appBar": { "mascotPose": "idle", "title": "Pusang Gala", "trailingIcon": "gear" },
+      "content": [
+        { "type": "frame", "name": "Mascot note", "dir": "row", "gap": 14, "w": 350, "padding": 16, "fill": "orangeSoft", "radius": 20, "align": "center", "children": [
+          { "type": "gaile", "pose": "binoculars", "w": 72, "h": 74 },
+          { "type": "frame", "name": "Text", "dir": "col", "gap": 3, "grow": true, "children": [
+            { "type": "text", "style": "Heading", "color": "ink", "chars": "Hinanap ko, pero wala pa." },
+            { "type": "text", "style": "Caption", "color": "muted", "chars": "Here is what I can still do." } ] } ] },
+        { "type": "frame", "name": "Outside NCR", "dir": "col", "gap": 10, "w": 350, "padding": 16, "fill": "surface", "radius": 20, "stroke": { "color": "border", "weight": 1 }, "children": [
+          { "type": "text", "style": "Caption", "color": "muted", "chars": "OUTSIDE NCR" },
+          { "type": "text", "style": "Body", "color": "ink", "chars": "Antipolo is outside Metro Manila. I only have NCR routes for now." },
+          { "type": "chip", "chars": "Edit destination", "fill": "orangeSoft", "color": "orange", "stroke": "none" } ] },
+        { "type": "frame", "name": "Unsupported place", "dir": "col", "gap": 10, "w": 350, "padding": 16, "fill": "surface", "radius": 20, "stroke": { "color": "border", "weight": 1 }, "children": [
+          { "type": "text", "style": "Caption", "color": "muted", "chars": "UNSUPPORTED PLACE" },
+          { "type": "text", "style": "Body", "color": "ink", "chars": "I don't have routes for “Tita's house” yet." },
+          { "type": "chip", "chars": "Pick a nearby landmark", "fill": "orangeSoft", "color": "orange", "stroke": "none" } ] },
+        { "type": "frame", "name": "No connected route", "dir": "col", "gap": 10, "w": 350, "padding": 16, "fill": "surface", "radius": 20, "stroke": { "color": "border", "weight": 1 }, "children": [
+          { "type": "text", "style": "Caption", "color": "muted", "chars": "NO CONNECTED ROUTE" },
+          { "type": "text", "style": "Body", "color": "ink", "chars": "I know both places, but no reported route connects them yet." },
+          { "type": "chip", "chars": "Try a nearby landmark", "fill": "orangeSoft", "color": "orange", "stroke": "none" } ] },
+        { "type": "text", "style": "Caption", "color": "muted", "align": "center", "chars": "Route cards stay on screen. Only the explanation retries." }
+      ]
+    }
+  ]
+}

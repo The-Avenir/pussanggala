@@ -1,0 +1,26 @@
+[
+  {
+    "stop_id": "st_plaza-bay",
+    "place_id": "pl_sample-plaza",
+    "name": "Plaza Bay",
+    "landmark_hint": "near the fixture clock tower"
+  },
+  {
+    "stop_id": "st_market-front",
+    "place_id": "pl_example-market",
+    "name": "Market Front",
+    "landmark_hint": "front entrance"
+  },
+  {
+    "stop_id": "st_market-rear",
+    "place_id": "pl_example-market",
+    "name": "Market Rear",
+    "landmark_hint": "loading area"
+  },
+  {
+    "stop_id": "st_terminal-bay",
+    "place_id": "pl_mock-terminal",
+    "name": "Terminal Bay",
+    "landmark_hint": "bay three"
+  }
+]

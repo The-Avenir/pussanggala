@@ -1,0 +1,5 @@
+{
+  "fx001": "included",
+  "fx002": ["rejected", "pending"],
+  "fx003": ["filtered", "included"]
+}
