@@ -26,6 +26,7 @@ reconciled: 2026-10-09
 | IDEA — scope and invariants | [idea-pusang-gala.md](idea-pusang-gala.md) | 0.5 | Draft; scope confirmed | 2026-10-09 |
 | PRD — features and acceptance | [prd-pusang-gala.md](prd-pusang-gala.md) | 0.5 | Draft | 2026-10-09 |
 | SDD — architecture/contracts | [sdd-pusang-gala.md](sdd-pusang-gala.md) | 0.5 | Draft | 2026-10-09 |
+| CONTRACTS — shared API/schema contracts v1 | [contracts-pusang-gala.md](contracts-pusang-gala.md) | 1.0 | Draft — awaiting T00 review | 2026-10-09 |
 | BUILD — stack/workflow/checks | [build-pusang-gala.md](build-pusang-gala.md) | 0.5 | Draft | 2026-10-09 |
 | LOG — decisions and evidence | [log-pusang-gala.md](log-pusang-gala.md) | 0.5 | Draft | 2026-10-09 |
 | TODO — four-member tasks and PR templates | [TODO.md](TODO.md) | 0.1 | Planning companion | 2026-10-09 |
