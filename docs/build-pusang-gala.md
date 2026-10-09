@@ -62,7 +62,13 @@ Do not load a model as base64 in JS. Verify native-readable paths and measure bo
 
 ## 3. Commands
 
-No package manifests exist. Do not claim any proposed command is runnable. Member 4 records actual scaffold/dev/build/lint commands in T40; Member 2 records core/type/test commands in T00/T26; Member 1 records extraction/build/report commands in T15; Member 3 records on-device model/eval commands in T30/T35.
+The root npm workspace exists (`packages/core` is the only workspace so far); the commands below are verified runnable. Member 4 records actual scaffold/dev/build/lint commands in T40; Member 2 records core/type/test commands in T00/T26; Member 1 records extraction/build/report commands in T15; Member 3 records on-device model/eval commands in T30/T35.
+
+| Command | Working directory | Prerequisite | Purpose |
+|---------|-------------------|--------------|---------|
+| `npm install` | repo root | Node.js >= 20 | Install workspace dependencies; produces `package-lock.json` |
+| `npm run typecheck` | repo root | `npm install` | Type-check all workspaces (`tsc`, no emit) |
+| `npm test` | repo root | `npm install` | Run workspace tests (`vitest run` in `packages/core`) |
 
 Required command entries once implemented: install, Android development build, release APK, typecheck, lint, core tests, corpus extraction/review/pack build, conversation evaluation and integrated device checks. Each entry states its working directory and prerequisites. Long-running services use the owner's terminal or a managed background session.
 
