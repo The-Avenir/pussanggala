@@ -1,0 +1,5 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": { "types": ["node"], "lib": ["ES2022", "DOM"] },
+  "include": ["*.ts", "*.mts", "../../../apps/mobile/src/assets/**/*.ts", "../../../apps/mobile/src/adapters/assets/**/*.ts"]
+}

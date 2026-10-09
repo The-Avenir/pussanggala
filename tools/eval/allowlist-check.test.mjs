@@ -20,6 +20,7 @@ import {
   checkContent,
   scanRoots,
   runSelfTests,
+  scanAssetInventory,
 } from "./allowlist-check.mjs";
 
 const LEAKS = {
@@ -112,5 +113,38 @@ describe("allowlist-check negative fixtures (clean tree passes)", () => {
   it("built-in self-tests pass", () => {
     const self = runSelfTests();
     assert.ok(self.ok, `self-tests failed: ${JSON.stringify(self.results)}`);
+  });
+});
+
+describe("explicit asset inventory includes binary inputs", () => {
+  const withTree = (create, check) => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "t41-inventory-"));
+    const assetDir = path.join(root, "apps/mobile/assets");
+    fs.mkdirSync(assetDir, { recursive: true });
+    try { create(assetDir, root); check(scanAssetInventory(root)); }
+    finally { fs.rmSync(root, { recursive: true, force: true }); }
+  };
+  it("rejects an unlisted SQLite input without needing to decode it", () => {
+    withTree(dir => fs.writeFileSync(path.join(dir, "raw-copy.sqlite"), Buffer.from([0, 1, 2])),
+      result => assert.equal(result.findings[0]?.rule, "asset-not-allowlisted"));
+  });
+  it("rejects raw-input paths even when the content has an allowed binary extension", () => {
+    withTree(dir => {
+      const raw = path.join(dir, "HOWTOGETTHEREPH_DATASET"); fs.mkdirSync(raw);
+      fs.writeFileSync(path.join(raw, "pack.sqlite"), Buffer.from([0]));
+    }, result => assert.equal(result.findings[0]?.rule, "asset-not-allowlisted"));
+  });
+  it("accepts the exact pack path and per-file glyph paths", () => {
+    withTree(dir => {
+      fs.mkdirSync(path.join(dir, "pack")); fs.writeFileSync(path.join(dir, "pack/pack.sqlite"), Buffer.from([0]));
+      fs.mkdirSync(path.join(dir, "map/glyphs/Fixture Font"), { recursive: true });
+      fs.writeFileSync(path.join(dir, "map/glyphs/Fixture Font/0-255.pbf"), Buffer.from([0]));
+    }, result => { assert.equal(result.filesScanned, 2); assert.deepEqual(result.findings, []); });
+  });
+  it("rejects an asset symlink/junction instead of silently skipping it", () => {
+    withTree((dir, root) => {
+      const target = path.join(root, "raw-source"); fs.mkdirSync(target);
+      fs.symlinkSync(target, path.join(dir, "source-link"), "junction");
+    }, result => assert.equal(result.findings[0]?.rule, "asset-symlink"));
   });
 });

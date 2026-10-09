@@ -30,6 +30,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { isPackagedPath, NON_SHIPPED_ASSET_DOCS } from "../../apps/mobile/src/assets/shipping-policy.mjs";
 
 /** Shippable trees, relative to the repo root. `howtogetthereph_dataset/` is intentionally absent. */
 export const SCAN_SUBDIRS = ["apps/mobile", "tools/map-pack", "data/seed"];
@@ -262,6 +263,32 @@ export function scanRoots(scanDirs) {
   return { filesScanned: files.length, findings };
 }
 
+/** Validate every asset input, including binaries the wording scan cannot read. */
+export function scanAssetInventory(repoRoot) {
+  const appRoot = path.join(repoRoot, "apps/mobile");
+  const assetRoot = path.join(appRoot, "assets");
+  const findings = [];
+  let filesScanned = 0;
+  const report = (file, rule) => findings.push({ file, line: 1, rule, snippet: "Asset input rejected by explicit packaging policy." });
+  const visit = (file) => {
+    let stat;
+    try { stat = fs.lstatSync(file); } catch { report(file, "asset-unreadable"); return; }
+    if (stat.isSymbolicLink()) { report(file, "asset-symlink"); return; }
+    if (stat.isDirectory()) {
+      let names;
+      try { names = fs.readdirSync(file); } catch { report(file, "asset-unreadable"); return; }
+      for (const name of names) visit(path.join(file, name));
+      return;
+    }
+    if (!stat.isFile()) { report(file, "asset-not-file"); return; }
+    filesScanned += 1;
+    const relative = path.relative(appRoot, file).split(path.sep).join("/");
+    if (!NON_SHIPPED_ASSET_DOCS.includes(relative) && !isPackagedPath(relative)) report(file, "asset-not-allowlisted");
+  };
+  if (fs.existsSync(assetRoot)) visit(assetRoot);
+  return { filesScanned, findings };
+}
+
 // ---------------------------------------------------------------------------
 // Built-in fixtures: positive (leak rejected) + negative (clean tree passes).
 // These run on every invocation so CI's single check command covers both.
@@ -461,7 +488,11 @@ function main() {
       `(${fs.existsSync(datasetDir) ? "present" : "absent"}).`,
   );
 
-  const { filesScanned, findings } = scanRoots(scanDirs);
+  const content = scanRoots(scanDirs);
+  const inventory = scanAssetInventory(repoRoot);
+  const filesScanned = content.filesScanned;
+  const findings = [...content.findings, ...inventory.findings];
+  console.log(`asset inventory: ${inventory.filesScanned} input file(s) checked against explicit paths (including binaries).`);
   console.log(
     `scanned ${filesScanned} file(s) in ${scanDirs.map((d) => path.relative(repoRoot, d)).join(", ")}.`,
   );
