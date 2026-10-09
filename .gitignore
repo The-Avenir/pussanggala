@@ -32,3 +32,6 @@ android/build
 !.env.example
 
 npm-debug.log*
+
+# model
+model/
