@@ -1,0 +1,394 @@
+{
+  "meta": {
+    "task": "T44",
+    "title": "SYNTHETIC save/restore/replan fixtures (PRD-F15/F21, T21/T25)",
+    "synthetic": true,
+    "notice": "All pack_ids and place/route/stop/leg/note IDs are fake SYNTHETIC placeholders. No real place names, no coordinates, no raw queries/chat, no GPS data (INV-3).",
+    "source_of_truth": "apps/mobile/src/store/tripStore.ts (revalidateRoute + TripStore save/delete controls)",
+    "requirements": ["PRD-F15", "PRD-F21"],
+    "invariants": ["INV-3"],
+    "known_schema_versions": [1],
+    "allowed_persisted_columns": [
+      "pack_id",
+      "schema_version",
+      "origin_place_id",
+      "destination_place_id",
+      "preference",
+      "route.leg_ids",
+      "route.stop_ids",
+      "route.place_ids",
+      "route.note_ids",
+      "current_step",
+      "started_at",
+      "saved_id",
+      "label",
+      "created_at",
+      "history_id",
+      "kind",
+      "at"
+    ],
+    "forbidden_columns": [
+      "raw_chat",
+      "transcript",
+      "query_text",
+      "gps_fix",
+      "latitude",
+      "longitude",
+      "coordinates",
+      "trace",
+      "firebase_uid",
+      "cloud_sync"
+    ]
+  },
+  "cases": [
+    {
+      "id": "T44-valid-restore",
+      "kind": "positive-restore",
+      "description": "SYNTHETIC: process-death restart restores a valid trip (IDs, preference, manual step) against the same pack.",
+      "active_trip": {
+        "pack_id": "SYNTHETIC-pack-v1",
+        "schema_version": 1,
+        "origin_place_id": "SYN-place-origin-A",
+        "destination_place_id": "SYN-place-dest-B",
+        "preference": "fewest-transfers",
+        "route": {
+          "leg_ids": ["SYN-leg-001", "SYN-leg-002"],
+          "stop_ids": ["SYN-stop-001", "SYN-stop-002", "SYN-stop-003"],
+          "place_ids": ["SYN-place-origin-A", "SYN-place-dest-B"],
+          "note_ids": ["SYN-note-001"]
+        },
+        "current_step": 1,
+        "started_at": "2026-10-01T08:00:00+08:00"
+      },
+      "pack": {
+        "pack_id": "SYNTHETIC-pack-v1",
+        "schema_version": 1,
+        "records": [
+          "SYN-leg-001",
+          "SYN-leg-002",
+          "SYN-stop-001",
+          "SYN-stop-002",
+          "SYN-stop-003",
+          "SYN-place-origin-A",
+          "SYN-place-dest-B",
+          "SYN-note-001"
+        ],
+        "retired_leg_ids": [],
+        "connection_continuous": true
+      },
+      "expect": {
+        "status": "valid"
+      }
+    },
+    {
+      "id": "T44-missing-record",
+      "kind": "replan",
+      "description": "SYNTHETIC: pack replacement dropped a route record, so restore requires replanning (record-exists rule).",
+      "active_trip": {
+        "pack_id": "SYNTHETIC-pack-v1",
+        "schema_version": 1,
+        "origin_place_id": "SYN-place-origin-A",
+        "destination_place_id": "SYN-place-dest-B",
+        "preference": "fewest-transfers",
+        "route": {
+          "leg_ids": ["SYN-leg-001", "SYN-leg-002"],
+          "stop_ids": ["SYN-stop-001", "SYN-stop-002", "SYN-stop-003"],
+          "place_ids": ["SYN-place-origin-A", "SYN-place-dest-B"],
+          "note_ids": ["SYN-note-001"]
+        },
+        "current_step": 0,
+        "started_at": "2026-10-01T08:00:00+08:00"
+      },
+      "pack": {
+        "pack_id": "SYNTHETIC-pack-v1",
+        "schema_version": 1,
+        "records": [
+          "SYN-leg-001",
+          "SYN-stop-001",
+          "SYN-stop-002",
+          "SYN-stop-003",
+          "SYN-place-origin-A",
+          "SYN-place-dest-B",
+          "SYN-note-001"
+        ],
+        "retired_leg_ids": [],
+        "connection_continuous": true
+      },
+      "expect": {
+        "status": "needs-replan",
+        "reason": "record_missing"
+      }
+    },
+    {
+      "id": "T44-retired-leg",
+      "kind": "replan",
+      "description": "SYNTHETIC: a leg is present but no longer eligible, so restore requires replanning (still-eligible rule).",
+      "active_trip": {
+        "pack_id": "SYNTHETIC-pack-v1",
+        "schema_version": 1,
+        "origin_place_id": "SYN-place-origin-A",
+        "destination_place_id": "SYN-place-dest-B",
+        "preference": "balanced",
+        "route": {
+          "leg_ids": ["SYN-leg-001", "SYN-leg-002"],
+          "stop_ids": ["SYN-stop-001", "SYN-stop-002", "SYN-stop-003"],
+          "place_ids": ["SYN-place-origin-A", "SYN-place-dest-B"],
+          "note_ids": ["SYN-note-001"]
+        },
+        "current_step": 0,
+        "started_at": "2026-10-01T08:05:00+08:00"
+      },
+      "pack": {
+        "pack_id": "SYNTHETIC-pack-v1",
+        "schema_version": 1,
+        "records": [
+          "SYN-leg-001",
+          "SYN-leg-002",
+          "SYN-stop-001",
+          "SYN-stop-002",
+          "SYN-stop-003",
+          "SYN-place-origin-A",
+          "SYN-place-dest-B",
+          "SYN-note-001"
+        ],
+        "retired_leg_ids": ["SYN-leg-002"],
+        "connection_continuous": true
+      },
+      "expect": {
+        "status": "needs-replan",
+        "reason": "record_retired"
+      }
+    },
+    {
+      "id": "T44-broken-connection",
+      "kind": "replan",
+      "description": "SYNTHETIC: records exist and are eligible but the saved sequence is no longer connected, so restore requires replanning.",
+      "active_trip": {
+        "pack_id": "SYNTHETIC-pack-v1",
+        "schema_version": 1,
+        "origin_place_id": "SYN-place-origin-A",
+        "destination_place_id": "SYN-place-dest-B",
+        "preference": "least-walk",
+        "route": {
+          "leg_ids": ["SYN-leg-001", "SYN-leg-002"],
+          "stop_ids": ["SYN-stop-001", "SYN-stop-002", "SYN-stop-003"],
+          "place_ids": ["SYN-place-origin-A", "SYN-place-dest-B"],
+          "note_ids": ["SYN-note-001"]
+        },
+        "current_step": 0,
+        "started_at": "2026-10-01T08:10:00+08:00"
+      },
+      "pack": {
+        "pack_id": "SYNTHETIC-pack-v1",
+        "schema_version": 1,
+        "records": [
+          "SYN-leg-001",
+          "SYN-leg-002",
+          "SYN-stop-001",
+          "SYN-stop-002",
+          "SYN-stop-003",
+          "SYN-place-origin-A",
+          "SYN-place-dest-B",
+          "SYN-note-001"
+        ],
+        "retired_leg_ids": [],
+        "connection_continuous": false
+      },
+      "expect": {
+        "status": "needs-replan",
+        "reason": "connection_broken"
+      }
+    },
+    {
+      "id": "T44-step-out-of-bounds",
+      "kind": "replan",
+      "description": "SYNTHETIC: saved manual step equals the leg count, so it is outside [0, leg_count) and restore requires replanning.",
+      "active_trip": {
+        "pack_id": "SYNTHETIC-pack-v1",
+        "schema_version": 1,
+        "origin_place_id": "SYN-place-origin-A",
+        "destination_place_id": "SYN-place-dest-B",
+        "preference": "fewest-transfers",
+        "route": {
+          "leg_ids": ["SYN-leg-001", "SYN-leg-002"],
+          "stop_ids": ["SYN-stop-001", "SYN-stop-002", "SYN-stop-003"],
+          "place_ids": ["SYN-place-origin-A", "SYN-place-dest-B"],
+          "note_ids": ["SYN-note-001"]
+        },
+        "current_step": 2,
+        "started_at": "2026-10-01T08:15:00+08:00"
+      },
+      "pack": {
+        "pack_id": "SYNTHETIC-pack-v1",
+        "schema_version": 1,
+        "records": [
+          "SYN-leg-001",
+          "SYN-leg-002",
+          "SYN-stop-001",
+          "SYN-stop-002",
+          "SYN-stop-003",
+          "SYN-place-origin-A",
+          "SYN-place-dest-B",
+          "SYN-note-001"
+        ],
+        "retired_leg_ids": [],
+        "connection_continuous": true
+      },
+      "expect": {
+        "status": "needs-replan",
+        "reason": "step_out_of_bounds"
+      }
+    },
+    {
+      "id": "T44-unknown-schema",
+      "kind": "replan",
+      "description": "SYNTHETIC: saved row uses a schema version this build does not understand, so restore requires replanning.",
+      "active_trip": {
+        "pack_id": "SYNTHETIC-pack-v1",
+        "schema_version": 99,
+        "origin_place_id": "SYN-place-origin-A",
+        "destination_place_id": "SYN-place-dest-B",
+        "preference": "fewest-transfers",
+        "route": {
+          "leg_ids": ["SYN-leg-001", "SYN-leg-002"],
+          "stop_ids": ["SYN-stop-001", "SYN-stop-002", "SYN-stop-003"],
+          "place_ids": ["SYN-place-origin-A", "SYN-place-dest-B"],
+          "note_ids": ["SYN-note-001"]
+        },
+        "current_step": 0,
+        "started_at": "2026-10-01T08:20:00+08:00"
+      },
+      "pack": {
+        "pack_id": "SYNTHETIC-pack-v1",
+        "schema_version": 1,
+        "records": [
+          "SYN-leg-001",
+          "SYN-leg-002",
+          "SYN-stop-001",
+          "SYN-stop-002",
+          "SYN-stop-003",
+          "SYN-place-origin-A",
+          "SYN-place-dest-B",
+          "SYN-note-001"
+        ],
+        "retired_leg_ids": [],
+        "connection_continuous": true
+      },
+      "expect": {
+        "status": "needs-replan",
+        "reason": "unknown_schema"
+      }
+    },
+    {
+      "id": "T44-pack-changed-negative",
+      "kind": "negative-incompatible-pack",
+      "description": "SYNTHETIC NEGATIVE fixture: installed pack changed, so the saved trip must offer replanning and must NOT silently render obsolete instructions.",
+      "active_trip": {
+        "pack_id": "SYNTHETIC-pack-v1",
+        "schema_version": 1,
+        "origin_place_id": "SYN-place-origin-A",
+        "destination_place_id": "SYN-place-dest-B",
+        "preference": "fewest-transfers",
+        "route": {
+          "leg_ids": ["SYN-leg-001", "SYN-leg-002"],
+          "stop_ids": ["SYN-stop-001", "SYN-stop-002", "SYN-stop-003"],
+          "place_ids": ["SYN-place-origin-A", "SYN-place-dest-B"],
+          "note_ids": ["SYN-note-001"]
+        },
+        "current_step": 0,
+        "started_at": "2026-10-01T08:25:00+08:00"
+      },
+      "pack": {
+        "pack_id": "SYNTHETIC-pack-v2",
+        "schema_version": 1,
+        "records": [
+          "SYN-leg-001",
+          "SYN-leg-002",
+          "SYN-stop-001",
+          "SYN-stop-002",
+          "SYN-stop-003",
+          "SYN-place-origin-A",
+          "SYN-place-dest-B",
+          "SYN-note-001"
+        ],
+        "retired_leg_ids": [],
+        "connection_continuous": true
+      },
+      "expect": {
+        "status": "needs-replan",
+        "reason": "pack_changed"
+      }
+    }
+  ],
+  "saved_routes": [
+    {
+      "saved_id": "SYN-saved-001",
+      "pack_id": "SYNTHETIC-pack-v1",
+      "origin_place_id": "SYN-place-origin-A",
+      "destination_place_id": "SYN-place-dest-B",
+      "preference": "fewest-transfers",
+      "route": {
+        "leg_ids": ["SYN-leg-001", "SYN-leg-002"],
+        "stop_ids": ["SYN-stop-001", "SYN-stop-002", "SYN-stop-003"],
+        "place_ids": ["SYN-place-origin-A", "SYN-place-dest-B"],
+        "note_ids": ["SYN-note-001"]
+      },
+      "label": "SYNTHETIC saved label 1 (user-typed, not a query)",
+      "created_at": "2026-10-01T08:30:00+08:00"
+    },
+    {
+      "saved_id": "SYN-saved-002",
+      "pack_id": "SYNTHETIC-pack-v1",
+      "origin_place_id": "SYN-place-dest-B",
+      "destination_place_id": "SYN-place-origin-A",
+      "preference": "least-walk",
+      "route": {
+        "leg_ids": ["SYN-leg-003"],
+        "stop_ids": ["SYN-stop-004"],
+        "place_ids": ["SYN-place-dest-B", "SYN-place-origin-A"],
+        "note_ids": []
+      },
+      "label": "SYNTHETIC saved label 2 (user-typed, not a query)",
+      "created_at": "2026-10-01T08:35:00+08:00"
+    }
+  ],
+  "history": [
+    {
+      "history_id": "SYN-hist-001",
+      "pack_id": "SYNTHETIC-pack-v1",
+      "origin_place_id": "SYN-place-origin-A",
+      "destination_place_id": "SYN-place-dest-B",
+      "preference": "fewest-transfers",
+      "route": {
+        "leg_ids": ["SYN-leg-001", "SYN-leg-002"],
+        "stop_ids": ["SYN-stop-001", "SYN-stop-002", "SYN-stop-003"],
+        "place_ids": ["SYN-place-origin-A", "SYN-place-dest-B"],
+        "note_ids": ["SYN-note-001"]
+      },
+      "kind": "looked_up",
+      "at": "2026-10-01T08:40:00+08:00"
+    },
+    {
+      "history_id": "SYN-hist-002",
+      "pack_id": "SYNTHETIC-pack-v1",
+      "origin_place_id": "SYN-place-dest-B",
+      "destination_place_id": "SYN-place-origin-A",
+      "preference": "least-walk",
+      "route": {
+        "leg_ids": ["SYN-leg-003"],
+        "stop_ids": ["SYN-stop-004"],
+        "place_ids": ["SYN-place-dest-B", "SYN-place-origin-A"],
+        "note_ids": []
+      },
+      "kind": "taken",
+      "at": "2026-10-01T09:00:00+08:00"
+    }
+  ],
+  "delete_checks": {
+    "delete_one_saved_id": "SYN-saved-001",
+    "expect_remaining_saved_ids": ["SYN-saved-002"],
+    "delete_unknown_saved_id": "SYN-saved-999",
+    "clear_all_history": true,
+    "expect_history_remaining": 0
+  }
+}
