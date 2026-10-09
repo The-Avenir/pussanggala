@@ -220,7 +220,7 @@ Exact GBNF/JSON grammar and output cap are settled by Member 3 in T30; this shap
 
 | Function | Task | Signature (summary) |
 |----------|------|---------------------|
-| `normalize` | T21 | `(text) => string` — lowercase, strip diacritics (ñ→n), punctuation→space, collapse spaces, expand `sta→santa`, `sto→santo`, `brgy→barangay`, `ave→avenue` |
+| `normalize` | T20 | `(text) => string` — lowercase, strip diacritics (ñ→n), punctuation→space, collapse spaces, expand `sta→santa`, `sto→santo`, `brgy→barangay`, `ave→avenue` |
 | `loadPack` | T20 | `(raw: RawPackTables) => Result<Pack, PackIssue[]>` |
 | `parse` | T21 | `(query, trip?) => Intent` rule baseline |
 | `resolve` | T21 | `(mention: PlaceMention, pack, trip?) => ResolveResult` |
