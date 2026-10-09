@@ -4,14 +4,14 @@
   "created_at": "2026-10-10T00:00:00Z",
   "input_sha256": "d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3",
   "pack_file": "pack.sqlite",
-  "pack_sha256": "9203234afd1b503186b607c28b16d758ae66fa8cd96a586a30c234a973f6bb10",
-  "pack_bytes": 851968,
+  "pack_sha256": "3859023cfd63573c1a25f63b567897a7b96a16f98a67b3dce9b6abf34c362e2d",
+  "pack_bytes": 811008,
   "assets": [
     {
       "path": "pack.sqlite",
       "kind": "pack",
-      "sha256": "9203234afd1b503186b607c28b16d758ae66fa8cd96a586a30c234a973f6bb10",
-      "bytes": 851968
+      "sha256": "3859023cfd63573c1a25f63b567897a7b96a16f98a67b3dce9b6abf34c362e2d",
+      "bytes": 811008
     }
   ],
   "manifest": {

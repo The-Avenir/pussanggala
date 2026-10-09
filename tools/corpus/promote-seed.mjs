@@ -8,6 +8,7 @@ import { build, PACK_FILE, COMPANION_FILE, sha256File } from "../pack-builder/bu
 import { checkCompanion, readPack } from "../pack-builder/acceptance.mjs";
 import { TABLES } from "../pack-builder/lib/spec.mjs";
 import { assertRegularFile, readSnapshotBytes, validateFrozenReference } from "./freeze-reference.mjs";
+import { scanRoots } from "../eval/allowlist-check.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const RUN_KEYS = ["pack_id", "region_id", "bbox", "created_at", "stale_after_days", "input_sha256", "input_posts", "answered_posts"];
@@ -91,7 +92,7 @@ export function promoteSeed(o = {}) {
       pack_sha256: packHash,
       notes: [
         "Allowlisted eligible tables validated against the built pack and frozen input.",
-        "No raw Reddit wording/usernames; unknowns stay unknown and conflicts stay recorded.",
+        "No raw source URLs, Reddit wording, usernames or dataset imports; offline provenance is retained.",
         "Human needs_review items remain quarantined; no automatic acceptance or physical verification.",
         "Source dates are post dates, not field-verification dates.",
       ],
@@ -103,12 +104,17 @@ export function promoteSeed(o = {}) {
       "eligible/*.json contains only pack tables; dispositions.json and run.json describe",
       "the same build. pack.manifest.json is the builder companion. pack.sha256 is the",
       "checksum of data/raw/out/pack.sqlite (the pack itself is not shipped here).", "",
-      "No raw Reddit wording/usernames. Unknowns remain unknown; conflicts are preserved.",
+      "No raw source URLs, Reddit wording, usernames or dataset imports.",
+      "Source IDs, post IDs, dates, snapshot hashes and comment indices retain offline provenance.",
+      "Raw permalinks remain in the build-input snapshot outside shipped assets.",
+      "Unknowns remain unknown; conflicts are preserved.",
       "Human needs_review items are not auto-accepted. Source dates are post dates.",
       "Ignored raw reference bytes are audit inputs only, outside shipped assets.", "",
       "Rebuild: node tools/corpus/run-pipeline.mjs",
       "Promote after a successful build: node tools/corpus/promote-seed.mjs", "",
     ].join("\n"));
+    const shipped = scanRoots([stage]);
+    if (shipped.findings.length) fail("seed shipped-content validation failed: " + shipped.findings.map((f) => `${path.relative(stage, f.file)}:${f.line} [${f.rule}]`).join(", "));
     const backup = path.join(work, "previous-seed");
     const hadSeed = existsSync(outDir);
     if (hadSeed) rename(outDir, backup);

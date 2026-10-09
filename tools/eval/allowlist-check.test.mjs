@@ -162,7 +162,7 @@ describe("explicit asset inventory includes binary inputs", () => {
   });
 });
 
-describe("source citation metadata keeps other leak rules", () => {
+describe("source citation metadata retains provenance without raw URLs", () => {
   const source = { kind: "reddit_thread", post_id: "abc123",
     url: "https://www.reddit.com/r/HowToGetTherePH/comments/abc123/fixture/" };
   const scan = (rows, relative = "data/seed/eligible/source.json") => {
@@ -174,9 +174,13 @@ describe("source citation metadata keeps other leak rules", () => {
       return scanRoots([root]).findings;
     } finally { fs.rmSync(root, { recursive: true, force: true }); }
   };
-  it("allows only matching thread provenance in the seed SOURCE table", () => {
-    assert.deepEqual(scan([source]), []);
+  it("rejects matching thread URLs in the seed table and app code", () => {
+    assert.ok(scan([source]).some(f => f.rule === "reddit-url"));
     assert.ok(scan([source], "apps/mobile/source.json").some(f => f.rule === "reddit-url"));
+  });
+  it("allows nullable URLs with IDs, dates and offline evidence locators", () => {
+    assert.deepEqual(scan([{ ...source, url: null, posted_at: "2026-10-10",
+      source_id: "src_fixture", snapshot_sha256: "f".repeat(64), comment_index: 0 }]), []);
   });
   it("rejects wrong post IDs, profile links, other kinds and malformed source JSON", () => {
     for (const row of [

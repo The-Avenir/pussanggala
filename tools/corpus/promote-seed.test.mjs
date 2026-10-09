@@ -9,6 +9,7 @@ import { build, COMPANION_FILE, PACK_FILE, sha256File } from "../pack-builder/bu
 import { DatabaseSync } from "../pack-builder/lib/sqlite.mjs";
 import { freezeReference } from "./freeze-reference.mjs";
 import { promoteSeed, parseArgs } from "./promote-seed.mjs";
+import { scanRoots } from "../eval/allowlist-check.mjs";
 
 const FX = join(dirname(fileURLToPath(import.meta.url)), "../pack-builder/fixtures");
 const readJson = (p) => JSON.parse(readFileSync(p, "utf8"));
@@ -59,6 +60,20 @@ test("real builder promotion uses actual companion, cleans stale destination and
   const old = tree(f.outDir);
   promoteSeed({ ...f, promotedAt: result.handoff.promoted_at });
   assert.deepEqual(tree(f.outDir), old);
+  assert.equal(readdirSync(join(f.rootDir, "data")).some((n) => n.startsWith(".seed-promote-")), false);
+  assert.deepEqual(scanRoots([f.outDir]).findings, [], "promoted fixtures meet the actual CI shipping policy");
+});
+
+test("INV-4 staging failure preserves the previous seed before publication", (t) => {
+  const f = fixture(t);
+  const before = tree(f.outDir);
+  const notePath = join(f.eligibleDir, "note.json");
+  const notes = readJson(notePath);
+  notes[0].body = "An authored synthetic planning note discusses jeep and station readiness for a fictional journey. ".repeat(5);
+  writeJson(notePath, notes);
+  build({ eligibleDir: f.eligibleDir, dispositions: f.dispositionsPath, run: f.runPath, rawDatasetPath: f.rawDatasetPath, outDir: dirname(f.packPath) });
+  assert.throws(() => promoteSeed(f), /seed shipped-content validation failed/);
+  assert.deepEqual(tree(f.outDir), before);
   assert.equal(readdirSync(join(f.rootDir, "data")).some((n) => n.startsWith(".seed-promote-")), false);
 });
 

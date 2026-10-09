@@ -194,6 +194,32 @@ test("privacy scan covers geometry properties, license, locator text and pack ma
   failsBuild({ run: { ...run, bbox: gram } }, "leak_ngram");
 });
 
+test("builder and post-build acceptance reject raw source URLs even when provenance matches", () => {
+  const permalink = JSON.parse(readFileSync(rawPath, "utf8")).find((p) => p.id === "fx001").permalink;
+  const tables = structuredClone(base);
+  tables.source.find((s) => s.source_id === "src_fx001").url = permalink;
+  failsBuild({ tables }, "leak_url");
+  const { packPath } = make();
+  tamper(packPath, `UPDATE source SET url = '${permalink.replace(/'/g, "''")}' WHERE source_id = 'src_fx001'`);
+  assert.ok(codes(accept(packPath)).includes("leak_url"));
+});
+
+test("pack privacy rejects raw URLs and imports in other text and escaped geometry", () => {
+  for (const [table, col, value, expected] of [
+    ["note", "body", "https://www.reddit.com/r/HowToGetTherePH/comments/fixture/synthetic/", "leak_url"],
+    ["note", "body", 'import raw from "howtogetthereph_dataset/ncr_routes.json";', "leak_raw_input"],
+    ["source", "license", "answer_count", "leak_raw_input"],
+    ["region", "boundary_geojson", '{"properties":{"url":"https://www.reddit\\u002ecom/r/fixture"}}', "leak_url"],
+  ]) {
+    const tables = structuredClone(base);
+    tables[table][0][col] = value;
+    const issues = leakScan(tables, rawPath);
+    assert.ok(issues.some((i) => i.code === expected), `${table}.${col}`);
+    assert.ok(!JSON.stringify(issues).includes(value), "reports expose only metadata");
+    failsBuild({ tables }, expected);
+  }
+});
+
 test("bare source author identities are rejected without rejecting unrelated substrings", () => {
   const posts = JSON.parse(readFileSync(rawPath, "utf8"));
   posts[0].author = "synthetic_author";

@@ -207,6 +207,18 @@ const DEFINITIONS = [
     },
   },
   {
+    name: "planted raw Reddit URL in a source",
+    group: "source-content",
+    expect: "leak_url",
+    apply(t) { t.source[0].url = "https://www.reddit.com/r/HowToGetTherePH/comments/fixture/synthetic_title/"; },
+  },
+  {
+    name: "planted raw dataset import in a note",
+    group: "source-content",
+    expect: "leak_raw_input",
+    apply(t) { t.note[0].body = 'import raw from "howtogetthereph_dataset/ncr_routes.json";'; },
+  },
+  {
     name: "planted u/ handle in a note",
     group: "source-content",
     expect: "leak_handle",

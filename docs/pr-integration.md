@@ -20,7 +20,7 @@ Expo dependency/plugin checks, clean Android prebuild and generated offline conf
 
 ## Corpus compatibility
 
-The seed SOURCE table retains documented thread citation URLs. The shipped-content guard permits only canonical matching post links in that table, while rejecting copied wording, handles, wrong post IDs, profile URLs, other fields and links in app code. Regression tests cover those boundaries. The synthetic T41 builder fixture now supplies the actual fixture snapshot hash for thread locators; the strengthened builder remains unchanged.
+The initial integration allowed canonical thread citation URLs in the seed SOURCE table. The INV-4 fix removes that exception: Reddit `source.url` is null, and all raw Reddit URLs are rejected in shipped trees and built packs. IDs, dates, snapshot hashes and comment indices retain offline provenance; permalinks stay in build inputs. Regression tests cover the shipping boundary and publication rollback. The synthetic T41 builder fixture continues to supply the actual snapshot hash for thread locators. Current corpus validation and pack identity are in [T16 acceptance](../tools/corpus/reports/t16-acceptance.md).
 
 ## Remaining integration
 

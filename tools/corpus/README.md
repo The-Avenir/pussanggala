@@ -4,7 +4,7 @@
 
 **Tasks:** T10–T16 (audit → extract → evidence → places → eligible → pack → acceptance → seed).
 
-Guardrails (BUILD §5): no raw Reddit wording or usernames in outputs (INV-4);
+Guardrails (BUILD §5): no raw source URLs, Reddit wording, usernames or dataset imports in shipped outputs (INV-4);
 no guessing missing walks, fares, hours or reply relationships; unknown values
 stay unknown, source-post dates labelled accurately, suspended/retired services
 excluded (INV-5); raw content never copied into app fixtures.
@@ -18,8 +18,9 @@ node tools/corpus/run-pipeline.mjs
 Steps: freeze pre-cleaned reference → T10 audit → T11 extract → T12 evidence →
 T13 places → T14 eligible → T15 pack build → T16 acceptance → promote `data/seed/`.
 
-T12 part B (`ai-apply.mjs`) is skipped until `ai-verdicts.json` is re-sampled against
-the current T11 candidate IDs.
+The pipeline regenerates heuristic T12 part-B verdicts for the current T11 IDs
+and applies quarantines. This deterministic screen is not independent AI evidence
+review; designated human decisions remain pending.
 
 ## Individual commands
 
@@ -43,7 +44,13 @@ node tools/corpus/progress.mjs           # local progress bars
 | `howtogetthereph_dataset/` | tracked | Working raw input |
 | `data/reference/howtogetthereph_dataset-precleaned/` | README+checksums | Frozen pre-clean copy (large files local) |
 | `data/raw/` | ignored | Intermediates + pack.sqlite |
-| `data/seed/` | tracked | Cleaned eligible pack inputs (no raw wording) |
+| `data/seed/` | tracked | Cleaned eligible pack inputs (no raw URLs, wording, usernames or imports) |
+
+Reddit `source.url` is null in eligible records and the built pack. Source IDs,
+post IDs, dates, snapshot hashes and comment indices retain offline provenance;
+raw permalinks remain in the build-input snapshot. The builder rejects leaks,
+promotion runs INV-4 on staged files before replacing the seed, and the pipeline
+finishes with the same shipped-tree check used by Member 4 CI.
 
 ## Tests
 

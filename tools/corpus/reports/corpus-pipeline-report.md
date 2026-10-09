@@ -2,7 +2,7 @@
 
 **Snapshot** `d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3` (`howtogetthereph_dataset/ncr_routes.json`)
 **Scope** T10–T16 (audit → extract → evidence → places → eligible → pack → acceptance → seed)
-**Status** Pipeline and technical acceptance completed on `feat/t14-t16-seed-handoff` via `node tools/corpus/run-pipeline.mjs`; validated parent commit `e9318bd8c55344636619b99a6753ea134e343968`.
+**Status** Pipeline and technical acceptance completed on `feat/t14-t16-seed-handoff` via `node tools/corpus/run-pipeline.mjs`; INV-4 raw-URL shipping fix validated on base `44fe8657f7e9a1304cf1f58642a4d0524f2b26c3`.
 
 T11's grounded extractor produced **5,713 candidates** across 2,186 answered posts, each with one outcome.
 T12 part A (deterministic): **5,583 `second_passed` / 130 `needs_review` / 0 rejected / 0 accepted**.
@@ -12,9 +12,9 @@ T14 uses the effective review state including `ai_override`, so quarantined cand
 
 Final pack: **134 legs / 69 routes / 59 stops / 91 places / 21 walk links / 0 fare reports / 0 hours reports / 276 notes / 1,719 provenance links**.
 Answered-post dispositions: **405 included / 91 pending / 497 rejected / 1,193 filtered = 2,186**.
-Pack SHA-256: `9203234afd1b503186b607c28b16d758ae66fa8cd96a586a30c234a973f6bb10`; size **851,968 bytes**.
+Pack SHA-256: `3859023cfd63573c1a25f63b567897a7b96a16f98a67b3dce9b6abf34c362e2d`; size **811,008 bytes**.
 Parent runtime: Node `v24.5.0` / SQLite writer `3.50.3`. Schema SQL is normalized to LF; byte reproducibility requires the same source and SQLite writer runtime.
-Acceptance: **22/22 PASS** (integrity 3/3, invalid-record 12/12, ambiguity 4/4, source-content 3/3).
+Acceptance: **24/24 PASS** (integrity 3/3, invalid-record 12/12, ambiguity 4/4, source-content 5/5).
 Final reproduction and validation evidence: [T16 acceptance](t16-acceptance.md).
 
 Cleaned handoff: `data/seed/`. Pre-clean reference: `data/reference/howtogetthereph_dataset-precleaned/`.

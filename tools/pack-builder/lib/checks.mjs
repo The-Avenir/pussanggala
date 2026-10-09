@@ -4,6 +4,7 @@
 
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
+import { REDDIT_URL_RE, RAW_IMPORT_RE, RAW_FILE_RE, RAW_SCHEMA_RE } from "../../eval/allowlist-check.mjs";
 import {
   DATE_PREFIX_RE, HHMM_RE, MANIFEST_COLS, SCHEMA_VERSION, STABLE_ID_RE, TABLES,
   TABLE_BY_KIND, TABLE_BY_NAME, normalizeAlias,
@@ -36,6 +37,8 @@ export const ISSUE_GROUP = {
   source_post_not_included: "source-content",
   leak_ngram: "source-content",
   leak_handle: "source-content",
+  leak_url: "source-content",
+  leak_raw_input: "source-content",
   sqlite_integrity: "integrity",
   sqlite_foreign_key: "integrity",
   schema_version: "integrity",
@@ -391,7 +394,7 @@ export function loadSourceNgrams(rawDatasetPath) {
 export function leakScan(tables, rawDatasetPathOrGrams, manifest) {
   const grams = rawDatasetPathOrGrams instanceof Set ? rawDatasetPathOrGrams : loadSourceNgrams(rawDatasetPathOrGrams);
   const issues = [];
-  const scan = (table, rid, col, v, permalink = false) => {
+  const scan = (table, rid, col, v, rawSourceUrl = false) => {
     if (typeof v !== "string") return;
     const usernames = grams.usernames ?? new Set();
     const lower = v.toLowerCase();
@@ -406,13 +409,12 @@ export function leakScan(tables, rawDatasetPathOrGrams, manifest) {
       return false;
     });
     if (HANDLE_RES.some((re) => re.test(v)) || PROFILE_RE.test(v) || hasAuthor) issues.push(issue("leak_handle", table, rid, `${col} contains a username/handle`));
-    // A Reddit thread's actual permalink slug is metadata; other text/JSON/URLs are scanned.
-    if (!permalink) {
-      for (const g of ngrams(tokenize(v))) {
-        if (grams.has(g)) {
-          issues.push(issue("leak_ngram", table, rid, `${col} shares a ${LEAK_NGRAM}-word sequence with source text`));
-          break;
-        }
+    if (rawSourceUrl || REDDIT_URL_RE.test(v)) issues.push(issue("leak_url", table, rid, `${col} contains a raw source URL`));
+    if (RAW_IMPORT_RE.test(v) || RAW_FILE_RE.test(v) || RAW_SCHEMA_RE.test(v)) issues.push(issue("leak_raw_input", table, rid, `${col} references raw build input`));
+    for (const g of ngrams(tokenize(v))) {
+      if (grams.has(g)) {
+        issues.push(issue("leak_ngram", table, rid, `${col} shares a ${LEAK_NGRAM}-word sequence with source text`));
+        break;
       }
     }
   };
@@ -422,7 +424,7 @@ export function leakScan(tables, rawDatasetPathOrGrams, manifest) {
         const v = row?.[col];
         if (!["text", "id"].includes(spec.t) || typeof v !== "string") continue;
         const rid = row[t.pk];
-        scan(t.name, rid, col, v, t.name === "source" && col === "url" && row.kind === "reddit_thread" && /^https?:\/\/(?:www\.)?reddit\.com\/r\/[^/]+\/comments\/[^/]+(?:\/|$)/i.test(v));
+        scan(t.name, rid, col, v, t.name === "source" && col === "url" && row.kind === "reddit_thread");
         if (col === "geojson" || col === "boundary_geojson") {
           // JSON escapes must not hide copied words or handles in feature properties.
           const scanJson = (value) => {
