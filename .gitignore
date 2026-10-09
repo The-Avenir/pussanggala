@@ -1,3 +1,13 @@
 # SPINE generated artifact
 cockpit.html
 
+# SPINE local pointers (per-machine, run scripts/init.ps1 or init.sh locally)
+# These contain absolute local_fallback paths - do not commit for team repos
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.cursor/rules/spine.mdc
+.windsurf/rules/spine.md
+.kiro/steering/spine.md
+.github/copilot-instructions.md
+
