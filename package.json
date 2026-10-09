@@ -1,8 +1,11 @@
-{
+﻿{
   "name": "pusang-gala",
   "private": true,
   "workspaces": [
-    "packages/core"
+    "packages/core",
+    "apps/mobile/src/conversation",
+    "apps/mobile/src/ai",
+    "tools/eval/conversation"
   ],
   "engines": {
     "node": ">=20"

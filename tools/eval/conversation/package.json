@@ -10,7 +10,7 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@pusang-gala/core": "0.0.0"
+    "@pusang-gala/core": "*"
   },
   "devDependencies": {
     "@types/node": "26.6.4",
