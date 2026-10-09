@@ -3,7 +3,7 @@ spine_type: IDEA
 spine_version: 0.3.0
 project: Pusang Gala
 slug: pusang-gala
-doc_version: 0.4
+doc_version: 0.5
 status: Draft
 owner: Salvador Vincent Javier
 created: 2026-10-09
@@ -13,89 +13,89 @@ reconciled: 2026-10-09
 
 # Idea Brief: Pusang Gala
 
----
+**Scope confirmed by the owner on 2026-10-09 after grilling rounds G01–G27.** This replaces the earlier Cubao–Masinag corridor MVP and optional-AI release split. Implementation and device feasibility remain unproven.
 
 ## 1. One-line summary
 
-Pusang Gala is an offline, conversational commute guide with a cat mascot (*pusa*). A Filipino commuter asks "Paano pumunta sa…?" in Taglish and gets the right jeep, signboard, boarding point, transfer, alighting landmark and fare range. It works with no mobile data.
+Pusang Gala is an offline Android commute app for NCR. A commuter asks a short Taglish or English question and receives source-backed route cards, a map and a grounded local-AI conversation with a friendly cat persona.
 
 ## 2. The problem
 
-Most route apps don't cover informal transit: jeepneys, UV Express, tricycles and provincial buses. The knowledge needed to ride them is tacit:
+Commuting instructions often depend on signboards, boarding landmarks, transfers and informal services that a rider does not know. Forum answers contain useful knowledge, but are difficult to retrieve during a trip without reliable data. They can also be incomplete, contradictory or old.
 
-- the text on the signboard
-- unofficial stops
-- landmarks such as "baba sa may Jollibee"
-- current fares
-
-That knowledge lives in people's heads and in forum threads like r/HowToGetTherePH (about 297k members, an unverified secondary figure).
-
-The current workaround is to post a question and wait hours for an answer, or to ask strangers on the street. Both fail when the commuter has no data, rations prepaid load, or is in a dead zone, which is exactly when they need directions. Cloud chat assistants and online route planners fail in the same conditions. Evidence for this is in [reference/pusang-gala-connectivity-evidence.md](reference/pusang-gala-connectivity-evidence.md) and [reference/pusang-gala-competitor-analysis.md](reference/pusang-gala-competitor-analysis.md).
+The supplied Reddit dataset is input evidence, not an established transit graph. The app must distinguish what the sources support from what remains unknown. The reference [connectivity evidence](reference/pusang-gala-connectivity-evidence.md) and [competitor analysis](reference/pusang-gala-competitor-analysis.md) motivate the problem; their market and demand claims are not measured product outcomes.
 
 ## 3. Who it is for
 
-| User | What they need | How they work around it today |
-|------|----------------|-------------------------------|
-| First-time rider on a corridor (student, new worker, visitor) | Which vehicle and signboard to take, where to board and alight, the fare | Posts on r/HowToGetTherePH, asks strangers, guesses |
-| Commuter without reliable data | Directions that work offline | Screenshots old answers, or memorizes the route beforehand |
-| Regular commuter facing a change (new destination, disruption) | Alternatives on routes they already know, plus local tips | Asks friends or family; trial and error |
+| User | Need |
+|------|------|
+| First-time NCR commuter | Understand where to board, transfer and alight, with reported fares and uncertainty |
+| Commuter without reliable data | Ask questions, read cards and use maps and foreground GPS offline |
+| Returning user | Reuse saved routes and restore an interrupted active journey |
+| Team corpus reviewer | Resolve ambiguous extracted connections and incomplete instructions before publication |
 
-## 4. Out of scope
+## 4. Confirmed release boundary
 
-These are explicit non-goals. None of them may appear in the PRD, the SDD or the code without a change record.
+The judged hackathon deliverable is a working app with these integral parts:
 
-Confirmed by the owner on 2026-10-09.
+- On-device retrieval of structured route facts and paraphrased notes, deterministic rule-based routing, and required local-AI conversation.
+- Short journey-focused exchanges: change endpoints or preferences, ask for alternatives or return journeys, clarify boarding, fares and transfers.
+- Deterministic cards shown before the streamed grounded explanation; a schematic for every supported itinerary.
+- Offline NCR map, mapped journey points, foreground GPS, nearby-origin suggestions requiring confirmation, and manual step progression.
+- Saved routes, local history and active-trip recovery through stable record IDs and pack compatibility checks.
+- Honest handling of ambiguity, unsupported journeys, old information, conflicts, unknown fares and unknown operating hours.
 
-- Coverage outside Metro Manila and Rizal in this phase. Within that area, routes are answered only where a corridor has been verified; the first is Cubao ↔ Antipolo/Masinag. Everywhere else the app says it has no data yet.
-- Live traffic, vehicle tracking, live ETAs or queue lengths.
-- Background or screen-off location tracking, GPS trace recording, and automatic "get off now" alerts.
-- Live location sharing with other people.
-- Turn-by-turn walking navigation to arbitrary addresses.
-- Free-form AI travel advice that isn't tied to a verified route.
-- Automatic ingestion of forum or Reddit content into the shipped product. Community data is curation input only.
-- Using Google Maps data (tiles, places, routes) as a data source.
-- Mandatory accounts, and any server the core experience depends on. Accounts are optional and come later (see PRD); the core never needs sign-in.
-- Showing unreviewed community submissions to other users.
-- Speech input (speech-to-text). Spoken output is deferred, not excluded (see PRD).
-- iOS in this phase.
+Both endpoints must be inside NCR. Supported places come from the corpus and aliases; arbitrary addresses require selection of a supported nearby landmark. The app does not invent the remaining walk. Geographic scope does not promise every NCR journey is represented.
 
-### 4.1 Invariants (must-never rules)
+Process all **2,186 NCR posts with stored comments** in `howtogetthereph_dataset/ncr_routes.json`. Automated extraction and a second AI pass produce facts, paraphrases and evidence for review. A designated team member resolves remaining ambiguities. Only usable records pass into the pack, and the build reports coverage and rejection counts. There is no predetermined route-count target and no field-verification requirement or verified badge.
 
-The owner chose INV-1 to INV-4 on 2026-10-09 and added INV-5 to INV-7 the same day. Each one traces to the place it is enforced and to a negative test that tries to break it (`INDEX` §3.1).
+Different threads may contribute to an itinerary only where records support boarding, alighting and transfer connections. Source review establishes eligibility for routing; it does not prove that a service currently operates.
 
-| ID | The product must never | Why | Status |
-|----|------------------------|-----|--------|
-| INV-1 | Invent a route. Every ride leg, walk link, stop, signboard and fare shown to the user must exist in the installed verified pack. When none exists, the product says it has no data instead of guessing. | A wrong route strands a real person; trust is the product | Active |
-| INV-2 | Require a network connection for the core experience (asking, resolving places, routing, step cards, persona text, the offline map, GPS position) once setup is complete, or silently fall back to a cloud service. | The target user has no data exactly when they need help | Active |
-| INV-3 | Send the user's location, queries or trip details off the device unless the user explicitly opts in. | Privacy; Data Privacy Act exposure; the offline promise | Active |
-| INV-4 | Ship or commit Reddit comment text or Reddit usernames. Only extracted facts plus a source link may be kept. | Reddit's terms and copyright in the wording; DPA risk from identifiable users | Active |
-| INV-5 | Present a stale fare, an unverified leg, or an old GPS fix as current. Every fact shows its age or status, and stale data is labelled. | Fares change (the 2026-09-28 increase, a possible rollback); old fixes mislead | Active |
-| INV-6 | Silently pick a place when a match is ambiguous. The product always asks the user to choose. | A wrong "SM" sends a person to the wrong city | Active |
-| INV-7 | Put route facts (legs, stops, signboards, fares) into model weights. Fine-tuning data contains no real route facts; facts live only in the pack. | Stale facts baked into weights can't be updated or traced; protects INV-1 | Active |
+## 4.1 Deferred and excluded work
 
-Status vocabulary: `Active`, `Retired`.
+- Accounts, cloud sync, user submissions, confirmations and voice output are deferred; no release number or date is promised for them.
+- Maintenance ownership and cadence are deferred at the owner's request.
+- Visual design follows functional validation. Figma is WIP and does not define the final UI.
+- Departure scheduling, arrival predictions, live traffic and live vehicle tracking are excluded from this release. Reported operating hours may answer time-related questions with dates and uncertainty.
+- Background/screen-off tracking, GPS traces, automatic boarding/alighting detection, automatic step advancement and arrival alerts are deferred.
+- Arbitrary-address walking navigation, automatic transfer creation from proximity, free-form unrelated chat, Google Maps data as a source, iOS and speech input are excluded.
+- Raw Reddit wording and usernames are excluded from the app, runtime retrieval pack and training assets. The supplied dataset remains an off-device build input.
+- The core requires no account, network or cloud-AI fallback.
+
+## 4.2 Invariants (must-never rules)
+
+| ID | The product must never | Status |
+|----|------------------------|--------|
+| INV-1 | Invent a route or add a fact absent from the installed source-backed pack. All boardings, alightings and transfers require supported records; an incomplete itinerary is withheld. | Active |
+| INV-2 | Require network for asking, retrieval, routing, conversation, cards, map rendering, GPS or restoration after asset setup; silently use cloud AI. | Active |
+| INV-3 | Persist raw conversation text or GPS traces, or transmit user location, queries or trips. This release has no upload path. | Active |
+| INV-4 | Bundle raw Reddit wording or usernames in the app, runtime pack or training set. The user-supplied repository dataset is curation input only and is excluded from packaged assets. | Active |
+| INV-5 | Present source-backed reports as field-verified/current, conceal age or conflict, turn a missing fare into zero, show an old GPS fix as current, or route through suspended/retired services. | Active |
+| INV-6 | Silently select an ambiguous place or GPS-derived origin. Ask the user to choose or confirm. | Active |
+| INV-7 | Train or fine-tune the runtime model on real route facts. Route knowledge belongs in the replaceable retrieval pack. | Active |
+
+Source dates are labelled as post dates, not verification dates. Older information remains usable with warnings. Fare/time comparisons state their evidence limits; options with unknown values remain visible.
 
 ## 5. Success looks like
 
-- A first-time rider in airplane mode asks a Taglish question about the pilot corridor and gets a correct, field-verified answer: signboard, boarding point, alighting landmark and fare range.
-- When the product doesn't know, it says so or asks a clarifying question. It never picks a wrong place or invents a leg.
-- Testers describe the cat persona as friendly and "human-sounding", and it never obscures or contradicts the route facts.
-- People who would otherwise post on r/HowToGetTherePH would use it instead.
+Judges can enter unseen questions about supported NCR journeys in airplane mode, ask follow-ups, see actual route cards and a streamed local-AI explanation, use the map/GPS, save a route, and recover a journey after restart. Ambiguous places prompt clarification; unsupported or incomplete journeys receive an honest explanation.
+
+A temporary inference failure leaves route cards usable. A rules-only demo on the reference phone does **not** satisfy the release requirement.
 
 ## 6. Constraints
 
-| Kind | Constraint | Source |
-|------|-----------|--------|
-| Time | No fixed deadline. Ship as fast as possible, with quality gates instead of time-boxes, to avoid rushed or hallucinated work | Owner, 2026-10-09 |
-| Platform | Android first. **Reach as many phones as possible.** Reference phone: 4 GB RAM, 64 GB storage, a budget MediaTek Helio-class chip (exact model unknown). Everything runs on-device | Owner, 2026-10-09 |
-| Platform | On-device language model, **strictly fewer than 1B parameters** (hard limit). Model choice is delegated to the agent | Owner, 2026-10-09 |
-| Coverage | **Metro Manila + Rizal** map coverage. Route data grows one verified corridor at a time, starting with Cubao ↔ Antipolo/Masinag, which someone must physically verify | Owner, 2026-10-09 |
-| Data | Reddit (r/HowToGetTherePH) is curation input only. Google Maps is not a data source (Google Maps Platform terms §3.2.3 restrict scraping and caching) | Owner, 2026-10-09; https://cloud.google.com/maps-platform/terms |
-| Team | Implementation is delegated to AI coding agents. Any stack is acceptable if agents know it and it is verified to work end to end | Owner, 2026-10-09 |
-| Cost | Free and open source preferred; the team may use any available tech. A commercial launch is possible after the hackathon. **License rule (relaxed 2026-10-09):** any license the team can comply with at startup scale is acceptable, including revenue-threshold licenses (e.g. LFM Open License, free under $10M/yr) and use-policy licenses (Gemma). Only licenses that forbid commercial use outright (CC-BY-NC, research-only) are avoided for anything shipped | Owner, 2026-10-09 |
+| Kind | Constraint |
+|------|-----------|
+| Delivery | Judged hackathon app; no fixed deadline was supplied. Build against quality gates rather than an invented six-week schedule. |
+| Platform | React Native + Expo Android development build and standalone APK. Exact dependency compatibility must be tested and pinned. |
+| Reference device | Previously specified 4 GB RAM / 64 GB storage, MediaTek Helio-class; record exact model, ABI and Android version when benchmarking. |
+| AI | Strictly fewer than 1B parameters. Model choice is delegated to measured evaluation; working AI is required on the reference phone. |
+| Compatibility | Unsupported phones receive a clearly explained fallback and the other usable features. Do not advertise an untested Android/RAM minimum. |
+| Response | Cards first, then streamed explanation. Initial complete warm-response target: 10 seconds, subject to device measurement. |
+| Assets | Bundle the corpus, model, map/style/glyphs/sprites for the judged APK. No team download server is required. |
+| Licensing | Free/open assets preferred; licences the team can comply with at startup scale are eligible. Avoid assets that prohibit commercial use outright. Record model, source and map attribution before redistribution. |
+| Team workflow | Four members, with ownership and dependencies in [TODO.md](TODO.md). Every task uses a branch and PR; no direct work on `main`. |
 
-## 7. Open questions
+## 7. Execution prerequisites
 
-Each question is mirrored in `LOG` §2.
-
-- `TBD(owner)` Q14: Who approves community submissions before they reach the pack (team review, or a confirmation threshold plus spot checks)? This blocks the moderation part of community contributions.
+Scope decisions are resolved. Exact device details, dependency versions, measured model performance, map format support and the designated reviewer name are execution prerequisites tracked in [LOG](log-pusang-gala.md) and [TODO](TODO.md). They do not reintroduce deferred product features.
