@@ -210,11 +210,12 @@ Bounds: ≤ 12 cards, ≤ 3 alternatives, ≤ 8 notes (cards' own notes first, t
 interface ExplanationUnit {
   kind: 'summary' | 'step' | 'comparison' | 'hours' | 'caveat' | 'clarify' | 'redirect';
   cardRef?: string;   // must be in allowedCardIds
+  inserts?: string[]; // optional canonical statement IDs (INV-1); model prose must not invent facts
   text: string;       // ≤ 280 chars; may not author boarding/alighting/transfer instructions
 }
 ```
 
-Exact GBNF/JSON grammar and output cap are settled by Member 3 in T30; this shape is the core-side validation target.
+Exact GBNF/JSON grammar and output cap are settled by Member 3 in T30; this shape is the core-side validation target. Streaming validation (T33) may require `inserts` when the unit conveys factual step/fare/hours content.
 
 ## 10. Core API (`@pusang-gala/core`)
 

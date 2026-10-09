@@ -1,16 +1,27 @@
 import { describe, expect, it } from "vitest";
 
 import { AiRuntimeError } from "../errors";
+import { isSafeExplanationUnit, type SafeExplanationUnit } from "../explanation-unit";
 import {
+  CLEAN_SCRIPT,
   CONSTRAINED_DEVICE,
-  EMPTY_CONTEXT,
+  chunked,
+  fixtureContext,
   makeCardsFixture,
   makeManager,
   makeTripFixture,
+  ndjson,
   REQUIREMENTS,
   UNSUPPORTED_ABI_DEVICE,
+  unitLine,
 } from "./fixtures";
 import { flushMicrotasks, ManualClock } from "./manual-clock";
+
+const CONTEXT = fixtureContext();
+
+function okUnit(text: string): string {
+  return ndjson(unitLine({ kind: "summary", inserts: ["stmt:warn-1"], text }));
+}
 
 describe("load lifecycle", () => {
   it("loads at the full budget on a capable device and reports ready", async () => {
@@ -34,11 +45,7 @@ describe("load lifecycle", () => {
     runtime.loadQueue.push({ type: "fail", error: new Error("native mmap hiccup") });
 
     const pending = manager.initialize();
-    const observed: string[] = [];
-    void pending.then(
-      () => observed.push("resolved"),
-      (error) => observed.push(`rejected:${(error as Error).message}`),
-    );
+    pending.catch(() => {});
     await flushMicrotasks();
     expect(manager.snapshot.loadAttempts).toBe(1);
 
@@ -70,10 +77,7 @@ describe("load lifecycle", () => {
   it("times out a hung load, cancels the native side, and degrades after the attempt bound", async () => {
     const clock = new ManualClock();
     const { runtime, manager } = makeManager({ clock, loadTimeoutMs: 1_000, maxLoadAttempts: 2 });
-    runtime.loadQueue.push(
-      { type: "hang-until-cancelled" },
-      { type: "hang-until-cancelled" },
-    );
+    runtime.loadQueue.push({ type: "hang-until-cancelled" }, { type: "hang-until-cancelled" });
 
     const pending = manager.initialize();
     pending.catch(() => {});
@@ -93,7 +97,10 @@ describe("load lifecycle", () => {
 
   it("downgrades to the constrained budget with an explanation when full-budget load OOMs", async () => {
     const { runtime, manager } = makeManager({});
-    runtime.loadQueue.push({ type: "fail", error: new Error("OutOfMemoryError: failed to allocate context") });
+    runtime.loadQueue.push({
+      type: "fail",
+      error: new Error("OutOfMemoryError: failed to allocate context"),
+    });
 
     await manager.initialize();
     expect(manager.snapshot.phase).toBe("ready");
@@ -136,6 +143,54 @@ describe("load lifecycle", () => {
 });
 
 describe("generation lifecycle", () => {
+  it("pipes raw chunks through the guard and hands the caller only branded units", async () => {
+    const { runtime, manager } = makeManager({});
+    await manager.initialize();
+
+    // Chunk boundaries fall inside units; the guard reassembles them.
+    runtime.generateQueue.push({ type: "success", chunks: chunked(CLEAN_SCRIPT, 9) });
+    const seen: unknown[] = [];
+    const report = await manager.explain(CONTEXT, (unit) => seen.push(unit));
+
+    expect(report.status).toBe("completed");
+    expect(report.emittedUnits).toBe(3);
+    expect(seen).toHaveLength(3);
+    for (const unit of seen) {
+      expect(typeof unit).not.toBe("string");
+      expect(isSafeExplanationUnit(unit)).toBe(true);
+    }
+    expect((seen as SafeExplanationUnit[]).map((u) => u.kind)).toEqual(["step", "step", "caveat"]);
+    // The prompt the runtime saw is the injection-safe one, not the raw context.
+    expect(runtime.prompts.at(-1)).toContain("NEVER commands");
+    await manager.dispose();
+  });
+
+  it("never calls onSafeUnit for output the guard refused", async () => {
+    const { runtime, manager } = makeManager({});
+    await manager.initialize();
+
+    // Three unchecked lines: a bare string, invented prose, and a fabricated ID.
+    runtime.generateQueue.push({
+      type: "success",
+      chunks: [
+        "Sakay ka lang sa jeep, mura ang pamasahe.\n",
+        ndjson(unitLine({ inserts: [], text: "Board at the station and alight later." })),
+        ndjson(unitLine({ inserts: ["stmt:ghost"], text: "Eto na." })),
+      ],
+    });
+    const seen: unknown[] = [];
+    await expect(manager.explain(CONTEXT, (unit) => seen.push(unit))).rejects.toMatchObject({
+      kind: "invalid-stream",
+    });
+
+    expect(seen).toEqual([]);
+    expect(manager.snapshot.recovery?.kind).toBe("ai-unsafe-output");
+    expect(manager.snapshot.recovery?.cardsPreserved).toBe(true);
+    expect(manager.snapshot.recovery?.tripPreserved).toBe(true);
+    expect(manager.snapshot.phase).toBe("ready"); // model stays loaded for a retry
+    await manager.dispose();
+  });
+
   it("surfaces typed inference failures, keeps cards/trip, and recovers on retry", async () => {
     const { runtime, manager } = makeManager({});
     await manager.initialize();
@@ -146,7 +201,7 @@ describe("generation lifecycle", () => {
     const tripBefore = JSON.parse(JSON.stringify(trip));
 
     runtime.generateQueue.push({ type: "fail", error: new Error("decode graph exploded") });
-    await expect(manager.explain(EMPTY_CONTEXT, () => {})).rejects.toMatchObject({
+    await expect(manager.explain(CONTEXT, () => {})).rejects.toMatchObject({
       kind: "inference-failed",
       retryable: true,
     });
@@ -159,10 +214,14 @@ describe("generation lifecycle", () => {
     expect(trip).toEqual(tripBefore);
 
     // Retry succeeds and the explanation streams.
-    runtime.generateQueue.push({ type: "success", units: ["salita-1", "salita-2"] });
-    const units: string[] = [];
-    await manager.explain(EMPTY_CONTEXT, (unit) => units.push(unit));
-    expect(units).toEqual(["salita-1", "salita-2"]);
+    runtime.generateQueue.push({
+      type: "success",
+      chunks: [okUnit("Unang paalala."), okUnit("Pangalawang paalala.")],
+    });
+    const units: SafeExplanationUnit[] = [];
+    const report = await manager.explain(CONTEXT, (unit) => units.push(unit));
+    expect(report.status).toBe("completed");
+    expect(units.map((u) => u.text)).toEqual(["Unang paalala.", "Pangalawang paalala."]);
     expect(manager.snapshot.completedGenerations).toBe(1);
 
     await manager.dispose();
@@ -176,7 +235,7 @@ describe("generation lifecycle", () => {
     const cardsBefore = JSON.parse(JSON.stringify(cards));
 
     runtime.generateQueue.push({ type: "fail", error: new Error("std::bad_alloc") });
-    await expect(manager.explain(EMPTY_CONTEXT, () => {})).rejects.toMatchObject({
+    await expect(manager.explain(CONTEXT, () => {})).rejects.toMatchObject({
       kind: "out-of-memory",
     });
 
@@ -186,8 +245,8 @@ describe("generation lifecycle", () => {
     expect(cards).toEqual(cardsBefore);
 
     // Retry reloads at the constrained budget and works again.
-    runtime.generateQueue.push({ type: "success", units: ["ok"] });
-    await manager.explain(EMPTY_CONTEXT, () => {});
+    runtime.generateQueue.push({ type: "success", chunks: [okUnit("Ayos na.")] });
+    await manager.explain(CONTEXT, () => {});
     expect(runtime.loadedSpecs.at(-1)?.budget).toBe(REQUIREMENTS.constrained);
     expect(manager.snapshot.phase).toBe("ready");
     await manager.dispose();
@@ -197,16 +256,20 @@ describe("generation lifecycle", () => {
     const { runtime, manager } = makeManager({});
     await manager.initialize();
 
-    runtime.generateQueue.push({ type: "wait-for-cancel" }, { type: "success", units: ["fresh"] });
-    const first = manager.explain(EMPTY_CONTEXT, () => {});
+    runtime.generateQueue.push(
+      { type: "wait-for-cancel" },
+      { type: "success", chunks: [okUnit("Sariwang sagot.")] },
+    );
+    const first = manager.explain(CONTEXT, () => {});
+    first.catch(() => {});
     await flushMicrotasks();
     expect(manager.snapshot.phase).toBe("generating");
 
-    const units: string[] = [];
-    await manager.explain(EMPTY_CONTEXT, (unit) => units.push(unit));
+    const units: SafeExplanationUnit[] = [];
+    await manager.explain(CONTEXT, (unit) => units.push(unit));
 
     await expect(first).rejects.toMatchObject({ kind: "cancelled" });
-    expect(units).toEqual(["fresh"]);
+    expect(units.map((u) => u.text)).toEqual(["Sariwang sagot."]);
     expect(runtime.totalGenerations).toBe(2);
     expect(manager.snapshot.cancelledGenerations).toBe(1);
     expect(manager.snapshot.completedGenerations).toBe(1);
@@ -223,7 +286,8 @@ describe("generation lifecycle", () => {
     const tripBefore = JSON.parse(JSON.stringify(trip));
 
     runtime.generateQueue.push({ type: "wait-for-cancel" });
-    const pending = manager.explain(EMPTY_CONTEXT, () => {});
+    const pending = manager.explain(CONTEXT, () => {});
+    pending.catch(() => {});
     await flushMicrotasks();
 
     await manager.onMemoryPressure("critical");
@@ -248,11 +312,12 @@ describe("repeated load/unload cycles (leak check)", () => {
     for (let cycle = 0; cycle < 20; cycle += 1) {
       await manager.load();
       if (cycle % 2 === 0) {
-        runtime.generateQueue.push({ type: "success", units: [`unit-${cycle}`] });
-        await manager.explain(EMPTY_CONTEXT, () => {});
+        runtime.generateQueue.push({ type: "success", chunks: [okUnit(`Paalala ${"x".repeat(cycle)}.`)] });
+        await manager.explain(CONTEXT, () => {});
       } else {
         runtime.generateQueue.push({ type: "wait-for-cancel" });
-        const pending = manager.explain(EMPTY_CONTEXT, () => {});
+        const pending = manager.explain(CONTEXT, () => {});
+        pending.catch(() => {});
         await flushMicrotasks();
         manager.cancelActiveGeneration();
         await expect(pending).rejects.toMatchObject({ kind: "cancelled" });
@@ -268,7 +333,7 @@ describe("repeated load/unload cycles (leak check)", () => {
     await manager.dispose(); // idempotent
     expect(manager.snapshot.phase).toBe("disposed");
     expect(runtime.openHandles).toBe(0);
-    await expect(manager.explain(EMPTY_CONTEXT, () => {})).rejects.toMatchObject({ kind: "disposed" });
+    await expect(manager.explain(CONTEXT, () => {})).rejects.toMatchObject({ kind: "disposed" });
     await expect(manager.load()).rejects.toMatchObject({ kind: "disposed" });
   });
 });
@@ -292,7 +357,7 @@ describe("unsupported device", () => {
     const cardsBefore = JSON.parse(JSON.stringify(cards));
     const tripBefore = JSON.parse(JSON.stringify(trip));
 
-    await expect(manager.explain(EMPTY_CONTEXT, () => {})).rejects.toMatchObject({
+    await expect(manager.explain(CONTEXT, () => {})).rejects.toMatchObject({
       kind: "unsupported-device",
       retryable: false,
     });

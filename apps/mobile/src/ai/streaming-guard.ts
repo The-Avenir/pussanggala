@@ -1,35 +1,40 @@
 /**
- * Validated streaming guard (SDD §4 `ai.explain(context, onSafeUnit)` / T33).
+ * Validated streaming guard (SDD §4 `ai.explain(context, onSafeUnit)`).
  *
  * The guard owns the whole safety contract of generation display:
- * - raw model tokens NEVER reach the UI; they only fill an internal buffer;
+ * - raw model chunks NEVER reach the UI; they only fill an internal buffer;
  * - a unit becomes visible only when a full NDJSON line has been received,
- *   parsed and validated against the grounding context;
+ *   parsed and validated against the grounding context, and it reaches
+ *   `onSafeUnit` as a branded `SafeExplanationUnit` that no caller can forge;
  * - cross-unit ordering is enforced so a later unit cannot walk back an
  *   already displayed step;
  * - invalid units are rejected (recorded, never shown); too many rejections
  *   abort the stream as `invalid_stream` — regeneration/fallback policy is
- *   owned by T32/T34, this module only guarantees nothing unchecked is shown;
+ *   owned by the lifecycle manager, this module only guarantees nothing
+ *   unchecked is shown;
  * - cancellation emits nothing partial and stops the runner promptly.
  */
 
 import {
+  brandSafeUnit,
   maxStepOrder,
   parseUnitLine,
   validateExplanationUnit,
   checkStepOrderAgainstEmitted,
+  type SafeUnitHandler,
   type UnitRejection,
-  type ValidatedExplanationUnit,
 } from "./explanation-unit";
 import { validatorContextOf } from "./grounding-context";
 import { buildExplainPrompt } from "./prompt";
-import type { GroundingContext, ModelRunnerPort } from "./ports";
+import type { AbortSignalLike, CancellationToken } from "./cancellation";
+import type { GroundingContext } from "./ports";
+import type { ModelRuntime } from "./runtime-port";
 
 export type ExplainStatus =
   | "completed" // stream finished; every emitted unit was validated
   | "cancelled" // caller aborted; nothing partial was emitted
-  | "invalid_stream" // too many rejections / oversize buffer: regenerate or fall back (T34)
-  | "model_error"; // the runner threw
+  | "invalid_stream" // too many rejections / oversize buffer: regenerate or fall back
+  | "model_error"; // the runtime threw
 
 export interface RejectedUnitRecord {
   index: number;
@@ -40,6 +45,8 @@ export interface ExplainReport {
   status: ExplainStatus;
   emittedUnits: number;
   rejectedUnits: RejectedUnitRecord[];
+  /** Present only when status is "model_error"; the lifecycle layer classifies it. */
+  error?: unknown;
 }
 
 export class ExplainCancelled extends Error {
@@ -50,39 +57,40 @@ export class ExplainCancelled extends Error {
 }
 
 export interface ExplainOptions {
-  signal?: AbortSignal;
+  /** Web idiom. Either or both may be supplied; both map to the same cancel. */
+  signal?: AbortSignalLike;
+  token?: CancellationToken;
 }
 
-export type OnSafeUnit = (unit: ValidatedExplanationUnit) => void;
-
 /**
- * Runs one guarded explanation stream. `onSafeUnit` fires synchronously per
- * validated unit, in emission order. The report states exactly how many
- * units reached the screen and which were rejected.
+ * Runs one guarded explanation stream end to end: prompt, generate, guard.
+ * `onSafeUnit` fires synchronously per validated unit, in emission order.
  */
 export async function explain(
   context: GroundingContext,
-  runner: ModelRunnerPort,
-  onSafeUnit: OnSafeUnit,
+  runtime: ModelRuntime,
+  onSafeUnit: SafeUnitHandler,
   options: ExplainOptions = {},
 ): Promise<ExplainReport> {
   const { prompt } = buildExplainPrompt(context);
-  return guardStream(context, runner.streamCompletion(prompt, { signal: options.signal ?? new AbortController().signal }), onSafeUnit, options);
+  const chunks = runtime.generate(prompt, options.token ?? options.signal);
+  return guardStream(context, chunks, onSafeUnit, options);
 }
 
 /**
  * Guard core, separated from prompt construction so evaluators can feed
- * adversarial token streams directly. Public because T35 evaluation needs it.
+ * adversarial chunk streams directly. Public because T35 evaluation needs it.
  */
 export async function guardStream(
   context: GroundingContext,
-  tokens: AsyncIterable<string>,
-  onSafeUnit: OnSafeUnit,
+  chunks: AsyncIterable<string>,
+  onSafeUnit: SafeUnitHandler,
   options: ExplainOptions = {},
 ): Promise<ExplainReport> {
   const budgets = context.budgets;
   const vctx = validatorContextOf(context);
-  const signal = options.signal;
+  const isCancelled = (): boolean =>
+    (options.signal?.aborted ?? false) || (options.token?.isCancelled ?? false);
   const rejected: RejectedUnitRecord[] = [];
   let emitted = 0;
   let unitIndex = 0;
@@ -122,48 +130,64 @@ export async function guardStream(
     lastStepOrder = Math.max(lastStepOrder, maxStepOrder(validation.unit, vctx));
     unitIndex += 1;
     emitted += 1;
-    // Only now — complete, parsed, validated — is the unit allowed on screen.
-    onSafeUnit(validation.unit);
+    // Only now — complete, parsed, validated — is the unit allowed on screen,
+    // and only as a branded value.
+    onSafeUnit(brandSafeUnit(validation.unit));
     return "continue";
   };
 
+  const report = (status: ExplainStatus): ExplainReport => ({
+    status,
+    emittedUnits: emitted,
+    rejectedUnits: rejected,
+  });
+
   try {
-    for await (const chunk of tokens) {
-      if (signal?.aborted) {
-        return { status: "cancelled", emittedUnits: emitted, rejectedUnits: rejected };
+    for await (const chunk of chunks) {
+      if (isCancelled()) {
+        return report("cancelled");
       }
       buffer += chunk;
-      if (buffer.length > budgets.maxUnitBufferChars) {
-        reject([{ code: "oversize", detail: `single unit exceeded ${budgets.maxUnitBufferChars} buffered chars` }]);
-        return { status: "invalid_stream", emittedUnits: emitted, rejectedUnits: rejected };
-      }
+      // Drain every complete line FIRST. A single chunk may carry several
+      // units, or a unit plus the start of the next one; only what is left
+      // undrained is an incomplete unit, so only that counts against the
+      // per-unit buffer cap.
       let nl: number;
       while ((nl = buffer.indexOf("\n")) !== -1) {
         const line = buffer.slice(0, nl);
         buffer = buffer.slice(nl + 1);
         if (handleLine(line) === "invalid_stream") {
-          return { status: "invalid_stream", emittedUnits: emitted, rejectedUnits: rejected };
+          return report("invalid_stream");
         }
       }
+      if (buffer.length > budgets.maxUnitBufferChars) {
+        reject([
+          {
+            code: "oversize",
+            detail: `incomplete unit exceeded ${budgets.maxUnitBufferChars} buffered chars`,
+          },
+        ]);
+        return report("invalid_stream");
+      }
     }
-    // The runner may also stop on its own in response to the abort; never
+    // The runtime may also stop on its own in response to the cancel; never
     // validate the remaining buffer after cancellation.
-    if (signal?.aborted) {
-      return { status: "cancelled", emittedUnits: emitted, rejectedUnits: rejected };
+    if (isCancelled()) {
+      return report("cancelled");
     }
     // Stream ended: a final complete JSON unit without a trailing newline is
     // still a complete unit and is validated like any other; a partial tail
     // is rejected and never shown.
     if (buffer.trim().length > 0) {
       if (handleLine(buffer) === "invalid_stream") {
-        return { status: "invalid_stream", emittedUnits: emitted, rejectedUnits: rejected };
+        return report("invalid_stream");
       }
     }
-    return { status: "completed", emittedUnits: emitted, rejectedUnits: rejected };
+    return report("completed");
   } catch (err) {
-    if (err instanceof ExplainCancelled || (signal?.aborted ?? false)) {
-      return { status: "cancelled", emittedUnits: emitted, rejectedUnits: rejected };
+    if (err instanceof ExplainCancelled || isCancelled()) {
+      return report("cancelled");
     }
-    return { status: "model_error", emittedUnits: emitted, rejectedUnits: rejected };
+    return { ...report("model_error"), error: err };
   }
 }

@@ -11,38 +11,21 @@
  * because a model can reverse instructions using allowed names.
  */
 
+import {
+  ExplanationUnitSchema,
+  type ExplanationUnit,
+  type ExplanationUnitKind,
+} from "@pusang-gala/core";
+
 import { stopNameVariants } from "./pack.ts";
 import type { BundleCard, EvidenceBundle } from "./pack.ts";
 
-export type UnitKind =
-  | "summary"
-  | "step"
-  | "comparison"
-  | "uncertainty"
-  | "note"
-  | "clarification"
-  | "redirect"
-  | "failure";
+export type { ExplanationUnit } from "@pusang-gala/core";
 
-export interface ExplanationUnit {
-  kind: UnitKind;
-  card_ref?: string;
-  text: string;
-}
+export const UNIT_TEXT_CAP = 280;
 
-export const UNIT_TEXT_CAP = 600;
-
-const KINDS_REQUIRE_REF = new Set<UnitKind>(["step"]);
-const ALL_KINDS = new Set<UnitKind>([
-  "summary",
-  "step",
-  "comparison",
-  "uncertainty",
-  "note",
-  "clarification",
-  "redirect",
-  "failure",
-]);
+const KINDS_REQUIRE_REF = new Set<ExplanationUnitKind>(["step"]);
+const UNIT_FIELDS = new Set(["kind", "cardRef", "inserts", "text"]);
 
 export interface UnitVerdict {
   ok: boolean;
@@ -61,27 +44,23 @@ export function parseUnit(raw: string): UnitVerdict {
   if (obj === null || typeof obj !== "object" || Array.isArray(obj))
     return { ok: false, reason: "unit is not a JSON object" };
   const rec = obj as Record<string, unknown>;
-  const kind = rec["kind"];
-  if (typeof kind !== "string" || !ALL_KINDS.has(kind as UnitKind))
-    return { ok: false, reason: `unknown or missing reply kind: ${String(kind)}` };
-  if (typeof rec["text"] !== "string" || rec["text"].trim() === "")
-    return { ok: false, reason: "missing or non-string text" };
-  if (rec["text"].length > UNIT_TEXT_CAP)
-    return { ok: false, reason: `text exceeds ${UNIT_TEXT_CAP}-char unit cap` };
-  const allowedKeys = new Set(["kind", "text", "card_ref"]);
-  const extra = Object.keys(rec).filter((k) => !allowedKeys.has(k));
+  const extra = Object.keys(rec).filter((key) => !UNIT_FIELDS.has(key));
   if (extra.length > 0)
     return { ok: false, reason: `unexpected unit fields: ${extra.join(",")}` };
-  if (rec["card_ref"] !== undefined && typeof rec["card_ref"] !== "string")
-    return { ok: false, reason: "card_ref must be a string" };
+
+  const parsed = ExplanationUnitSchema.safeParse(rec);
+  if (!parsed.success) {
+    const issue = parsed.error.issues[0];
+    return {
+      ok: false,
+      reason: issue?.message ?? "unit does not match ExplanationUnitSchema",
+    };
+  }
+
   return {
     ok: true,
     reason: "",
-    unit: {
-      kind: kind as UnitKind,
-      text: rec["text"] as string,
-      ...(typeof rec["card_ref"] === "string" ? { card_ref: rec["card_ref"] as string } : {}),
-    },
+    unit: parsed.data,
   };
 }
 
@@ -226,10 +205,10 @@ export function detectUnsupportedClaims(text: string, bundle: EvidenceBundle): s
 
 /** Full validation of a parsed unit against the bundle (schema + semantics). */
 export function validateUnit(unit: ExplanationUnit, bundle: EvidenceBundle): UnitVerdict {
-  if (KINDS_REQUIRE_REF.has(unit.kind) && !unit.card_ref)
-    return { ok: false, reason: `${unit.kind} unit requires a card_ref` };
-  if (unit.card_ref && !bundle.cards.some((c) => c.card_id === unit.card_ref))
-    return { ok: false, reason: `card_ref '${unit.card_ref}' is not in the evidence bundle` };
+  if (KINDS_REQUIRE_REF.has(unit.kind) && !unit.cardRef)
+    return { ok: false, reason: `${unit.kind} unit requires a cardRef` };
+  if (unit.cardRef && !bundle.cards.some((c) => c.card_id === unit.cardRef))
+    return { ok: false, reason: `cardRef '${unit.cardRef}' is not in the evidence bundle` };
   const violations = detectUnsupportedClaims(unit.text, bundle);
   if (violations.length > 0)
     return { ok: false, reason: `unsupported or contradictory claim: ${violations.join("; ")}` };

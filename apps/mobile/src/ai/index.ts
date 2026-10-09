@@ -1,18 +1,67 @@
 /**
- * apps/mobile/src/ai — local model runtime support (Member 3).
+ * `@pusang-gala/ai` — on-device model runtime, grounded generation and
+ * validated streaming (Member 3).
  *
- * T33: grounded generation and validated streaming (see STREAMING-NOTES.md
- * for the validation contract and the ports other subagents must satisfy).
- * T34: capability probing, runtime lifecycle, cancellation, and inference
- * recovery with explained fallback. T30/T31 own the native runtime
- * implementation behind ModelRuntime.
+ * The package merges two halves of the same pipeline:
+ *   - grounded streaming: context assembly, injection-safe prompt, and the
+ *     display guard that only ever emits validated, branded units;
+ *   - inference recovery: capability probing, load/generate lifecycle,
+ *     cancellation and explained recovery states.
+ *
+ * See README.md for the native-adapter TODO (T30/T40), STREAMING-NOTES.md
+ * for the validation contract and RECOVERY-NOTES.md for the copy contract.
  */
 
-export * from "./ports";
-export * from "./explanation-unit";
-export * from "./grounding-context";
-export * from "./prompt";
-export * from "./streaming-guard";
+export {
+  CORE_UNIT_TEXT_MAX,
+  DEFAULT_BUDGETS,
+  type CanonicalStatement,
+  type CardBundleInput,
+  type ContextBudgets,
+  type DeterministicCard,
+  type GroundingContext,
+  type StatementRole,
+  type TripContextPort,
+} from "./ports";
+
+export {
+  UNIT_KINDS,
+  brandSafeUnit,
+  checkStepOrderAgainstEmitted,
+  isSafeExplanationUnit,
+  maxStepOrder,
+  parseUnitLine,
+  validateExplanationUnit,
+  type ExplanationUnit,
+  type ExplanationUnitKind,
+  type SafeExplanationUnit,
+  type SafeUnitHandler,
+  type UnitRejection,
+  type UnitRejectionCode,
+  type UnitValidation,
+  type ValidatedExplanationUnit,
+  type ValidatorContext,
+} from "./explanation-unit";
+
+export {
+  buildGroundingContext,
+  validatorContextOf,
+  type AssemblyInput,
+  type AssemblyResult,
+} from "./grounding-context";
+
+export { DATA_BLOCK_KIND, buildExplainPrompt, sanitizeDataText, type ExplainPrompt } from "./prompt";
+
+export {
+  ExplainCancelled,
+  explain,
+  guardStream,
+  type ExplainOptions,
+  type ExplainReport,
+  type ExplainStatus,
+  type RejectedUnitRecord,
+} from "./streaming-guard";
+
 export {
   probeCapability,
   checkReferencePhoneGate,
@@ -25,8 +74,26 @@ export {
   type ModelRequirements,
   type ReferenceGateResult,
 } from "./capability";
-export { CancellationTokenSource, linkToken, type CancellationToken } from "./cancellation";
-export { AiRuntimeError, classifyNativeError, isAiRuntimeError, type AiErrorKind } from "./errors";
+
+export {
+  CancellationTokenSource,
+  asCancellationToken,
+  linkToken,
+  signalFromToken,
+  tokenFromSignal,
+  type AbortControllerLike,
+  type AbortSignalLike,
+  type CancellationLike,
+  type CancellationToken,
+} from "./cancellation";
+
+export {
+  AiRuntimeError,
+  classifyNativeError,
+  isAiRuntimeError,
+  type AiErrorKind,
+} from "./errors";
+
 export {
   AiRuntimeManager,
   systemClock,
@@ -37,6 +104,7 @@ export {
   type LifecycleSnapshot,
   type MemoryPressureLevel,
 } from "./lifecycle";
+
 export {
   recoveryForCapability,
   recoveryForError,
@@ -44,11 +112,5 @@ export {
   type RecoveryKind,
   type RecoveryState,
 } from "./recovery";
-export type {
-  ExplanationContext,
-  ModelRuntime,
-  ModelSpec,
-  RuntimeHandle,
-  SafeExplanationUnit,
-  SafeUnitHandler,
-} from "./runtime-port";
+
+export type { ModelRuntime, ModelSpec, RuntimeHandle } from "./runtime-port";

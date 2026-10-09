@@ -1,5 +1,5 @@
 /**
- * Typed AI runtime error taxonomy (T34).
+ * Typed AI runtime error taxonomy.
  *
  * Maps native/model failures to typed kinds so recovery.ts can turn them into
  * distinct, explained PRD-F9 states. Cards and the active trip are owned by
@@ -19,6 +19,8 @@ export type AiErrorKind =
   | "load-failed"
   /** Generation failed partway for a non-OOM, non-cancel reason. */
   | "inference-failed"
+  /** The stream produced output the guard refused to display (see streaming-guard). */
+  | "invalid-stream"
   /** A user/lifecycle cancellation; not surfaced as a failure. */
   | "cancelled"
   /** Call raced a disposed manager/runtime. */
@@ -31,6 +33,7 @@ const RETRYABLE = new Set<AiErrorKind>([
   "out-of-memory",
   "load-failed",
   "inference-failed",
+  "invalid-stream",
 ]);
 
 export class AiRuntimeError extends Error {

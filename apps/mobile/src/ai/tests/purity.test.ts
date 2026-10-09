@@ -72,4 +72,23 @@ describe("apps/mobile/src/ai purity boundary", () => {
     }
     expect(violations).toEqual([]);
   });
+
+  it("SafeExplanationUnit is never aliased back to a bare string", () => {
+    const violations: string[] = [];
+    for (const path of sources) {
+      const source = readFileSync(path, "utf8");
+      if (/type\s+SafeExplanationUnit\s*=\s*string\b/.test(source)) {
+        violations.push(relative(SRC_DIR, path));
+      }
+    }
+    expect(violations).toEqual([]);
+  });
+
+  it("only the stream guard mints branded safe units", () => {
+    const minters = sources.filter((path) => /\bbrandSafeUnit\s*\(/.test(readFileSync(path, "utf8")));
+    expect(minters.map((p) => relative(SRC_DIR, p)).sort()).toEqual([
+      "explanation-unit.ts", // the definition itself
+      "streaming-guard.ts",
+    ]);
+  });
 });

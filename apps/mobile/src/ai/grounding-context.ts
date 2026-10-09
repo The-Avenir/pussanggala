@@ -1,5 +1,5 @@
 /**
- * Bounded grounding-context assembly (T33 local `core.buildContext` shape).
+ * Bounded grounding-context assembly (local `core.buildContext` shape).
  *
  * Takes the deterministic card bundle and produces the bounded context the
  * prompt builder and the validator share. Assembly is fail-loud: anything
@@ -33,7 +33,10 @@ export function buildGroundingContext(
 ): AssemblyResult {
   const { cards, statements } = input;
   if (statements.length > budgets.maxStatements) {
-    return { ok: false, reason: `statement count ${statements.length} exceeds maxStatements ${budgets.maxStatements}` };
+    return {
+      ok: false,
+      reason: `statement count ${statements.length} exceeds maxStatements ${budgets.maxStatements}`,
+    };
   }
   const cardIds = new Set<string>();
   for (const card of cards) {
@@ -59,10 +62,17 @@ export function buildGroundingContext(
       return { ok: false, reason: `statement "${stmt.id}" has empty canonical text` };
     }
     if (stmt.text.length > budgets.maxStatementChars) {
-      return { ok: false, reason: `statement "${stmt.id}" exceeds maxStatementChars (${stmt.text.length} > ${budgets.maxStatementChars})` };
+      return {
+        ok: false,
+        reason: `statement "${stmt.id}" exceeds maxStatementChars (${stmt.text.length} > ${budgets.maxStatementChars})`,
+      };
     }
     if (stmt.role === "step") {
-      if (typeof stmt.stepOrder !== "number" || !Number.isInteger(stmt.stepOrder) || stmt.stepOrder < 1) {
+      if (
+        typeof stmt.stepOrder !== "number" ||
+        !Number.isInteger(stmt.stepOrder) ||
+        stmt.stepOrder < 1
+      ) {
         return { ok: false, reason: `step statement "${stmt.id}" has no valid canonical stepOrder` };
       }
       if (stepOrders.has(stmt.stepOrder)) {

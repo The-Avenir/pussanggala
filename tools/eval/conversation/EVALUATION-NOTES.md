@@ -10,15 +10,21 @@ reversed instruction baits are a first-class category).
 ## How to run
 
 ```text
-# repo root, Node.js >= 20 (verified on v26.11.1; type-stripping runs the .ts sources directly)
-node tools/eval/conversation/src/run.ts        # full report, exit 0 = all gates pass
-node tools/eval/conversation/src/run.ts --json # machine-readable report to stdout
-node_modules/.bin/tsc -p tools/eval/conversation/tsconfig.json   # typecheck
+# repo root
+npm test -w @pusang-gala/eval-conversation
+npm run run -w @pusang-gala/eval-conversation
+npm run typecheck -w @pusang-gala/eval-conversation
+
+# PowerShell: request the optional real adapter
+$env:PUSANG_GALA_EVAL_SUT='real'
+npm run run -w @pusang-gala/eval-conversation
+Remove-Item Env:PUSANG_GALA_EVAL_SUT
 ```
 
-The runner always writes `results/conversation-eval-report.json` and exits 1 if
-any gate fails. There are no npm dependencies beyond Node itself; nothing here
-performs network access (INV-2 harness hygiene).
+`PUSANG_GALA_EVAL_SUT` accepts `stub` (default) or `real`; direct runner
+invocations also accept `--sut=stub|real`. The stub runner writes
+`results/conversation-eval-report.json` and fails if any gate fails. Nothing
+here performs network access (INV-2 harness hygiene).
 
 ## Layout
 
@@ -32,6 +38,7 @@ performs network access (INV-2 harness hygiene).
 | `src/guard.ts` | Explanation-unit schema validator + unsupported-claim detector (the M3 hook). |
 | `src/sut.ts` | `SystemUnderTest` port — the plug-in contract for T32/T33/T34. |
 | `src/stubSut.ts` | `StubRulesSut`, a deterministic rules SUT so the harness runs today. |
+| `src/realSut.ts` | Optional adapter loading `@pusang-gala/conversation` + `@pusang-gala/ai`. |
 | `src/run.ts` | Runner: corpus validation → harness self-checks → suites → gates + report. |
 
 ## Corpus schema
@@ -108,14 +115,17 @@ with deeper semantic review that T33 may add (see "Limitations").
 ### Stream-unit contract (what the guard validates)
 
 ```json
-{ "kind": "summary|step|comparison|uncertainty|note|clarification|redirect|failure",
-  "card_ref": "card-lg-bh-1",   // required for "step"
-  "text": "...(<=600 chars)..." }
+{ "kind": "summary|step|comparison|hours|caveat|clarify|redirect",
+  "cardRef": "card-lg-bh-1",
+  "inserts": ["canonical-statement-id"],
+  "text": "...(<=280 chars)..." }
 ```
 
-Strict schema: only these fields, valid JSON object, `card_ref` must exist in
-the bundle. Raw unchecked tokens can never be displayed because display is
-only ever the concatenation of accepted units.
+The product-shape validation delegates to
+`@pusang-gala/core`'s `ExplanationUnitSchema`. The harness additionally rejects
+unknown fields, requires `cardRef` for a `step`, and checks that referenced
+cards exist in the bundle. Raw unchecked tokens can never be displayed because
+display is only ever the concatenation of accepted units.
 
 ## SystemUnderTest port — how T32/T33/T34 plug in
 
@@ -134,11 +144,14 @@ guardStream(rawUnits, trip) -> { accepted, rejected, displayed_text }     // T33
   and its grounded explanation through `respond`. Bundle construction stays
   harness-side (deterministic, from the demo pack), so injected/malformed model
   output is evaluated against fixed evidence.
-- **T34** recovery behaviours can return `behaviour: "failure"` states; the
-  redirect/failure-unit kinds exist for this.
-- Swap the SUT in `run.ts` (`const sut: SystemUnderTest = new StubRulesSut(pack);`)
-  or add a `--sut` adapter there. Real packs can replace `demo-pack.json` once
-  T15/T24 fixtures converge — the trip-state keys and card shape are the seam.
+- **T34** recovery behaviours may still return `behaviour: "failure"` while
+  emitted explanation units remain valid core kinds.
+- The `real` adapter expects `@pusang-gala/conversation` to export
+  `createConversationEvalSut({ pack, aiModule })`. It loads and passes
+  `@pusang-gala/ai` to that factory. If either package or the factory is absent,
+  the real run exits as a clearly labelled skip; the default remains the stub.
+- Real packs can replace `demo-pack.json` once T15/T24 fixtures converge — the
+  trip-state keys and card shape are the seam.
 
 ## Preliminary results vs. what awaits integration
 
@@ -155,7 +168,7 @@ Preliminary run (stub, host machine — see `results/conversation-eval-report.js
 | M1 held-out required-slot accuracy | 100% (14/14 scored) | ≥90% (SUT-dependent) | preliminary pass |
 | M3 unsupported claims displayed | 0 | 0 | preliminary pass |
 | Adversarial suite | 105/105 | all pass | preliminary pass |
-| Latency (host, not device!) | parse p50 ~0.08 ms, respond p95 ~0.55 ms | evidence recorded | host-only |
+| Latency | host stub timing only | no device gate claimed | preliminary only |
 
 Awaiting integration (T32/T33/T34, then T31/T30 device runs):
 - **M1/M2 (held-out accuracy, rules-vs-hybrid comparison)** — rerun against the
@@ -184,13 +197,14 @@ Awaiting integration (T32/T33/T34, then T31/T30 device runs):
 ## Commands run and results (this checkout)
 
 ```text
-node tools/eval/conversation/src/run.ts
-  -> exit 0; all 5 gates PASS; 65 intent (100% intent/behaviour accuracy,
-     M1 held-out 100%), 105/105 adversarial, 0 unsupported claims displayed,
-     latency recorded in results/conversation-eval-report.json
-node tools/eval/conversation/src/run.ts --json   # machine-readable dump
-node_modules/.bin/tsc -p tools/eval/conversation/tsconfig.json   -> clean
-npm run typecheck (repo root) -> packages/core clean       npm test -> 2/2 pass
+npm test --prefix tools/eval/conversation
+  -> 4 files / 10 tests pass; stub report has all 5 gates PASS,
+     65 intent (22 train / 43 held-out), 105/105 adversarial,
+     and 0 unsupported claims displayed
+npm run typecheck --prefix tools/eval/conversation
+  -> clean
+PUSANG_GALA_EVAL_SUT=real npm run run --prefix tools/eval/conversation
+  -> clear SKIP while @pusang-gala/conversation and @pusang-gala/ai are absent
 ```
 
 Iteration defects found by the harness itself (useful calibration evidence):
@@ -213,3 +227,5 @@ from these fixtures.
 - Trip coverage is bounded by the synthetic pack (single region demograph).
   When the real pack lands, the corpora need re-pointing at real place/leg IDs
   plus new conflict/unknown fixtures drawn from actual review outcomes.
+- Host stub timings are not device latency evidence. This harness makes no T30
+  model-quality, model-compatibility, footprint, or reference-phone claim.

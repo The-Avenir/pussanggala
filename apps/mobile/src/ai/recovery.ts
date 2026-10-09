@@ -1,5 +1,5 @@
 /**
- * Recovery policy (T34): error taxonomy -> user-facing explained states.
+ * Recovery policy: error taxonomy -> user-facing explained states.
  *
  * Invariants enforced by construction:
  *  - every RecoveryState declares cardsPreserved/tripPreserved = true. This
@@ -27,7 +27,9 @@ export type RecoveryKind =
   /** Device cannot run the model; other features unaffected. */
   | "ai-unsupported"
   /** Model asset missing/corrupt; route to asset readiness UI. */
-  | "ai-asset-problem";
+  | "ai-asset-problem"
+  /** The model's output failed the display guard; nothing unchecked was shown. */
+  | "ai-unsafe-output";
 
 export type RecoveryActionId = "retry-ai" | "cancel" | "continue-without-ai" | "check-assets";
 
@@ -65,6 +67,7 @@ const STATES: Record<RecoveryKind, RecoveryState> = {
   "ai-memory-pressure": state("ai-memory-pressure", ["retry-ai", "continue-without-ai"], true),
   "ai-unsupported": state("ai-unsupported", ["continue-without-ai"], false),
   "ai-asset-problem": state("ai-asset-problem", ["check-assets", "continue-without-ai"], false),
+  "ai-unsafe-output": state("ai-unsafe-output", ["retry-ai", "continue-without-ai"], true),
 };
 
 /** Recovery banner for a capability report; null when the device is "full". */
@@ -79,6 +82,7 @@ const ERROR_TO_RECOVERY: Record<AiErrorKind, RecoveryKind> = {
   "load-timeout": "ai-retryable",
   "load-failed": "ai-retryable",
   "inference-failed": "ai-retryable",
+  "invalid-stream": "ai-unsafe-output",
   "out-of-memory": "ai-memory-pressure",
   cancelled: "ai-cancelled",
   disposed: "ai-unsupported",

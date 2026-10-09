@@ -529,7 +529,7 @@ export class StubRulesSut implements SystemUnderTest {
         c.ride_min === null ? "" : ` Reported ride about ${c.ride_min} min.`;
       units.push({
         kind: "step",
-        card_ref: c.card_id,
+        cardRef: c.card_id,
         text: `Board the ${c.signboard ?? c.route_name} ${modeLabel(c.mode)} at ${c.board_stop_name} and alight at ${c.alight_stop_name}.${rideNote}${transferNote}`,
       });
     });

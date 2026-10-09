@@ -1,15 +1,15 @@
 /**
- * Local ports for T33 — grounded generation and validated streaming.
+ * Grounding-context ports for the AI layer.
  *
- * REPLACEME markers: T24 (card composer / Member 2), T30 (native model
- * runtime / Member 3), T32 (conversation manager / Member 3) run in other
- * worktrees and do not exist in this checkout. The interfaces below mirror
- * SDD §4 (`core.compose`, `core.buildContext`, `ai.explain`) and §3 so this
- * module compiles and is testable in isolation. Once the real contracts
- * land, these types become thin aliases or adapters over
- * `packages/core` / T30 / T32 exports. No raw Reddit text may ever appear
- * in any of these structures (INV-4): every `text` field is a
- * canonical, pre-authored statement produced by deterministic code.
+ * REPLACEME markers: T24 (card composer / Member 2), T30+T40 (native model
+ * runtime), T32 (conversation manager) own the real contracts. The shapes
+ * below mirror SDD §4 (`core.compose`, `core.buildContext`, `ai.explain`) so
+ * this package compiles and is testable in isolation; once those land these
+ * become thin aliases or adapters over `packages/core` / T30 / T32 exports.
+ *
+ * No raw Reddit text may ever appear in any of these structures (INV-4):
+ * every `text` field is a canonical, pre-authored statement produced by
+ * deterministic code.
  */
 
 /** One deterministic card as composed by T24 (`core.compose`). */
@@ -46,7 +46,7 @@ export interface CanonicalStatement {
   packRecordIds: string[];
   /**
    * Canonical itinerary order, present only for role "step". The model can
-   * only reorder freely authored prose; checkpoints of instructions must be
+   * reorder freely authored prose, but instruction checkpoints must stay
    * monotone. 1-based, unique across the bundle.
    */
   stepOrder?: number;
@@ -78,39 +78,27 @@ export interface ContextBudgets {
   maxStatements: number;
   /** Max chars of one canonical statement text; oversize is rejected, never truncated (a truncated fact is a false fact). */
   maxStatementChars: number;
-  /** Max chars of model-authored `text` per unit. */
+  /** Max chars of model-authored `text` per unit. Must not exceed the core ExplanationUnit cap of 280. */
   maxUnitTextChars: number;
   /** Max statement IDs cited by one unit. */
   maxInsertsPerUnit: number;
   /** Max explanation units per explanation stream. */
   maxUnits: number;
-  /** Max buffered chars for one incomplete unit; exceeding it aborts the stream. */
+  /** Max buffered chars of one *incomplete* unit; exceeding it aborts the stream. */
   maxUnitBufferChars: number;
   /** Rejections tolerated before the stream is aborted as invalid. */
   maxRejectedUnits: number;
 }
 
+/** Hard cap from `ExplanationUnitSchema` in `@pusang-gala/core`. */
+export const CORE_UNIT_TEXT_MAX = 280;
+
 export const DEFAULT_BUDGETS: ContextBudgets = {
   maxStatements: 40,
   maxStatementChars: 240,
-  maxUnitTextChars: 280,
+  maxUnitTextChars: CORE_UNIT_TEXT_MAX,
   maxInsertsPerUnit: 8,
   maxUnits: 24,
   maxUnitBufferChars: 2048,
   maxRejectedUnits: 2,
 };
-
-/**
- * REPLACEME(T30): native model runtime port. The T30 adapter must satisfy:
- * - yields raw decoded text chunks in generation order (never partial UI
- *   surface — the guard buffers them);
- * - honours `signal.aborted` promptly, stops sampling, and releases the
- *   native context (one inference at a time, SDD §1.5);
- * - performs no network access (INV-2).
- */
-export interface ModelRunnerPort {
-  streamCompletion(
-    prompt: string,
-    options: { signal: AbortSignal },
-  ): AsyncIterable<string>;
-}

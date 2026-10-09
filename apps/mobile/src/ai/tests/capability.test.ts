@@ -33,10 +33,7 @@ describe("probeCapability", () => {
   });
 
   it("returns unsupported in OS low-memory mode and when the model asset is not ready", () => {
-    for (const patch of [
-      { lowMemoryMode: true },
-      { modelAssetReady: false },
-    ] satisfies Partial<DeviceSnapshot>[]) {
+    for (const patch of [{ lowMemoryMode: true }, { modelAssetReady: false }] satisfies Partial<DeviceSnapshot>[]) {
       const report = probeCapability({ ...FULL_DEVICE, ...patch }, REQUIREMENTS);
       expect(report.level).toBe("unsupported");
     }
@@ -63,7 +60,9 @@ describe("checkReferencePhoneGate (S4 guardrail)", () => {
       checkReferencePhoneGate(probeCapability(FULL_DEVICE, REQUIREMENTS), { isReferencePhone: true }).ok,
     ).toBe(true);
     expect(
-      checkReferencePhoneGate(probeCapability(CONSTRAINED_DEVICE, REQUIREMENTS), { isReferencePhone: false }).ok,
+      checkReferencePhoneGate(probeCapability(CONSTRAINED_DEVICE, REQUIREMENTS), {
+        isReferencePhone: false,
+      }).ok,
     ).toBe(true);
   });
 });

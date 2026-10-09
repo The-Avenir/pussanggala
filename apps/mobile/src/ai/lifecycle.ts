@@ -1,15 +1,20 @@
 /**
- * AI runtime lifecycle manager (T34).
+ * AI runtime lifecycle manager.
  *
  * Owns capability probing, model load/unload with timeout and bounded
  * back-off retry, one-at-a-time generation with prompt idempotent
- * cancellation, OS memory-pressure handling and leak-free disposal.
+ * cancellation, OS memory-pressure handling and leak-free disposal — and it
+ * is the component that wires generation to the display guard:
+ *
+ *   load() -> runtime.generate(prompt) -> guardStream(...) -> onSafeUnit(branded)
  *
  * Guardrails (BUILD §5 / SDD §1.4–1.5):
  *  - no cloud/network fallback exists anywhere in this file — all failures
  *    surface as typed errors mapped to explained on-device states;
  *  - cards and the active trip are never touched here; every failure keeps
  *    them usable (see recovery.ts);
+ *  - raw chunks from the runtime never reach `onSafeUnit`: they are piped
+ *    through `guardStream`, which is the only minter of SafeExplanationUnit;
  *  - one model context and one generation at a time; a new explain()
  *    supersedes (cancels) any stale in-flight generation;
  *  - an explained constrained/unsupported fallback never substitutes for
@@ -24,16 +29,20 @@ import {
   type GenerationBudget,
   type ModelRequirements,
 } from "./capability";
-import { CancellationTokenSource, linkToken, type CancellationToken } from "./cancellation";
+import {
+  CancellationTokenSource,
+  asCancellationToken,
+  linkToken,
+  type CancellationLike,
+  type CancellationToken,
+} from "./cancellation";
 import { AiRuntimeError, classifyNativeError } from "./errors";
+import { buildExplainPrompt } from "./prompt";
 import { recoveryForCapability, recoveryForError, type RecoveryState } from "./recovery";
-import type {
-  ExplanationContext,
-  ModelRuntime,
-  ModelSpec,
-  RuntimeHandle,
-  SafeUnitHandler,
-} from "./runtime-port";
+import { guardStream, type ExplainReport } from "./streaming-guard";
+import type { SafeUnitHandler } from "./explanation-unit";
+import type { GroundingContext } from "./ports";
+import type { ModelRuntime, ModelSpec, RuntimeHandle } from "./runtime-port";
 
 export type LifecyclePhase =
   | "idle"
@@ -115,7 +124,8 @@ export class AiRuntimeManager {
 
   private handle: RuntimeHandle | null = null;
   private loadPromise: Promise<void> | null = null;
-  private generation: { id: number; source: CancellationTokenSource; settled: Promise<void> } | null = null;
+  private generation: { id: number; source: CancellationTokenSource; settled: Promise<void> } | null =
+    null;
   private forceConstrained = false;
   private seq = 0;
   private readonly listeners = new Set<(snapshot: LifecycleSnapshot) => void>();
@@ -162,7 +172,7 @@ export class AiRuntimeManager {
   }
 
   /** Probe capability and load the model unless the device is unsupported. */
-  async initialize(token?: CancellationToken): Promise<LifecycleSnapshot> {
+  async initialize(token?: CancellationLike): Promise<LifecycleSnapshot> {
     if (this.phase === "disposed") {
       throw new AiRuntimeError("disposed", "AI runtime manager is disposed");
     }
@@ -187,7 +197,7 @@ export class AiRuntimeManager {
    * Retries transient failures with bounded back-off; a full-budget
    * out-of-memory downgrades to the constrained budget once (explained).
    */
-  load(token?: CancellationToken): Promise<void> {
+  load(token?: CancellationLike): Promise<void> {
     if (this.phase === "disposed") {
       return Promise.reject(new AiRuntimeError("disposed", "AI runtime manager is disposed"));
     }
@@ -199,7 +209,7 @@ export class AiRuntimeManager {
     if (this.handle && this.phase === "ready") {
       return Promise.resolve();
     }
-    this.loadPromise ??= this.runLoad(token).finally(() => {
+    this.loadPromise ??= this.runLoad(asCancellationToken(token)).finally(() => {
       this.loadPromise = null;
     });
     return this.loadPromise;
@@ -234,11 +244,16 @@ export class AiRuntimeManager {
         this.handle = handle;
         this.budget = budget;
         this.lastError = null;
-        this.recovery = budget === this.options.requirements.constrained ? recoveryForCapability({
-          level: "constrained",
-          reasons: [{ code: "memory-constrained", detail: "running with reduced generation budget" }],
-          budget,
-        }) : null;
+        this.recovery =
+          budget === this.options.requirements.constrained
+            ? recoveryForCapability({
+                level: "constrained",
+                reasons: [
+                  { code: "memory-constrained", detail: "running with reduced generation budget" },
+                ],
+                budget,
+              })
+            : null;
         this.setPhase("ready");
         return;
       } catch (raw) {
@@ -248,11 +263,7 @@ export class AiRuntimeManager {
           throw error;
         }
         this.lastError = error;
-        if (
-          error.kind === "out-of-memory" &&
-          !this.forceConstrained &&
-          this.capability.level === "full"
-        ) {
+        if (error.kind === "out-of-memory" && !this.forceConstrained && this.capability.level === "full") {
           // Explained degradation: retry at the constrained budget.
           this.forceConstrained = true;
         }
@@ -266,10 +277,7 @@ export class AiRuntimeManager {
         try {
           // Back-off is interruptible only by the caller's external token; the
           // per-attempt source may already be cancelled by its own timeout.
-          await this.interruptibleSleep(
-            Math.min(baseMs * factor ** (failures - 1), maxMs),
-            token,
-          );
+          await this.interruptibleSleep(Math.min(baseMs * factor ** (failures - 1), maxMs), token);
         } catch (sleepError) {
           // Cancellation during back-off must still restore the phase.
           if ((sleepError as AiRuntimeError).kind === "cancelled") {
@@ -294,18 +302,22 @@ export class AiRuntimeManager {
   }
 
   /**
-   * Stream a guarded explanation for the current cards/trip context.
+   * Stream a guarded explanation for the supplied grounding context.
+   *
+   * Raw chunks from `runtime.generate` are piped straight into `guardStream`,
+   * so `onSafeUnit` only ever receives complete, schema-valid, grounded,
+   * branded units. Any failure throws a typed AiRuntimeError and updates
+   * snapshot.recovery; cards and the active trip are untouched.
    *
    * One inference at a time (SDD §1.5): an in-flight generation is cancelled
    * and awaited before the new one starts; its caller receives the typed
-   * "cancelled" error. Any failure throws a typed AiRuntimeError and updates
-   * snapshot.recovery; cards and the active trip are untouched.
+   * "cancelled" error.
    */
   async explain(
-    input: Omit<ExplanationContext, "budget">,
+    context: GroundingContext,
     onSafeUnit: SafeUnitHandler,
-    token?: CancellationToken,
-  ): Promise<void> {
+    token?: CancellationLike,
+  ): Promise<ExplainReport> {
     if (this.phase === "disposed") {
       throw new AiRuntimeError("disposed", "AI runtime manager is disposed");
     }
@@ -334,7 +346,15 @@ export class AiRuntimeManager {
     }
 
     const source = new CancellationTokenSource();
-    const unlink = linkToken(source, token);
+    const unlink = linkToken(source, asCancellationToken(token));
+    // Either cancellation idiom ends at ModelRuntime.cancel().
+    const unlinkNative = source.token.onCancel(() => {
+      try {
+        this.runtime.cancel();
+      } catch {
+        // cancel() is best-effort per the port contract.
+      }
+    });
     const id = (this.seq += 1);
     let resolveSettled!: () => void;
     const settled = new Promise<void>((resolve) => {
@@ -344,44 +364,75 @@ export class AiRuntimeManager {
     this.setPhase("generating");
 
     try {
-      const context: ExplanationContext = { ...input, budget: this.budget };
-      await this.runtime.generate(
-        handle,
+      const { prompt } = buildExplainPrompt(context);
+      const report = await guardStream(
         context,
+        this.runtime.generate(prompt, source.token),
         (unit) => {
           // Late units from a superseded/cancelled generation never surface.
           if (!source.token.isCancelled && this.generation?.id === id) onSafeUnit(unit);
         },
-        source.token,
+        { token: source.token },
       );
+
+      if (report.status === "cancelled") {
+        this.cancelledGenerations += 1;
+        this.lastError = null;
+        this.recovery = recoveryForError(new AiRuntimeError("cancelled", "explanation cancelled"));
+        if (this.generation?.id === id) this.setPhase(this.handle ? "ready" : "degraded");
+        throw new AiRuntimeError("cancelled", "explanation cancelled");
+      }
+      if (report.status === "model_error") {
+        throw await this.failGeneration(classifyNativeError(report.error, "inference-failed"), id);
+      }
+      if (report.status === "invalid_stream") {
+        throw await this.failGeneration(
+          new AiRuntimeError(
+            "invalid-stream",
+            `model output failed the display guard (${report.rejectedUnits.length} rejected units)`,
+          ),
+          id,
+        );
+      }
+
       this.completedGenerations += 1;
+      this.lastError = null;
       if (this.generation?.id === id) this.setPhase("ready");
+      return report;
     } catch (raw) {
+      if (raw instanceof AiRuntimeError) throw raw;
       if (source.token.isCancelled) {
         this.cancelledGenerations += 1;
         this.lastError = null;
         if (this.generation?.id === id) this.setPhase(this.handle ? "ready" : "degraded");
         throw new AiRuntimeError("cancelled", "explanation cancelled", { cause: raw });
       }
-      const error = classifyNativeError(raw, "inference-failed");
-      this.lastError = error;
-      if (error.kind === "out-of-memory") {
-        this.forceConstrained = true;
-        await this.unloadHandleQuietly();
-        this.recovery = recoveryForError(error);
-        this.setPhase("degraded");
-      } else {
-        this.recovery = recoveryForError(error);
-        this.setPhase(this.handle ? "ready" : "degraded");
-        // Cards/trip stay usable; the next explain() retries with the
-        // in-memory model (or reloads if the handle was lost).
-      }
-      throw error;
+      throw await this.failGeneration(classifyNativeError(raw, "inference-failed"), id);
     } finally {
+      unlinkNative();
       unlink();
       if (this.generation?.id === id) this.generation = null;
       resolveSettled();
     }
+  }
+
+  /**
+   * Record a generation failure, unloading on OOM so the next attempt reloads
+   * at the constrained budget. Cards/trip stay usable in every branch.
+   */
+  private async failGeneration(error: AiRuntimeError, id: number): Promise<AiRuntimeError> {
+    this.lastError = error;
+    this.recovery = recoveryForError(error);
+    if (error.kind === "out-of-memory") {
+      this.forceConstrained = true;
+      await this.unloadHandleQuietly();
+      this.setPhase("degraded");
+    } else if (this.generation?.id === id) {
+      // Cards/trip stay usable; the next explain() retries with the in-memory
+      // model (or reloads if the handle was lost).
+      this.setPhase(this.handle ? "ready" : "degraded");
+    }
+    return error;
   }
 
   /** Prompt and idempotent cancellation of the in-flight generation. */
@@ -456,7 +507,7 @@ export class AiRuntimeManager {
     this.handle = null;
     if (!handle) return;
     try {
-      await this.runtime.dispose(handle);
+      await this.runtime.dispose();
     } catch {
       // Disposal is best-effort; failures here must not mask the real error
       // or block cleanup. The native adapter contract keeps this leak-free.
@@ -485,9 +536,7 @@ export class AiRuntimeManager {
 
 const TIMEOUT = Symbol("ai-load-timeout");
 
-async function probeCapabilityFromOptions(
-  options: LifecycleOptions,
-): Promise<CapabilityReport> {
+async function probeCapabilityFromOptions(options: LifecycleOptions): Promise<CapabilityReport> {
   const snapshot = await options.probe();
   return probeCapability(snapshot, options.requirements);
 }

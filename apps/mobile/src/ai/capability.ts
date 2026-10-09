@@ -1,5 +1,5 @@
 /**
- * Device-capability probe (T34).
+ * Device-capability probe.
  *
  * Determines whether the pinned sub-1B model can run on this device and at
  * which budget, per the SDD §1.5 capability table:
@@ -75,7 +75,10 @@ export interface DeviceSnapshot {
   modelAssetReady: boolean;
 }
 
-export function probeCapability(snapshot: DeviceSnapshot, requirements: ModelRequirements): CapabilityReport {
+export function probeCapability(
+  snapshot: DeviceSnapshot,
+  requirements: ModelRequirements,
+): CapabilityReport {
   const reasons: CapabilityReason[] = [];
 
   const abiOk = snapshot.abis.some((abi) => requirements.supportedAbis.includes(abi));
@@ -134,9 +137,9 @@ export function checkReferencePhoneGate(
   const problems: string[] = [];
   if (options.isReferencePhone && report.level !== "full") {
     problems.push(
-      `reference phone probed as "${report.level}" (${report.reasons
-        .map((r) => r.code)
-        .join(", ") || "no reasons"}): the judged release requires working on-device AI on the reference phone`,
+      `reference phone probed as "${report.level}" (${
+        report.reasons.map((r) => r.code).join(", ") || "no reasons"
+      }): the judged release requires working on-device AI on the reference phone`,
     );
   }
   return { ok: problems.length === 0, problems };

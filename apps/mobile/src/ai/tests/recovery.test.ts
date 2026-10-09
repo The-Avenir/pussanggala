@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { probeCapability } from "../capability";
-import { AiRuntimeError, type AiErrorKind } from "../errors";
+import { AiRuntimeError, classifyNativeError, type AiErrorKind } from "../errors";
 import { recoveryForCapability, recoveryForError, type RecoveryKind } from "../recovery";
 import { CONSTRAINED_DEVICE, FULL_DEVICE, REQUIREMENTS, UNSUPPORTED_ABI_DEVICE } from "./fixtures";
 
@@ -11,6 +11,7 @@ const EXPECTED_MAPPING: Record<AiErrorKind, RecoveryKind> = {
   "load-timeout": "ai-retryable",
   "load-failed": "ai-retryable",
   "inference-failed": "ai-retryable",
+  "invalid-stream": "ai-unsafe-output",
   "out-of-memory": "ai-memory-pressure",
   cancelled: "ai-cancelled",
   disposed: "ai-unsupported",
@@ -44,6 +45,7 @@ describe("recoveryForError", () => {
 
   it("marks retryability consistently with the error kind", () => {
     expect(recoveryForError(new AiRuntimeError("load-timeout", "x")).retryable).toBe(true);
+    expect(recoveryForError(new AiRuntimeError("invalid-stream", "x")).retryable).toBe(true);
     expect(recoveryForError(new AiRuntimeError("unsupported-device", "x")).retryable).toBe(false);
   });
 
@@ -72,13 +74,8 @@ describe("recoveryForCapability", () => {
 });
 
 describe("error classification", () => {
-  it("keeps typed errors as-is and detects OOM phrasing", async () => {
-    const { classifyNativeError } = await import("../errors");
-    for (const message of [
-      "OutOfMemoryError: failed to allocate",
-      "std::bad_alloc",
-      "llama OOM in ctx",
-    ]) {
+  it("keeps typed errors as-is and detects OOM phrasing", () => {
+    for (const message of ["OutOfMemoryError: failed to allocate", "std::bad_alloc", "llama OOM in ctx"]) {
       expect(classifyNativeError(new Error(message), "load-failed").kind).toBe("out-of-memory");
     }
     expect(classifyNativeError(new Error("weird decode fault"), "inference-failed").kind).toBe(

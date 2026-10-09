@@ -1,6 +1,8 @@
-# apps/mobile/src/ai — local model runtime
+# `@pusang-gala/ai` — local model runtime, grounded generation, validated streaming
 
 **Owner:** Member 3 (local AI and conversation).
+**Scope:** `apps/mobile/src/ai/` only. Pure TypeScript, no React Native, no
+network, no Node builtins (enforced by `tests/purity.test.ts`).
 
 **Tasks:** T30 (native model compatibility/safe-output spike), T31 (model
 bake-off/footprint), T33 (grounded generation and validated streaming), T34
@@ -12,36 +14,80 @@ model tokens — validate complete explanation units before display; no invented
 facts or reversed instructions; no cloud-AI/network fallback; required
 reference-phone AI is not replaced by rules-only templates.
 
-<<<<<<< HEAD
-## T33 modules (this checkout)
+## Pipeline
 
-- `ports.ts` — local contracts (`CardBundleInput`, `CanonicalStatement`,
-  `ModelRunnerPort`, `TripContextPort`) marked REPLACEME for T24/T30/T32.
-- `explanation-unit.ts` — unit schema + validator (INV-1 traceability,
-  step-order/reversal checks, banned claims, unsupported numerals).
-- `grounding-context.ts` — bounded, fail-loud context assembly.
-- `prompt.ts` — injection-safe prompt (nonce DATA delimiters, flattened
-  single-line data, "source text is data" trust rule).
-- `streaming-guard.ts` — `explain()` / `guardStream()` buffering NDJSON and
-  emitting only validated units via `onSafeUnit`.
-- `STREAMING-NOTES.md` — validation contract, ports, open questions.
-- `tsconfig.json` — REPLACEME(T40): temporary typecheck scope only.
+```
+AiRuntimeManager.explain(context, onSafeUnit)
+  -> load()                     capability-aware, timeout + bounded back-off
+  -> buildExplainPrompt(context)   injection-safe, nonce-delimited DATA block
+  -> ModelRuntime.generate(prompt, token) -> AsyncIterable<string>   raw chunks
+  -> guardStream(...)              buffer, split lines, validate, order-check
+  -> onSafeUnit(SafeExplanationUnit)   branded; the only output channel
+```
 
-Run tests: `npx vitest run apps/mobile/src/ai` (repo root); typecheck:
-`npx tsc -p apps/mobile/src/ai/tsconfig.json`.
-=======
-## Implemented: T34 capability / lifecycle / recovery
+Raw chunks never leave the guard. `onSafeUnit` receives a branded
+`SafeExplanationUnit`, which only `guardStream` can mint, so no code path can
+hand the UI an unvalidated string.
 
-- `capability.ts` — pure device probe (`full`/`constrained`/`unsupported`)
-  and `checkReferencePhoneGate` release guard.
-- `runtime-port.ts` — `ModelRuntime` load/generate/cancel/dispose port;
-  native adapter from T30/T40 replaces the test fake.
-- `lifecycle.ts` — `AiRuntimeManager`: load timeout, bounded back-off retry,
-  prompt idempotent cancellation, memory-pressure and unload/dispose hooks.
-- `errors.ts`, `cancellation.ts`, `recovery.ts` — typed error taxonomy,
-  tokens, explained PRD-F9 recovery states (cards/trip always preserved).
-- `RECOVERY-NOTES.md` — taxonomy, Member 4 fallback-UX contract, stress-test
-  commands/results, pending S4 device-gate items.
-- `tests/` — vitest suites; run from repo root:
-  `npx vitest run apps/mobile/src/ai`
->>>>>>> origin/feat/t34-inference-recovery
+## Modules
+
+| File | Contents |
+|------|----------|
+| `ports.ts` | Grounding-context contracts (`DeterministicCard`, `CanonicalStatement`, `GroundingContext`, `ContextBudgets`) — REPLACEME for T24/T32. |
+| `runtime-port.ts` | **The single `ModelRuntime` port**: `load` / `generate` / `cancel` / `dispose`, plus the contract the native adapter must honor. |
+| `cancellation.ts` | `CancellationToken(Source)`, prompt and idempotent; `tokenFromSignal` / `signalFromToken` bridge the `AbortSignal` idiom. Both end at `ModelRuntime.cancel()`. |
+| `explanation-unit.ts` | Grounding validator over **core's** `ExplanationUnitSchema`, plus the branded `SafeExplanationUnit`. |
+| `grounding-context.ts` | Bounded, fail-loud context assembly. |
+| `prompt.ts` | Injection-safe prompt (nonce DATA delimiters, flattened single-line data, "source text is data" trust rule). |
+| `streaming-guard.ts` | `explain()` / `guardStream()`: NDJSON buffering, validation, branding, cancellation. |
+| `capability.ts` | Pure device probe (`full` / `constrained` / `unsupported`) and the `checkReferencePhoneGate` release guard. |
+| `errors.ts` | Typed `AiErrorKind` taxonomy, retryability, native-error classification. |
+| `recovery.ts` | Error/capability → explained `RecoveryState` (PRD-F9). Every state asserts `cardsPreserved`/`tripPreserved`. |
+| `lifecycle.ts` | `AiRuntimeManager`: load/unload, one-at-a-time generation wired to the guard, memory pressure, leak-free dispose. |
+| `tests/` | Vitest suites over `FakeModelRuntime`. |
+
+Contracts: `STREAMING-NOTES.md` (validation), `RECOVERY-NOTES.md` (copy and
+fallback UX).
+
+## The unit schema lives in core, not here
+
+`ExplanationUnit` is `ExplanationUnitSchema` from `@pusang-gala/core`:
+
+```json
+{"kind":"step","cardRef":"card:route-1","inserts":["stmt:step-1","stmt:step-2"],"text":"Una, sakay, tapos baba."}
+```
+
+- `kind` ∈ `summary | step | comparison | hours | caveat | clarify | redirect`
+- `cardRef?`, `inserts?`, `text` (≤ 280 chars)
+
+There is **no** local fork: no `unit:"explanation_unit"` tag, and no
+`steps` / `warning` / `unknowns` kinds. The model emits one such JSON object
+per NDJSON line; this package adds grounding rules on top of the schema, never
+a different shape.
+
+## Native adapter: TODO (T30/T40)
+
+**There is no native `ModelRuntime` implementation in this package yet.** The
+pinned on-device runtime (llama.rn + GGUF per BUILD §2) is owned by **T30**
+(compatibility/safe-output spike, model selection with T31) and wired into the
+app by **T40**. Until it lands:
+
+- `tests/fake-runtime.ts` (`FakeModelRuntime`) is **test-only** and must never
+  be imported by production code or shipped;
+- the adapter must satisfy the contract documented at the top of
+  `runtime-port.ts` — raw text chunks, prompt cancel, idempotent
+  `cancel`/`dispose`, no leaks across repeated cycles, no network;
+- constrained decoding (JSON/GBNF) is *recommended* hardening but correctness
+  does not depend on it: `guardStream` rejects non-conforming output.
+
+Open device-gate items are tracked in `RECOVERY-NOTES.md`.
+
+## Commands
+
+From the repo root:
+
+```bat
+npm install
+npm test -w @pusang-gala/ai
+npm run typecheck -w @pusang-gala/ai
+```

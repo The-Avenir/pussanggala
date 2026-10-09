@@ -1,25 +1,32 @@
 /**
- * ModelRuntime port (T34).
+ * The single local model runtime port.
  *
- * This file defines the interface only. The pinned native implementation
- * (llama.rn/GGUF per BUILD §2) is provided by T30/T40 and plugs in behind this
- * port; tests inject a fake runtime with failure injection.
+ * This is the one and only seam between the AI layer and the native model.
+ * `FakeModelRuntime` (tests/) implements it for tests; the pinned native
+ * adapter (llama.rn/GGUF per BUILD §2) is **TODO, owned by T30/T40** and is
+ * not present in this package — see README.md.
  *
  * Port contract the native adapter MUST honor:
- *  - load() must reject promptly when its token is cancelled (including after
- *    an internal timeout-driven cancel from the manager) and must not leave a
- *    native context allocated when it rejects;
- *  - generate() must stop emitting units and reject when its token is
- *    cancelled; units are complete explanation-unit payloads, never raw token
- *    streams — validation of units belongs to T33's stream guard, layered on
- *    top of this port;
- *  - cancel() and dispose() must be idempotent and safe to call in any order;
- *  - dispose() must release ALL native memory for the handle so repeated
- *    load/generate/cancel cycles do not leak (verified in tests).
+ *  - `load` rejects promptly when its token is cancelled (including after a
+ *    timeout-driven cancel from the manager) and leaves no native context
+ *    allocated when it rejects;
+ *  - `generate` yields **raw decoded text chunks** in generation order.
+ *    Chunk boundaries are arbitrary: a chunk may split a unit or contain
+ *    several. The adapter performs no validation and no UI-facing
+ *    formatting — `streaming-guard.ts` is the safety boundary, and nothing
+ *    yielded here may reach the screen unvalidated;
+ *  - `generate` stops sampling and ends/rejects promptly once its token is
+ *    cancelled; one inference at a time (SDD §1.5);
+ *  - `cancel()` and `dispose()` are idempotent and safe in any order;
+ *  - `dispose()` releases ALL native memory so repeated
+ *    load/generate/cancel cycles do not leak (verified in tests);
+ *  - no network access anywhere behind this port (INV-2).
  */
 
-import type { CancellationToken } from "./cancellation";
+import type { CancellationLike } from "./cancellation";
 import type { GenerationBudget } from "./capability";
+
+export type { SafeExplanationUnit, SafeUnitHandler } from "./explanation-unit";
 
 export interface ModelSpec {
   /** Native-readable file path supplied by Member 4's asset loader (T41). */
@@ -28,34 +35,6 @@ export interface ModelSpec {
   budget: GenerationBudget;
 }
 
-/**
- * Structured explanation context.
- *
- * REPLACE (T24/T32): the real shape is `core.buildContext(cards, notes,
- * tripState)` — a bounded evidence bundle with eligible record IDs, canonical
- * cards, paraphrased notes and unknown/conflict/age flags. Kept minimal here
- * so lifecycle/recovery work proceeds before those packages merge.
- */
-export interface ExplanationContext {
-  /** Canonical card payload as produced by core.compose (opaque here). */
-  readonly cardsJson: string;
-  readonly notesJson: string;
-  readonly tripStateJson: string;
-  readonly budget: GenerationBudget;
-}
-
-/**
- * One complete, guarded explanation unit.
- *
- * REPLACE (T33): T33's stream guard validates unit kind, canonical card
- * references and factual inserts before any unit reaches this callback; this
- * layer only transports already-validated units. Raw unchecked tokens must
- * never flow through onSafeUnit or reach the screen (INV, SDD §1.4).
- */
-export type SafeExplanationUnit = string;
-
-export type SafeUnitHandler = (unit: SafeExplanationUnit) => void;
-
 /** Opaque native handle returned by a successful load. */
 export interface RuntimeHandle {
   readonly id: number;
@@ -63,15 +42,11 @@ export interface RuntimeHandle {
 }
 
 export interface ModelRuntime {
-  load(spec: ModelSpec, token: CancellationToken): Promise<RuntimeHandle>;
-  generate(
-    handle: RuntimeHandle,
-    context: ExplanationContext,
-    onSafeUnit: SafeUnitHandler,
-    token: CancellationToken,
-  ): Promise<void>;
-  /** Best-effort stop of any in-flight generation on this handle. Idempotent. */
-  cancel(handle: RuntimeHandle): void;
-  /** Release all native resources for the handle. Idempotent. */
-  dispose(handle: RuntimeHandle): Promise<void> | void;
+  load(spec: ModelSpec, token?: CancellationLike): Promise<RuntimeHandle>;
+  /** Raw text chunks, in order. Never units, never validated output. */
+  generate(prompt: string, token?: CancellationLike): AsyncIterable<string>;
+  /** Best-effort stop of any in-flight generation. Idempotent. */
+  cancel(): void;
+  /** Release all native resources. Idempotent. */
+  dispose(): Promise<void> | void;
 }

@@ -10,7 +10,7 @@
  */
 
 import { mkdirSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { loadJson, buildBundle } from "./pack.ts";
@@ -18,7 +18,9 @@ import type { DemoPack, TripState } from "./pack.ts";
 import { validateCorpora } from "./schema.ts";
 import type { AdversarialCase, IntentCase } from "./schema.ts";
 import { detectUnsupportedClaims, guardStream } from "./guard.ts";
+import { loadRealSut, RealSutUnavailableError } from "./realSut.ts";
 import { StubRulesSut } from "./stubSut.ts";
+import { resolveSutMode } from "./sutSelection.ts";
 import type { SystemUnderTest } from "./sut.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -101,7 +103,7 @@ function checkTextAssertions(
   }
 }
 
-async function main(): Promise<void> {
+export async function runEvaluation(): Promise<boolean> {
   const jsonOnly = process.argv.includes("--json");
   const failures: Failure[] = [];
   const parseMs: number[] = [];
@@ -148,7 +150,21 @@ async function main(): Promise<void> {
   for (const f of selfCheckFailures) failures.push({ case_id: "SELF-CHECK", reason: "harness_self_check", detail: f });
 
   // ---------- 3) SUT wiring ----------
-  const sut: SystemUnderTest = new StubRulesSut(pack);
+  const sutMode = resolveSutMode(process.argv.slice(2), process.env);
+  let sut: SystemUnderTest;
+  if (sutMode === "real") {
+    try {
+      sut = await loadRealSut(pack);
+    } catch (error) {
+      if (error instanceof RealSutUnavailableError) {
+        console.log(`SKIP real SUT: ${error.message}`);
+        return true;
+      }
+      throw error;
+    }
+  } else {
+    sut = new StubRulesSut(pack);
+  }
 
   // ---------- 4) intent suite ----------
   let intentCorrect = 0;
@@ -257,7 +273,9 @@ async function main(): Promise<void> {
     generated_at: new Date().toISOString(),
     preliminary: true,
     preliminary_reason:
-      "SUT is the deterministic stub (stub-rules-v0). Scores validate the harness and floor the acceptance gates; model-backed numbers await T32/T33/T34 integration (see EVALUATION-NOTES.md). Latency is host-side harness timing only - device M1/M4/M5 evidence is NOT recorded here.",
+      sutMode === "stub"
+        ? "SUT is the deterministic stub (stub-rules-v0). Scores validate the harness and floor the acceptance gates; model-backed numbers await T32/T33/T34 integration (see EVALUATION-NOTES.md). Latency is host-side harness timing only; device latency and T30 model scores are NOT claimed."
+        : "Real conversation/AI adapter run on the host. This is not reference-device evidence; device latency and T30 model scores are NOT claimed.",
     sut: sut.name,
     environment: { node: process.version, platform: process.platform, arch: process.arch },
     corpus: corpus.stats,
@@ -295,7 +313,7 @@ async function main(): Promise<void> {
   if (!jsonOnly) {
     const line = "-".repeat(72);
     console.log(line);
-    console.log("T35 conversation/grounding evaluation — PRELIMINARY (stub SUT)");
+    console.log(`T35 conversation/grounding evaluation — PRELIMINARY (${sut.name})`);
     console.log(line);
     console.log(
       `corpus: ${corpus.stats.intent_total} intent (${corpus.stats.intent_train} train / ${corpus.stats.intent_held_out} held-out) + ${corpus.stats.adversarial_total} adversarial cases`,
@@ -330,7 +348,10 @@ async function main(): Promise<void> {
     console.log(JSON.stringify(report));
   }
 
-  process.exit(passed ? 0 : 1);
+  return passed;
 }
 
-await main();
+const invokedPath = process.argv[1];
+if (invokedPath && resolve(invokedPath) === fileURLToPath(import.meta.url)) {
+  process.exitCode = (await runEvaluation()) ? 0 : 1;
+}
