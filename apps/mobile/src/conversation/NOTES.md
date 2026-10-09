@@ -115,6 +115,17 @@ against the current `TripState`.
 performs the swap, so the manager swaps and then calls `plan` for fresh
 evidence.
 
+## T35 eval bridge (`createConversationEvalSut`)
+
+Exports a harness-facing SUT named `conversation-ai-bridge-v0`. Parse/respond
+use the same deterministic rules as `tools/eval` `StubRulesSut` (vendored under
+`src/evalHarness/`). `guardStream` prefers duck-typed `@pusang-gala/ai` helpers
+when the passed `aiModule` exposes them; otherwise it uses the eval guard.
+
+Real-path eval (`PUSANG_GALA_EVAL_SUT=real`) may fail corpus accuracy gates
+until T30/T33 production wiring lands; it should load without
+`RealSutUnavailableError` and pass harness self-checks.
+
 ## Open integration questions
 
 1. **`plan` vs. itinerary selection.** The port currently both ranks and
