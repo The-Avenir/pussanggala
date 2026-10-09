@@ -13,7 +13,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { DatabaseSync } from "./lib/sqlite.mjs";
 import { SCHEMA_VERSION, TABLES, emptyTables } from "./lib/spec.mjs";
 import {
-  checkManifest, checkRecords, checkSourcePosts, leakScan, loadSourceNgrams,
+  checkManifest, checkRecords, checkSourcePosts, checkSourceSnapshot, leakScan, loadSourceNgrams, sourceSnapshotSha256,
 } from "./lib/checks.mjs";
 
 export { leakScan } from "./lib/checks.mjs";
@@ -280,7 +280,7 @@ export function build(o) {
 
   if (o.verifyInput !== false) {
     const audit = auditRawDataset(o.rawDatasetPath);
-    const sha = sha256File(o.rawDatasetPath);
+    const sha = sourceSnapshotSha256(o.rawDatasetPath);
     if (sha !== run.input_sha256) issues.push({ code: "input_mismatch", table: "run", id: null, detail: "input_sha256 does not match raw dataset" });
     if (audit.inputPosts !== run.input_posts) issues.push({ code: "input_mismatch", table: "run", id: null, detail: `input_posts ${run.input_posts} != dataset ${audit.inputPosts}` });
     if (audit.answeredPosts !== run.answered_posts) issues.push({ code: "input_mismatch", table: "run", id: null, detail: `answered_posts ${run.answered_posts} != dataset ${audit.answeredPosts}` });
@@ -311,8 +311,9 @@ export function build(o) {
   issues.push(...checkRecords(tables));
   issues.push(...checkManifest(manifestRow, tables));
   issues.push(...checkSourcePosts(tables, final));
+  issues.push(...checkSourceSnapshot(tables, manifestRow, o.rawDatasetPath));
   const grams = loadSourceNgrams(o.rawDatasetPath);
-  const leaks = leakScan(tables, grams);
+  const leaks = leakScan(tables, grams, manifestRow);
   issues.push(...leaks);
   if (issues.length) throw new BuildError(`build failed with ${issues.length} issue(s)`, issues);
 

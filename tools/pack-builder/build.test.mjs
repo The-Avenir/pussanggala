@@ -20,6 +20,9 @@ const RAW = join(FX, "raw-dataset.json");
 const RUN = JSON.parse(readFileSync(join(FX, "run.json"), "utf8"));
 const DISP = JSON.parse(readFileSync(join(FX, "dispositions.json"), "utf8"));
 const BASE = readEligibleDir(join(FX, "eligible"));
+// Legacy fixtures use a placeholder snapshot; materialize a valid locator without editing raw fixtures.
+const redditSources = new Set(BASE.source.filter((s) => s.kind === "reddit_thread").map((s) => s.source_id));
+for (const rs of BASE.record_source) if (redditSources.has(rs.source_id)) rs.snapshot_sha256 = RUN.input_sha256;
 
 const tmpDirs = [];
 const tmp = () => {

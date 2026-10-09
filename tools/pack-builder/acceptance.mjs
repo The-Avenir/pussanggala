@@ -7,14 +7,43 @@
 //   node tools/pack-builder/acceptance.mjs --pack data/raw/out/pack.sqlite \
 //        [--companion data/raw/out/pack.manifest.json] [--raw howtogetthereph_dataset/ncr_routes.json] [--json]
 
-import { existsSync, readFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { existsSync, readFileSync, statSync } from "node:fs";
+import { basename, dirname, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { DatabaseSync } from "./lib/sqlite.mjs";
 import { MANIFEST_COLS, TABLES, emptyTables } from "./lib/spec.mjs";
-import { ISSUE_GROUP, checkManifest, checkRecords, leakScan, loadSourceNgrams } from "./lib/checks.mjs";
+import { ISSUE_GROUP, checkManifest, checkRecords, checkSourceSnapshot, leakScan, loadSourceNgrams } from "./lib/checks.mjs";
 import { MUTATIONS, clone } from "./lib/mutations.mjs";
-import { COMPANION_FILE, sha256File, sqliteChecks } from "./build.mjs";
+import { COMPANION_FILE, sha256File, sqliteChecks, sourceDateRange } from "./build.mjs";
+
+/** Validate the existing v1 companion against the actual SQLite manifest and file. */
+export function checkCompanion(companion, manifest, packPath) {
+  const issues = [];
+  const add = (code, detail) => issues.push({ code, table: null, id: null, detail });
+  if (!companion || typeof companion !== "object" || Array.isArray(companion)) {
+    return [{ code: "companion_invalid", table: null, id: null, detail: "companion must be an object" }];
+  }
+  const sha = sha256File(packPath);
+  const bytes = statSync(packPath).size;
+  if (companion.pack_sha256 !== sha) add("pack_sha256_mismatch", "companion pack_sha256 does not match pack file");
+  for (const key of ["pack_id", "schema_version", "created_at", "input_sha256"]) {
+    if (!manifest || companion[key] !== manifest[key]) add(key === "pack_id" ? "pack_id_mismatch" : "companion_metadata_mismatch", `companion ${key} differs from pack_manifest`);
+  }
+  if (!companion.manifest || typeof companion.manifest !== "object" || Array.isArray(companion.manifest)
+    || Object.keys(companion.manifest).length !== MANIFEST_COLS.length
+    || MANIFEST_COLS.some((key) => !manifest || companion.manifest[key] !== manifest[key])) {
+    add("companion_manifest_mismatch", "companion manifest differs from the SQLite manifest");
+  }
+  if (companion.pack_file !== basename(packPath)) add("companion_file_mismatch", "pack_file differs from the actual filename");
+  if (companion.pack_bytes !== bytes) add("companion_bytes_mismatch", "pack_bytes differs from the actual file size");
+  const assets = companion.assets;
+  if (!Array.isArray(assets) || assets.length !== 1 || !assets[0]
+    || assets[0].kind !== "pack" || assets[0].path !== basename(packPath)
+    || assets[0].sha256 !== sha || assets[0].bytes !== bytes) {
+    add("companion_asset_mismatch", "assets must describe the built pack with its actual path, checksum and bytes");
+  }
+  return issues;
+}
 
 /** Read every pack table back out of SQLite as {sqlTableName: rows[]} plus the manifest row. */
 export function readPack(packPath) {
@@ -49,6 +78,10 @@ export function runAcceptance({ packPath, companionPath, rawDatasetPath }) {
   const manifestIssues = manifests.length === 1
     ? checkManifest(manifests[0], tables)
     : [{ code: "manifest_invalid", table: "pack_manifest", id: null, detail: `expected 1 row, found ${manifests.length}` }];
+  if (manifests.length === 1) {
+    const range = sourceDateRange(tables);
+    if (manifests[0].source_date_min !== range.min || manifests[0].source_date_max !== range.max) manifestIssues.push({ code: "manifest_dates_mismatch", table: "pack_manifest", id: null, detail: "source date range differs from cited sources" });
+  }
   push("invalid-record", "pack_manifest row and post-disposition reconciliation", manifestIssues);
 
   const recordIssues = checkRecords(tables);
@@ -58,11 +91,12 @@ export function runAcceptance({ packPath, companionPath, rawDatasetPath }) {
 
   const cPath = companionPath ?? join(dirname(packPath), COMPANION_FILE);
   if (existsSync(cPath)) {
-    const companion = JSON.parse(readFileSync(cPath, "utf8"));
-    const sha = sha256File(packPath);
-    const issues = [];
-    if (companion.pack_sha256 !== sha) issues.push({ code: "pack_sha256_mismatch", table: null, id: null, detail: "companion pack_sha256 does not match pack file" });
-    if (manifests[0] && companion.pack_id !== manifests[0].pack_id) issues.push({ code: "pack_id_mismatch", table: null, id: null, detail: "companion pack_id differs from pack_manifest" });
+    let issues;
+    try {
+      issues = checkCompanion(JSON.parse(readFileSync(cPath, "utf8")), manifests[0], packPath);
+    } catch {
+      issues = [{ code: "companion_invalid", table: null, id: null, detail: "companion could not be read as JSON" }];
+    }
     push("integrity", "companion manifest external checksum", issues);
   } else {
     push("integrity", "companion manifest external checksum", [{ code: "companion_missing", table: null, id: null, detail: "companion manifest not found" }]);
@@ -71,7 +105,8 @@ export function runAcceptance({ packPath, companionPath, rawDatasetPath }) {
   let grams = null;
   if (rawDatasetPath) {
     grams = loadSourceNgrams(rawDatasetPath);
-    push("source-content", "pack text: no 6-word source copies or usernames", leakScan(tables, grams));
+    push("integrity", "raw snapshot identity, counts and evidence locators", checkSourceSnapshot(tables, manifests[0] ?? {}, rawDatasetPath));
+    push("source-content", "pack text: no 6-word source copies or usernames", leakScan(tables, grams, manifests[0]));
   } else {
     push("source-content", "pack text: no 6-word source copies or usernames", [{ code: "raw_missing", table: null, id: null, detail: "--raw not given; leak scan not run" }]);
   }
