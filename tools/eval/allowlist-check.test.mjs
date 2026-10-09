@@ -141,6 +141,19 @@ describe("explicit asset inventory includes binary inputs", () => {
       fs.writeFileSync(path.join(dir, "map/glyphs/Fixture Font/0-255.pbf"), Buffer.from([0]));
     }, result => { assert.equal(result.filesScanned, 2); assert.deepEqual(result.findings, []); });
   });
+  it("accepts enumerated UI assets while rejecting unknown files in the same folders", () => {
+    withTree(dir => {
+      fs.mkdirSync(path.join(dir, "figma")); fs.mkdirSync(path.join(dir, "fonts"));
+      fs.writeFileSync(path.join(dir, "figma/08b9c.svg"), "<svg/>");
+      fs.writeFileSync(path.join(dir, "fonts/DMSans-Regular.ttf"), Buffer.from([0]));
+      fs.writeFileSync(path.join(dir, "figma/unlisted.svg"), "<svg/>");
+    }, result => {
+      assert.equal(result.filesScanned, 3);
+      assert.equal(result.findings.length, 1);
+      assert.equal(result.findings[0]?.rule, "asset-not-allowlisted");
+      assert.ok(result.findings[0]?.file.endsWith("unlisted.svg"));
+    });
+  });
   it("rejects an asset symlink/junction instead of silently skipping it", () => {
     withTree((dir, root) => {
       const target = path.join(root, "raw-source"); fs.mkdirSync(target);

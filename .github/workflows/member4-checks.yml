@@ -33,6 +33,12 @@ jobs:
       - name: Run workspace tests
         run: npm test
 
+      - name: Check persistence types and builder-compatible asset loader
+        run: |
+          node apps/mobile/src/store/check.mjs
+          node node_modules/typescript/bin/tsc -p tools/eval/t41-assets/tsconfig.json
+          node node_modules/vitest/vitest.mjs run --config tools/eval/t41-assets/vitest.config.mts
+
       - name: Check Expo dependency and plugin configuration
         run: npm run mobile:check
 

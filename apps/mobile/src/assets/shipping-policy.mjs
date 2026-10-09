@@ -22,10 +22,50 @@ export const ALLOWLIST = [
 Object.freeze(ALLOWLIST);
 
 // Existing UI art only, separate from required offline knowledge assets.
+const figmaUiPaths = [
+  "assets/figma/08b9c.svg",
+  "assets/figma/18a08.svg",
+  "assets/figma/1f84b.svg",
+  "assets/figma/239f2.svg",
+  "assets/figma/29042.svg",
+  "assets/figma/2f68d.svg",
+  "assets/figma/2ffb3.svg",
+  "assets/figma/44e61.svg",
+  "assets/figma/47028.svg",
+  "assets/figma/4ab7b.svg",
+  "assets/figma/4ce16.svg",
+  "assets/figma/5c959.svg",
+  "assets/figma/5f8e3.svg",
+  "assets/figma/62fc3.svg",
+  "assets/figma/787af.svg",
+  "assets/figma/7a422.svg",
+  "assets/figma/7cf24.svg",
+  "assets/figma/b4595.svg",
+  "assets/figma/b5dc8.svg",
+  "assets/figma/bcb41.svg",
+  "assets/figma/cc825.svg",
+  "assets/figma/d4f14.svg",
+  "assets/figma/d8c58.svg",
+  "assets/figma/de22a.svg",
+  "assets/figma/e681d.svg",
+  "assets/figma/e6da9.svg",
+  "assets/figma/eed90.svg",
+  "assets/figma/f0ea4.svg",
+  "assets/figma/f44dc.svg",
+  "assets/figma/fb95a.svg",
+  "assets/figma/ff654.svg",
+  "assets/fonts/DMSans-Bold.ttf",
+  "assets/fonts/DMSans-Regular.ttf",
+  "assets/fonts/Nunito-Bold.ttf",
+  "assets/fonts/Nunito-ExtraBold.ttf",
+  "assets/licences/DMSans-OFL.txt",
+  "assets/licences/Nunito-OFL.txt",
+  "assets/ui-manifest.json",
+];
 const mascotNames = ["wave", "walk", "think", "pointing", "map", "idle", "compass", "cheer", "binoculars"];
-export const UI_ASSET_PATHS = Object.freeze(mascotNames.flatMap(name => [
+export const UI_ASSET_PATHS = Object.freeze([...figmaUiPaths, ...mascotNames.flatMap(name => [
   `assets/mascot/gaile-${name}.png`, `assets/mascot/trimmed/gaile-${name}.png`,
-]));
+])]);
 export const NON_SHIPPED_ASSET_DOCS = Object.freeze(["assets/mascot/README.md"]);
 
 export function findForbiddenMarker(value) {

@@ -8,8 +8,23 @@
     "exactOptionalPropertyTypes": true,
     "noImplicitOverride": true,
     "verbatimModuleSyntax": true,
-    "types": ["react", "react-native"]
+    "types": [
+      "react",
+      "react-native"
+    ]
   },
-  "include": ["index.ts", "App.tsx", "src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["node_modules", "android", "ios", "src/ai/tests", "src/conversation/test"]
+  "include": [
+    "index.ts",
+    "App.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "android",
+    "ios",
+    "src/ai/tests",
+    "src/conversation/test",
+    "src/store/test"
+  ]
 }

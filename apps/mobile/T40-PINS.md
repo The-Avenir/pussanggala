@@ -1,4 +1,6 @@
-# T40 pins — native scaffold (feat/t40-scaffold-dev)
+# Historical T40 scaffold investigation
+
+**Superseded during PR integration:** Current exact pins and offline plugin settings are recorded in package.json, app.json and t40-build-evidence.md. The integrated scaffold uses llama.rn 0.12.9 with OpenCL disabled, one root workspace lockfile and the release network-permission overlay. The exploratory prerelease configuration below is historical.
 
 **Date (UTC):** 2026-10-10
 **Branch:** `feat/t40-scaffold-dev` from `dev` @ `ae42517`

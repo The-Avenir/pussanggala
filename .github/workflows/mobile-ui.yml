@@ -5,11 +5,15 @@ on:
     paths:
       - 'apps/mobile/**'
       - 'packages/core/**'
+      - 'package.json'
+      - 'package-lock.json'
       - '.github/workflows/mobile-ui.yml'
   pull_request:
     paths:
       - 'apps/mobile/**'
       - 'packages/core/**'
+      - 'package.json'
+      - 'package-lock.json'
       - '.github/workflows/mobile-ui.yml'
 
 jobs:
@@ -23,12 +27,9 @@ jobs:
           cache: npm
           cache-dependency-path: |
             package-lock.json
-            apps/mobile/package-lock.json
-      - name: Install core dependencies
+
+      - name: Install workspace dependencies
         run: npm ci
-      - name: Install mobile dependencies
-        run: npm ci
-        working-directory: apps/mobile
       - name: Typecheck and verify local UI assets
         run: npm run typecheck && npm run check:ui-assets
         working-directory: apps/mobile

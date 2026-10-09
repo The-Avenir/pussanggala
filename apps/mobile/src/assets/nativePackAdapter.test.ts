@@ -40,7 +40,7 @@ function fakeSha(raw: Uint8Array): string {
   return acc.toString(16).padStart(64, "0");
 }
 
-const OTHER_SHA256 = "f".repeat(64);
+const OTHER_SHA256 = "fedcba98".repeat(8);
 const enc = new TextEncoder();
 
 function validManifestRow(): Record<string, unknown> {
