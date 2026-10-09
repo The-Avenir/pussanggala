@@ -1,0 +1,10 @@
+{
+  "name": "pusang-gala-eval-conversation",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "eval": "node src/run.ts",
+    "typecheck": "tsc -p tsconfig.json"
+  }
+}
