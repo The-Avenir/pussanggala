@@ -1,0 +1,342 @@
+<title>Daanan Project Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..800&family=Public+Sans:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: single reading column like a printed proposal, with a sticky section index on wide screens and route "signboards" as the one recurring motif. */
+:root {
+  --bg: #f6f7f5;
+  --surface: #ffffff;
+  --ink: #17221f;
+  --muted: #56645f;
+  --line: #d9dfdb;
+  --accent: #0e6b5c;      /* deep route-sign green */
+  --sign: #f2b705;        /* jeepney signboard yellow, used sparingly */
+  --sign-ink: #1a1a12;
+  --warn: #a4471b;
+  --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --step--1: 0.84rem;
+  --step-0: 1rem;
+  --step-1: 1.2rem;
+  --step-2: 1.5rem;
+  --step-3: clamp(2rem, 5vw, 3rem);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101715; --surface: #17201d; --ink: #e6ece9; --muted: #9aaaa4; --line: #2a3632;
+    --accent: #5cc4ae; --sign: #f2b705; --sign-ink: #1a1a12; --warn: #e58a5c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101715; --surface: #17201d; --ink: #e6ece9; --muted: #9aaaa4; --line: #2a3632;
+  --accent: #5cc4ae; --sign: #f2b705; --sign-ink: #1a1a12; --warn: #e58a5c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: var(--step-0); line-height: 1.6; }
+.wrap { max-width: 1080px; margin: 0 auto; padding-inline: 20px; padding-block: 48px 80px; display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 56px; }
+@media (max-width: 860px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-block: 28px 56px; } nav.toc { display: none; } }
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); align-self: start; font-size: var(--step--1); }
+nav.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; counter-reset: s; }
+nav.toc a { color: var(--muted); text-decoration: none; display: flex; gap: 8px; }
+nav.toc a::before { counter-increment: s; content: counter(s, decimal-leading-zero); font-family: var(--font-mono); color: var(--accent); }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--ink); }
+main { min-width: 0; display: grid; gap: 56px; }
+a { color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: var(--step-3); font-weight: 800; font-stretch: 112%; letter-spacing: -0.01em; }
+h2 { font-size: var(--step-2); font-weight: 700; font-stretch: 105%; }
+h3 { font-size: var(--step-1); font-weight: 600; }
+p { margin: 0; max-width: 66ch; }
+section { display: grid; gap: 16px; scroll-margin-top: 24px; }
+.eyebrow { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.muted { color: var(--muted); }
+header.hero { display: grid; gap: 18px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: var(--step--1); color: var(--muted); }
+.meta b { color: var(--ink); font-weight: 600; }
+.lede { font-size: var(--step-1); max-width: 60ch; }
+
+/* Route signboard: the subject's own artifact */
+.signboard { background: var(--sign); color: var(--sign-ink); font-family: var(--font-display); font-weight: 800; font-stretch: 120%; text-transform: uppercase; letter-spacing: 0.04em; padding: 6px 14px; border-radius: 4px; display: inline-block; font-size: var(--step-0); border: 2px solid var(--sign-ink); }
+.example { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px; display: grid; gap: 14px; }
+.q { font-style: italic; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.steps li { display: grid; grid-template-columns: 76px minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding-bottom: 10px; border-bottom: 1px dashed var(--line); }
+.steps li:last-child { border-bottom: 0; padding-bottom: 0; }
+.mode { font-family: var(--font-mono); font-size: var(--step--1); color: var(--accent); text-transform: uppercase; }
+.fare { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: var(--step--1); white-space: nowrap; }
+.src { font-size: var(--step--1); color: var(--muted); }
+@media (max-width: 480px) { .steps li { grid-template-columns: minmax(0, 1fr) auto; } .steps .mode { grid-column: 1 / -1; } }
+
+ul.plain { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; max-width: 66ch; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.cell { border-top: 2px solid var(--accent); padding-top: 12px; display: grid; gap: 6px; min-width: 0; }
+.cell p { font-size: 0.95rem; }
+
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.93rem; min-width: 560px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--font-mono); font-size: var(--step--1); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pill { display: inline-block; font-family: var(--font-mono); font-size: 0.72rem; padding: 2px 8px; border-radius: 99px; border: 1px solid currentColor; white-space: nowrap; }
+.pill.high { color: var(--warn); }
+.pill.med { color: var(--accent); }
+
+.phases { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.phases li { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 20px; padding-block: 16px; border-top: 1px solid var(--line); }
+.phases li:last-child { border-bottom: 1px solid var(--line); }
+.phases .when { font-family: var(--font-mono); font-size: var(--step--1); color: var(--accent); }
+.phases h3 { margin-bottom: 4px; }
+@media (max-width: 480px) { .phases li { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+
+pre.mermaid { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px; overflow-x: auto; margin: 0; }
+.callout { border-left: 3px solid var(--warn); padding: 4px 0 4px 16px; max-width: 66ch; }
+footer { font-size: var(--step--1); color: var(--muted); border-top: 1px solid var(--line); padding-top: 20px; display: grid; gap: 6px; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Sections">
+    <ol>
+      <li><a href="#summary">Summary</a></li>
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#solution">Solution</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#data">Data strategy</a></li>
+      <li><a href="#mvp">MVP scope</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
+      <li><a href="#risks">Risks</a></li>
+      <li><a href="#metrics">Success metrics</a></li>
+      <li><a href="#resources">Resources</a></li>
+      <li><a href="#questions">Open questions</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <span class="eyebrow">Project proposal · Draft v0.1 · October 2026</span>
+      <h1>Daanan: local-AI commute directions for the Philippines</h1>
+      <p class="lede">A phone app that answers "Paano pumunta sa…?" the way a helpful local would: which jeep to ride, what the signboard says, where to get off and how much to pay. It runs on the device and works on weak or no mobile data.</p>
+      <div class="meta">
+        <span><b>Working name</b> Daanan ("pathway")</span>
+        <span><b>Team</b> appBuilders</span>
+        <span><b>Platforms</b> Android first, then iOS</span>
+        <span><b>Status</b> Seeking approval for a 6-week prototype</span>
+      </div>
+    </header>
+
+    <section id="summary">
+      <span class="eyebrow">Summary</span>
+      <h2>The idea in one paragraph</h2>
+      <p>Filipino commuters already solve this problem by asking each other. r/HowToGetTherePH has about 297,000 members posting and answering route questions, many of them outside Metro Manila. Daanan turns that kind of local, informal-transit knowledge into a structured route database. A small language model on the phone then answers questions in Taglish from that database. Unlike existing apps, it covers jeepneys, UV Express, tricycles and provincial buses outside NCR, and it keeps working when the signal drops.</p>
+      <div class="example" aria-label="Example answer, illustrative only">
+        <p class="q">"Pano pumunta sa SM Masinag galing Cubao? First time ko po."</p>
+        <ol class="steps">
+          <li><span class="mode">Jeep</span><span>Ride a jeep with signboard <span class="signboard">Cubao – Antipolo</span> along Aurora Blvd. Get off at SM Masinag, Marcos Hwy.</span><span class="fare">≈ ₱20–30</span></li>
+          <li><span class="mode">Walk</span><span>The mall entrance faces the highway. About 2 minutes.</span><span class="fare">—</span></li>
+        </ol>
+        <p class="src">Example only. Fares and routes are illustrative. In the app, each step cites its source answers and shows when they were last confirmed.</p>
+      </div>
+    </section>
+
+    <section id="problem">
+      <span class="eyebrow">Problem</span>
+      <h2>Informal transit is mostly missing from route apps</h2>
+      <ul class="plain">
+        <li><b>The knowledge is tacit.</b> Signboard text, unofficial stops, "baba sa may Jollibee" landmarks and current fares live in people's heads and in forum threads, not in GTFS feeds.</li>
+        <li><b>Coverage stops at NCR.</b> Sakay.ph is strong in Metro Manila but does not cover other cities. Google Maps is weak on jeepneys and tricycles.</li>
+        <li><b>Asking takes hours.</b> A Reddit question can take hours to get a good answer, and the answer gets buried. The same corridors are asked about again and again.</li>
+        <li><b>Data is unreliable on the road.</b> Commuters hit dead zones, ration prepaid data, or run phones low on battery. Cloud-only AI fails exactly when they need it.</li>
+      </ul>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Existing option</th><th>Strength</th><th>Gap Daanan fills</th></tr></thead>
+          <tbody>
+            <tr><td>Sakay.ph</td><td>Jeep, bus and train routing with fares in NCR</td><td>Regions outside Metro Manila; conversational questions</td></tr>
+            <tr><td>Sansa Sakay</td><td>Crowd-reported live route status</td><td>Route planning from A to B</td></tr>
+            <tr><td>Google Maps</td><td>Rail, major buses, walking</td><td>Jeepneys, tricycles, signboards, local landmarks</td></tr>
+            <tr><td>r/HowToGetTherePH</td><td>Rich local answers</td><td>Instant answers, search, offline use, freshness tracking</td></tr>
+            <tr><td>ph-commute.com, guide sites</td><td>Written step-by-step guides</td><td>Any-origin queries; updates</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="solution">
+      <span class="eyebrow">Solution</span>
+      <h2>What Daanan does</h2>
+      <div class="grid2">
+        <div class="cell"><h3>Ask in plain Taglish</h3><p>Type or speak a question. The model works out origin, destination and preferences such as cheapest, fewest transfers or avoiding EDSA.</p></div>
+        <div class="cell"><h3>Get step-by-step legs</h3><p>Each leg shows the vehicle type, signboard, where to board and alight, a fare range, and a walking map from OSM data.</p></div>
+        <div class="cell"><h3>See where it came from</h3><p>Each step links to the community answers behind it, with a "last confirmed" date and a confidence level.</p></div>
+        <div class="cell"><h3>Works offline</h3><p>Region packs bundle map tiles, the route database and the model. You download Region IV-A once and use it without data.</p></div>
+        <div class="cell"><h3>Contribute routes</h3><p>Commuters confirm, correct or add legs after a trip. This replaces scraping over time.</p></div>
+        <div class="cell"><h3>Private by design</h3><p>Questions and location stay on the phone. Sharing contributions is opt-in and anonymised.</p></div>
+      </div>
+    </section>
+
+    <section id="architecture">
+      <span class="eyebrow">Architecture</span>
+      <h2>How it works</h2>
+      <p>The language model never invents geography. Retrieval supplies the routes and the map engine supplies distances. The model's job is to understand the question and write the answer from the retrieved legs.</p>
+<pre class="mermaid">
+flowchart LR
+  subgraph Phone["On the phone (offline)"]
+    Q[Question in Taglish] --> P[Small LLM: parse origin, destination, preferences]
+    P --> G[Geocoder: OSM places + landmark aliases]
+    G --> R[Retriever: route legs + vector search]
+    R --> J[Leg stitcher + OSM walking router]
+    J --> A[LLM: compose answer with citations]
+  end
+  subgraph Server["Server (periodic sync)"]
+    S[Community answers + contributions] --> X[Extraction LLM -> structured legs]
+    X --> V[Review queue + dedupe + freshness scoring]
+    V --> K[Region pack builder]
+  end
+  K -- "region pack download" --> R
+  A -. "opt-in corrections" .-> S
+</pre>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Layer</th><th>Choice</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td>On-device LLM</td><td>Qwen or Gemma, 1.5–4B parameters, 4-bit quantized, running on llama.cpp</td><td>Fits mid-range Android phones (about 6 GB RAM); handles Taglish reasonably well</td></tr>
+            <tr><td>Embeddings</td><td>Small multilingual embedding model</td><td>Matches "Masinag" and "SM Masinag Antipolo" style variants</td></tr>
+            <tr><td>Route store</td><td>SQLite + vector index (sqlite-vec)</td><td>One file per region, so it's easy to ship and update</td></tr>
+            <tr><td>Maps and walking</td><td>OpenStreetMap tiles + GraphHopper or Valhalla (offline)</td><td>Open data with proven offline routing</td></tr>
+            <tr><td>App</td><td>Kotlin (Android) first; Flutter if we need iOS soon</td><td>Best native access to the device's GPU and NPU for inference</td></tr>
+            <tr><td>Server pipeline</td><td>Python, a larger LLM for extraction, Postgres</td><td>Extraction runs in batches, so it doesn't need to be on the phone</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="data">
+      <span class="eyebrow">Data strategy</span>
+      <h2>Where the route knowledge comes from</h2>
+      <p>Each route leg is stored as a structured record:</p>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Field</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>mode</td><td>jeepney · uv_express · bus · tricycle · rail · ferry · walk</td></tr>
+            <tr><td>signboard</td><td>"Cubao – Antipolo"</td></tr>
+            <tr><td>board_at / alight_at</td><td>Landmark text + coordinates, e.g. "Aurora Blvd cor. 15th Ave"</td></tr>
+            <tr><td>fare_min / fare_max</td><td class="num">₱ range, with the year it was reported</td></tr>
+            <tr><td>region</td><td>NCR · Region III · Region IV-A · …</td></tr>
+            <tr><td>sources / last_confirmed</td><td>Source IDs, date, number of confirmations</td></tr>
+            <tr><td>notes</td><td>"Rush hour: line at terminal 30+ min"</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="callout"><b>Reddit content needs a licensing decision before anything ships.</b> Reddit's terms restrict scraping and commercial or AI use of its content. For the prototype, we use only a small set of hand-collected examples for internal testing. Before launch, we pick one of three paths: (a) a data agreement with Reddit, (b) asking moderators and contributors for permission and linking out instead of copying, or (c) building our own dataset from scratch through contributions and partners.</p>
+      <ul class="plain">
+        <li><b>Seed sources we can use:</b> OpenStreetMap public-transport relations, LTFRB published route and fare data where available, and partner LGUs or schools.</li>
+        <li><b>Contributions:</b> after each trip, ask "Did this route work?" with one tap. Corrections go to a review queue.</li>
+        <li><b>Freshness:</b> confidence drops as data ages and rises with confirmations. Fares older than 12 months are flagged in the app.</li>
+      </ul>
+    </section>
+
+    <section id="mvp">
+      <span class="eyebrow">MVP scope</span>
+      <h2>What the prototype includes</h2>
+      <div class="grid2">
+        <div class="cell"><h3>In scope</h3>
+          <ul class="plain">
+            <li>One corridor: Metro Manila ↔ Rizal (Cubao, Antipolo, Marikina, Cainta)</li>
+            <li>About 300 hand-checked route legs</li>
+            <li>Offline question answering on one mid-range Android phone</li>
+            <li>Answers with sources, fare ranges and a confidence level</li>
+            <li>Confirm or correct a route</li>
+          </ul>
+        </div>
+        <div class="cell"><h3>Not in this phase</h3>
+          <ul class="plain">
+            <li>Live traffic or vehicle tracking</li>
+            <li>iOS app</li>
+            <li>Bulk ingestion from Reddit</li>
+            <li>Voice input</li>
+            <li>Turn-by-turn navigation while walking</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="roadmap">
+      <span class="eyebrow">Roadmap</span>
+      <h2>Phases</h2>
+      <ol class="phases">
+        <li><span class="when">Weeks 1–2</span><div><h3>Data and extraction</h3><p class="muted">Define the leg schema. Hand-collect the Rizal corridor. Test LLM extraction against hand-labelled answers until it reaches at least 85% field accuracy.</p></div></li>
+        <li><span class="when">Weeks 3–4</span><div><h3>Desktop prototype</h3><p class="muted">Build the retrieval, leg-stitching and answer pipeline on a laptop with Ollama. Write 100 test questions and score the answers.</p></div></li>
+        <li><span class="when">Weeks 5–6</span><div><h3>Android prototype</h3><p class="muted">Port to llama.cpp on Android with an offline region pack. Measure speed, RAM and battery use. Test with 10–15 commuters.</p></div></li>
+        <li><span class="when">Months 2–4</span><div><h3>Pilot</h3><p class="muted">Settle the data licensing path. Add contributions and the review queue. Expand to Region III and IV-A. Closed beta with about 500 users.</p></div></li>
+        <li><span class="when">Months 5+</span><div><h3>Public launch</h3><p class="muted">Add Visayas and Mindanao city packs (Cebu, Davao), an iOS app and voice input. Explore partnerships with LGUs and campuses.</p></div></li>
+      </ol>
+    </section>
+
+    <section id="risks">
+      <span class="eyebrow">Risks</span>
+      <h2>Risks and mitigations</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Risk</th><th>Level</th><th>Mitigation</th></tr></thead>
+          <tbody>
+            <tr><td>Data licensing: Reddit terms block use of its content</td><td><span class="pill high">High</span></td><td>Don't depend on it. Plan for contributions and open data from the start, and treat Reddit as a partnership option rather than the foundation.</td></tr>
+            <tr><td>A wrong route strands someone</td><td><span class="pill high">High</span></td><td>Answer only from retrieved legs. Show sources and confidence. Say "not enough data yet" instead of guessing.</td></tr>
+            <tr><td>Routes and fares go out of date (jeepney modernization, fare changes)</td><td><span class="pill med">Medium</span></td><td>Confidence that drops with age, one-tap confirmations, and ingesting LTFRB fare announcements.</td></tr>
+            <tr><td>Small models struggle on low-end phones</td><td><span class="pill med">Medium</span></td><td>A 1.5B fallback model, template answers when no LLM is available, and an optional cloud mode.</td></tr>
+            <tr><td>Thin coverage at launch (cold start)</td><td><span class="pill med">Medium</span></td><td>Launch corridor by corridor. Recruit campus and office commuter groups as early contributors.</td></tr>
+            <tr><td>Region packs are large to download</td><td><span class="pill med">Medium</span></td><td>Split packs by province, offer Wi-Fi-only downloads, and share the model file across regions.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="metrics">
+      <span class="eyebrow">Success metrics</span>
+      <h2>How we judge the prototype</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Metric</th><th>Target at week 6</th></tr></thead>
+          <tbody>
+            <tr><td>Answers rated correct and usable by local reviewers</td><td class="num">≥ 80% of 100 test questions</td></tr>
+            <tr><td>Answers that contain an invented leg</td><td class="num">≤ 2%</td></tr>
+            <tr><td>Time to first answer, offline, mid-range phone</td><td class="num">≤ 8 s</td></tr>
+            <tr><td>Region pack size (Rizal corridor)</td><td class="num">≤ 1.5 GB including model</td></tr>
+            <tr><td>Testers who would use it instead of posting to Reddit</td><td class="num">≥ 7 of 10</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="resources">
+      <span class="eyebrow">Resources</span>
+      <h2>What the prototype needs</h2>
+      <ul class="plain">
+        <li><b>People:</b> 1 ML / backend developer, 1 Android developer, and 1 part-time data curator who commutes the corridor.</li>
+        <li><b>Hardware:</b> a laptop with a GPU (8 GB VRAM or more) for extraction and testing, plus two Android test phones (one low-end, one mid-range).</li>
+        <li><b>Software:</b> all open source (llama.cpp, Ollama, SQLite, GraphHopper, OSM data). Cloud costs are limited to an optional extraction server. Check provider pricing calculators for estimates.</li>
+        <li><b>Time:</b> 6 weeks to a go/no-go decision for the pilot.</li>
+      </ul>
+    </section>
+
+    <section id="questions">
+      <span class="eyebrow">Open questions</span>
+      <h2>Decisions needed from the team</h2>
+      <ul class="plain">
+        <li>Which data path to pursue first: a Reddit agreement, moderator collaboration, or our own community?</li>
+        <li>Is the Rizal corridor the right first test, or should we start with a region Sakay.ph doesn't cover, such as Cebu?</li>
+        <li>Should there be an optional cloud mode for older phones, and how do we keep it private?</li>
+        <li>Business model: free with sponsored LGU or campus packs, a premium region bundle, or non-profit?</li>
+      </ul>
+    </section>
+
+    <footer>
+      <span>Background references: <a href="https://gummysearch.com/r/HowToGetTherePH/">r/HowToGetTherePH stats</a> · <a href="https://apps.apple.com/ph/app/sakay-ph-commute-directions/id937998546">Sakay.ph</a> · <a href="https://www.sansasakay.com/">Sansa Sakay</a> · <a href="https://organicmaps.app/">Organic Maps</a> · <a href="https://guttikondaparthasai.medium.com/how-i-built-an-offline-navigation-pipeline-using-a-local-llm-osrm-and-openstreetmap-120ec64b5af0">Local LLM + OSRM pipeline write-up</a></span>
+      <span>Fares, targets and timelines are planning estimates and haven't been validated in the field.</span>
+    </footer>
+  </main>
+</div>
