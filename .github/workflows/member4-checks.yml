@@ -13,6 +13,8 @@ on:
 jobs:
   member4-checks:
     runs-on: ubuntu-latest
+    env:
+      EXPO_NO_TELEMETRY: "1"
     steps:
       - name: Check out
         uses: actions/checkout@v4
@@ -23,13 +25,21 @@ jobs:
           node-version: "22"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci --no-audit --no-fund
 
       - name: Typecheck workspaces
         run: npm run typecheck
 
       - name: Run workspace tests
         run: npm test
+
+      - name: Check Expo dependency and plugin configuration
+        run: npm run mobile:check
+
+      - name: Generate and inspect local Android project
+        run: |
+          npm run android:prebuild
+          node apps/mobile/scripts/verify-native.cjs
 
       - name: Shipped-content allowlist check (INV-4)
         run: node tools/eval/allowlist-check.mjs

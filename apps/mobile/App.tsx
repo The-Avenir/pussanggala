@@ -1,13 +1,15 @@
 /**
  * T40 minimal Expo harness — ugly-first offline placeholder.
  *
- * Renders static placeholder cards + an offline map box. No networking,
- * no analytics, no model/map native modules yet (those land in T41/T42/S1-S2).
+ * Renders synthetic integration controls. Native modules are registered by
+ * the scaffold; actual pack/model/map readiness requires the owning adapters.
  * Never imports `howtogetthereph_dataset/` (INV-4).
  */
-import { registerRootComponent } from 'expo';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { JourneyScreen } from './src/screens/JourneyScreen';
+import { SUPPORTED_PACK_SCHEMA_VERSION } from './src/core';
+import { CORE_UNIT_TEXT_MAX } from '@pusang-gala/ai';
+import { DEFAULT_MAX_EXCHANGES } from '@pusang-gala/conversation';
 
 interface PlaceholderCard {
   readonly id: string;
@@ -63,6 +65,8 @@ function App(): React.JSX.Element {
   return (
     <ScrollView style={styles.root} contentContainerStyle={styles.content}>
       <Text style={styles.heading}>Pusang Gala</Text>
+      <Text>Technical harness: core schema {SUPPORTED_PACK_SCHEMA_VERSION}. Real pack, model and map readiness is unmeasured.</Text>
+      <Text>Linked AI unit limit: {CORE_UNIT_TEXT_MAX}; conversation window: {DEFAULT_MAX_EXCHANGES}.</Text>
       <OfflineBanner />
       <JourneyScreen />
       {PLACEHOLDER_CARDS.map((card) => (
@@ -136,7 +140,5 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
 });
-
-registerRootComponent(App);
 
 export default App;
