@@ -24,18 +24,6 @@
     "landmark_hint": "main boarding point"
   },
   {
-    "stop_id": "st_lrt1-gil-puyat-34b3b2",
-    "place_id": "pl_lrt1-gil-puyat-34b3b2",
-    "name": "LRT-1 Gil Puyat station",
-    "landmark_hint": "station boarding area"
-  },
-  {
-    "stop_id": "st_edsa-corridor-83965b",
-    "place_id": "pl_edsa-corridor-83965b",
-    "name": "EDSA corridor",
-    "landmark_hint": "main boarding point"
-  },
-  {
     "stop_id": "st_mrt3-taft-avenue-818567",
     "place_id": "pl_mrt3-taft-avenue-818567",
     "name": "MRT-3 Taft Avenue station",
@@ -48,6 +36,12 @@
     "landmark_hint": "station boarding area"
   },
   {
+    "stop_id": "st_edsa-corridor-83965b",
+    "place_id": "pl_edsa-corridor-83965b",
+    "name": "EDSA corridor",
+    "landmark_hint": "main boarding point"
+  },
+  {
     "stop_id": "st_lrt2-recto-d73d89",
     "place_id": "pl_lrt2-recto-d73d89",
     "name": "LRT-2 Recto station",
@@ -57,18 +51,6 @@
     "stop_id": "st_lrt2-araneta-cubao-8ac903",
     "place_id": "pl_lrt2-araneta-cubao-8ac903",
     "name": "Cubao LRT-2 station",
-    "landmark_hint": "station boarding area"
-  },
-  {
-    "stop_id": "st_mrt3-araneta-cubao-0c4bc2",
-    "place_id": "pl_mrt3-araneta-cubao-0c4bc2",
-    "name": "Cubao MRT-3 station",
-    "landmark_hint": "station boarding area"
-  },
-  {
-    "stop_id": "st_lrt1-pedro-gil-6a8aa8",
-    "place_id": "pl_lrt1-pedro-gil-6a8aa8",
-    "name": "LRT-1 Pedro Gil station",
     "landmark_hint": "station boarding area"
   },
   {
@@ -90,6 +72,12 @@
     "landmark_hint": "station boarding area"
   },
   {
+    "stop_id": "st_mrt3-araneta-cubao-0c4bc2",
+    "place_id": "pl_mrt3-araneta-cubao-0c4bc2",
+    "name": "Cubao MRT-3 station",
+    "landmark_hint": "station boarding area"
+  },
+  {
     "stop_id": "st_mrt3-boni-19f73c",
     "place_id": "pl_mrt3-boni-19f73c",
     "name": "MRT-3 Boni station",
@@ -100,18 +88,6 @@
     "place_id": "pl_mrt3-shaw-6856fd",
     "name": "MRT-3 Shaw Boulevard station",
     "landmark_hint": "station boarding area"
-  },
-  {
-    "stop_id": "st_sm-fairview-60f122",
-    "place_id": "pl_sm-fairview-60f122",
-    "name": "SM City Fairview",
-    "landmark_hint": "mall pickup area"
-  },
-  {
-    "stop_id": "st_sm-megamall-68f140",
-    "place_id": "pl_sm-megamall-68f140",
-    "name": "SM Megamall",
-    "landmark_hint": "mall pickup area"
   },
   {
     "stop_id": "st_lrt1-doroteo-jose-42663a",
@@ -138,40 +114,10 @@
     "landmark_hint": "station boarding area"
   },
   {
-    "stop_id": "st_pasay-rotonda-c32297",
-    "place_id": "pl_pasay-rotonda-c32297",
-    "name": "Pasay rotonda transfer point",
-    "landmark_hint": "main boarding point"
-  },
-  {
     "stop_id": "st_mrt3-north-avenue-933d3a",
     "place_id": "pl_mrt3-north-avenue-933d3a",
     "name": "MRT-3 North Avenue station",
     "landmark_hint": "station boarding area"
-  },
-  {
-    "stop_id": "st_espana-boulevard-dc5afd",
-    "place_id": "pl_espana-boulevard-dc5afd",
-    "name": "Espana Boulevard corridor",
-    "landmark_hint": "main boarding point"
-  },
-  {
-    "stop_id": "st_manila-city-hall-5b0168",
-    "place_id": "pl_manila-city-hall-5b0168",
-    "name": "Manila City Hall",
-    "landmark_hint": "landmark vicinity"
-  },
-  {
-    "stop_id": "st_mrt3-ortigas-3f274b",
-    "place_id": "pl_mrt3-ortigas-3f274b",
-    "name": "MRT-3 Ortigas station",
-    "landmark_hint": "station boarding area"
-  },
-  {
-    "stop_id": "st_robinsons-galleria-fed25a",
-    "place_id": "pl_robinsons-galleria-fed25a",
-    "name": "Robinsons Galleria Ortigas",
-    "landmark_hint": "mall pickup area"
   },
   {
     "stop_id": "st_one-ayala-c9df31",
@@ -180,16 +126,22 @@
     "landmark_hint": "terminal loading area"
   },
   {
-    "stop_id": "st_starmall-alabang-ee55bd",
-    "place_id": "pl_starmall-alabang-ee55bd",
-    "name": "Starmall Alabang transport hub",
-    "landmark_hint": "terminal loading area"
+    "stop_id": "st_sm-fairview-60f122",
+    "place_id": "pl_sm-fairview-60f122",
+    "name": "SM City Fairview",
+    "landmark_hint": "mall pickup area"
   },
   {
-    "stop_id": "st_commonwealth-avenue-dad802",
-    "place_id": "pl_commonwealth-avenue-dad802",
-    "name": "Commonwealth Avenue corridor",
-    "landmark_hint": "main boarding point"
+    "stop_id": "st_lrt1-gil-puyat-34b3b2",
+    "place_id": "pl_lrt1-gil-puyat-34b3b2",
+    "name": "LRT-1 Gil Puyat station",
+    "landmark_hint": "station boarding area"
+  },
+  {
+    "stop_id": "st_lrt1-pedro-gil-6a8aa8",
+    "place_id": "pl_lrt1-pedro-gil-6a8aa8",
+    "name": "LRT-1 Pedro Gil station",
+    "landmark_hint": "station boarding area"
   },
   {
     "stop_id": "st_mall-of-asia-f3838e",
@@ -207,18 +159,6 @@
     "stop_id": "st_lrt1-libertad-58e52c",
     "place_id": "pl_lrt1-libertad-58e52c",
     "name": "LRT-1 Libertad station",
-    "landmark_hint": "station boarding area"
-  },
-  {
-    "stop_id": "st_lrt1-carriedo-d82d6f",
-    "place_id": "pl_lrt1-carriedo-d82d6f",
-    "name": "LRT-1 Carriedo station",
-    "landmark_hint": "station boarding area"
-  },
-  {
-    "stop_id": "st_lrt1-tayuman-49da1c",
-    "place_id": "pl_lrt1-tayuman-49da1c",
-    "name": "LRT-1 Tayuman station",
     "landmark_hint": "station boarding area"
   },
   {
@@ -240,10 +180,10 @@
     "landmark_hint": "station boarding area"
   },
   {
-    "stop_id": "st_edsa-crossing-bd45b7",
-    "place_id": "pl_edsa-crossing-bd45b7",
-    "name": "EDSA Crossing transfer point",
-    "landmark_hint": "main boarding point"
+    "stop_id": "st_mrt3-ortigas-3f274b",
+    "place_id": "pl_mrt3-ortigas-3f274b",
+    "name": "MRT-3 Ortigas station",
+    "landmark_hint": "station boarding area"
   },
   {
     "stop_id": "st_pasig-palengke-2ff6d1",
@@ -252,10 +192,10 @@
     "landmark_hint": "terminal loading area"
   },
   {
-    "stop_id": "st_fairview-1b3a8c",
-    "place_id": "pl_fairview-1b3a8c",
-    "name": "Fairview district",
-    "landmark_hint": "main boarding point"
+    "stop_id": "st_lrt1-carriedo-d82d6f",
+    "place_id": "pl_lrt1-carriedo-d82d6f",
+    "name": "LRT-1 Carriedo station",
+    "landmark_hint": "station boarding area"
   },
   {
     "stop_id": "st_greenhills-33be05",
@@ -276,27 +216,9 @@
     "landmark_hint": "station boarding area"
   },
   {
-    "stop_id": "st_alabang-south-station-6b40a7",
-    "place_id": "pl_alabang-south-station-6b40a7",
-    "name": "Alabang South Station terminal",
-    "landmark_hint": "terminal loading area"
-  },
-  {
-    "stop_id": "st_festival-mall-c5f3dc",
-    "place_id": "pl_festival-mall-c5f3dc",
-    "name": "Festival Mall Alabang",
-    "landmark_hint": "mall pickup area"
-  },
-  {
-    "stop_id": "st_vista-transport-exchange-6a8ca1",
-    "place_id": "pl_vista-transport-exchange-6a8ca1",
-    "name": "Vista transport exchange at Alabang",
-    "landmark_hint": "terminal loading area"
-  },
-  {
-    "stop_id": "st_bgc-c6858b",
-    "place_id": "pl_bgc-c6858b",
-    "name": "Bonifacio Global City",
+    "stop_id": "st_fairview-1b3a8c",
+    "place_id": "pl_fairview-1b3a8c",
+    "name": "Fairview district",
     "landmark_hint": "main boarding point"
   },
   {
@@ -304,6 +226,12 @@
     "place_id": "pl_sm-north-edsa-85d0b1",
     "name": "SM North EDSA",
     "landmark_hint": "mall pickup area"
+  },
+  {
+    "stop_id": "st_vista-transport-exchange-6a8ca1",
+    "place_id": "pl_vista-transport-exchange-6a8ca1",
+    "name": "Vista transport exchange at Alabang",
+    "landmark_hint": "terminal loading area"
   },
   {
     "stop_id": "st_market-market-b9ab79",
@@ -318,10 +246,28 @@
     "landmark_hint": "station boarding area"
   },
   {
+    "stop_id": "st_espana-boulevard-dc5afd",
+    "place_id": "pl_espana-boulevard-dc5afd",
+    "name": "Espana Boulevard corridor",
+    "landmark_hint": "main boarding point"
+  },
+  {
+    "stop_id": "st_bgc-c6858b",
+    "place_id": "pl_bgc-c6858b",
+    "name": "Bonifacio Global City",
+    "landmark_hint": "main boarding point"
+  },
+  {
     "stop_id": "st_shaw-boulevard-ffd89a",
     "place_id": "pl_shaw-boulevard-ffd89a",
     "name": "Shaw Boulevard corridor",
     "landmark_hint": "main boarding point"
+  },
+  {
+    "stop_id": "st_sm-megamall-68f140",
+    "place_id": "pl_sm-megamall-68f140",
+    "name": "SM Megamall",
+    "landmark_hint": "mall pickup area"
   },
   {
     "stop_id": "st_alabang-town-center-b2e210",
@@ -330,22 +276,28 @@
     "landmark_hint": "mall pickup area"
   },
   {
+    "stop_id": "st_lawton-649e50",
+    "place_id": "pl_lawton-649e50",
+    "name": "Lawton transport hub",
+    "landmark_hint": "terminal loading area"
+  },
+  {
     "stop_id": "st_buendia-avenue-f7e6a8",
     "place_id": "pl_buendia-avenue-f7e6a8",
     "name": "Gil Puyat Avenue corridor",
     "landmark_hint": "main boarding point"
   },
   {
-    "stop_id": "st_ust-1f1cfc",
-    "place_id": "pl_ust-1f1cfc",
-    "name": "University of Santo Tomas",
-    "landmark_hint": "campus entrance area"
+    "stop_id": "st_manila-city-hall-5b0168",
+    "place_id": "pl_manila-city-hall-5b0168",
+    "name": "Manila City Hall",
+    "landmark_hint": "landmark vicinity"
   },
   {
-    "stop_id": "st_lrt2-katipunan-5634a2",
-    "place_id": "pl_lrt2-katipunan-5634a2",
-    "name": "LRT-2 Katipunan station",
-    "landmark_hint": "station boarding area"
+    "stop_id": "st_starmall-alabang-ee55bd",
+    "place_id": "pl_starmall-alabang-ee55bd",
+    "name": "Starmall Alabang transport hub",
+    "landmark_hint": "terminal loading area"
   },
   {
     "stop_id": "st_chino-roces-avenue-e88e70",
@@ -354,22 +306,10 @@
     "landmark_hint": "main boarding point"
   },
   {
-    "stop_id": "st_lawton-649e50",
-    "place_id": "pl_lawton-649e50",
-    "name": "Lawton transport hub",
-    "landmark_hint": "terminal loading area"
-  },
-  {
-    "stop_id": "st_sm-east-ortigas-c17ebd",
-    "place_id": "pl_sm-east-ortigas-c17ebd",
-    "name": "SM City East Ortigas",
-    "landmark_hint": "mall pickup area"
-  },
-  {
-    "stop_id": "st_quiapo-2e7a2a",
-    "place_id": "pl_quiapo-2e7a2a",
-    "name": "Quiapo district",
-    "landmark_hint": "main boarding point"
+    "stop_id": "st_lrt2-katipunan-5634a2",
+    "place_id": "pl_lrt2-katipunan-5634a2",
+    "name": "LRT-2 Katipunan station",
+    "landmark_hint": "station boarding area"
   },
   {
     "stop_id": "st_mrt3-kamuning-e7d051",
@@ -378,10 +318,10 @@
     "landmark_hint": "station boarding area"
   },
   {
-    "stop_id": "st_ateneo-0887b0",
-    "place_id": "pl_ateneo-0887b0",
-    "name": "Ateneo de Manila campus",
-    "landmark_hint": "campus entrance area"
+    "stop_id": "st_robinsons-galleria-fed25a",
+    "place_id": "pl_robinsons-galleria-fed25a",
+    "name": "Robinsons Galleria Ortigas",
+    "landmark_hint": "mall pickup area"
   },
   {
     "stop_id": "st_ayala-triangle-c4bcc8",
@@ -396,9 +336,21 @@
     "landmark_hint": "mall pickup area"
   },
   {
-    "stop_id": "st_binondo-464761",
-    "place_id": "pl_binondo-464761",
-    "name": "Binondo district",
-    "landmark_hint": "main boarding point"
+    "stop_id": "st_ateneo-0887b0",
+    "place_id": "pl_ateneo-0887b0",
+    "name": "Ateneo de Manila campus",
+    "landmark_hint": "campus entrance area"
+  },
+  {
+    "stop_id": "st_alabang-south-station-6b40a7",
+    "place_id": "pl_alabang-south-station-6b40a7",
+    "name": "Alabang South Station terminal",
+    "landmark_hint": "terminal loading area"
+  },
+  {
+    "stop_id": "st_festival-mall-c5f3dc",
+    "place_id": "pl_festival-mall-c5f3dc",
+    "name": "Festival Mall Alabang",
+    "landmark_hint": "mall pickup area"
   }
 ]

@@ -102,13 +102,16 @@ export function buildPartB(sample, v, effectiveTotals) {
   );
   return {
     seed: SEED,
+    judge: v.judge ?? null,
     sample_size: sample.length,
     supported: sample.length - (v.exceptions ?? []).length,
     flagged: (v.exceptions ?? []).length,
     per_kind: perKind,
     flagged_by_reason_code: sortedReasons,
     effective_review_state_totals: effectiveTotals,
-    notes: [
+    // The judging pass owns the narrative: a hand pass and the heuristic pass draw
+    // different conclusions from the same counts.
+    notes: v.report_notes ?? [
       "This pass only quarantines: it never set accepted or rejected, so the designated human reviewer still owns every queued item.",
       "The deterministic part-A pass held up well for ride and walk records but was systematically weak on fare and hours value semantics, where almost all defects concentrate.",
       "The dominant failure modes are open-ended or approximate amounts recorded as exact, fares carrying no ride scope, and clock values hardened out of hedged or asker-supplied statements.",
@@ -121,7 +124,7 @@ function partBMd(b) {
   const L = [
     PART_B_HEADING,
     "",
-    `Independent audit of ${b.sample_size} sampled candidates (seed ${b.seed}): ${b.supported} supported, ${b.flagged} flagged to needs_review. Counts only; no source text.`,
+    `Independent audit of ${b.sample_size} sampled candidates (seed ${b.seed}, judge \`${b.judge}\`): ${b.supported} supported, ${b.flagged} flagged to needs_review. Counts only; no source text.`,
     "",
     row("record_kind", "sampled", "supported", "flagged", "defect_rate"),
     row("---", "---:", "---:", "---:", "---:"),

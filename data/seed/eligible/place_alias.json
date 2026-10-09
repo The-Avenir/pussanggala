@@ -153,7 +153,7 @@
     "alias_id": 26,
     "place_id": "pl_buendia-avenue-f7e6a8",
     "alias_norm": "buendia avenue",
-    "alias_display": "Buendia Ave"
+    "alias_display": "Buendia Avenue"
   },
   {
     "alias_id": 27,
@@ -213,7 +213,7 @@
     "alias_id": 36,
     "place_id": "pl_edsa-crossing-bd45b7",
     "alias_norm": "crossing",
-    "alias_display": "Crossing"
+    "alias_display": "crossing"
   },
   {
     "alias_id": 37,
@@ -225,7 +225,7 @@
     "alias_id": 38,
     "place_id": "pl_mrt3-araneta-cubao-0c4bc2",
     "alias_norm": "cubao mrt",
-    "alias_display": "Cubao MRT"
+    "alias_display": "cubao mrt"
   },
   {
     "alias_id": 39,
@@ -261,7 +261,7 @@
     "alias_id": 44,
     "place_id": "pl_lrt1-doroteo-jose-42663a",
     "alias_norm": "doroteo jose station",
-    "alias_display": "Doroteo Jose station"
+    "alias_display": "doroteo jose station"
   },
   {
     "alias_id": 45,
@@ -303,7 +303,7 @@
     "alias_id": 51,
     "place_id": "pl_edsa-crossing-bd45b7",
     "alias_norm": "edsa crossing",
-    "alias_display": "EDSA Crossing"
+    "alias_display": "edsa crossing"
   },
   {
     "alias_id": 52,
@@ -327,7 +327,7 @@
     "alias_id": 55,
     "place_id": "pl_mrt3-shaw-6856fd",
     "alias_norm": "edsa shaw",
-    "alias_display": "EDSA Shaw"
+    "alias_display": "edsa shaw"
   },
   {
     "alias_id": 56,
@@ -441,7 +441,7 @@
     "alias_id": 74,
     "place_id": "pl_katipunan-avenue-9b2129",
     "alias_norm": "katipunan avenue",
-    "alias_display": "Katipunan Ave"
+    "alias_display": "katipunan avenue"
   },
   {
     "alias_id": 75,
@@ -663,7 +663,7 @@
     "alias_id": 111,
     "place_id": "pl_lrt2-recto-d73d89",
     "alias_norm": "lrt recto",
-    "alias_display": "LRT Recto"
+    "alias_display": "lrt recto"
   },
   {
     "alias_id": 112,
@@ -705,7 +705,7 @@
     "alias_id": 118,
     "place_id": "pl_lrt1-blumentritt-a6743b",
     "alias_norm": "lrt1 blumentritt",
-    "alias_display": "LRT1 Blumentritt"
+    "alias_display": "lrt1 blumentritt"
   },
   {
     "alias_id": 119,
@@ -717,7 +717,7 @@
     "alias_id": 120,
     "place_id": "pl_lrt1-gil-puyat-34b3b2",
     "alias_norm": "lrt1 buendia",
-    "alias_display": "LRT1 buendia"
+    "alias_display": "lrt1 buendia"
   },
   {
     "alias_id": 121,
@@ -771,7 +771,7 @@
     "alias_id": 129,
     "place_id": "pl_taft-avenue-manila-8f3b38",
     "alias_norm": "lrt1 taft",
-    "alias_display": "LRT1 taft"
+    "alias_display": "lrt1 taft"
   },
   {
     "alias_id": 130,
@@ -831,7 +831,7 @@
     "alias_id": 139,
     "place_id": "pl_lrt2-santolan-faada1",
     "alias_norm": "lrt2 santolan",
-    "alias_display": "LRT2 Santolan-"
+    "alias_display": "lrt2 santolan"
   },
   {
     "alias_id": 140,
@@ -1071,7 +1071,7 @@
     "alias_id": 179,
     "place_id": "pl_mrt3-shaw-6856fd",
     "alias_norm": "mrt shaw blvd station",
-    "alias_display": "MRT Shaw Blvd station"
+    "alias_display": "MRT Shaw blvd station"
   },
   {
     "alias_id": 180,
@@ -1317,19 +1317,19 @@
     "alias_id": 220,
     "place_id": "pl_mrt3-quezon-avenue-a72dc0",
     "alias_norm": "quezon avenue mrt",
-    "alias_display": "Quezon Ave MRT"
+    "alias_display": "quezon avenue mrt"
   },
   {
     "alias_id": 221,
     "place_id": "pl_mrt3-quezon-avenue-a72dc0",
     "alias_norm": "quezon avenue mrt station",
-    "alias_display": "Quezon Ave MRT Station"
+    "alias_display": "quezon avenue mrt station"
   },
   {
     "alias_id": 222,
     "place_id": "pl_mrt3-quezon-avenue-a72dc0",
     "alias_norm": "quezon avenue station",
-    "alias_display": "Quezon Ave station"
+    "alias_display": "Quezon Avenue station"
   },
   {
     "alias_id": 223,
@@ -1539,7 +1539,7 @@
     "alias_id": 257,
     "place_id": "pl_telus-mckinley-exchange-617f13",
     "alias_norm": "telus mckinley",
-    "alias_display": "Telus Mckinley"
+    "alias_display": "Telus McKinley"
   },
   {
     "alias_id": 258,

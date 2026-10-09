@@ -40,26 +40,6 @@
     "eligibility": "ready"
   },
   {
-    "access_id": "ac_lrt1-gil-puyat-34b3b2",
-    "place_id": "pl_lrt1-gil-puyat-34b3b2",
-    "stop_id": "st_lrt1-gil-puyat-34b3b2",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_edsa-corridor-83965b",
-    "place_id": "pl_edsa-corridor-83965b",
-    "stop_id": "st_edsa-corridor-83965b",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "excluded"
-  },
-  {
     "access_id": "ac_mrt3-taft-avenue-818567",
     "place_id": "pl_mrt3-taft-avenue-818567",
     "stop_id": "st_mrt3-taft-avenue-818567",
@@ -80,6 +60,16 @@
     "eligibility": "ready"
   },
   {
+    "access_id": "ac_edsa-corridor-83965b",
+    "place_id": "pl_edsa-corridor-83965b",
+    "stop_id": "st_edsa-corridor-83965b",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "excluded"
+  },
+  {
     "access_id": "ac_lrt2-recto-d73d89",
     "place_id": "pl_lrt2-recto-d73d89",
     "stop_id": "st_lrt2-recto-d73d89",
@@ -93,26 +83,6 @@
     "access_id": "ac_lrt2-araneta-cubao-8ac903",
     "place_id": "pl_lrt2-araneta-cubao-8ac903",
     "stop_id": "st_lrt2-araneta-cubao-8ac903",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_mrt3-araneta-cubao-0c4bc2",
-    "place_id": "pl_mrt3-araneta-cubao-0c4bc2",
-    "stop_id": "st_mrt3-araneta-cubao-0c4bc2",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_lrt1-pedro-gil-6a8aa8",
-    "place_id": "pl_lrt1-pedro-gil-6a8aa8",
-    "stop_id": "st_lrt1-pedro-gil-6a8aa8",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,
@@ -150,6 +120,16 @@
     "eligibility": "ready"
   },
   {
+    "access_id": "ac_mrt3-araneta-cubao-0c4bc2",
+    "place_id": "pl_mrt3-araneta-cubao-0c4bc2",
+    "stop_id": "st_mrt3-araneta-cubao-0c4bc2",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
     "access_id": "ac_mrt3-boni-19f73c",
     "place_id": "pl_mrt3-boni-19f73c",
     "stop_id": "st_mrt3-boni-19f73c",
@@ -163,26 +143,6 @@
     "access_id": "ac_mrt3-shaw-6856fd",
     "place_id": "pl_mrt3-shaw-6856fd",
     "stop_id": "st_mrt3-shaw-6856fd",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_sm-fairview-60f122",
-    "place_id": "pl_sm-fairview-60f122",
-    "stop_id": "st_sm-fairview-60f122",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_sm-megamall-68f140",
-    "place_id": "pl_sm-megamall-68f140",
-    "stop_id": "st_sm-megamall-68f140",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,
@@ -230,59 +190,9 @@
     "eligibility": "ready"
   },
   {
-    "access_id": "ac_pasay-rotonda-c32297",
-    "place_id": "pl_pasay-rotonda-c32297",
-    "stop_id": "st_pasay-rotonda-c32297",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
     "access_id": "ac_mrt3-north-avenue-933d3a",
     "place_id": "pl_mrt3-north-avenue-933d3a",
     "stop_id": "st_mrt3-north-avenue-933d3a",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_espana-boulevard-dc5afd",
-    "place_id": "pl_espana-boulevard-dc5afd",
-    "stop_id": "st_espana-boulevard-dc5afd",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_manila-city-hall-5b0168",
-    "place_id": "pl_manila-city-hall-5b0168",
-    "stop_id": "st_manila-city-hall-5b0168",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_mrt3-ortigas-3f274b",
-    "place_id": "pl_mrt3-ortigas-3f274b",
-    "stop_id": "st_mrt3-ortigas-3f274b",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_robinsons-galleria-fed25a",
-    "place_id": "pl_robinsons-galleria-fed25a",
-    "stop_id": "st_robinsons-galleria-fed25a",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,
@@ -300,9 +210,9 @@
     "eligibility": "ready"
   },
   {
-    "access_id": "ac_starmall-alabang-ee55bd",
-    "place_id": "pl_starmall-alabang-ee55bd",
-    "stop_id": "st_starmall-alabang-ee55bd",
+    "access_id": "ac_sm-fairview-60f122",
+    "place_id": "pl_sm-fairview-60f122",
+    "stop_id": "st_sm-fairview-60f122",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,
@@ -310,9 +220,19 @@
     "eligibility": "ready"
   },
   {
-    "access_id": "ac_commonwealth-avenue-dad802",
-    "place_id": "pl_commonwealth-avenue-dad802",
-    "stop_id": "st_commonwealth-avenue-dad802",
+    "access_id": "ac_lrt1-gil-puyat-34b3b2",
+    "place_id": "pl_lrt1-gil-puyat-34b3b2",
+    "stop_id": "st_lrt1-gil-puyat-34b3b2",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
+    "access_id": "ac_lrt1-pedro-gil-6a8aa8",
+    "place_id": "pl_lrt1-pedro-gil-6a8aa8",
+    "stop_id": "st_lrt1-pedro-gil-6a8aa8",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,
@@ -350,26 +270,6 @@
     "eligibility": "ready"
   },
   {
-    "access_id": "ac_lrt1-carriedo-d82d6f",
-    "place_id": "pl_lrt1-carriedo-d82d6f",
-    "stop_id": "st_lrt1-carriedo-d82d6f",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_lrt1-tayuman-49da1c",
-    "place_id": "pl_lrt1-tayuman-49da1c",
-    "stop_id": "st_lrt1-tayuman-49da1c",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
     "access_id": "ac_mrt3-buendia-be6647",
     "place_id": "pl_mrt3-buendia-be6647",
     "stop_id": "st_mrt3-buendia-be6647",
@@ -400,9 +300,9 @@
     "eligibility": "ready"
   },
   {
-    "access_id": "ac_edsa-crossing-bd45b7",
-    "place_id": "pl_edsa-crossing-bd45b7",
-    "stop_id": "st_edsa-crossing-bd45b7",
+    "access_id": "ac_mrt3-ortigas-3f274b",
+    "place_id": "pl_mrt3-ortigas-3f274b",
+    "stop_id": "st_mrt3-ortigas-3f274b",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,
@@ -420,9 +320,9 @@
     "eligibility": "ready"
   },
   {
-    "access_id": "ac_fairview-1b3a8c",
-    "place_id": "pl_fairview-1b3a8c",
-    "stop_id": "st_fairview-1b3a8c",
+    "access_id": "ac_lrt1-carriedo-d82d6f",
+    "place_id": "pl_lrt1-carriedo-d82d6f",
+    "stop_id": "st_lrt1-carriedo-d82d6f",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,
@@ -460,39 +360,9 @@
     "eligibility": "ready"
   },
   {
-    "access_id": "ac_alabang-south-station-6b40a7",
-    "place_id": "pl_alabang-south-station-6b40a7",
-    "stop_id": "st_alabang-south-station-6b40a7",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_festival-mall-c5f3dc",
-    "place_id": "pl_festival-mall-c5f3dc",
-    "stop_id": "st_festival-mall-c5f3dc",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_vista-transport-exchange-6a8ca1",
-    "place_id": "pl_vista-transport-exchange-6a8ca1",
-    "stop_id": "st_vista-transport-exchange-6a8ca1",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_bgc-c6858b",
-    "place_id": "pl_bgc-c6858b",
-    "stop_id": "st_bgc-c6858b",
+    "access_id": "ac_fairview-1b3a8c",
+    "place_id": "pl_fairview-1b3a8c",
+    "stop_id": "st_fairview-1b3a8c",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,
@@ -503,6 +373,16 @@
     "access_id": "ac_sm-north-edsa-85d0b1",
     "place_id": "pl_sm-north-edsa-85d0b1",
     "stop_id": "st_sm-north-edsa-85d0b1",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
+    "access_id": "ac_vista-transport-exchange-6a8ca1",
+    "place_id": "pl_vista-transport-exchange-6a8ca1",
+    "stop_id": "st_vista-transport-exchange-6a8ca1",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,
@@ -530,9 +410,39 @@
     "eligibility": "ready"
   },
   {
+    "access_id": "ac_espana-boulevard-dc5afd",
+    "place_id": "pl_espana-boulevard-dc5afd",
+    "stop_id": "st_espana-boulevard-dc5afd",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
+    "access_id": "ac_bgc-c6858b",
+    "place_id": "pl_bgc-c6858b",
+    "stop_id": "st_bgc-c6858b",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
     "access_id": "ac_shaw-boulevard-ffd89a",
     "place_id": "pl_shaw-boulevard-ffd89a",
     "stop_id": "st_shaw-boulevard-ffd89a",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
+    "access_id": "ac_sm-megamall-68f140",
+    "place_id": "pl_sm-megamall-68f140",
+    "stop_id": "st_sm-megamall-68f140",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,
@@ -550,6 +460,16 @@
     "eligibility": "ready"
   },
   {
+    "access_id": "ac_lawton-649e50",
+    "place_id": "pl_lawton-649e50",
+    "stop_id": "st_lawton-649e50",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
     "access_id": "ac_buendia-avenue-f7e6a8",
     "place_id": "pl_buendia-avenue-f7e6a8",
     "stop_id": "st_buendia-avenue-f7e6a8",
@@ -560,9 +480,9 @@
     "eligibility": "ready"
   },
   {
-    "access_id": "ac_ust-1f1cfc",
-    "place_id": "pl_ust-1f1cfc",
-    "stop_id": "st_ust-1f1cfc",
+    "access_id": "ac_manila-city-hall-5b0168",
+    "place_id": "pl_manila-city-hall-5b0168",
+    "stop_id": "st_manila-city-hall-5b0168",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,
@@ -570,9 +490,9 @@
     "eligibility": "ready"
   },
   {
-    "access_id": "ac_lrt2-katipunan-5634a2",
-    "place_id": "pl_lrt2-katipunan-5634a2",
-    "stop_id": "st_lrt2-katipunan-5634a2",
+    "access_id": "ac_starmall-alabang-ee55bd",
+    "place_id": "pl_starmall-alabang-ee55bd",
+    "stop_id": "st_starmall-alabang-ee55bd",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,
@@ -590,29 +510,9 @@
     "eligibility": "ready"
   },
   {
-    "access_id": "ac_lawton-649e50",
-    "place_id": "pl_lawton-649e50",
-    "stop_id": "st_lawton-649e50",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_sm-east-ortigas-c17ebd",
-    "place_id": "pl_sm-east-ortigas-c17ebd",
-    "stop_id": "st_sm-east-ortigas-c17ebd",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_quiapo-2e7a2a",
-    "place_id": "pl_quiapo-2e7a2a",
-    "stop_id": "st_quiapo-2e7a2a",
+    "access_id": "ac_lrt2-katipunan-5634a2",
+    "place_id": "pl_lrt2-katipunan-5634a2",
+    "stop_id": "st_lrt2-katipunan-5634a2",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,
@@ -630,9 +530,9 @@
     "eligibility": "ready"
   },
   {
-    "access_id": "ac_ateneo-0887b0",
-    "place_id": "pl_ateneo-0887b0",
-    "stop_id": "st_ateneo-0887b0",
+    "access_id": "ac_robinsons-galleria-fed25a",
+    "place_id": "pl_robinsons-galleria-fed25a",
+    "stop_id": "st_robinsons-galleria-fed25a",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,
@@ -660,9 +560,29 @@
     "eligibility": "ready"
   },
   {
-    "access_id": "ac_binondo-464761",
-    "place_id": "pl_binondo-464761",
-    "stop_id": "st_binondo-464761",
+    "access_id": "ac_ateneo-0887b0",
+    "place_id": "pl_ateneo-0887b0",
+    "stop_id": "st_ateneo-0887b0",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
+    "access_id": "ac_alabang-south-station-6b40a7",
+    "place_id": "pl_alabang-south-station-6b40a7",
+    "stop_id": "st_alabang-south-station-6b40a7",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
+    "access_id": "ac_festival-mall-c5f3dc",
+    "place_id": "pl_festival-mall-c5f3dc",
+    "stop_id": "st_festival-mall-c5f3dc",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,

@@ -9,15 +9,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1sgaidh-e9fb1f",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1sgaidh/sm_north_to_pitx/",
-    "post_id": "1sgaidh",
-    "posted_at": "2026-04-09",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1sgk85h-832d03",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1sgk85h/from_one_ayala_makati_to_pitx/",
@@ -72,15 +63,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1shjuhf-0f5b16",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1shjuhf/commute_from_sm_east_ortigas_to_robinsons_galleria/",
-    "post_id": "1shjuhf",
-    "posted_at": "2026-04-10",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1shl3k0-342802",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1shl3k0/pitx_to_concentrix_glorietta_5/",
@@ -117,24 +99,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1sifvg9-da3d40",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1sifvg9/from_araneta_coliseum_to_pitx/",
-    "post_id": "1sifvg9",
-    "posted_at": "2026-04-11",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1siga1r-61577e",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1siga1r/from_guadalupe_to_pitx_station_mrt_lrt/",
-    "post_id": "1siga1r",
-    "posted_at": "2026-04-11",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1siizpr-400d19",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1siizpr/from_alabang_to_taguig/",
@@ -153,28 +117,10 @@
     "license": null
   },
   {
-    "source_id": "src_post-1sj7j40-4b229e",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1sj7j40/cubao_to_pateros/",
-    "post_id": "1sj7j40",
-    "posted_at": "2026-04-12",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1sjh687-3e7729",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1sjh687/mrt_ortigas_to_manila_central_office/",
     "post_id": "1sjh687",
-    "posted_at": "2026-04-12",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1sjovbt-ff5101",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1sjovbt/mrt_buendia_to_lrt_pedro_gil/",
-    "post_id": "1sjovbt",
     "posted_at": "2026-04-12",
     "observed_at": null,
     "license": null
@@ -203,15 +149,6 @@
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1skbqez/lrt_1_balintawak_to_lrt_2_marikina_pasig/",
     "post_id": "1skbqez",
     "posted_at": "2026-04-13",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1skvf80-0f0ff1",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1skvf80/from_monumento_to_makati_medical_center/",
-    "post_id": "1skvf80",
-    "posted_at": "2026-04-14",
     "observed_at": null,
     "license": null
   },
@@ -297,24 +234,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1sn7utt-faeda1",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1sn7utt/mrt_shaw_to_sm_north_annex/",
-    "post_id": "1sn7utt",
-    "posted_at": "2026-04-16",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1snljo6-ae0822",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1snljo6/baclaran_to_un_ave_ermita/",
-    "post_id": "1snljo6",
-    "posted_at": "2026-04-17",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1snv2b5-cc06a5",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1snv2b5/from_divisoria_to_sm_north/",
@@ -346,15 +265,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1spjr2f/quiapo_to_bgc/",
     "post_id": "1spjr2f",
-    "posted_at": "2026-04-19",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1spmrmy-84e340",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1spmrmy/monumento_to_jennys_ave_may_bunga_pasig/",
-    "post_id": "1spmrmy",
     "posted_at": "2026-04-19",
     "observed_at": null,
     "license": null
@@ -400,15 +310,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1sqlqc6/gilmore_to_bgc/",
     "post_id": "1sqlqc6",
-    "posted_at": "2026-04-20",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1sqol5e-8dd30e",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1sqol5e/ayala_to_ortigas_mrt/",
-    "post_id": "1sqol5e",
     "posted_at": "2026-04-20",
     "observed_at": null,
     "license": null
@@ -558,33 +459,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1sxlpld-7abd0c",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1sxlpld/prc_sampaloc_to_manila_city_hall/",
-    "post_id": "1sxlpld",
-    "posted_at": "2026-04-28",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1sxmmcv-3f6fa0",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1sxmmcv/edsaevangelista_to_guadalupe_nuevo/",
-    "post_id": "1sxmmcv",
-    "posted_at": "2026-04-28",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1sxs03a-63b8c7",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1sxs03a/robinsons_manila_to_dltb_buendia_bus_terminal/",
-    "post_id": "1sxs03a",
-    "posted_at": "2026-04-28",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1sy25l6-e22d6d",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1sy25l6/monumento_to_quezon_city_hall/",
@@ -599,33 +473,6 @@
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1sy27cw/rosario_jct_to_robinsons_galleria_viceversa/",
     "post_id": "1sy27cw",
     "posted_at": "2026-04-28",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1syq8qe-de770b",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1syq8qe/kamuning_to_ust/",
-    "post_id": "1syq8qe",
-    "posted_at": "2026-04-29",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1sz5tdt-4cef0f",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1sz5tdt/one_ayala_to_sm_sucat/",
-    "post_id": "1sz5tdt",
-    "posted_at": "2026-04-29",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1szib4g-7686e5",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1szib4g/pitx_to_paseo_de_magallanes/",
-    "post_id": "1szib4g",
-    "posted_at": "2026-04-30",
     "observed_at": null,
     "license": null
   },
@@ -648,15 +495,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1t00eax-aa8e34",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1t00eax/from_pitx_to_landbank_plaza_malate/",
-    "post_id": "1t00eax",
-    "posted_at": "2026-04-30",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1t0nuno-b15a75",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1t0nuno/lrt_tayuman_to_trinoma/",
@@ -671,24 +509,6 @@
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1t0obrb/from_sm_north_edsa_to_st_paul_university_quezon/",
     "post_id": "1t0obrb",
     "posted_at": "2026-05-01",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1t1ieip-d1c601",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1t1ieip/parañaque_to_ust/",
-    "post_id": "1t1ieip",
-    "posted_at": "2026-05-02",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1t1lvpp-759605",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1t1lvpp/market_market_to_ateneo_de_manila_univ/",
-    "post_id": "1t1lvpp",
-    "posted_at": "2026-05-02",
     "observed_at": null,
     "license": null
   },
@@ -715,15 +535,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1t1sd1o/marikina_to_smdc_jazz_makati/",
     "post_id": "1t1sd1o",
-    "posted_at": "2026-05-02",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1t1vdib-96cf74",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1t1vdib/from_novaliches_bayan_to_makati_medical_center/",
-    "post_id": "1t1vdib",
     "posted_at": "2026-05-02",
     "observed_at": null,
     "license": null
@@ -774,37 +585,10 @@
     "license": null
   },
   {
-    "source_id": "src_post-1t3j8kc-be6948",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1t3j8kc/night_commute_from_sm_fairview_to_moa/",
-    "post_id": "1t3j8kc",
-    "posted_at": "2026-05-04",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1t3vsn2-b11c74",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1t3vsn2/riverbanks_to_bgc_to_riverbanks/",
-    "post_id": "1t3vsn2",
-    "posted_at": "2026-05-04",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1t5csa4-652912",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1t5csa4/sm_north_to_up_diliman/",
     "post_id": "1t5csa4",
-    "posted_at": "2026-05-06",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1t5fgsm-907619",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1t5fgsm/sm_fairviewterraces_to_gateway_mall/",
-    "post_id": "1t5fgsm",
     "posted_at": "2026-05-06",
     "observed_at": null,
     "license": null
@@ -824,15 +608,6 @@
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1t6riyo/commute_monumento_to_binondo/",
     "post_id": "1t6riyo",
     "posted_at": "2026-05-07",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1t6ver2-53f460",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1t6ver2/mrt_cubao_to_11th_ave_bgc_cocolight_building/",
-    "post_id": "1t6ver2",
-    "posted_at": "2026-05-08",
     "observed_at": null,
     "license": null
   },
@@ -869,15 +644,6 @@
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1t88ai2/españa_to_snr_congressional/",
     "post_id": "1t88ai2",
     "posted_at": "2026-05-09",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1t8uaf4-e574b8",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1t8uaf4/moa_to_ospital_ng_paranaque_2/",
-    "post_id": "1t8uaf4",
-    "posted_at": "2026-05-10",
     "observed_at": null,
     "license": null
   },
@@ -1008,15 +774,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1teqfdt-d02f62",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1teqfdt/katipunan_to_mckinley_hill_via_metrolink_bus/",
-    "post_id": "1teqfdt",
-    "posted_at": "2026-05-16",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1tez5ab-fd079a",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tez5ab/pitx_to_mh_del_pilar_st_ermita_manila/",
@@ -1035,28 +792,10 @@
     "license": null
   },
   {
-    "source_id": "src_post-1tfg25m-8fc8f0",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tfg25m/five_star_cubao_terminal_to_taguigpateros/",
-    "post_id": "1tfg25m",
-    "posted_at": "2026-05-17",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1tfmzit-c8f9c5",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tfmzit/pitx_to_paranaque_doctors/",
     "post_id": "1tfmzit",
-    "posted_at": "2026-05-17",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1tfn7g1-f71746",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tfn7g1/heritage_baclaran_to_bgc/",
-    "post_id": "1tfn7g1",
     "posted_at": "2026-05-17",
     "observed_at": null,
     "license": null
@@ -1134,15 +873,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1tjm3rk-b23f0b",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tjm3rk/c5_housingwaterfun_to_one_ayala/",
-    "post_id": "1tjm3rk",
-    "posted_at": "2026-05-21",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1tk2ilm-5abdea",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tk2ilm/buendialrt1_gil_puyat_to_ortigas/",
@@ -1188,28 +918,10 @@
     "license": null
   },
   {
-    "source_id": "src_post-1tl10hr-7c9c87",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tl10hr/from_oro_b_street_manila_to_st_jude_college_manila/",
-    "post_id": "1tl10hr",
-    "posted_at": "2026-05-23",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1tl97cm-368e14",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tl97cm/from_ateneo_to_the_finance_center_bgc/",
     "post_id": "1tl97cm",
-    "posted_at": "2026-05-23",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1tl9z94-8065af",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tl9z94/commute_from_parañaque_to_sm_north_edsa/",
-    "post_id": "1tl9z94",
     "posted_at": "2026-05-23",
     "observed_at": null,
     "license": null
@@ -1228,15 +940,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tm7n9n/from_pasig_choice_market_to_csc_fo_manila/",
     "post_id": "1tm7n9n",
-    "posted_at": "2026-05-24",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1tm8clp-fa5036",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tm8clp/qc_katipunan_to_moa_arena/",
-    "post_id": "1tm8clp",
     "posted_at": "2026-05-24",
     "observed_at": null,
     "license": null
@@ -1323,33 +1026,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1tqmfp1-bd8392",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tqmfp1/alabang_to_makati_on_a_weekend/",
-    "post_id": "1tqmfp1",
-    "posted_at": "2026-05-29",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1tqqnmi-d7084a",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tqqnmi/from_shangrila_plaza_mandaluyong_to_tv5_media/",
-    "post_id": "1tqqnmi",
-    "posted_at": "2026-05-29",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1tqzqah-71c0f1",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tqzqah/sm_north_to_salcedo_village_trafalgar_plaza/",
-    "post_id": "1tqzqah",
-    "posted_at": "2026-05-29",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1trhiy5-85c114",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1trhiy5/one_ayala_to_sm_north_edsa/",
@@ -1399,15 +1075,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tti90h/from_glorietta_to_buendiagil_puyat/",
     "post_id": "1tti90h",
-    "posted_at": "2026-06-01",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1ttl2jw-120ae0",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1ttl2jw/alt_route_from_parañaque_to_pasig_and_vice_versa/",
-    "post_id": "1ttl2jw",
     "posted_at": "2026-06-01",
     "observed_at": null,
     "license": null
@@ -1476,15 +1143,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1tvk8jm-66c897",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tvk8jm/commute_from_waltermart_makati_to_ust/",
-    "post_id": "1tvk8jm",
-    "posted_at": "2026-06-03",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1tw6uw9-2471b6",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tw6uw9/muñoz_qc_to_parada_valenzuela/",
@@ -1544,15 +1202,6 @@
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1ty047b/pitx_to_ayala_malls_circuit/",
     "post_id": "1ty047b",
     "posted_at": "2026-06-05",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1tyby0b-bc0634",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1tyby0b/monumento_to_ecom_pasay_moa/",
-    "post_id": "1tyby0b",
-    "posted_at": "2026-06-06",
     "observed_at": null,
     "license": null
   },
@@ -1620,28 +1269,10 @@
     "license": null
   },
   {
-    "source_id": "src_post-1u1fhbg-41700c",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1u1fhbg/fairview_qc_to_festival_mall_alabang/",
-    "post_id": "1u1fhbg",
-    "posted_at": "2026-06-09",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1u1olue-65f673",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1u1olue/quiapo_church_to_ayala_triangle/",
     "post_id": "1u1olue",
-    "posted_at": "2026-06-10",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1u1tn8h-d36c63",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1u1tn8h/muntinlupa_to_pagibig_pasay_near_moa_i_think/",
-    "post_id": "1u1tn8h",
     "posted_at": "2026-06-10",
     "observed_at": null,
     "license": null
@@ -1737,15 +1368,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1u5c5p8-c6b8b8",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1u5c5p8/one_ayala_to_sm_north/",
-    "post_id": "1u5c5p8",
-    "posted_at": "2026-06-14",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1u69cg1-d5c0de",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1u69cg1/sm_fairview_to_pitx_and_vice_versa/",
@@ -1773,15 +1395,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1u78v1l-7bfdee",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1u78v1l/from_market_market_taguig_city_to_cash_carry/",
-    "post_id": "1u78v1l",
-    "posted_at": "2026-06-16",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1u7gx29-446769",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1u7gx29/shaw_blvd_to_quiapo/",
@@ -1795,24 +1408,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1u7vqam/guadalupe_to_cybergate_mandaluyong/",
     "post_id": "1u7vqam",
-    "posted_at": "2026-06-17",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1u81ute-6d18d4",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1u81ute/commute_from_smdc_welcome_rotonda_to_town_center/",
-    "post_id": "1u81ute",
-    "posted_at": "2026-06-17",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1u85ko2-b5cc43",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1u85ko2/monumento_to_ml_quezon_ave_taguig_city/",
-    "post_id": "1u85ko2",
     "posted_at": "2026-06-17",
     "observed_at": null,
     "license": null
@@ -1859,15 +1454,6 @@
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1u8p8fw/from_pitx_to_mows_bar_in_qc/",
     "post_id": "1u8p8fw",
     "posted_at": "2026-06-17",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1u8wryw-9fe996",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1u8wryw/market_market_to_up_diliman/",
-    "post_id": "1u8wryw",
-    "posted_at": "2026-06-18",
     "observed_at": null,
     "license": null
   },
@@ -1953,28 +1539,10 @@
     "license": null
   },
   {
-    "source_id": "src_post-1ubv1x0-3d1f25",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1ubv1x0/from_pitx_to_sunette_tower_makati/",
-    "post_id": "1ubv1x0",
-    "posted_at": "2026-06-21",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1uc9vw4-fa96e3",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uc9vw4/commute_from_market_market_to_up_ayalaland/",
     "post_id": "1uc9vw4",
-    "posted_at": "2026-06-22",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1ucdo2y-958b8d",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1ucdo2y/sm_manila_to_psa_makati/",
-    "post_id": "1ucdo2y",
     "posted_at": "2026-06-22",
     "observed_at": null,
     "license": null
@@ -1989,28 +1557,10 @@
     "license": null
   },
   {
-    "source_id": "src_post-1ucngwh-cc35b1",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1ucngwh/sm_north_to_chino_roces_makati_mcdo/",
-    "post_id": "1ucngwh",
-    "posted_at": "2026-06-22",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1ud7ols-aa295b",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1ud7ols/españa_to_greenfields_tower_mandaluyong/",
     "post_id": "1ud7ols",
-    "posted_at": "2026-06-23",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1udbchc-6feb1a",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1udbchc/eta_from_c5_phase_1_to_ortigas/",
-    "post_id": "1udbchc",
     "posted_at": "2026-06-23",
     "observed_at": null,
     "license": null
@@ -2043,15 +1593,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1udftk5-6e4c23",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1udftk5/mrt_boni_to_uptown_bgc/",
-    "post_id": "1udftk5",
-    "posted_at": "2026-06-23",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1udi8v9-e6ffbf",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1udi8v9/moa_to_alabang/",
@@ -2065,15 +1606,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1udnkap/from_inviernes_manila_to_up_bgc_campus_viceversa/",
     "post_id": "1udnkap",
-    "posted_at": "2026-06-23",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1udxm6r-0c8d87",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1udxm6r/cubao_to_tesda_taguig/",
-    "post_id": "1udxm6r",
     "posted_at": "2026-06-23",
     "observed_at": null,
     "license": null
@@ -2169,15 +1701,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1ugf2pn-606ab6",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1ugf2pn/kabihasnan_parañaque_to_vista_mall_las_piñas/",
-    "post_id": "1ugf2pn",
-    "posted_at": "2026-06-26",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1ugo5pb-e8f45d",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1ugo5pb/lrt1_blumentritt_station_to_ayala_malls_feliz/",
@@ -2214,15 +1737,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1uho92l-70cf8c",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uho92l/from_monumento_to_bridgetown_pasig/",
-    "post_id": "1uho92l",
-    "posted_at": "2026-06-28",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1uinoge-804a49",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uinoge/boni_to_cubao_victory_liner_station/",
@@ -2255,15 +1769,6 @@
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1ujndsz/starmall_alabang_to_sm_megamall/",
     "post_id": "1ujndsz",
     "posted_at": "2026-06-30",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1ukgzbz-c5453b",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1ukgzbz/sm_north_to_ateneo/",
-    "post_id": "1ukgzbz",
-    "posted_at": "2026-07-01",
     "observed_at": null,
     "license": null
   },
@@ -2326,15 +1831,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uorpcg/one_ayala_makati_to_sm_east_ortigas/",
     "post_id": "1uorpcg",
-    "posted_at": "2026-07-06",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1uoulle-6c1c8c",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uoulle/up_diliman_to_puregold_rosario_pasig/",
-    "post_id": "1uoulle",
     "posted_at": "2026-07-06",
     "observed_at": null,
     "license": null
@@ -2403,47 +1899,11 @@
     "license": null
   },
   {
-    "source_id": "src_post-1ush76c-bb049b",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1ush76c/marco_polo_ortigas_to_cubao_or_marikina/",
-    "post_id": "1ush76c",
-    "posted_at": "2026-07-10",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1usn84k-9401c3",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1usn84k/from_pup_sta_mesa_to_levi_mariano_taguig/",
-    "post_id": "1usn84k",
-    "posted_at": "2026-07-10",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1ut949i-b81d0e",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1ut949i/from_trinoma_to_bf_homes_paranaque/",
-    "post_id": "1ut949i",
-    "posted_at": "2026-07-11",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1utobha-51bfe6",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1utobha/sm_north_to_luneta_and_luneta_to_cubao/",
     "post_id": "1utobha",
     "posted_at": "2026-07-11",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1uu6u4h-aef654",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uu6u4h/munoz_qc_to_ayala_triangles_makati/",
-    "post_id": "1uu6u4h",
-    "posted_at": "2026-07-12",
     "observed_at": null,
     "license": null
   },
@@ -2466,33 +1926,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1uuzl2r-4367e3",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uuzl2r/pedro_gil_to_unionbank_plaza_near_robinsons/",
-    "post_id": "1uuzl2r",
-    "posted_at": "2026-07-13",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1uv1cxj-bfb5a9",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uv1cxj/las_piñas_to_up_diliman/",
-    "post_id": "1uv1cxj",
-    "posted_at": "2026-07-13",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1uv2ccl-acdd31",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uv2ccl/welcome_rotonda_to_ateneo_art_gallery_and_vice/",
-    "post_id": "1uv2ccl",
-    "posted_at": "2026-07-13",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1uw3g22-4331c0",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uw3g22/monumento_to_nu_manila/",
@@ -2502,38 +1935,11 @@
     "license": null
   },
   {
-    "source_id": "src_post-1uwb8l6-eb34ee",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uwb8l6/commute_from_commonwealth_to_bangkal_makati_dmci/",
-    "post_id": "1uwb8l6",
-    "posted_at": "2026-07-14",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1uwq4at-23c11a",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uwq4at/sm_north_to_ateneo/",
-    "post_id": "1uwq4at",
-    "posted_at": "2026-07-15",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1ux2p35-f78627",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1ux2p35/pasig_palengke_to_pup_sta_mesa/",
     "post_id": "1ux2p35",
     "posted_at": "2026-07-15",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1uxth99-302cf0",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uxth99/cubao_to_century_city_mall_makati/",
-    "post_id": "1uxth99",
-    "posted_at": "2026-07-16",
     "observed_at": null,
     "license": null
   },
@@ -2556,29 +1962,11 @@
     "license": null
   },
   {
-    "source_id": "src_post-1uyfaf0-8e884e",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uyfaf0/philplans_bgc_to_be_fit_makati/",
-    "post_id": "1uyfaf0",
-    "posted_at": "2026-07-16",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1uyvesx-07ef9b",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uyvesx/greenhills_shopping_center_to_tayuman_lrt_station/",
     "post_id": "1uyvesx",
     "posted_at": "2026-07-17",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1uzow3j-8f69e5",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1uzow3j/guadalupe_to_manila_central_university_mcu/",
-    "post_id": "1uzow3j",
-    "posted_at": "2026-07-18",
     "observed_at": null,
     "license": null
   },
@@ -2641,15 +2029,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1v0f6t7/northgate_alabang_to_lrt_buendia/",
     "post_id": "1v0f6t7",
-    "posted_at": "2026-07-19",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1v0mhiu-a2129c",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1v0mhiu/vito_cruz_to_rcbc_plaza_makati/",
-    "post_id": "1v0mhiu",
     "posted_at": "2026-07-19",
     "observed_at": null,
     "license": null
@@ -2727,15 +2106,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1v36pv9-777253",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1v36pv9/from_cubao_to_moa/",
-    "post_id": "1v36pv9",
-    "posted_at": "2026-07-22",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1v39ncu-632094",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1v39ncu/salcedo_weekend_market_to_mrt_magallanes/",
@@ -2749,24 +2119,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1v3dha0/pitx_to_quezon_city_hall/",
     "post_id": "1v3dha0",
-    "posted_at": "2026-07-22",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1v3flcj-87d3b6",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1v3flcj/sta_mesa_to_bgc/",
-    "post_id": "1v3flcj",
-    "posted_at": "2026-07-22",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1v3juup-89e5dc",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1v3juup/sm_fairview_to_moa/",
-    "post_id": "1v3juup",
     "posted_at": "2026-07-22",
     "observed_at": null,
     "license": null
@@ -2835,24 +2187,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1v56h3u-69d471",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1v56h3u/san_juan_near_broadway_to_claret_school_of_qc/",
-    "post_id": "1v56h3u",
-    "posted_at": "2026-07-24",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1v5vogi-41bc14",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1v5vogi/from_monumento_to_alabang/",
-    "post_id": "1v5vogi",
-    "posted_at": "2026-07-25",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1v5yw3u-7abff8",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1v5yw3u/philhealth_paranaque_to_ust/",
@@ -2884,24 +2218,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1v68get/from_edsa_taft_to_feu_manila/",
     "post_id": "1v68get",
-    "posted_at": "2026-07-25",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1v6bur2-494795",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1v6bur2/one_ayala_to_century_city_mall_makati/",
-    "post_id": "1v6bur2",
-    "posted_at": "2026-07-25",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1v6ejd3-cfbca0",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1v6ejd3/espana_to_cubaoqave_mrt_which_is_faster/",
-    "post_id": "1v6ejd3",
     "posted_at": "2026-07-25",
     "observed_at": null,
     "license": null
@@ -3024,15 +2340,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1vbhaao-304397",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vbhaao/divisoria_to_up_diliman/",
-    "post_id": "1vbhaao",
-    "posted_at": "2026-07-31",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1vbhdhc-76ff7e",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vbhdhc/naia_t3_to_robinsons_manila/",
@@ -3123,15 +2430,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1ve32xs-5299f9",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1ve32xs/one_ayala_to_ritm_alabang/",
-    "post_id": "1ve32xs",
-    "posted_at": "2026-08-03",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1vewkto-20c813",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vewkto/ust_to_taft_lrt_or_magallanes_station/",
@@ -3154,15 +2452,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vezfp6/from_sm_bf_parañaque_to_silver_city_pasig/",
     "post_id": "1vezfp6",
-    "posted_at": "2026-08-04",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1vf657f-7cc2ca",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vf657f/robinsons_ortigas_to_sm_fairview/",
-    "post_id": "1vf657f",
     "posted_at": "2026-08-04",
     "observed_at": null,
     "license": null
@@ -3195,37 +2484,10 @@
     "license": null
   },
   {
-    "source_id": "src_post-1vfc8fw-9133dd",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vfc8fw/commonwealthlitex_to_edsa_grand_residence/",
-    "post_id": "1vfc8fw",
-    "posted_at": "2026-08-04",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1vfradl-9f1f51",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vfradl/commute_from_sm_east_ortigas_to_fishermall_qc_and/",
-    "post_id": "1vfradl",
-    "posted_at": "2026-08-04",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1vfsapb-583601",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vfsapb/makati_to_manila_drive/",
     "post_id": "1vfsapb",
-    "posted_at": "2026-08-05",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1vfzb3l-3edd1b",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vfzb3l/from_shopwise_commonwealth_to_carlos_palanca_san/",
-    "post_id": "1vfzb3l",
     "posted_at": "2026-08-05",
     "observed_at": null,
     "license": null
@@ -3276,15 +2538,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1vgzj7w-05366b",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vgzj7w/from_vista_mall_taguig_to_paseo_makati/",
-    "post_id": "1vgzj7w",
-    "posted_at": "2026-08-06",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1vgzkd6-ae941f",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vgzkd6/from_boni_avenue_mandaluyong_to_espana_sampaloc/",
@@ -3307,24 +2560,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vhsfcg/magallanes_station_to_paco_manila/",
     "post_id": "1vhsfcg",
-    "posted_at": "2026-08-07",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1vhsgrz-0c395a",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vhsgrz/from_navotasmonumento_to_pasay_city_west_high/",
-    "post_id": "1vhsgrz",
-    "posted_at": "2026-08-07",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1vhw66q-f2afde",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vhw66q/pitx_to_pup_taguig/",
-    "post_id": "1vhw66q",
     "posted_at": "2026-08-07",
     "observed_at": null,
     "license": null
@@ -3465,15 +2700,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1vn3cr2-c9d232",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vn3cr2/sm_fairview_to_sm_megamall/",
-    "post_id": "1vn3cr2",
-    "posted_at": "2026-08-13",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1vnhj67-b78d69",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vnhj67/marikina_to_st_lukes_qc/",
@@ -3496,15 +2722,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vo3a4u/from_mrt_shaw_to_up_diliman/",
     "post_id": "1vo3a4u",
-    "posted_at": "2026-08-14",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1vo73um-58f2f9",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vo73um/ust_to_kpmg_office_makati/",
-    "post_id": "1vo73um",
     "posted_at": "2026-08-14",
     "observed_at": null,
     "license": null
@@ -3537,28 +2754,10 @@
     "license": null
   },
   {
-    "source_id": "src_post-1vpm7n5-0b85e8",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vpm7n5/pitx_to_western_bicutan_taguig/",
-    "post_id": "1vpm7n5",
-    "posted_at": "2026-08-16",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1vpq45f-7a195a",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vpq45f/baclaran_to_edsa_shangrila_vice_versa/",
     "post_id": "1vpq45f",
-    "posted_at": "2026-08-16",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1vpsjd1-4f7fc3",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vpsjd1/sm_manila_to_kamuning_t_gener_fastest_way/",
-    "post_id": "1vpsjd1",
     "posted_at": "2026-08-16",
     "observed_at": null,
     "license": null
@@ -3587,15 +2786,6 @@
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vq1qss/pioneer_st_to_san_joaquin_pasig/",
     "post_id": "1vq1qss",
     "posted_at": "2026-08-16",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1vqiz3p-04695b",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vqiz3p/taft_pedro_gil_to_tordesillas_makati/",
-    "post_id": "1vqiz3p",
-    "posted_at": "2026-08-17",
     "observed_at": null,
     "license": null
   },
@@ -3658,15 +2848,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vu43hb/alabang_to_ever_commonwealth/",
     "post_id": "1vu43hb",
-    "posted_at": "2026-08-21",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1vu50ex-758e23",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vu50ex/from_boni_to_hma_773_building_makati/",
-    "post_id": "1vu50ex",
     "posted_at": "2026-08-21",
     "observed_at": null,
     "license": null
@@ -3739,15 +2920,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vwwxc8/pedro_gil_to_arnaiz_ave_makati/",
     "post_id": "1vwwxc8",
-    "posted_at": "2026-08-24",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1vwx1cx-86c72b",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1vwx1cx/mrt_edsa_taft_to_sm_center_shaw/",
-    "post_id": "1vwx1cx",
     "posted_at": "2026-08-24",
     "observed_at": null,
     "license": null
@@ -3933,15 +3105,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1w42ptn-0a0e6a",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1w42ptn/qc_fisher_mall_to_pateros_municipal_hall/",
-    "post_id": "1w42ptn",
-    "posted_at": "2026-09-01",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1w4wlph-dc7fae",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1w4wlph/quiapo_to_pasig_jeep/",
@@ -3960,15 +3123,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1w57dhk-e0d2a6",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1w57dhk/commute_from_up_manila_to_shopwise_chino_roces/",
-    "post_id": "1w57dhk",
-    "posted_at": "2026-09-02",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1w5d9aq-3444b0",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1w5d9aq/from_philippine_general_hospital_pedro_gil_to_bgc/",
@@ -3982,15 +3136,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1w61pbn/sm_fairview_to_intramuros/",
     "post_id": "1w61pbn",
-    "posted_at": "2026-09-03",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1w61sz0-65302d",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1w61sz0/commute_from_starmall_shaw_mandaluyong_to_alabang/",
-    "post_id": "1w61sz0",
     "posted_at": "2026-09-03",
     "observed_at": null,
     "license": null
@@ -4068,15 +3213,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1w8w0s2-d5593b",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1w8w0s2/north_edsa_to_mckinley_bus/",
-    "post_id": "1w8w0s2",
-    "posted_at": "2026-09-06",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1w930gr-0f0517",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1w930gr/pup_manila_to_ayala_trianglesgv_makati/",
@@ -4099,15 +3235,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1w9kymf/pasig_palengke_to_nbi_un_ave/",
     "post_id": "1w9kymf",
-    "posted_at": "2026-09-07",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1w9nxdb-7d62a4",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1w9nxdb/pitx_to_sm_fairview/",
-    "post_id": "1w9nxdb",
     "posted_at": "2026-09-07",
     "observed_at": null,
     "license": null
@@ -4194,28 +3321,10 @@
     "license": null
   },
   {
-    "source_id": "src_post-1wcdo1w-87598c",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wcdo1w/from_mrt_guadalupe_to_bgc/",
-    "post_id": "1wcdo1w",
-    "posted_at": "2026-09-10",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1wcdo42-29ce37",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wcdo42/from_cubao_gatewaylrt_to_smx_convention_centermoa/",
     "post_id": "1wcdo42",
-    "posted_at": "2026-09-10",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1wch830-4077ac",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wch830/manila_to_alabang/",
-    "post_id": "1wch830",
     "posted_at": "2026-09-10",
     "observed_at": null,
     "license": null
@@ -4226,24 +3335,6 @@
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wcm09b/pitx_commute_to_pasig_ortigas/",
     "post_id": "1wcm09b",
     "posted_at": "2026-09-10",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1wcm3ie-fc97a8",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wcm3ie/from_lrt_roosevelt_edsa_carousel_to_ayala_avenue/",
-    "post_id": "1wcm3ie",
-    "posted_at": "2026-09-10",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1wd9ktn-6a5d83",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wd9ktn/vito_cruz_lrt_to_mall_of_asia/",
-    "post_id": "1wd9ktn",
-    "posted_at": "2026-09-11",
     "observed_at": null,
     "license": null
   },
@@ -4284,15 +3375,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1wfzsvv-ae402d",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wfzsvv/pioneer_st_to_bgc/",
-    "post_id": "1wfzsvv",
-    "posted_at": "2026-09-14",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1wgsy1o-e247c6",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wgsy1o/commute_from_commonwealth_sandiganbayan_to_bpi/",
@@ -4316,15 +3398,6 @@
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wio6g5/pitx_to_malate_manila/",
     "post_id": "1wio6g5",
     "posted_at": "2026-09-17",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1wl0tp7-844b38",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wl0tp7/pasig_palengke_to_ayala_mall_circuit/",
-    "post_id": "1wl0tp7",
-    "posted_at": "2026-09-19",
     "observed_at": null,
     "license": null
   },
@@ -4356,15 +3429,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1wn8wkm-27c7e7",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wn8wkm/festival_mall_alabang_to_cubaogateway_2/",
-    "post_id": "1wn8wkm",
-    "posted_at": "2026-09-22",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1wnrdwk-44b3f9",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wnrdwk/libis_qc_to_mrt_3_araneta_center_cubao/",
@@ -4379,15 +3443,6 @@
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wpuqrd/pitx_to_starbucks_oriental_gardens_makati/",
     "post_id": "1wpuqrd",
     "posted_at": "2026-09-25",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1wqn05f-e36e9f",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wqn05f/sm_fairview_to_ayala_vertis_north/",
-    "post_id": "1wqn05f",
-    "posted_at": "2026-09-26",
     "observed_at": null,
     "license": null
   },
@@ -4437,15 +3492,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1ws473t-4c4840",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1ws473t/pitx_to_dlsu_to_moa/",
-    "post_id": "1ws473t",
-    "posted_at": "2026-09-28",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1wsu07b-35727c",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wsu07b/from_quezon_city_to_las_pinas/",
@@ -4473,24 +3519,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1wuimea-628b19",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wuimea/lrt_2_cubao_to_barangay_pinagsama_taguig/",
-    "post_id": "1wuimea",
-    "posted_at": "2026-09-30",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1wujrhi-ec3cc1",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wujrhi/greenbelt_5_to_alabang_town_center_p2p_bus/",
-    "post_id": "1wujrhi",
-    "posted_at": "2026-09-30",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1wuxlgr-a3a38b",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wuxlgr/pitx_to_tunasan_muntinlupa/",
@@ -4505,24 +3533,6 @@
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wv3uq4/ust_to_filinvest_alabang/",
     "post_id": "1wv3uq4",
     "posted_at": "2026-10-01",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1wvj052-2b3298",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wvj052/bldg_q_smileannex_citihomes_qc_to_pearl_drive/",
-    "post_id": "1wvj052",
-    "posted_at": "2026-10-02",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1wvp6gi-d67e6e",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wvp6gi/malabon_to_commonwealth/",
-    "post_id": "1wvp6gi",
-    "posted_at": "2026-10-02",
     "observed_at": null,
     "license": null
   },
@@ -4549,15 +3559,6 @@
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wx7bmj/monumento_to_prisma_residence_pasig/",
     "post_id": "1wx7bmj",
-    "posted_at": "2026-10-04",
-    "observed_at": null,
-    "license": null
-  },
-  {
-    "source_id": "src_post-1wx94s9-9791fc",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wx94s9/pitx_to_sevenneo_bldg_bgc/",
-    "post_id": "1wx94s9",
     "posted_at": "2026-10-04",
     "observed_at": null,
     "license": null
@@ -4599,15 +3600,6 @@
     "license": null
   },
   {
-    "source_id": "src_post-1wy6flm-8b4a04",
-    "kind": "reddit_thread",
-    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wy6flm/vito_cruz_to_bgc_5th_avenue/",
-    "post_id": "1wy6flm",
-    "posted_at": "2026-10-05",
-    "observed_at": null,
-    "license": null
-  },
-  {
     "source_id": "src_post-1wzivpv-0eeb18",
     "kind": "reddit_thread",
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wzivpv/ust_españa_to_northgate_alabang/",
@@ -4640,6 +3632,15 @@
     "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1wzpqnk/ust_to_greenbeltglorietta/",
     "post_id": "1wzpqnk",
     "posted_at": "2026-10-07",
+    "observed_at": null,
+    "license": null
+  },
+  {
+    "source_id": "src_post-1x0gi0h-181bf6",
+    "kind": "reddit_thread",
+    "url": "https://www.reddit.com/r/HowToGetTherePH/comments/1x0gi0h/alabang_to_ltfrb_quezon_city/",
+    "post_id": "1x0gi0h",
+    "posted_at": "2026-10-08",
     "observed_at": null,
     "license": null
   },

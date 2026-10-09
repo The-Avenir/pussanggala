@@ -2,23 +2,23 @@
   "task": "T12",
   "part": "A (deterministic pass)",
   "snapshot_sha256": "d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3",
-  "candidates": 6640,
+  "candidates": 5713,
   "review_state_by_kind": {
     "second_passed": {
-      "place": 4090,
-      "ride": 1524,
-      "walk": 358,
-      "fare": 35,
-      "hours": 32,
+      "place": 4088,
+      "ride": 961,
+      "walk": 205,
+      "fare": 29,
+      "hours": 24,
       "service_status": 0,
-      "note": 357
+      "note": 276
     },
     "needs_review": {
       "place": 0,
-      "ride": 178,
+      "ride": 91,
       "walk": 0,
-      "fare": 56,
-      "hours": 6,
+      "fare": 31,
+      "hours": 4,
       "service_status": 4,
       "note": 0
     },
@@ -42,43 +42,43 @@
     }
   },
   "review_state_totals": {
-    "second_passed": 6396,
-    "needs_review": 244,
+    "second_passed": 5583,
+    "needs_review": 130,
     "rejected": 0,
     "accepted": 0
   },
   "flag_counts": {
-    "hedged": 375,
-    "question_missing": 337,
-    "fare_unscoped": 46,
-    "conflict": 44,
+    "question_missing": 299,
+    "hedged": 264,
+    "fare_unscoped": 51,
+    "conflict": 25,
     "inactive_service": 4
   },
   "flag_counts_by_state": {
-    "hedged": {
-      "second_passed": 240,
-      "needs_review": 135
-    },
     "question_missing": {
-      "second_passed": 251,
-      "needs_review": 86
+      "second_passed": 241,
+      "needs_review": 58
+    },
+    "hedged": {
+      "second_passed": 209,
+      "needs_review": 55
     },
     "fare_unscoped": {
-      "needs_review": 26,
-      "second_passed": 20
+      "needs_review": 30,
+      "second_passed": 21
     },
     "conflict": {
-      "needs_review": 44
+      "needs_review": 25
     },
     "inactive_service": {
       "needs_review": 4
     }
   },
-  "conflict_pairs": 35,
+  "conflict_pairs": 14,
   "queue": {
-    "posts": 144,
-    "items": 244,
-    "posts_with_route_critical_items": 119
+    "posts": 85,
+    "items": 130,
+    "posts_with_route_critical_items": 70
   },
   "reviewer_instructions": [
     "Open data/raw/t12/review-queue.md (top posts) or review-queue.jsonl (all), follow the permalink and read the cited comment (comment_index = 0-based answers[] position; null = title/question).",
@@ -91,5 +91,55 @@
   "notes": [
     "Second pass is a text-evidence check, not field verification; no field-verified badge.",
     "Place/board/alight/from/to grounding accepts ≥0.8 token overlap with the cited text or the post title/question; signboards must match the cited text."
-  ]
+  ],
+  "part_b": {
+    "seed": 20261009,
+    "sample_size": 313,
+    "supported": 292,
+    "flagged": 21,
+    "per_kind": {
+      "ride": {
+        "sampled": 200,
+        "supported": 200,
+        "flagged": 0,
+        "defect_rate_pct": 0
+      },
+      "walk": {
+        "sampled": 60,
+        "supported": 60,
+        "flagged": 0,
+        "defect_rate_pct": 0
+      },
+      "fare": {
+        "sampled": 29,
+        "supported": 8,
+        "flagged": 21,
+        "defect_rate_pct": 72.4
+      },
+      "hours": {
+        "sampled": 24,
+        "supported": 24,
+        "flagged": 0,
+        "defect_rate_pct": 0
+      },
+      "service_status": {
+        "sampled": 0,
+        "supported": 0,
+        "flagged": 0,
+        "defect_rate_pct": 0
+      }
+    },
+    "flagged_by_reason_code": {
+      "fare_unscoped": 21
+    },
+    "effective_review_state_totals": {
+      "second_passed": 5562,
+      "needs_review": 151
+    },
+    "notes": [
+      "This pass only quarantines: it never set accepted or rejected, so the designated human reviewer still owns every queued item.",
+      "The deterministic part-A pass held up well for ride and walk records but was systematically weak on fare and hours value semantics, where almost all defects concentrate.",
+      "The dominant failure modes are open-ended or approximate amounts recorded as exact, fares carrying no ride scope, and clock values hardened out of hedged or asker-supplied statements."
+    ]
+  }
 }

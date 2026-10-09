@@ -14,13 +14,6 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_rail-board-lrt-gil-puyat-bf843f",
-    "mode": "rail",
-    "signboard": null,
-    "direction_label": "LRT-1 Gil Puyat station to EDSA corridor",
-    "service_status": "unknown"
-  },
-  {
     "route_id": "rt_rail-board-mrt-taft-c375bd",
     "mode": "rail",
     "signboard": null,
@@ -35,31 +28,10 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_rail-board-lrt-pitx-870080",
-    "mode": "rail",
-    "signboard": null,
-    "direction_label": "PITX integrated terminal to EDSA corridor",
-    "service_status": "unknown"
-  },
-  {
     "route_id": "rt_rail-board-lrt2-recto-89d2f2",
     "mode": "rail",
     "signboard": null,
     "direction_label": "LRT-2 Recto station to Cubao LRT-2 station",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_rail-board-lrt2-cubao-234396",
-    "mode": "rail",
-    "signboard": null,
-    "direction_label": "Cubao LRT-2 station to Cubao MRT-3 station",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_bus-board-lrt-pedro-gil-5be9e8",
-    "mode": "bus",
-    "signboard": null,
-    "direction_label": "LRT-1 Pedro Gil station to EDSA corridor",
     "service_status": "unknown"
   },
   {
@@ -77,8 +49,8 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_rail-board-mrt-cubao-f9606e",
-    "mode": "rail",
+    "route_id": "rt_tricycle-board-mrt-cubao-cd5b10",
+    "mode": "tricycle",
     "signboard": null,
     "direction_label": "Cubao MRT-3 station to MRT-3 Boni station",
     "service_status": "unknown"
@@ -88,13 +60,6 @@
     "mode": "rail",
     "signboard": null,
     "direction_label": "rail service",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_uv-express-board-sm-fairview-77d48b",
-    "mode": "uv_express",
-    "signboard": null,
-    "direction_label": "SM City Fairview to SM Megamall",
     "service_status": "unknown"
   },
   {
@@ -126,38 +91,10 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_jeepney-board-alabang-6faadd",
-    "mode": "jeepney",
-    "signboard": null,
-    "direction_label": "Alabang district to Pasay rotonda transfer point",
-    "service_status": "unknown"
-  },
-  {
     "route_id": "rt_rail-board-mrt-ayala-db8347",
     "mode": "rail",
     "signboard": null,
     "direction_label": "MRT-3 Ayala station to MRT-3 North Avenue station",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_jeepney-board-espana-c8e8be",
-    "mode": "jeepney",
-    "signboard": null,
-    "direction_label": "Espana Boulevard corridor to Manila City Hall",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_rail-board-ortigas-mrt-c56ae8",
-    "mode": "rail",
-    "signboard": null,
-    "direction_label": "MRT-3 Ortigas station to Robinsons Galleria Ortigas",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_bus-board-megamall-d44305",
-    "mode": "bus",
-    "signboard": null,
-    "direction_label": "SM Megamall to Starmall Alabang transport hub",
     "service_status": "unknown"
   },
   {
@@ -175,10 +112,17 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_jeepney-board-monumento-fd6d9c",
-    "mode": "jeepney",
+    "route_id": "rt_bus-board-moa-2f8948",
+    "mode": "bus",
     "signboard": null,
-    "direction_label": "Monumento transport hub to Commonwealth Avenue corridor",
+    "direction_label": "SM Mall of Asia complex to Monumento transport hub",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_rail-board-mrt-cubao-f9606e",
+    "mode": "rail",
+    "signboard": null,
+    "direction_label": "Cubao MRT-3 station to MRT-3 Ayala station",
     "service_status": "unknown"
   },
   {
@@ -189,13 +133,6 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_bus-board-moa-2f8948",
-    "mode": "bus",
-    "signboard": null,
-    "direction_label": "SM Mall of Asia complex to Monumento transport hub",
-    "service_status": "unknown"
-  },
-  {
     "route_id": "rt_rail-board-lrt-pedro-gil-dc2b9b",
     "mode": "rail",
     "signboard": null,
@@ -203,17 +140,10 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_rail-board-monumento-30cfb2",
-    "mode": "rail",
+    "route_id": "rt_jeepney-board-mrt-guadalupe-7568d4",
+    "mode": "jeepney",
     "signboard": null,
-    "direction_label": "Monumento transport hub to LRT-1 Libertad station",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_bus-board-lrt-carriedo-a07c8e",
-    "mode": "bus",
-    "signboard": null,
-    "direction_label": "LRT-1 Carriedo station to LRT-1 Tayuman station",
+    "direction_label": "MRT-3 Guadalupe station to MRT-3 Boni station",
     "service_status": "unknown"
   },
   {
@@ -224,17 +154,17 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_rail-board-guadalupe-7da9e0",
-    "mode": "rail",
-    "signboard": null,
-    "direction_label": "MRT-3 Guadalupe station to MRT-3 Boni station",
-    "service_status": "unknown"
-  },
-  {
     "route_id": "rt_rail-board-lrt-balintawak-32e72b",
     "mode": "rail",
     "signboard": null,
     "direction_label": "LRT-1 Balintawak station to LRT-1 Libertad station",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_rail-board-lrt-pitx-870080",
+    "mode": "rail",
+    "signboard": null,
+    "direction_label": "PITX integrated terminal to LRT-1 EDSA station",
     "service_status": "unknown"
   },
   {
@@ -259,17 +189,10 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_rail-board-edsa-crossing-55c55d",
-    "mode": "rail",
+    "route_id": "rt_jeepney-board-mrt-boni-34a448",
+    "mode": "jeepney",
     "signboard": null,
-    "direction_label": "EDSA Crossing transfer point to LRT-2 Legarda station",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_bus-board-edsa-cac0e0",
-    "mode": "bus",
-    "signboard": null,
-    "direction_label": "EDSA corridor to Monumento transport hub",
+    "direction_label": "MRT-3 Boni station to Pasig public market transport hub",
     "service_status": "unknown"
   },
   {
@@ -280,10 +203,10 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_bus-board-lrt-pitx-42b529",
-    "mode": "bus",
+    "route_id": "rt_tricycle-board-mrt-ayala-2f5980",
+    "mode": "tricycle",
     "signboard": null,
-    "direction_label": "PITX integrated terminal to EDSA corridor",
+    "direction_label": "MRT-3 Ayala station to MRT-3 Guadalupe station",
     "service_status": "unknown"
   },
   {
@@ -291,27 +214,6 @@
     "mode": "rail",
     "signboard": null,
     "direction_label": "LRT-1 Carriedo station to EDSA corridor",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_uv-express-board-fairview-eae2b0",
-    "mode": "uv_express",
-    "signboard": null,
-    "direction_label": "Fairview district to MRT-3 Quezon Avenue station",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_jeepney-board-lrt-pedro-gil-06d947",
-    "mode": "jeepney",
-    "signboard": null,
-    "direction_label": "jeepney service",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_bus-board-quezon-avenue-881178",
-    "mode": "bus",
-    "signboard": null,
-    "direction_label": "MRT-3 Quezon Avenue station to MRT-3 North Avenue station",
     "service_status": "unknown"
   },
   {
@@ -350,34 +252,6 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_tricycle-board-pitx-ce3c77",
-    "mode": "tricycle",
-    "signboard": null,
-    "direction_label": "PITX integrated terminal to LRT-1 EDSA station",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_jeepney-board-mrt-taft-bd42b6",
-    "mode": "jeepney",
-    "signboard": null,
-    "direction_label": "jeepney service",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_rail-board-pitx-26fe62",
-    "mode": "rail",
-    "signboard": null,
-    "direction_label": "PITX integrated terminal to Fairview district",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_rail-northbound-69143c",
-    "mode": "rail",
-    "signboard": null,
-    "direction_label": "northbound",
-    "service_status": "unknown"
-  },
-  {
     "route_id": "rt_bus-board-one-ayala-bc0424",
     "mode": "bus",
     "signboard": null,
@@ -392,24 +266,10 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_bus-board-south-station-316c75",
-    "mode": "bus",
-    "signboard": null,
-    "direction_label": "Alabang South Station terminal to Festival Mall Alabang",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_bus-board-vtx-35c484",
-    "mode": "bus",
-    "signboard": null,
-    "direction_label": "Vista transport exchange at Alabang to MRT-3 Magallanes station",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_jeepney-northbound-de9fd4",
+    "route_id": "rt_jeepney-board-lrt-pitx-7fa52e",
     "mode": "jeepney",
     "signboard": null,
-    "direction_label": "northbound",
+    "direction_label": "jeepney service",
     "service_status": "unknown"
   },
   {
@@ -417,6 +277,13 @@
     "mode": "bus",
     "signboard": null,
     "direction_label": "SM North EDSA to Monumento transport hub",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_bus-board-vtx-35c484",
+    "mode": "bus",
+    "signboard": null,
+    "direction_label": "Vista transport exchange at Alabang to Market! Market! transport hub",
     "service_status": "unknown"
   },
   {
@@ -431,6 +298,20 @@
     "mode": "rail",
     "signboard": null,
     "direction_label": "MRT-3 Quezon Avenue station to MRT-3 Guadalupe station",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_rail-board-pitx-26fe62",
+    "mode": "rail",
+    "signboard": null,
+    "direction_label": "PITX integrated terminal to Monumento transport hub",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_jeepney-board-espana-c8e8be",
+    "mode": "jeepney",
+    "signboard": null,
+    "direction_label": "Espana Boulevard corridor to Bonifacio Global City",
     "service_status": "unknown"
   },
   {
@@ -455,10 +336,38 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_rail-board-pedro-gil-24db84",
+    "route_id": "rt_bus-board-megamall-d44305",
+    "mode": "bus",
+    "signboard": null,
+    "direction_label": "SM Megamall to Alabang Town Center",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_bus-board-lrt-pitx-42b529",
+    "mode": "bus",
+    "signboard": null,
+    "direction_label": "PITX integrated terminal to EDSA corridor",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_jeepney-northbound-de9fd4",
+    "mode": "jeepney",
+    "signboard": null,
+    "direction_label": "northbound",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_jeepney-board-mrt-ayala-d0ba2d",
+    "mode": "jeepney",
+    "signboard": null,
+    "direction_label": "MRT-3 Ayala station to MRT-3 Guadalupe station",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_rail-board-lrt-gil-puyat-bf843f",
     "mode": "rail",
     "signboard": null,
-    "direction_label": "LRT-1 Pedro Gil station to EDSA corridor",
+    "direction_label": "LRT-1 Gil Puyat station to LRT-1 EDSA station",
     "service_status": "unknown"
   },
   {
@@ -473,27 +382,6 @@
     "mode": "rail",
     "signboard": null,
     "direction_label": "LRT-1 Central Terminal station to LRT-1 EDSA station",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_bus-board-quezon-avenue-station-b4ed07",
-    "mode": "bus",
-    "signboard": null,
-    "direction_label": "MRT-3 Quezon Avenue station to MRT-3 Guadalupe station",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_rail-board-ust-dac839",
-    "mode": "rail",
-    "signboard": null,
-    "direction_label": "rail service",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_rail-board-lrt-katipunan-eb0eb1",
-    "mode": "rail",
-    "signboard": null,
-    "direction_label": "LRT-2 Katipunan station to LRT-2 Recto station",
     "service_status": "unknown"
   },
   {
@@ -518,13 +406,6 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_rail-board-lrt-tayuman-a95612",
-    "mode": "rail",
-    "signboard": null,
-    "direction_label": "LRT-1 Tayuman station to EDSA corridor",
-    "service_status": "unknown"
-  },
-  {
     "route_id": "rt_jeepney-board-lrt-katipunan-847bd4",
     "mode": "jeepney",
     "signboard": null,
@@ -532,17 +413,10 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_tricycle-board-mrt-cubao-cd5b10",
-    "mode": "tricycle",
-    "signboard": null,
-    "direction_label": "Cubao MRT-3 station to MRT-3 Guadalupe station",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_rail-board-ayala-mrt-168376",
+    "route_id": "rt_rail-board-monumento-30cfb2",
     "mode": "rail",
     "signboard": null,
-    "direction_label": "MRT-3 Ayala station to MRT-3 Quezon Avenue station",
+    "direction_label": "Monumento transport hub to EDSA corridor",
     "service_status": "unknown"
   },
   {
@@ -567,13 +441,6 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_rail-board-vito-cruz-d5a2b3",
-    "mode": "rail",
-    "signboard": null,
-    "direction_label": "rail service",
-    "service_status": "unknown"
-  },
-  {
     "route_id": "rt_rail-board-lrt1-pitx-deb10a",
     "mode": "rail",
     "signboard": null,
@@ -581,24 +448,10 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_rail-board-mrt-buendia-7352f1",
-    "mode": "rail",
+    "route_id": "rt_jeepney-board-mrt-buendia-d9b108",
+    "mode": "jeepney",
     "signboard": null,
     "direction_label": "MRT-3 Buendia station to MRT-3 Guadalupe station",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_rail-board-lrt-central-96943f",
-    "mode": "rail",
-    "signboard": null,
-    "direction_label": "rail service",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_bus-board-sm-east-ortigas-7a411a",
-    "mode": "bus",
-    "signboard": null,
-    "direction_label": "SM City East Ortigas to Quiapo district",
     "service_status": "unknown"
   },
   {
@@ -616,38 +469,17 @@
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_bus-board-mrt-ortigas-50699f",
-    "mode": "bus",
-    "signboard": null,
-    "direction_label": "MRT-3 Ortigas station to MRT-3 Kamuning station",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_rail-board-lrt-carriedo-d5f443",
-    "mode": "rail",
-    "signboard": null,
-    "direction_label": "LRT-1 Carriedo station to EDSA corridor",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_jeepney-board-sm-north-2cba63",
+    "route_id": "rt_jeepney-board-lrt-gil-puyat-03c842",
     "mode": "jeepney",
     "signboard": null,
-    "direction_label": "SM North EDSA to Ateneo de Manila campus",
+    "direction_label": "LRT-1 Gil Puyat station to EDSA corridor",
     "service_status": "unknown"
   },
   {
-    "route_id": "rt_rail-board-quiapo-653109",
+    "route_id": "rt_rail-board-mrt-buendia-7352f1",
     "mode": "rail",
     "signboard": null,
-    "direction_label": "Quiapo district to LRT-1 Carriedo station",
-    "service_status": "unknown"
-  },
-  {
-    "route_id": "rt_rail-southbound-51e862",
-    "mode": "rail",
-    "signboard": null,
-    "direction_label": "southbound",
+    "direction_label": "MRT-3 Buendia station to MRT-3 Magallanes station",
     "service_status": "unknown"
   }
 ]

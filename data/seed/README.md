@@ -1,28 +1,14 @@
-# data/seed — cleaned eligible pack inputs
+# data/seed - cleaned eligible pack inputs
 
-**Owner:** Member 1. Promoted from T14 by `tools/corpus/promote-seed.mjs`.
+Promoted by tools/corpus/promote-seed.mjs after a deterministic builder validation.
 
-## Contents
+eligible/*.json contains only pack tables; dispositions.json and run.json describe
+the same build. pack.manifest.json is the builder companion. pack.sha256 is the
+checksum of data/raw/out/pack.sqlite (the pack itself is not shipped here).
 
-| Path | Purpose |
-|------|---------|
-| `eligible/*.json` | Pack tables (places, routes, legs, …) — paraphrases only |
-| `dispositions.json` | Per-post disposition |
-| `run.json` | Build run metadata |
-| `pack.sha256` | Checksum of last built `data/raw/out/pack.sqlite` (file itself gitignored) |
-| `HANDOFF.json` | Machine-readable handoff note |
+No raw Reddit wording/usernames. Unknowns remain unknown; conflicts are preserved.
+Human needs_review items are not auto-accepted. Source dates are post dates.
+Ignored raw reference bytes are audit inputs only, outside shipped assets.
 
-## Guardrails
-
-- No raw Reddit wording/usernames (INV-4).
-- Unknown fares/times stay unknown; conflicts preserved (INV-5).
-- Human `needs_review` queue is **not** auto-accepted.
-- Pre-cleaned raw snapshot reference: `data/reference/howtogetthereph_dataset-precleaned/` (see freeze script).
-
-## Rebuild
-
-```sh
-node tools/corpus/run-pipeline.mjs
-# or promote only after T14/T15:
-node tools/corpus/promote-seed.mjs
-```
+Rebuild: node tools/corpus/run-pipeline.mjs
+Promote after a successful build: node tools/corpus/promote-seed.mjs

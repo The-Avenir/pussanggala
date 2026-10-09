@@ -21,9 +21,8 @@ run("tools/corpus/freeze-reference.mjs");
 run("tools/corpus/audit.mjs");
 run("tools/corpus/extract.mjs");
 run("tools/corpus/evidence.mjs");
-// T12 part B (ai-apply) is skipped: committed ai-verdicts.json targets the
-// historical 19,709-candidate extractor IDs. Re-sample after T11 stabilizes.
-console.log("\n=== skip tools/corpus/ai-apply.mjs (verdicts stale vs new T11 IDs) ===");
+run("tools/corpus/regenerate-heuristic-verdicts.mjs");
+run("tools/corpus/ai-apply.mjs");
 run("tools/corpus/places.mjs");
 run("tools/corpus/eligible.mjs");
 run("tools/pack-builder/build.mjs", [

@@ -1,11 +1,1 @@
-[
-  {
-    "fare_id": "fr_c-1sxmmcv-2-4-52c930",
-    "leg_id": "lg_rt-rail-board-mrt-taft-c375bd-st-mrt3-taft-a-d453e6",
-    "amount_min": 16,
-    "amount_max": 16,
-    "currency": "PHP",
-    "basis": "reported_segment",
-    "effective_at": "2026-04-28"
-  }
-]
+[]

@@ -10,18 +10,8 @@
     "kind": "warning"
   },
   {
-    "note_id": "nt_queue-delay-noted-1uorpcg-2-cb9b61",
-    "body": "Queue delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_traffic-delay-noted-1w8899o-0-be4365",
     "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_queue-delay-noted-1w8899o-2-0efe31",
-    "body": "Queue delay noted.",
     "kind": "warning"
   },
   {
@@ -36,11 +26,6 @@
   },
   {
     "note_id": "nt_traffic-delay-noted-1wv3uq4-5-1b8a05",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1ugf2pn-3-68d44e",
     "body": "Traffic delay noted.",
     "kind": "warning"
   },
@@ -71,11 +56,6 @@
   },
   {
     "note_id": "nt_traffic-delay-noted-1w386ph-1-512770",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1w386ph-2-a73567",
     "body": "Traffic delay noted.",
     "kind": "warning"
   },
@@ -125,24 +105,9 @@
     "kind": "warning"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1v5zc13-1-512d5d",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_transfer-caution-noted-1v5zc13-3-3d19b6",
     "body": "Transfer caution noted.",
     "kind": "tip"
-  },
-  {
-    "note_id": "nt_queue-delay-noted-1uuzl2r-1-3e0402",
-    "body": "Queue delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_queue-delay-noted-1ush76c-2-f6175f",
-    "body": "Queue delay noted.",
-    "kind": "warning"
   },
   {
     "note_id": "nt_transfer-caution-noted-1ugo5pb-3-39b6d6",
@@ -150,19 +115,9 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_transfer-caution-noted-1udfj89-2-c8251b",
-    "body": "Transfer caution noted.",
-    "kind": "tip"
-  },
-  {
     "note_id": "nt_transfer-caution-noted-1u69cg1-1-f2afbe",
     "body": "Transfer caution noted.",
     "kind": "tip"
-  },
-  {
-    "note_id": "nt_queue-delay-noted-1u69cg1-3-efd18f",
-    "body": "Queue delay noted.",
-    "kind": "warning"
   },
   {
     "note_id": "nt_transfer-caution-noted-1shebsr-1-d16b9f",
@@ -173,11 +128,6 @@
     "note_id": "nt_transfer-caution-noted-1shebsr-3-9e58cb",
     "body": "Transfer caution noted.",
     "kind": "tip"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1w9nxdb-2-3ab7e5",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
   },
   {
     "note_id": "nt_traffic-delay-noted-1w724ct-1-fd015e",
@@ -200,34 +150,9 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_transfer-caution-noted-1v36pv9-2-f53791",
-    "body": "Transfer caution noted.",
-    "kind": "tip"
-  },
-  {
-    "note_id": "nt_queue-delay-noted-1tqmfp1-2-ed59da",
-    "body": "Queue delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_transfer-caution-noted-1tlzu3f-2-f05861",
     "body": "Transfer caution noted.",
     "kind": "tip"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1t00eax-2-adcfdd",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1sqol5e-0-79770c",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1sqol5e-2-6f1ee4",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
   },
   {
     "note_id": "nt_queue-delay-noted-1w814ay-0-57f4f5",
@@ -260,16 +185,6 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1v6ejd3-0-5e6262",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1v6ejd3-1-0e4fc6",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_queue-delay-noted-1ufq8rl-1-b9acb4",
     "body": "Queue delay noted.",
     "kind": "warning"
@@ -281,16 +196,6 @@
   },
   {
     "note_id": "nt_transfer-caution-noted-1twd96i-1-9d8895",
-    "body": "Transfer caution noted.",
-    "kind": "tip"
-  },
-  {
-    "note_id": "nt_safety-caution-noted-1tfn7g1-1-fd7fcb",
-    "body": "Safety caution noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_transfer-caution-noted-1siga1r-1-d40248",
     "body": "Transfer caution noted.",
     "kind": "tip"
   },
@@ -370,11 +275,6 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_queue-delay-noted-1usn84k-0-5d4b35",
-    "body": "Queue delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_queue-delay-noted-1uqhcvz-0-266858",
     "body": "Queue delay noted.",
     "kind": "warning"
@@ -383,11 +283,6 @@
     "note_id": "nt_transfer-caution-noted-1ufwlv7-0-212e40",
     "body": "Transfer caution noted.",
     "kind": "tip"
-  },
-  {
-    "note_id": "nt_queue-delay-noted-1ucngwh-0-73daca",
-    "body": "Queue delay noted.",
-    "kind": "warning"
   },
   {
     "note_id": "nt_transfer-caution-noted-1uchpco-0-c589dc",
@@ -470,11 +365,6 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_queue-delay-noted-1spmrmy-3-9e34f5",
-    "body": "Queue delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_safety-caution-noted-1v51wm6-1-bd98d2",
     "body": "Safety caution noted.",
     "kind": "warning"
@@ -495,28 +385,8 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_transfer-caution-noted-1wd9ktn-1-38bc7d",
-    "body": "Transfer caution noted.",
-    "kind": "tip"
-  },
-  {
     "note_id": "nt_traffic-delay-noted-1vtkd7s-2-f560a9",
     "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1vtkd7s-5-a382dd",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1uzow3j-2-e61993",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_queue-delay-noted-1uzow3j-3-886c13",
-    "body": "Queue delay noted.",
     "kind": "warning"
   },
   {
@@ -541,11 +411,6 @@
   },
   {
     "note_id": "nt_transfer-caution-noted-1wxa0xp-3-21e5be",
-    "body": "Transfer caution noted.",
-    "kind": "tip"
-  },
-  {
-    "note_id": "nt_transfer-caution-noted-1w5d9aq-1-145eaa",
     "body": "Transfer caution noted.",
     "kind": "tip"
   },
@@ -580,19 +445,9 @@
     "kind": "warning"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1tglsxp-3-8e2c21",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_transfer-caution-noted-1t0obrb-1-120954",
     "body": "Transfer caution noted.",
     "kind": "tip"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1t0obrb-2-a3b955",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
   },
   {
     "note_id": "nt_transfer-caution-noted-1t0obrb-3-923792",
@@ -603,16 +458,6 @@
     "note_id": "nt_transfer-caution-noted-1sl7s45-1-9275f4",
     "body": "Transfer caution noted.",
     "kind": "tip"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1wvj052-0-9cadcc",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1wch830-0-abf73d",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
   },
   {
     "note_id": "nt_traffic-delay-noted-1vy2f3q-2-f9a184",
@@ -648,21 +493,6 @@
     "note_id": "nt_transfer-caution-noted-1uztq3y-2-3aecf0",
     "body": "Transfer caution noted.",
     "kind": "tip"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1udbchc-2-a1a4b8",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1u8wryw-1-f2222c",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1tl10hr-2-1aee6a",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
   },
   {
     "note_id": "nt_transfer-caution-noted-1tjlkgf-0-deb5fd",
@@ -715,11 +545,6 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_queue-delay-noted-1vgzj7w-1-eec1f1",
-    "body": "Queue delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_queue-delay-noted-1v5yw3u-0-dd96e3",
     "body": "Queue delay noted.",
     "kind": "warning"
@@ -735,9 +560,9 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1upucag-0-2febd0",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
+    "note_id": "nt_transfer-caution-noted-1upucag-0-0668d4",
+    "body": "Transfer caution noted.",
+    "kind": "tip"
   },
   {
     "note_id": "nt_transfer-caution-noted-1um5ahd-1-d814a9",
@@ -746,11 +571,6 @@
   },
   {
     "note_id": "nt_traffic-delay-noted-1ujfcfp-1-120a6d",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1uh1ndo-0-f7f758",
     "body": "Traffic delay noted.",
     "kind": "warning"
   },
@@ -785,17 +605,7 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1wy6flm-0-14d21d",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_queue-delay-noted-1wx7bmj-0-f99fbc",
-    "body": "Queue delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_queue-delay-noted-1w42ptn-0-7fa9c2",
     "body": "Queue delay noted.",
     "kind": "warning"
   },
@@ -810,19 +620,9 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1vpsjd1-0-f554db",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_traffic-delay-noted-1vfsapb-0-601f1e",
     "body": "Traffic delay noted.",
     "kind": "warning"
-  },
-  {
-    "note_id": "nt_transfer-caution-noted-1vfc8fw-0-b8e960",
-    "body": "Transfer caution noted.",
-    "kind": "tip"
   },
   {
     "note_id": "nt_transfer-caution-noted-1vbqeta-0-2f7ccc",
@@ -845,11 +645,6 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1v56h3u-0-8b0376",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_transfer-caution-noted-1v3dha0-0-326caf",
     "body": "Transfer caution noted.",
     "kind": "tip"
@@ -860,19 +655,9 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_queue-delay-noted-1uwb8l6-0-73a913",
-    "body": "Queue delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_transfer-caution-noted-1uw3g22-0-f882ab",
     "body": "Transfer caution noted.",
     "kind": "tip"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1uv2ccl-0-18273f",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
   },
   {
     "note_id": "nt_transfer-caution-noted-1unw28l-0-c49cfd",
@@ -915,11 +700,6 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1t1lvpp-0-a18061",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_queue-delay-noted-1sy27cw-0-d6b295",
     "body": "Queue delay noted.",
     "kind": "warning"
@@ -930,34 +710,14 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1sgaidh-0-76e67e",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_queue-delay-noted-1vi0dns-2-f42029",
     "body": "Queue delay noted.",
     "kind": "warning"
   },
   {
-    "note_id": "nt_transfer-caution-noted-1vi0dns-4-3dbdb0",
-    "body": "Transfer caution noted.",
-    "kind": "tip"
-  },
-  {
     "note_id": "nt_transfer-caution-noted-1ue1p1y-0-44e5cd",
     "body": "Transfer caution noted.",
     "kind": "tip"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1wx94s9-0-b6992d",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1wx94s9-7-709ea1",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
   },
   {
     "note_id": "nt_queue-delay-noted-1vo3a4u-1-b89660",
@@ -1005,11 +765,6 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_queue-delay-noted-1slqxtv-5-ba2e24",
-    "body": "Queue delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_transfer-caution-noted-1wqq2f9-0-d70ae0",
     "body": "Transfer caution noted.",
     "kind": "tip"
@@ -1027,16 +782,6 @@
   {
     "note_id": "nt_queue-delay-noted-1w8puk8-1-c56b4a",
     "body": "Queue delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1v3flcj-0-f3d74d",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1uwq4at-1-8e7716",
-    "body": "Traffic delay noted.",
     "kind": "warning"
   },
   {
@@ -1070,17 +815,7 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_queue-delay-noted-1wl0tp7-0-d3a969",
-    "body": "Queue delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_transfer-caution-noted-1wgsy1o-2-302b6f",
-    "body": "Transfer caution noted.",
-    "kind": "tip"
-  },
-  {
-    "note_id": "nt_transfer-caution-noted-1vgw63a-0-6d2308",
     "body": "Transfer caution noted.",
     "kind": "tip"
   },
@@ -1105,11 +840,6 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1udbega-1-9f68df",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_transfer-caution-noted-1udbega-2-16abe5",
     "body": "Transfer caution noted.",
     "kind": "tip"
@@ -1126,16 +856,6 @@
   },
   {
     "note_id": "nt_traffic-delay-noted-1t9uz1a-2-4fd13a",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_safety-caution-noted-1wn8wkm-1-f08b05",
-    "body": "Safety caution noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1w8w0s2-0-62bfa9",
     "body": "Traffic delay noted.",
     "kind": "warning"
   },
@@ -1165,11 +885,6 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1vd298f-0-4ee3b7",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_transfer-caution-noted-1v8olgc-1-625662",
     "body": "Transfer caution noted.",
     "kind": "tip"
@@ -1178,11 +893,6 @@
     "note_id": "nt_transfer-caution-noted-1v4zidv-0-45ec53",
     "body": "Transfer caution noted.",
     "kind": "tip"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1uoulle-0-e4a3a9",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
   },
   {
     "note_id": "nt_transfer-caution-noted-1umzf0u-0-4308a7",
@@ -1216,16 +926,6 @@
   },
   {
     "note_id": "nt_transfer-caution-noted-1tdiy4m-0-2ab8b3",
-    "body": "Transfer caution noted.",
-    "kind": "tip"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1t1ieip-1-faee1e",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_transfer-caution-noted-1syq8qe-0-0c442f",
     "body": "Transfer caution noted.",
     "kind": "tip"
   },
@@ -1288,11 +988,6 @@
     "note_id": "nt_transfer-caution-noted-1vg347y-0-eb7fa6",
     "body": "Transfer caution noted.",
     "kind": "tip"
-  },
-  {
-    "note_id": "nt_safety-caution-noted-1vfzb3l-0-13640b",
-    "body": "Safety caution noted.",
-    "kind": "warning"
   },
   {
     "note_id": "nt_traffic-delay-noted-1vdcqw7-0-6efc10",
@@ -1360,16 +1055,6 @@
     "kind": "warning"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1tm8clp-0-2cb553",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1t3vsn2-0-eb9b3d",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_transfer-caution-noted-1spr2wd-0-a4dde4",
     "body": "Transfer caution noted.",
     "kind": "tip"
@@ -1378,21 +1063,6 @@
     "note_id": "nt_transfer-caution-noted-1sjuj04-0-1a0dd1",
     "body": "Transfer caution noted.",
     "kind": "tip"
-  },
-  {
-    "note_id": "nt_queue-delay-noted-1sjovbt-0-98d05e",
-    "body": "Queue delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1ttl2jw-10-ea5bfc",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1uv1cxj-1-e67049",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
   },
   {
     "note_id": "nt_traffic-delay-noted-1sl49hv-0-ad574e",
@@ -1410,22 +1080,7 @@
     "kind": "warning"
   },
   {
-    "note_id": "nt_queue-delay-noted-1tqzqah-0-376866",
-    "body": "Queue delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1tqzqah-1-2a1f1a",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_traffic-delay-noted-1szt17x-3-f8efd0",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1szt17x-6-ab5a43",
     "body": "Traffic delay noted.",
     "kind": "warning"
   },
@@ -1460,22 +1115,12 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1v3juup-0-8dde7e",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_traffic-delay-noted-1sq4l6o-3-d5858f",
     "body": "Traffic delay noted.",
     "kind": "warning"
   },
   {
     "note_id": "nt_traffic-delay-noted-1sq4l6o-4-1c68a7",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1vbhaao-0-bd9e62",
     "body": "Traffic delay noted.",
     "kind": "warning"
   },
@@ -1525,24 +1170,9 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1wcdo1w-1-d2c00e",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_traffic-delay-noted-1w2sz1e-1-0697f0",
     "body": "Traffic delay noted.",
     "kind": "warning"
-  },
-  {
-    "note_id": "nt_transfer-caution-noted-1vhsfcg-1-615f26",
-    "body": "Transfer caution noted.",
-    "kind": "tip"
-  },
-  {
-    "note_id": "nt_transfer-caution-noted-1uu6u4h-0-6a0a53",
-    "body": "Transfer caution noted.",
-    "kind": "tip"
   },
   {
     "note_id": "nt_transfer-caution-noted-1ug44ta-1-69a669",
@@ -1565,16 +1195,6 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1tvk8jm-0-f2c478",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1tvk8jm-1-1677f0",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_transfer-caution-noted-1ttp3r3-0-c97b13",
     "body": "Transfer caution noted.",
     "kind": "tip"
@@ -1582,21 +1202,6 @@
   {
     "note_id": "nt_queue-delay-noted-1sqvnf8-2-5cdedd",
     "body": "Queue delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1sn7utt-1-60d77f",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1wujrhi-0-c56bba",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1wujrhi-1-d25690",
-    "body": "Traffic delay noted.",
     "kind": "warning"
   },
   {
@@ -1730,19 +1335,9 @@
     "kind": "tip"
   },
   {
-    "note_id": "nt_traffic-delay-noted-1teqfdt-0-06c33f",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
-  },
-  {
     "note_id": "nt_transfer-caution-noted-1tajvyh-0-8cbdbe",
     "body": "Transfer caution noted.",
     "kind": "tip"
-  },
-  {
-    "note_id": "nt_traffic-delay-noted-1t8uaf4-0-866f5f",
-    "body": "Traffic delay noted.",
-    "kind": "warning"
   },
   {
     "note_id": "nt_transfer-caution-noted-1t7t3zb-0-651d5a",

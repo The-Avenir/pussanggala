@@ -18,15 +18,6 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-lrt-gil-puyat-bf843f-st-lrt1-g-10930a",
-    "route_id": "rt_rail-board-lrt-gil-puyat-bf843f",
-    "board_stop_id": "st_lrt1-gil-puyat-34b3b2",
-    "alight_stop_id": "st_edsa-corridor-83965b",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "excluded"
-  },
-  {
     "leg_id": "lg_rt-rail-board-mrt-taft-c375bd-st-mrt3-taft-a-bbf06c",
     "route_id": "rt_rail-board-mrt-taft-c375bd",
     "board_stop_id": "st_mrt3-taft-avenue-818567",
@@ -45,15 +36,6 @@
     "eligibility": "excluded"
   },
   {
-    "leg_id": "lg_rt-rail-board-lrt-pitx-870080-st-pitx-813185-44c44e",
-    "route_id": "rt_rail-board-lrt-pitx-870080",
-    "board_stop_id": "st_pitx-813185",
-    "alight_stop_id": "st_edsa-corridor-83965b",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "excluded"
-  },
-  {
     "leg_id": "lg_rt-rail-board-lrt2-recto-89d2f2-st-lrt2-rect-ec924a",
     "route_id": "rt_rail-board-lrt2-recto-89d2f2",
     "board_stop_id": "st_lrt2-recto-d73d89",
@@ -61,24 +43,6 @@
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-lrt2-cubao-234396-st-lrt2-aran-c9b02c",
-    "route_id": "rt_rail-board-lrt2-cubao-234396",
-    "board_stop_id": "st_lrt2-araneta-cubao-8ac903",
-    "alight_stop_id": "st_mrt3-araneta-cubao-0c4bc2",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-bus-board-lrt-pedro-gil-5be9e8-st-lrt1-pe-714480",
-    "route_id": "rt_bus-board-lrt-pedro-gil-5be9e8",
-    "board_stop_id": "st_lrt1-pedro-gil-6a8aa8",
-    "alight_stop_id": "st_edsa-corridor-83965b",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "excluded"
   },
   {
     "leg_id": "lg_rt-jeepney-board-trinoma-e46840-st-trinoma-2-288752",
@@ -99,8 +63,8 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-mrt-cubao-f9606e-st-mrt3-arane-b55ecd",
-    "route_id": "rt_rail-board-mrt-cubao-f9606e",
+    "leg_id": "lg_rt-tricycle-board-mrt-cubao-cd5b10-st-mrt3-a-b7aa8a",
+    "route_id": "rt_tricycle-board-mrt-cubao-cd5b10",
     "board_stop_id": "st_mrt3-araneta-cubao-0c4bc2",
     "alight_stop_id": "st_mrt3-boni-19f73c",
     "ride_min": null,
@@ -112,15 +76,6 @@
     "route_id": "rt_rail-board-mrt-shaw-33cb0a",
     "board_stop_id": "st_mrt3-shaw-6856fd",
     "alight_stop_id": "st_mrt3-taft-avenue-818567",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-uv-express-board-sm-fairview-77d48b-st-sm-d125bf",
-    "route_id": "rt_uv-express-board-sm-fairview-77d48b",
-    "board_stop_id": "st_sm-fairview-60f122",
-    "alight_stop_id": "st_sm-megamall-68f140",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -162,37 +117,10 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-jeepney-board-alabang-6faadd-st-alabang-d-ebc9a2",
-    "route_id": "rt_jeepney-board-alabang-6faadd",
-    "board_stop_id": "st_alabang-db1a08",
-    "alight_stop_id": "st_pasay-rotonda-c32297",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
     "leg_id": "lg_rt-rail-board-mrt-ayala-db8347-st-mrt3-ayala-704781",
     "route_id": "rt_rail-board-mrt-ayala-db8347",
     "board_stop_id": "st_mrt3-ayala-404889",
     "alight_stop_id": "st_mrt3-north-avenue-933d3a",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-jeepney-board-espana-c8e8be-st-espana-bou-5ebd07",
-    "route_id": "rt_jeepney-board-espana-c8e8be",
-    "board_stop_id": "st_espana-boulevard-dc5afd",
-    "alight_stop_id": "st_manila-city-hall-5b0168",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-ortigas-mrt-c56ae8-st-mrt3-ort-10045d",
-    "route_id": "rt_rail-board-ortigas-mrt-c56ae8",
-    "board_stop_id": "st_mrt3-ortigas-3f274b",
-    "alight_stop_id": "st_robinsons-galleria-fed25a",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -211,15 +139,6 @@
     "route_id": "rt_rail-board-mrt-taft-c375bd",
     "board_stop_id": "st_mrt3-taft-avenue-818567",
     "alight_stop_id": "st_mrt3-ayala-404889",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-bus-board-megamall-d44305-st-sm-megamall--ec56a6",
-    "route_id": "rt_bus-board-megamall-d44305",
-    "board_stop_id": "st_sm-megamall-68f140",
-    "alight_stop_id": "st_starmall-alabang-ee55bd",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -270,33 +189,6 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-jeepney-board-monumento-fd6d9c-st-monumen-3ef7b4",
-    "route_id": "rt_jeepney-board-monumento-fd6d9c",
-    "board_stop_id": "st_monumento-d88fad",
-    "alight_stop_id": "st_commonwealth-avenue-dad802",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-lrt-pitx-870080-st-pitx-813185-7318a5",
-    "route_id": "rt_rail-board-lrt-pitx-870080",
-    "board_stop_id": "st_pitx-813185",
-    "alight_stop_id": "st_lrt1-pedro-gil-6a8aa8",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-mrt-boni-8ff0b1-st-mrt3-boni-1-63d76e",
-    "route_id": "rt_rail-board-mrt-boni-8ff0b1",
-    "board_stop_id": "st_mrt3-boni-19f73c",
-    "alight_stop_id": "st_mrt3-guadalupe-7da74c",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
     "leg_id": "lg_rt-bus-board-moa-2f8948-st-mall-of-asia-f383-6933d1",
     "route_id": "rt_bus-board-moa-2f8948",
     "board_stop_id": "st_mall-of-asia-f3838e",
@@ -342,19 +234,19 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-mrt-guadalupe-f3a047-st-mrt3-g-3255d3",
-    "route_id": "rt_rail-board-mrt-guadalupe-f3a047",
-    "board_stop_id": "st_mrt3-guadalupe-7da74c",
-    "alight_stop_id": "st_mrt3-taft-avenue-818567",
+    "leg_id": "lg_rt-rail-board-lrt-edsa-5a2ac4-st-lrt1-edsa-8-5f6a75",
+    "route_id": "rt_rail-board-lrt-edsa-5a2ac4",
+    "board_stop_id": "st_lrt1-edsa-8894e2",
+    "alight_stop_id": "st_lrt1-pedro-gil-6a8aa8",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-lrt-edsa-5a2ac4-st-lrt1-edsa-8-5f6a75",
-    "route_id": "rt_rail-board-lrt-edsa-5a2ac4",
-    "board_stop_id": "st_lrt1-edsa-8894e2",
-    "alight_stop_id": "st_lrt1-pedro-gil-6a8aa8",
+    "leg_id": "lg_rt-rail-board-mrt-boni-8ff0b1-st-mrt3-boni-1-63d76e",
+    "route_id": "rt_rail-board-mrt-boni-8ff0b1",
+    "board_stop_id": "st_mrt3-boni-19f73c",
+    "alight_stop_id": "st_mrt3-guadalupe-7da74c",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -378,15 +270,6 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-monumento-30cfb2-st-monumento--2edd38",
-    "route_id": "rt_rail-board-monumento-30cfb2",
-    "board_stop_id": "st_monumento-d88fad",
-    "alight_stop_id": "st_lrt1-libertad-58e52c",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
     "leg_id": "lg_rt-rail-board-mrt-guadalupe-f3a047-st-mrt3-g-7c2fce",
     "route_id": "rt_rail-board-mrt-guadalupe-f3a047",
     "board_stop_id": "st_mrt3-guadalupe-7da74c",
@@ -396,8 +279,8 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-mrt-guadalupe-f3a047-st-mrt3-g-ec238b",
-    "route_id": "rt_rail-board-mrt-guadalupe-f3a047",
+    "leg_id": "lg_rt-jeepney-board-mrt-guadalupe-7568d4-st-mrt-cf2571",
+    "route_id": "rt_jeepney-board-mrt-guadalupe-7568d4",
     "board_stop_id": "st_mrt3-guadalupe-7da74c",
     "alight_stop_id": "st_mrt3-boni-19f73c",
     "ride_min": null,
@@ -409,15 +292,6 @@
     "route_id": "rt_rail-board-mrt-guadalupe-f3a047",
     "board_stop_id": "st_mrt3-guadalupe-7da74c",
     "alight_stop_id": "st_mrt3-magallanes-f2637a",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-bus-board-lrt-carriedo-a07c8e-st-lrt1-car-01dd2d",
-    "route_id": "rt_bus-board-lrt-carriedo-a07c8e",
-    "board_stop_id": "st_lrt1-carriedo-d82d6f",
-    "alight_stop_id": "st_lrt1-tayuman-49da1c",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -468,19 +342,19 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-lrt-pitx-870080-st-pitx-813185-381567",
-    "route_id": "rt_rail-board-lrt-pitx-870080",
-    "board_stop_id": "st_pitx-813185",
-    "alight_stop_id": "st_lrt1-gil-puyat-34b3b2",
+    "leg_id": "lg_rt-rail-board-mrt-guadalupe-f3a047-st-mrt3-g-ec238b",
+    "route_id": "rt_rail-board-mrt-guadalupe-f3a047",
+    "board_stop_id": "st_mrt3-guadalupe-7da74c",
+    "alight_stop_id": "st_mrt3-boni-19f73c",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-guadalupe-7da9e0-st-mrt3-guada-d36c26",
-    "route_id": "rt_rail-board-guadalupe-7da9e0",
+    "leg_id": "lg_rt-rail-board-mrt-guadalupe-f3a047-st-mrt3-g-3255d3",
+    "route_id": "rt_rail-board-mrt-guadalupe-f3a047",
     "board_stop_id": "st_mrt3-guadalupe-7da74c",
-    "alight_stop_id": "st_mrt3-boni-19f73c",
+    "alight_stop_id": "st_mrt3-taft-avenue-818567",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -540,15 +414,6 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-edsa-crossing-55c55d-st-edsa-c-b1e629",
-    "route_id": "rt_rail-board-edsa-crossing-55c55d",
-    "board_stop_id": "st_edsa-crossing-bd45b7",
-    "alight_stop_id": "st_lrt2-legarda-e664df",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
     "leg_id": "lg_rt-rail-board-mrt-taft-c375bd-st-mrt3-taft-a-1e8310",
     "route_id": "rt_rail-board-mrt-taft-c375bd",
     "board_stop_id": "st_mrt3-taft-avenue-818567",
@@ -558,17 +423,8 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-bus-board-edsa-cac0e0-st-edsa-corridor-83-076641",
-    "route_id": "rt_bus-board-edsa-cac0e0",
-    "board_stop_id": "st_edsa-corridor-83965b",
-    "alight_stop_id": "st_monumento-d88fad",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "excluded"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-mrt-boni-8ff0b1-st-mrt3-boni-1-907a53",
-    "route_id": "rt_rail-board-mrt-boni-8ff0b1",
+    "leg_id": "lg_rt-jeepney-board-mrt-boni-34a448-st-mrt3-bon-ddc249",
+    "route_id": "rt_jeepney-board-mrt-boni-34a448",
     "board_stop_id": "st_mrt3-boni-19f73c",
     "alight_stop_id": "st_pasig-palengke-2ff6d1",
     "ride_min": null,
@@ -594,31 +450,13 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-lrt-gil-puyat-bf843f-st-lrt1-g-b6619c",
-    "route_id": "rt_rail-board-lrt-gil-puyat-bf843f",
-    "board_stop_id": "st_lrt1-gil-puyat-34b3b2",
-    "alight_stop_id": "st_lrt1-doroteo-jose-42663a",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-mrt-ayala-db8347-st-mrt3-ayala-868baa",
-    "route_id": "rt_rail-board-mrt-ayala-db8347",
+    "leg_id": "lg_rt-tricycle-board-mrt-ayala-2f5980-st-mrt3-a-403ffa",
+    "route_id": "rt_tricycle-board-mrt-ayala-2f5980",
     "board_stop_id": "st_mrt3-ayala-404889",
     "alight_stop_id": "st_mrt3-guadalupe-7da74c",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-bus-board-lrt-pitx-42b529-st-pitx-813185--961233",
-    "route_id": "rt_bus-board-lrt-pitx-42b529",
-    "board_stop_id": "st_pitx-813185",
-    "alight_stop_id": "st_edsa-corridor-83965b",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "excluded"
   },
   {
     "leg_id": "lg_rt-rail-board-carriedo-bde182-st-lrt1-carrie-510906",
@@ -630,45 +468,9 @@
     "eligibility": "excluded"
   },
   {
-    "leg_id": "lg_rt-rail-board-lrt-monumento-d14bf9-st-monume-b170ee",
-    "route_id": "rt_rail-board-lrt-monumento-d14bf9",
-    "board_stop_id": "st_monumento-d88fad",
-    "alight_stop_id": "st_lrt1-carriedo-d82d6f",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-uv-express-board-fairview-eae2b0-st-fairv-b3be12",
-    "route_id": "rt_uv-express-board-fairview-eae2b0",
-    "board_stop_id": "st_fairview-1b3a8c",
-    "alight_stop_id": "st_mrt3-quezon-avenue-a72dc0",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-jeepney-board-lrt-pedro-gil-06d947-st-lrt-d51f3c",
-    "route_id": "rt_jeepney-board-lrt-pedro-gil-06d947",
-    "board_stop_id": "st_lrt1-pedro-gil-6a8aa8",
-    "alight_stop_id": "st_lrt1-gil-puyat-34b3b2",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
     "leg_id": "lg_rt-bus-board-monumento-3726c0-st-monumento-d-7196c5",
     "route_id": "rt_bus-board-monumento-3726c0",
     "board_stop_id": "st_monumento-d88fad",
-    "alight_stop_id": "st_mrt3-north-avenue-933d3a",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-bus-board-quezon-avenue-881178-st-mrt3-qu-c8e694",
-    "route_id": "rt_bus-board-quezon-avenue-881178",
-    "board_stop_id": "st_mrt3-quezon-avenue-a72dc0",
     "alight_stop_id": "st_mrt3-north-avenue-933d3a",
     "ride_min": null,
     "dist_km": null,
@@ -684,6 +486,15 @@
     "eligibility": "ready"
   },
   {
+    "leg_id": "lg_rt-rail-board-lrt-pitx-870080-st-pitx-813185-44c44e",
+    "route_id": "rt_rail-board-lrt-pitx-870080",
+    "board_stop_id": "st_pitx-813185",
+    "alight_stop_id": "st_edsa-corridor-83965b",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "excluded"
+  },
+  {
     "leg_id": "lg_rt-rail-board-mrt-guadalupe-f3a047-st-mrt3-g-acccb7",
     "route_id": "rt_rail-board-mrt-guadalupe-f3a047",
     "board_stop_id": "st_mrt3-guadalupe-7da74c",
@@ -697,6 +508,15 @@
     "route_id": "rt_rail-board-mrt-ayala-station-73d8da",
     "board_stop_id": "st_mrt3-ayala-404889",
     "alight_stop_id": "st_mrt3-guadalupe-7da74c",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-rail-board-mrt-cubao-f9606e-st-mrt3-arane-b55ecd",
+    "route_id": "rt_rail-board-mrt-cubao-f9606e",
+    "board_stop_id": "st_mrt3-araneta-cubao-0c4bc2",
+    "alight_stop_id": "st_mrt3-boni-19f73c",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -738,15 +558,6 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-tricycle-board-pitx-ce3c77-st-pitx-813185-2bcd10",
-    "route_id": "rt_tricycle-board-pitx-ce3c77",
-    "board_stop_id": "st_pitx-813185",
-    "alight_stop_id": "st_lrt1-edsa-8894e2",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
     "leg_id": "lg_rt-rail-board-lrt-pedro-gil-dc2b9b-st-lrt1-p-7285de",
     "route_id": "rt_rail-board-lrt-pedro-gil-dc2b9b",
     "board_stop_id": "st_lrt1-pedro-gil-6a8aa8",
@@ -778,33 +589,6 @@
     "route_id": "rt_rail-board-mrt-taft-c375bd",
     "board_stop_id": "st_mrt3-taft-avenue-818567",
     "alight_stop_id": "st_mrt3-north-avenue-933d3a",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-jeepney-board-mrt-taft-bd42b6-st-mrt3-taf-21e06f",
-    "route_id": "rt_jeepney-board-mrt-taft-bd42b6",
-    "board_stop_id": "st_mrt3-taft-avenue-818567",
-    "alight_stop_id": "st_mrt3-quezon-avenue-a72dc0",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-pitx-26fe62-st-pitx-813185-st--5a8f83",
-    "route_id": "rt_rail-board-pitx-26fe62",
-    "board_stop_id": "st_pitx-813185",
-    "alight_stop_id": "st_fairview-1b3a8c",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-northbound-69143c-st-mrt3-araneta-cu-ef4155",
-    "route_id": "rt_rail-northbound-69143c",
-    "board_stop_id": "st_mrt3-araneta-cubao-0c4bc2",
-    "alight_stop_id": "st_mrt3-guadalupe-7da74c",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -846,28 +630,19 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-lrt-pitx-870080-st-pitx-813185-cd0a6d",
+    "leg_id": "lg_rt-jeepney-board-lrt-pitx-7fa52e-st-pitx-813-867408",
+    "route_id": "rt_jeepney-board-lrt-pitx-7fa52e",
+    "board_stop_id": "st_pitx-813185",
+    "alight_stop_id": "st_lrt1-gil-puyat-34b3b2",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-rail-board-lrt-pitx-870080-st-pitx-813185-381567",
     "route_id": "rt_rail-board-lrt-pitx-870080",
     "board_stop_id": "st_pitx-813185",
-    "alight_stop_id": "st_lrt1-libertad-58e52c",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-bus-board-south-station-316c75-st-alabang-f8a993",
-    "route_id": "rt_bus-board-south-station-316c75",
-    "board_stop_id": "st_alabang-south-station-6b40a7",
-    "alight_stop_id": "st_festival-mall-c5f3dc",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-bus-board-vtx-35c484-st-vista-transport-e-04f786",
-    "route_id": "rt_bus-board-vtx-35c484",
-    "board_stop_id": "st_vista-transport-exchange-6a8ca1",
-    "alight_stop_id": "st_mrt3-magallanes-f2637a",
+    "alight_stop_id": "st_lrt1-gil-puyat-34b3b2",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -891,15 +666,6 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-jeepney-northbound-de9fd4-st-mrt3-guadalu-5a37fc",
-    "route_id": "rt_jeepney-northbound-de9fd4",
-    "board_stop_id": "st_mrt3-guadalupe-7da74c",
-    "alight_stop_id": "st_bgc-c6858b",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
     "leg_id": "lg_rt-bus-board-sm-north-a5907e-st-sm-north-eds-1474f3",
     "route_id": "rt_bus-board-sm-north-a5907e",
     "board_stop_id": "st_sm-north-edsa-85d0b1",
@@ -909,37 +675,10 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-mrt-shaw-33cb0a-st-mrt3-shaw-6-86759c",
-    "route_id": "rt_rail-board-mrt-shaw-33cb0a",
-    "board_stop_id": "st_mrt3-shaw-6856fd",
-    "alight_stop_id": "st_mrt3-boni-19f73c",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
     "leg_id": "lg_rt-rail-board-mrt-taft-c375bd-st-mrt3-taft-a-cfa7a1",
     "route_id": "rt_rail-board-mrt-taft-c375bd",
     "board_stop_id": "st_mrt3-taft-avenue-818567",
     "alight_stop_id": "st_mrt3-boni-19f73c",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-bus-board-one-ayala-bc0424-st-one-ayala-c-71dea6",
-    "route_id": "rt_bus-board-one-ayala-bc0424",
-    "board_stop_id": "st_one-ayala-c9df31",
-    "alight_stop_id": "st_lrt1-gil-puyat-34b3b2",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-mrt-shaw-33cb0a-st-mrt3-shaw-6-a73c81",
-    "route_id": "rt_rail-board-mrt-shaw-33cb0a",
-    "board_stop_id": "st_mrt3-shaw-6856fd",
-    "alight_stop_id": "st_mrt3-ayala-404889",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -1035,15 +774,6 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-bus-board-one-ayala-bc0424-st-one-ayala-c-e509aa",
-    "route_id": "rt_bus-board-one-ayala-bc0424",
-    "board_stop_id": "st_one-ayala-c9df31",
-    "alight_stop_id": "st_alabang-south-station-6b40a7",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
     "leg_id": "lg_rt-bus-board-one-ayala-bc0424-st-one-ayala-c-a4bcb7",
     "route_id": "rt_bus-board-one-ayala-bc0424",
     "board_stop_id": "st_one-ayala-c9df31",
@@ -1098,15 +828,6 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-mrt-north-avenue-bd91f1-st-mrt-924e2e",
-    "route_id": "rt_rail-board-mrt-north-avenue-bd91f1",
-    "board_stop_id": "st_mrt3-north-avenue-933d3a",
-    "alight_stop_id": "st_sm-north-edsa-85d0b1",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
     "leg_id": "lg_rt-rail-board-d-jose-97f3c1-st-lrt1-doroteo--1bf906",
     "route_id": "rt_rail-board-d-jose-97f3c1",
     "board_stop_id": "st_lrt1-doroteo-jose-42663a",
@@ -1143,19 +864,46 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-mrt-taft-c375bd-st-mrt3-taft-a-d16c34",
-    "route_id": "rt_rail-board-mrt-taft-c375bd",
-    "board_stop_id": "st_mrt3-taft-avenue-818567",
-    "alight_stop_id": "st_mall-of-asia-f3838e",
+    "leg_id": "lg_rt-bus-board-lrt-pitx-42b529-st-pitx-813185--961233",
+    "route_id": "rt_bus-board-lrt-pitx-42b529",
+    "board_stop_id": "st_pitx-813185",
+    "alight_stop_id": "st_edsa-corridor-83965b",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "excluded"
+  },
+  {
+    "leg_id": "lg_rt-rail-board-mrt-shaw-33cb0a-st-mrt3-shaw-6-a73c81",
+    "route_id": "rt_rail-board-mrt-shaw-33cb0a",
+    "board_stop_id": "st_mrt3-shaw-6856fd",
+    "alight_stop_id": "st_mrt3-ayala-404889",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-mrt-boni-8ff0b1-st-mrt3-boni-1-3cbeb8",
-    "route_id": "rt_rail-board-mrt-boni-8ff0b1",
-    "board_stop_id": "st_mrt3-boni-19f73c",
-    "alight_stop_id": "st_mrt3-ortigas-3f274b",
+    "leg_id": "lg_rt-rail-board-lrt-pitx-870080-st-pitx-813185-cd0a6d",
+    "route_id": "rt_rail-board-lrt-pitx-870080",
+    "board_stop_id": "st_pitx-813185",
+    "alight_stop_id": "st_lrt1-libertad-58e52c",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-jeepney-northbound-de9fd4-st-lawton-649e5-c8171f",
+    "route_id": "rt_jeepney-northbound-de9fd4",
+    "board_stop_id": "st_lawton-649e50",
+    "alight_stop_id": "st_mrt3-guadalupe-7da74c",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-jeepney-board-mrt-ayala-d0ba2d-st-mrt3-ay-0ad482",
+    "route_id": "rt_jeepney-board-mrt-ayala-d0ba2d",
+    "board_stop_id": "st_mrt3-ayala-404889",
+    "alight_stop_id": "st_mrt3-guadalupe-7da74c",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -1168,15 +916,6 @@
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-pedro-gil-24db84-st-lrt1-pedro-ce91f4",
-    "route_id": "rt_rail-board-pedro-gil-24db84",
-    "board_stop_id": "st_lrt1-pedro-gil-6a8aa8",
-    "alight_stop_id": "st_edsa-corridor-83965b",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "excluded"
   },
   {
     "leg_id": "lg_rt-rail-board-mrt-magallanes-cb0189-st-mrt3--1ffd66",
@@ -1192,6 +931,15 @@
     "route_id": "rt_bus-board-one-ayala-bc0424",
     "board_stop_id": "st_one-ayala-c9df31",
     "alight_stop_id": "st_sm-north-edsa-85d0b1",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-tricycle-board-mrt-cubao-cd5b10-st-mrt3-a-6c8fe9",
+    "route_id": "rt_tricycle-board-mrt-cubao-cd5b10",
+    "board_stop_id": "st_mrt3-araneta-cubao-0c4bc2",
+    "alight_stop_id": "st_mrt3-guadalupe-7da74c",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -1215,37 +963,19 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-bus-board-quezon-avenue-station-b4ed07-st-ea55a0",
-    "route_id": "rt_bus-board-quezon-avenue-station-b4ed07",
-    "board_stop_id": "st_mrt3-quezon-avenue-a72dc0",
-    "alight_stop_id": "st_mrt3-guadalupe-7da74c",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-ust-dac839-st-ust-1f1cfc-st-lr-0ff9c2",
-    "route_id": "rt_rail-board-ust-dac839",
-    "board_stop_id": "st_ust-1f1cfc",
-    "alight_stop_id": "st_lrt1-gil-puyat-34b3b2",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-lrt-katipunan-eb0eb1-st-lrt2-k-21d91d",
-    "route_id": "rt_rail-board-lrt-katipunan-eb0eb1",
-    "board_stop_id": "st_lrt2-katipunan-5634a2",
-    "alight_stop_id": "st_lrt2-recto-d73d89",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
     "leg_id": "lg_rt-rail-board-magallanes-station-ed94d3-st-m-5fa92f",
     "route_id": "rt_rail-board-magallanes-station-ed94d3",
     "board_stop_id": "st_mrt3-magallanes-f2637a",
     "alight_stop_id": "st_mrt3-north-avenue-933d3a",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-rail-board-lrt-pitx-870080-st-pitx-813185-7318a5",
+    "route_id": "rt_rail-board-lrt-pitx-870080",
+    "board_stop_id": "st_pitx-813185",
+    "alight_stop_id": "st_lrt1-pedro-gil-6a8aa8",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -1276,15 +1006,6 @@
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-lrt-tayuman-a95612-st-lrt1-tay-ea6905",
-    "route_id": "rt_rail-board-lrt-tayuman-a95612",
-    "board_stop_id": "st_lrt1-tayuman-49da1c",
-    "alight_stop_id": "st_edsa-corridor-83965b",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "excluded"
   },
   {
     "leg_id": "lg_rt-jeepney-board-lrt-katipunan-847bd4-st-lrt-cde637",
@@ -1323,46 +1044,10 @@
     "eligibility": "excluded"
   },
   {
-    "leg_id": "lg_rt-uv-express-board-sm-fairview-77d48b-st-sm-4aaef1",
-    "route_id": "rt_uv-express-board-sm-fairview-77d48b",
-    "board_stop_id": "st_sm-fairview-60f122",
-    "alight_stop_id": "st_mrt3-quezon-avenue-a72dc0",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-tricycle-board-mrt-cubao-cd5b10-st-mrt3-a-6c8fe9",
-    "route_id": "rt_tricycle-board-mrt-cubao-cd5b10",
-    "board_stop_id": "st_mrt3-araneta-cubao-0c4bc2",
-    "alight_stop_id": "st_mrt3-guadalupe-7da74c",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
     "leg_id": "lg_rt-rail-board-lrt-edsa-5a2ac4-st-lrt1-edsa-8-0632f3",
     "route_id": "rt_rail-board-lrt-edsa-5a2ac4",
     "board_stop_id": "st_lrt1-edsa-8894e2",
     "alight_stop_id": "st_lrt1-gil-puyat-34b3b2",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-lrt-baclaran-955a1e-st-lrt1-ba-2d7d8c",
-    "route_id": "rt_rail-board-lrt-baclaran-955a1e",
-    "board_stop_id": "st_lrt1-baclaran-be7115",
-    "alight_stop_id": "st_lrt1-un-avenue-7a8a0d",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-ayala-mrt-168376-st-mrt3-ayala-7d4a95",
-    "route_id": "rt_rail-board-ayala-mrt-168376",
-    "board_stop_id": "st_mrt3-ayala-404889",
-    "alight_stop_id": "st_mrt3-quezon-avenue-a72dc0",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -1386,28 +1071,10 @@
     "eligibility": "excluded"
   },
   {
-    "leg_id": "lg_rt-rail-board-lrt-pitx-870080-st-pitx-813185-314d39",
-    "route_id": "rt_rail-board-lrt-pitx-870080",
-    "board_stop_id": "st_pitx-813185",
-    "alight_stop_id": "st_lrt1-vito-cruz-4870eb",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
     "leg_id": "lg_rt-rail-board-mrt-magallanes-station-ba2fa3--7b03a8",
     "route_id": "rt_rail-board-mrt-magallanes-station-ba2fa3",
     "board_stop_id": "st_mrt3-magallanes-f2637a",
     "alight_stop_id": "st_mrt3-guadalupe-7da74c",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-vito-cruz-d5a2b3-st-lrt1-vito--844a7f",
-    "route_id": "rt_rail-board-vito-cruz-d5a2b3",
-    "board_stop_id": "st_lrt1-vito-cruz-4870eb",
-    "alight_stop_id": "st_lrt1-gil-puyat-34b3b2",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -1440,8 +1107,8 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-mrt-buendia-7352f1-st-mrt3-bue-769cae",
-    "route_id": "rt_rail-board-mrt-buendia-7352f1",
+    "leg_id": "lg_rt-jeepney-board-mrt-buendia-d9b108-st-mrt3--090b11",
+    "route_id": "rt_jeepney-board-mrt-buendia-d9b108",
     "board_stop_id": "st_mrt3-buendia-be6647",
     "alight_stop_id": "st_mrt3-guadalupe-7da74c",
     "ride_min": null,
@@ -1449,46 +1116,19 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-bus-board-pitx-752b7a-st-pitx-813185-st-e-651975",
-    "route_id": "rt_bus-board-pitx-752b7a",
+    "leg_id": "lg_rt-bus-board-lrt-pitx-42b529-st-pitx-813185--ad587b",
+    "route_id": "rt_bus-board-lrt-pitx-42b529",
     "board_stop_id": "st_pitx-813185",
-    "alight_stop_id": "st_edsa-corridor-83965b",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "excluded"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-mrt-ayala-db8347-st-mrt3-ayala-122a7b",
-    "route_id": "rt_rail-board-mrt-ayala-db8347",
-    "board_stop_id": "st_mrt3-ayala-404889",
-    "alight_stop_id": "st_mrt3-ortigas-3f274b",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-lrt-central-96943f-st-lrt1-cen-391eb1",
-    "route_id": "rt_rail-board-lrt-central-96943f",
-    "board_stop_id": "st_lrt1-central-terminal-f2429f",
     "alight_stop_id": "st_lrt1-gil-puyat-34b3b2",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-mrt-buendia-7352f1-st-mrt3-bue-9739f5",
-    "route_id": "rt_rail-board-mrt-buendia-7352f1",
-    "board_stop_id": "st_mrt3-buendia-be6647",
-    "alight_stop_id": "st_mrt3-ayala-404889",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-bus-board-sm-east-ortigas-7a411a-st-sm-ea-402a86",
-    "route_id": "rt_bus-board-sm-east-ortigas-7a411a",
-    "board_stop_id": "st_sm-east-ortigas-c17ebd",
-    "alight_stop_id": "st_quiapo-2e7a2a",
+    "leg_id": "lg_rt-rail-board-mrt-ayala-db8347-st-mrt3-ayala-122a7b",
+    "route_id": "rt_rail-board-mrt-ayala-db8347",
+    "board_stop_id": "st_mrt3-ayala-404889",
+    "alight_stop_id": "st_mrt3-ortigas-3f274b",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -1512,64 +1152,19 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-bus-board-mrt-ortigas-50699f-st-mrt3-orti-bf1bd6",
-    "route_id": "rt_bus-board-mrt-ortigas-50699f",
-    "board_stop_id": "st_mrt3-ortigas-3f274b",
-    "alight_stop_id": "st_mrt3-kamuning-e7d051",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-lrt-carriedo-d5f443-st-lrt1-ca-85445e",
-    "route_id": "rt_rail-board-lrt-carriedo-d5f443",
-    "board_stop_id": "st_lrt1-carriedo-d82d6f",
+    "leg_id": "lg_rt-jeepney-board-lrt-gil-puyat-03c842-st-lrt-594019",
+    "route_id": "rt_jeepney-board-lrt-gil-puyat-03c842",
+    "board_stop_id": "st_lrt1-gil-puyat-34b3b2",
     "alight_stop_id": "st_edsa-corridor-83965b",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "excluded"
   },
   {
-    "leg_id": "lg_rt-rail-board-lrt-gil-puyat-bf843f-st-lrt1-g-c9efde",
-    "route_id": "rt_rail-board-lrt-gil-puyat-bf843f",
-    "board_stop_id": "st_lrt1-gil-puyat-34b3b2",
-    "alight_stop_id": "st_lrt1-carriedo-d82d6f",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
     "leg_id": "lg_rt-rail-board-mrt-buendia-7352f1-st-mrt3-bue-a0e2a1",
     "route_id": "rt_rail-board-mrt-buendia-7352f1",
     "board_stop_id": "st_mrt3-buendia-be6647",
     "alight_stop_id": "st_mrt3-magallanes-f2637a",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-lrt-katipunan-eb0eb1-st-lrt2-k-1882f1",
-    "route_id": "rt_rail-board-lrt-katipunan-eb0eb1",
-    "board_stop_id": "st_lrt2-katipunan-5634a2",
-    "alight_stop_id": "st_lrt2-legarda-e664df",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-mrt-north-avenue-bd91f1-st-mrt-29a2d6",
-    "route_id": "rt_rail-board-mrt-north-avenue-bd91f1",
-    "board_stop_id": "st_mrt3-north-avenue-933d3a",
-    "alight_stop_id": "st_mrt3-taft-avenue-818567",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-jeepney-board-sm-north-2cba63-st-sm-north-5d96a7",
-    "route_id": "rt_jeepney-board-sm-north-2cba63",
-    "board_stop_id": "st_sm-north-edsa-85d0b1",
-    "alight_stop_id": "st_ateneo-0887b0",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -1593,24 +1188,6 @@
     "eligibility": "ready"
   },
   {
-    "leg_id": "lg_rt-rail-board-lrt-monumento-d14bf9-st-monume-4de7a8",
-    "route_id": "rt_rail-board-lrt-monumento-d14bf9",
-    "board_stop_id": "st_monumento-d88fad",
-    "alight_stop_id": "st_lrt1-edsa-8894e2",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-board-quiapo-653109-st-quiapo-2e7a2a-bf2efa",
-    "route_id": "rt_rail-board-quiapo-653109",
-    "board_stop_id": "st_quiapo-2e7a2a",
-    "alight_stop_id": "st_lrt1-carriedo-d82d6f",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
     "leg_id": "lg_rt-rail-board-mrt-ayala-db8347-st-mrt3-ayala-a50548",
     "route_id": "rt_rail-board-mrt-ayala-db8347",
     "board_stop_id": "st_mrt3-ayala-404889",
@@ -1624,15 +1201,6 @@
     "route_id": "rt_rail-board-lrt-gil-puyat-bf843f",
     "board_stop_id": "st_lrt1-gil-puyat-34b3b2",
     "alight_stop_id": "st_monumento-d88fad",
-    "ride_min": null,
-    "dist_km": null,
-    "eligibility": "ready"
-  },
-  {
-    "leg_id": "lg_rt-rail-southbound-51e862-st-lrt1-edsa-8894e-d1203d",
-    "route_id": "rt_rail-southbound-51e862",
-    "board_stop_id": "st_lrt1-edsa-8894e2",
-    "alight_stop_id": "st_pitx-813185",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
