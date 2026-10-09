@@ -29,7 +29,9 @@ the declared static gates.
 
 Expo's default SDK-57 Metro configuration discovers npm workspace links and package
 exports. Core resolves directly to `packages/core/src/index.ts`; AI/conversation resolve
-to their existing packages. There is no copied core, compiler path alias or second React
+to their existing packages. A resolver fallback supports existing relative `.js`
+specifiers in TypeScript source while preferring actual JavaScript files. There is no
+copied core, compiler path alias or second React
 runtime. Binary asset extensions support explicit static imports; they do not import
 whole asset directories. T41 owns the final asset allowlist and loader.
 

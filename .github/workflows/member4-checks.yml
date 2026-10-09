@@ -41,6 +41,9 @@ jobs:
           npm run android:prebuild
           node apps/mobile/scripts/verify-native.cjs
 
+      - name: Bundle the Android harness and shared workspace source
+        run: npm run export:android --workspace @pusang-gala/mobile
+
       - name: Shipped-content allowlist check (INV-4)
         run: node tools/eval/allowlist-check.mjs
 
