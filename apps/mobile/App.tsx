@@ -1,4 +1,3 @@
-import { registerRootComponent } from 'expo';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -18,5 +17,4 @@ function App(): React.JSX.Element {
     <MobileShell />
   </SafeAreaProvider>;
 }
-registerRootComponent(App);
 export default App;

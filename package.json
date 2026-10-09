@@ -3,15 +3,20 @@
   "private": true,
   "workspaces": [
     "packages/core",
+    "apps/mobile",
     "apps/mobile/src/conversation",
     "apps/mobile/src/ai",
     "tools/eval/conversation"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=22.13.0"
   },
   "scripts": {
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present"
+    "test": "npm run test --workspaces --if-present",
+    "mobile:check": "npm run check --workspace @pusang-gala/mobile",
+    "android:prebuild": "npm run android:prebuild --workspace @pusang-gala/mobile",
+    "android:development": "npm run android:development --workspace @pusang-gala/mobile",
+    "android:release": "npm run android:release --workspace @pusang-gala/mobile"
   }
 }

@@ -1,90 +1,107 @@
-# apps/mobile — Expo app
+﻿# Pusang Gala mobile app
 
-**Owner:** Member 4 (mobile, maps, GPS, release). `src/ai/` and
-`src/conversation/` are owned by Member 3.
-
-**Tasks:** T40 (Expo scaffold/pinned build), T41 (assets/pack loader), T42
-(offline basemap), T43 (foreground GPS), T44 (persistence), T45 (integration),
-T46 (UI), T47 (judged APK).
+Member 4 owns the native scaffold. AI/conversation, local assets and user-store
+implementations retain their separate ownership. The UI preview does not establish model, pack, map or phone readiness.
+See [T40 evidence](t40-build-evidence.md) for executed checks and unresolved gates.
+The earlier `spike-t40.md` is historical research, not the installed-version record.
 
 The current entry point is the T46 playful commute chat: Gaile-led onboarding, the Sunset Playful palette, rounded Nunito headings and a “Where to go?” home with a sticky chat composer. The supplied mascot replaces the SVG cat logo. Plan, Map and Trips remain the main destinations; “Enter landmarks” reveals manual routing. The preview shows onboarding once per fresh session; native integration must persist its completion flag for returning users. See the [audit, navigation, interactions and validation](../../docs/ux-redesign.md), [visual review](../../docs/ux-review.html), [wireframes](../../docs/ux-wireframes.html), and [independent Luna review / Orca record](../../docs/playful-chat-review.md). Run `npm run web` here to explore it. Route data, native AI, basemap, GPS and persistent storage remain unconnected; real queries fail honestly and examples require an explicit action. The earlier [Figma implementation](../../docs/ui-figma-implementation.md) is preserved as a comparison baseline.
 
-Guardrails
-(BUILD §5): the supplied `howtogetthereph_dataset/` raw input must never appear
-in app assets; the APK uses an explicit asset allowlist (pack/model/map/style/
-glyph/sprite/licence files, with hashes); no runtime networking, analytics or
-crash-upload SDKs; no raw chat or GPS-coordinate persistence.
+## Install and checks
 
-## Historical T40 minimal harness (ugly-first, offline-first)
-
-**Research:** SDK-57 direction per `spike-t40.md` (RESEARCH-ONLY until a device
-build proves it). Harness pins: `expo@57.0.23`, `react-native@0.86.3`,
-`react@19.2.3`, Node `>=22.13`. New Architecture stays enabled (llama.rn
-requires it). No OTA, no network/cloud/analytics SDKs, no
-`howtogetthereph_dataset` import (BUILD §5 / INV-2/INV-3/INV-4).
-
-**Files:** `package.json` (deps + `typecheck` script), `app.json` (Expo config:
-`com.pusanggala.app`, no plugins yet), `App.tsx` (single-file entry, registers
-root component; originally rendered offline banner + 3 synthetic placeholder cards + offline
-map box). That entry point has been replaced by the nine-screen Figma implementation.
-Native modules (`llama.rn`, MapLibre), pack loader (T41), GPS (T43) and real
-device evidence (S1/S2) land in later tasks.
-
-**Commands** (from `apps/mobile/`):
+Use Node >=22.13 and npm from the repository root. The root `package-lock.json`
+is the only lockfile. Do not install a separate app dependency tree.
 
 ```sh
-npm install                       # install harness deps (local node_modules only)
-npm run typecheck                 # tsc --noEmit over App.tsx
+npm ci --no-audit --no-fund
+npm run typecheck
+npm test
+npm run mobile:check
+node tools/eval/allowlist-check.mjs
+node --test tools/eval/allowlist-check.test.mjs
 ```
 
-From repo root, `npm run typecheck` still covers `packages/core`; this app is
-not yet a workspace member (kept out until the T40 device build is proven).
-Device-build commands (`prebuild --clean`, `run:android --device`) are proposed
-in `spike-t40.md` §4 and remain unrun — no device evidence claimed.
+The app typecheck covers all mobile production TypeScript, including the existing
+AI/conversation imports. Their test files remain covered by their own workspaces.
+Mobile tests exercise build preflight, offline-release configuration and real workspace
+links. Root tests also run the established core, AI, conversation and evaluation suites.
+There is no repository lint command; TypeScript and the existing content checks are
+the declared static gates.
 
-## T01 gates — actual commands (Member 4)
+Expo's default SDK-57 Metro configuration discovers npm workspace links and package
+exports. Core resolves directly to `packages/core/src/index.ts`; AI/conversation resolve
+to their existing packages. A resolver fallback supports existing relative `.js`
+specifiers in TypeScript source while preferring actual JavaScript files. There is no
+copied core, compiler path alias or second React
+runtime. Binary asset extensions support explicit static imports; they do not import
+whole asset directories. T41 owns the final asset allowlist and loader.
 
-Repo checks + asset guard, run from the repo root (verified 2026-10-09,
-Node v22.21.1; CI mirrors them in `.github/workflows/member4-checks.yml`):
+## Local native generation and compilation
+
+Build prerequisites: JDK 17 (`JAVA_HOME`), Android SDK (`ANDROID_HOME`), platform 36,
+build-tools 36.0.0, platform-tools, and the NDK/CMake required by the generated RN/native
+Gradle project. Gradle may fetch build dependencies; installed app runtime is offline.
+No Expo account or EAS cloud build is needed.
 
 ```sh
-npm install                             # install workspace deps
-npm run typecheck                       # tsc over workspaces (packages/core)
-npm test                                # vitest in packages/core (2 passed)
-node tools/eval/allowlist-check.mjs     # INV-4 shipped-content scan + built-in self-tests (exit 0 when clean)
-node --test tools/eval/allowlist-check.test.mjs  # positive (leak rejected) + negative (clean passes) fixtures
+# From the repository root:
+npm run android:prebuild
+node apps/mobile/scripts/verify-native.cjs
+npm run android:development
+npm run android:release
+
+# From apps/mobile, once a USB-debuggable Android device is connected:
+npm run android
+npm start -- --localhost
 ```
 
-App-local harness commands (from `apps/mobile/`; the app is not yet a
-workspace member, so the root commands above do not cover it):
+`android:prebuild` regenerates ONLY the ignored `apps/mobile/android` directory;
+hand-editing generated native files is not durable. Re-run it after native dependency
+or plugin changes. The build scripts run `:app:assembleDebug` or `:app:assembleRelease`
+with the generated Gradle wrapper, without requiring a phone, and print actual APK
+paths, bytes and SHA-256 only after successful compilation. SDK/JDK failures return
+nonzero and produce no APK claim. `npm run android:tooling` from the app inspects them.
 
-```sh
-npm install        # install harness deps (local node_modules only)
-npm run typecheck  # tsc --noEmit over App.tsx
-```
+Expected APK locations after successful builds:
 
-The allowlist check scans `apps/mobile`, `tools/map-pack` and `data/seed`
-for raw Reddit leaks (verbatim long comment text, `u/` usernames, Reddit
-permalinks, raw-dataset imports) and fails on any hit. The supplied
-`howtogetthereph_dataset/` directory at the repo root is intentional build
-input: it is never scanned, so its mere existence never fails the gate.
+- `apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk`
+- `apps/mobile/android/app/build/outputs/apk/release/app-release.apk`
 
-## Using @pusang-gala/core
+The generated local release uses the template's debug signing key. It is suitable
+for local installation checks, not distribution signing; T47 owns the release key.
+Compilation never counts as phone installation, cold offline launch or performance
+evidence. Expo Go cannot load the custom MapLibre/llama native modules.
 
-App code imports the shared core only through `src/core` (`./src/core` from
-`App.tsx`, `../core` inside `src/`) — do not deep-import `packages/core`
-paths elsewhere. Prerequisite: `npm install` in `apps/mobile` (and `npm install`
-at the repo root so `packages/core`'s own dev toolchain is present for the
-root typecheck/tests).
+## Native configuration and offline boundary
 
-The dependency is `file:../../packages/core` (a symlink; `apps/mobile` stays
-out of the root npm workspaces). `metro.config.js` adds `packages/core` to
-`watchFolders` and keeps Metro's default hierarchical lookup: Expo's own
-lockfile nests version-conflicted deps under `node_modules/expo/node_modules`
-(`expo-asset`, `ws@8`, `zod@3`), so strict flat resolution would misresolve
-them. Core's `zod` import resolves via the symlink realpath to the repo-root
-`node_modules/zod@4.6.5` (core's pinned dep — root `npm install` is required
-before bundling/typechecking), and app code resolves `zod` to the app's own
-top-level `zod@4.6.5` — never the `zod@3` nested under `expo`. Verified by
-`npx expo export`: the bundle contains zod 4 (`$ZodType`/`_zod` internals) and
-no zod-3 copy. Do not use zod 3 APIs in app code; `zod` here is v4.
+Expo `57.0.27`, RN `0.86.3`, React `19.2.3` and dev-client `57.0.19` are exact
+manifest/lockfile pins. New Architecture is enabled; build ABIs are `arm64-v8a` and
+`x86_64`. MapLibre `11.5.0` and llama.rn `0.12.9` are installed and their plugins
+registered. llama's newer registry `latest` is a release candidate; this scaffold
+uses the published non-prerelease `0.12.9`, with OpenCL disabled until T30 measures it.
+Neither native execution nor GPU support is claimed.
+
+The release manifest overlay removes INTERNET/ACCESS_NETWORK_STATE from the merged
+release manifest. Debug retains local Metro access. Android backup and OTA updates
+are disabled; background location/service, audio and shared-storage permissions are
+blocked. There are no analytics, cloud fallback or upload SDKs. A merged-manifest/APK
+permission audit and actual network-blocked cold launch remain required after compilation.
+Removing INTERNET also prevents opening HTTP links inside the app; a future explicit
+source-link action must hand off to a browser rather than fetch content.
+
+## Adapter ports for T41 and T44
+
+These are installed pins and available imports, not competing adapter implementations:
+
+| Package | Exact pin | Adapter imports and constraints |
+| --- | --- | --- |
+| expo-asset | 57.0.19 | `import { Asset } from 'expo-asset'`; resolve static module assets with `Asset.fromModule`. Accept only bundled local URIs; never use a remote asset/download fallback. |
+| expo-file-system | 57.0.7 | `import { File, Directory, Paths } from 'expo-file-system'`; private document/cache files, `copy`, `exists`, `size`, `uri`, native-readable paths. Old `copyAsync`/`getInfoAsync`/`documentDirectory` imports must use `'expo-file-system/legacy'`. |
+| expo-sqlite | 57.0.4 | `import { openDatabaseAsync, type SQLiteDatabase } from 'expo-sqlite'`; async query/bind APIs, transaction APIs and `closeAsync`. FTS is enabled; SQLCipher is disabled. Enforce read-only pack access in the T41 adapter; T44 owns the separate ID-only user DB and migrations. |
+| expo-crypto | 57.0.3 | `import { digest, CryptoDigestAlgorithm } from 'expo-crypto'`; SHA-256 of bytes, not MD5 or stringified binary. This is a whole-buffer API: do not read a large GGUF into JS merely to hash it. Bounded-memory large-file hashing remains an adapter/device gate. |
+| expo-location | 57.0.20 | Foreground permission/watch APIs only; T43 owns lifecycle and explicit origin confirmation. |
+
+T41 adds final explicit bundled asset references/checksums once artifacts are eligible.
+No pack, map or GGUF file is supplied by T40, and no raw curation dataset is imported.
+T30/T31 consume the installed llama native module through their existing runtime/model
+ports. A native runtime adapter and model selection are outside this task.
