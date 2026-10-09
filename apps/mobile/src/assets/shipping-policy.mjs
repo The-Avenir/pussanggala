@@ -61,12 +61,15 @@ const figmaUiPaths = [
   "assets/licences/DMSans-OFL.txt",
   "assets/licences/Nunito-OFL.txt",
   "assets/ui-manifest.json",
+  "assets/icon.png",
+  "assets/adaptive-icon.png",
+  "assets/favicon.png",
 ];
 const mascotNames = ["wave", "walk", "think", "pointing", "map", "idle", "compass", "cheer", "binoculars"];
 export const UI_ASSET_PATHS = Object.freeze([...figmaUiPaths, ...mascotNames.flatMap(name => [
   `assets/mascot/gaile-${name}.png`, `assets/mascot/trimmed/gaile-${name}.png`,
 ])]);
-export const NON_SHIPPED_ASSET_DOCS = Object.freeze(["assets/mascot/README.md"]);
+export const NON_SHIPPED_ASSET_DOCS = Object.freeze(["assets/mascot/README.md", "assets/mascot/Gaile App Icon.png"]);
 
 export function findForbiddenMarker(value) {
   if (typeof value !== "string") return undefined;

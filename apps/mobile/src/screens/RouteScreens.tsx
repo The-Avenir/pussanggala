@@ -127,7 +127,7 @@ export function RouteStepsScreen({ route, stepIndex, onStep, onMap, onSave, onAs
             {step.tips.map(tip => <Text key={tip} style={type.secondary}>{tip}</Text>)}</View> : null}
           {step.source ? <Pressable accessibilityRole="button" accessibilityLabel="About this source" onPress={onSources} style={styles.sourceRow}>
             <Icon name="info" size={15} color={palette.secondary}/>
-            <Text style={[type.caption, ui.flex]}>Reported in {step.source.label} · posted {step.source.postedAt} · <Text style={styles.accent}>Open source</Text></Text>
+            <Text style={[type.caption, ui.flex, styles.shrink]}>Reported in {step.source.label} · posted {step.source.postedAt} · <Text style={styles.accent}>Open source</Text></Text>
           </Pressable> : null}
         </View> : null}
       </View>
@@ -301,6 +301,7 @@ const styles = StyleSheet.create({
   tipsLabel: { fontWeight: '600', letterSpacing: 0.4 },
   fareConflict: { gap: 4, borderLeftWidth: 3, borderLeftColor: palette.gold, backgroundColor: palette.goldSoft, padding: 12 },
   sourceRow: { flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 44 },
+  shrink: { flexShrink: 1, minWidth: 0 },
   diagram: { paddingTop: 20 }, diagramRow: { flexDirection: 'row', gap: 18, minHeight: 70 },
   diagramRail: { minWidth: 26, alignItems: 'center' },
   node: { minWidth: 26, minHeight: 26, padding: 2, borderRadius: 24, borderWidth: 2, borderColor: palette.rail, backgroundColor: palette.paper, alignItems: 'center', justifyContent: 'center' },
