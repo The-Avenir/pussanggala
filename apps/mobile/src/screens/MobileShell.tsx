@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, BackHandler, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, CatMark, Icon, IconButton, Notice, palette, type, ui } from '../ui/travel';
+import { Button, Gaile, Icon, IconButton, Notice, palette, type, ui } from '../ui/travel';
 import type { IconName } from '../ui/travel';
 import { createTripStore } from '../store/tripStore';
 import type { SavedRouteRow, TripHistoryRow, TripPreference } from '../store/tripStore';
@@ -40,6 +40,7 @@ export function MobileShell(): React.JSX.Element {
   const [preference, setPreference] = useState<Preference>('cheapest');
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
+  const [landmarksOpen, setLandmarksOpen] = useState(false);
   const [exampleMode, setExampleMode] = useState(false);
   const [turns, setTurns] = useState<ConversationTurn[]>([]);
   const [tripConversation, setTripConversation] = useState(false);
@@ -132,29 +133,35 @@ export function MobileShell(): React.JSX.Element {
     appendTurn(exampleQuestion, 'Tara. This example uses Carousel, a walking transfer, then MRT-3. Open Directions for each boarding and alighting point.', EXAMPLE_ROUTE);
     history('looked_up', EXAMPLE_ROUTE);
   }
-  function submit(query: string): void {
+  function submit(query: string, fromHome = false): void {
     const normalized = normalize(query);
+    const currentChatRoute = fromHome ? route : chatRoute;
     if (/masinag|antipolo/.test(normalized)) {
       appendTurn(query, 'Masinag and Antipolo are outside Metro Manila. This release covers NCR only. Edit your destination to a supported NCR landmark.'); return;
     }
     if (/pauwi|reverse|return|from one ayala|galing one ayala/.test(normalized)) {
       appendTurn(query, 'A return trip needs its own directed route search. Reverse route data isn’t installed; the forward steps can’t be reused.'); return;
     }
-    if (chatRoute && /bababa|get off|alight/.test(normalized)) {
-      const step = tripConversation ? activeRoute?.steps[activeStep] : chatRoute.steps.slice().reverse().find(item => item.mode === 'ride');
+    if (currentChatRoute && /bababa|get off|alight/.test(normalized)) {
+      const step = !fromHome && tripConversation ? activeRoute?.steps[activeStep] : currentChatRoute.steps.slice().reverse().find(item => item.mode === 'ride');
       appendTurn(query, step?.mode === 'ride' ? 'In the example, get off at ' + step.stop + '. ' + step.instruction
         : 'Your current example step is a walk. ' + (step?.instruction ?? 'Open Directions for the boarding and alighting points.')); return;
     }
-    if (chatRoute && /last trip|oras|hours|schedule/.test(normalized)) {
+    if (currentChatRoute && /last trip|oras|hours|schedule/.test(normalized)) {
       appendTurn(query, 'Operating hours aren’t reported in this example. I can’t confirm a last departure or whether the service is running now.'); return;
     }
-    if (chatRoute && /cheapest|mura|cheaper|transfers|sakay|fastest/.test(normalized)) {
-      appendTurn(query, 'Compare the example fare, reported time and transfers in Other options. Time ranges overlap; none is guaranteed fastest.', chatRoute); return;
+    if (currentChatRoute && /cheapest|mura|cheaper|transfers|sakay|fastest/.test(normalized)) {
+      appendTurn(query, 'Compare the example fare, reported time and transfers in Other options. Time ranges overlap; none is guaranteed fastest.', currentChatRoute); return;
     }
     if (exampleMode && normalized.includes('monumento') && normalized.includes('one ayala')) {
       appendTurn(query, 'These are example route facts, not installed data. Open Directions to see the supported layout and transfer sequence.', selected); return;
     }
     appendTurn(query, 'The route pack and local assistant aren’t installed in this preview. I can’t answer this journey yet. Use the example question to explore the design.');
+  }
+  function submitFromHome(query: string): void {
+    setTripConversation(false);
+    navigate('ask');
+    submit(query, true);
   }
   function findRoutes(): void {
     if (!origin || !destination) { editEndpoint(!origin ? 'origin' : 'destination'); return; }
@@ -241,9 +248,10 @@ export function MobileShell(): React.JSX.Element {
         if (stacks[tab].length > 1) back();
         else setStacks(current => ({ ...current, plan: ['plan'] }));
       }}/>;
-      case 'plan': return <PlanScreen origin={origin} destination={destination} onEdit={editEndpoint}
+      case 'plan': return <PlanScreen origin={origin} destination={destination} landmarksOpen={landmarksOpen} onLandmarksOpen={setLandmarksOpen}
+        onSuggestion={submitFromHome} onEdit={editEndpoint}
         onSwap={() => { setOrigin(destination); setDestination(origin); setRoute(null); setExampleMode(false); }}
-        onFind={findRoutes} onAsk={() => openAsk()} onExample={chooseExample} onResources={() => navigate('offline')} onLocation={location} onIntro={() => navigate('welcome')}/>;
+        onFind={findRoutes} onExample={chooseExample} onResources={() => navigate('offline')} onLocation={location} onIntro={() => navigate('welcome')}/>;
       case 'ask': return <AskScreen turns={turns} route={chatRoute} origin={tripConversation && activeRoute ? 'LRT-1 Monumento' : origin}
         destination={tripConversation && activeRoute ? 'One Ayala' : destination} activeStep={tripConversation && activeRoute ? activeStep : null}
         onEdit={() => { setTripConversation(false); editEndpoint('destination'); }} onOptions={() => { if (chatRoute) setRoute(chatRoute); navigate('options'); }}
@@ -285,6 +293,7 @@ export function MobileShell(): React.JSX.Element {
   }
   function footer(): React.JSX.Element | null {
     if (screen === 'ask') return <AskComposer onSubmit={submit}/>;
+    if (screen === 'plan') return <AskComposer onSubmit={submitFromHome}/>;
     if (screen === 'options' && route) return <Button label="See directions" icon="arrow" onPress={() => navigate('steps')}/>;
     if (screen === 'steps' && route) return <Button label="Start example trip" icon="arrow" onPress={startTrip}/>;
     if (screen === 'active' && activeRoute) return <View style={ui.row}>
@@ -300,7 +309,7 @@ export function MobileShell(): React.JSX.Element {
       accessibilityElementsHidden={modalOpen} importantForAccessibility={modalOpen ? 'no-hide-descendants' : 'auto'}
       {...(Platform.OS === 'web' ? { inert: modalOpen ? true : undefined } : {})}>
       <View style={styles.header} ref={returnFocus} tabIndex={-1}>
-        {isRoot ? screen === 'plan' || screen === 'welcome' ? <CatMark/> : <Icon name={tab === 'map' ? 'map' : 'trips'} color={palette.accent}/> : <IconButton name="back" label="Go back" onPress={back}/>}
+        {isRoot ? screen === 'plan' || screen === 'welcome' ? <Gaile pose="idle" height={30}/> : <Icon name={tab === 'map' ? 'map' : 'trips'} color={palette.accent}/> : <IconButton name="back" label="Go back" onPress={back}/>}
         <Text style={[type.label, ui.flex]}>{screen === 'welcome' ? 'Pusang Gala' : TITLES[screen]}</Text>
         {screen === 'welcome' ? null : screen === 'ask' ? <Button label="New" variant="text" onPress={newConversation}/> : <IconButton name="settings" label="Open settings" onPress={() => { if (screen !== 'settings') navigate('settings'); }}/>}
       </View>
@@ -315,7 +324,7 @@ export function MobileShell(): React.JSX.Element {
           onAction={() => { if (error.recovery === 'resources') navigate('offline'); else editEndpoint(error.recovery); }}>{error.message}</Notice> : null}
         {content()}
       </ScrollView>
-      {bottomAction ? <View style={styles.footer}>{bottomAction}</View> : null}
+      {bottomAction ? <View style={[styles.footer, screen === 'plan' && styles.homeFooter]}>{bottomAction}</View> : null}
       {activeRoute && screen !== 'active' ? <Pressable accessibilityRole="button" accessibilityLabel="Resume active trip" onPress={resumeTrip} style={styles.resume}>
         <Icon name="arrow" size={19} color={palette.accent}/><View style={ui.flex}><Text style={type.label}>Continue to One Ayala</Text>
           <Text style={type.caption}>{'Step ' + (activeStep + 1) + ' of ' + activeRoute.steps.length + ' · manual progress'}</Text></View>
@@ -369,7 +378,8 @@ const styles = StyleSheet.create({
   preview: { minHeight: 44, paddingLeft: 20, paddingRight: 10, backgroundColor: palette.background, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
   leave: { minWidth: 48, minHeight: 44, alignItems: 'center', justifyContent: 'center' },
   content: { padding: 20, paddingTop: 24, paddingBottom: 32, gap: 20 },
-  footer: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 12, backgroundColor: palette.paper, borderTopWidth: 1, borderColor: palette.line },
+  footer: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 12, backgroundColor: palette.paper, borderTopWidth: 1, borderColor: palette.line },
+  homeFooter: { backgroundColor: palette.goldSoft, borderTopColor: palette.gold },
   tabs: { flexDirection: 'row', borderTopWidth: 1, borderColor: palette.line, paddingHorizontal: 20, paddingTop: 7, paddingBottom: 5, backgroundColor: palette.paper },
   tab: { flex: 1, minHeight: 58, alignItems: 'center', justifyContent: 'center', gap: 3 },
   activeTab: { color: palette.accent, fontWeight: '600' }, tabIndicator: { position: 'absolute', top: -8, width: 30, height: 2, backgroundColor: palette.accent },

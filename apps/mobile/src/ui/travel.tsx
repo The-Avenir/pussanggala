@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import type { StyleProp, ViewStyle } from 'react-native';
-import Svg, { Circle, Path } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 
 // Sunset Playful identity, with darker text/action tones for outdoor readability.
 export const palette = {
@@ -12,11 +12,11 @@ export const palette = {
   destructive: '#A83229', dark: '#253C36', white: '#FFFFFF',
 } as const;
 export const space = { xs: 4, sm: 8, md: 12, lg: 16, page: 20, xl: 24, xxl: 32 } as const;
-const fontFamily = Platform.select({ ios: 'System', android: 'sans-serif', default: 'system-ui' });
+const fontFamily = Platform.select({ ios: 'DMSans', android: 'DMSans', default: 'DMSans' });
 export const type = StyleSheet.create({
-  display: { fontFamily, fontSize: 34, lineHeight: 40, fontWeight: '700', letterSpacing: -1.1, color: palette.ink },
-  title: { fontFamily, fontSize: 28, lineHeight: 34, fontWeight: '700', letterSpacing: -0.6, color: palette.ink },
-  heading: { fontFamily, fontSize: 20, lineHeight: 27, fontWeight: '600', color: palette.ink },
+  display: { fontFamily: 'NunitoExtraBold', fontSize: 34, lineHeight: 40, fontWeight: '800', letterSpacing: -0.5, color: palette.ink },
+  title: { fontFamily: 'NunitoExtraBold', fontSize: 28, lineHeight: 34, fontWeight: '800', letterSpacing: -0.25, color: palette.ink },
+  heading: { fontFamily: 'NunitoBold', fontSize: 20, lineHeight: 27, fontWeight: '700', color: palette.ink },
   body: { fontFamily, fontSize: 17, lineHeight: 25, color: palette.ink },
   label: { fontFamily, fontSize: 16, lineHeight: 23, fontWeight: '600', color: palette.ink },
   secondary: { fontFamily, fontSize: 15, lineHeight: 22, color: palette.secondary },
@@ -42,14 +42,8 @@ export function Icon({ name, size = 22, color = palette.ink }: { name: IconName;
     <Path d={paths[name]} stroke={color} strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" fill="none" />
   </Svg>;
 }
-export function CatMark(): React.JSX.Element {
-  return <Svg width={28} height={28} viewBox="0 0 28 28" accessible={false} aria-hidden>
-    <Path d="M5 12 4 3l8 5h4l8-5-1 9c3 13-21 13-18 0Z" stroke={palette.accent} fill={palette.accentSoft} strokeWidth={1.6} strokeLinejoin="round" />
-    <Circle cx={10} cy={14} r={1.2} fill={palette.ink}/><Circle cx={18} cy={14} r={1.2} fill={palette.ink}/>
-    <Path d="m12 18 2 1 2-1M2 16l5 1m-4 4 5-1m18-4-5 1m4 4-5-1" stroke={palette.ink} strokeWidth={1.2} strokeLinecap="round" />
-  </Svg>;
-}
 const gaileArt = {
+  idle: { source: require('../../assets/mascot/trimmed/gaile-idle.png'), width: 383, height: 502 },
   wave: { source: require('../../assets/mascot/trimmed/gaile-wave.png'), width: 383, height: 507 },
   map: { source: require('../../assets/mascot/trimmed/gaile-map.png'), width: 404, height: 506 },
   think: { source: require('../../assets/mascot/trimmed/gaile-think.png'), width: 363, height: 499 },
@@ -65,8 +59,7 @@ export function Button({ label, onPress, variant = 'primary', icon, disabled = f
   label: string; onPress: () => void; variant?: 'primary' | 'secondary' | 'text' | 'danger'; icon?: IconName;
   disabled?: boolean; style?: StyleProp<ViewStyle>;
 }): React.JSX.Element {
-  const solid = variant === 'primary' || variant === 'danger';
-  const color = solid ? palette.white : variant === 'text' ? palette.accent : palette.ink;
+  const color = variant === 'primary' ? palette.ink : variant === 'danger' ? palette.white : variant === 'text' ? palette.accent : palette.ink;
   return <Pressable accessibilityRole="button" accessibilityLabel={label} disabled={disabled} accessibilityState={{ disabled }}
     style={({ pressed }) => [ui.button, variant === 'primary' ? ui.primary : variant === 'danger' ? ui.danger : variant === 'secondary' ? ui.secondaryButton : ui.textButton,
       pressed && ui.pressed, disabled && ui.disabled, style]} onPress={onPress}>
@@ -101,14 +94,14 @@ export function Section({ title, children }: { title: string; children: ReactNod
 export const ui = StyleSheet.create({
   screen: { gap: 24 }, flex: { flex: 1 }, row: { flexDirection: 'row', alignItems: 'center', gap: 12, flexWrap: 'wrap' },
   between: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 },
-  button: { minWidth: 44, minHeight: 50, paddingHorizontal: 18, paddingVertical: 12, borderRadius: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 },
-  primary: { backgroundColor: palette.accent }, danger: { backgroundColor: palette.destructive },
-  secondaryButton: { backgroundColor: palette.background, borderWidth: 1, borderColor: palette.line },
+  button: { minWidth: 44, minHeight: 50, paddingHorizontal: 18, paddingVertical: 12, borderRadius: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 },
+  primary: { backgroundColor: palette.gold, borderBottomWidth: 4, borderBottomColor: '#D98C13' }, danger: { backgroundColor: palette.destructive },
+  secondaryButton: { backgroundColor: palette.goldSoft, borderWidth: 1, borderColor: palette.gold },
   textButton: { paddingHorizontal: 0, justifyContent: 'flex-start' }, pressed: { opacity: 0.7 }, disabled: { opacity: 0.45 },
   iconButton: { minWidth: 48, minHeight: 48, alignItems: 'center', justifyContent: 'center' },
   listRow: { minHeight: 64, paddingVertical: 15, flexDirection: 'row', alignItems: 'center', gap: 12, borderBottomWidth: 1, borderBottomColor: palette.line },
   notice: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, borderLeftWidth: 3, borderLeftColor: palette.warning, backgroundColor: palette.warningSoft, padding: 14 },
   noticeAction: { minHeight: 44, paddingVertical: 8 }, sectionTitle: { fontWeight: '600', marginTop: 8, marginBottom: 4 },
-  input: { minHeight: 50, padding: 12, borderWidth: 1, borderColor: palette.secondary, borderRadius: 10, backgroundColor: palette.paper },
+  input: { minHeight: 50, padding: 12, borderWidth: 1, borderColor: palette.secondary, borderRadius: 16, backgroundColor: palette.paper },
   rule: { height: 1, backgroundColor: palette.line },
 });

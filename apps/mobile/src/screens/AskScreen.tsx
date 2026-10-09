@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Button, Gaile, Icon, palette, type, ui } from '../ui/travel';
 import type { PreviewRoute } from './previewJourney';
 
@@ -30,9 +30,9 @@ export function AskScreen({ turns, route, origin, destination, activeStep, onEdi
         <View style={ui.row}><Button variant="text" label="Directions" icon="arrow" onPress={() => onSteps(turn.route!)}/>
           <Button variant="text" label="Map" onPress={() => onMap(turn.route!)}/></View>
       </View> : null}
-      <View style={{ gap: 6 }}><View style={styles.assistant}><Gaile pose="think" height={36}/>
+      <View style={{ gap: 8 }}><View style={styles.assistant}><View style={styles.assistantAvatar}><Gaile pose="idle" height={34}/></View>
         <View style={ui.flex}><Text style={type.label}>Gaile</Text><Text style={[type.caption, styles.overline]}>BASIC SUMMARY · AI UNAVAILABLE</Text></View></View>
-        <Text style={type.body}>{turn.answer}</Text></View>
+        <Text style={[type.body, styles.answer]}>{turn.answer}</Text></View>
     </View>)}
     {route && turns.length > 0 ? <View style={styles.followups}>
       <Button variant="secondary" label="Other options" onPress={onOptions}/>
@@ -44,9 +44,16 @@ export function AskScreen({ turns, route, origin, destination, activeStep, onEdi
 export function AskComposer({ onSubmit }: { onSubmit: (query: string) => void }): React.JSX.Element {
   const [query, setQuery] = useState('');
   function submit(): void { if (query.trim()) { onSubmit(query.trim()); setQuery(''); } }
+  function handleWebKeyPress(event: unknown): void {
+    const keyEvent = event as { key: string; shiftKey: boolean; preventDefault: () => void };
+    if (keyEvent.key !== 'Enter' || keyEvent.shiftKey) return;
+    keyEvent.preventDefault();
+    submit();
+  }
   return <View style={styles.composer}>
     <TextInput accessibilityLabel="Ask Pusang Gala" placeholder="Ask about your commute…" placeholderTextColor={palette.secondary}
-      value={query} onChangeText={setQuery} onSubmitEditing={submit} returnKeyType="send"
+      value={query} onChangeText={setQuery} returnKeyType="send" multiline blurOnSubmit={false}
+      onKeyPress={Platform.OS === 'web' ? handleWebKeyPress : undefined}
       style={[type.body, styles.input]}/>
     <Pressable accessibilityRole="button" accessibilityLabel="Send question" disabled={!query.trim()}
       accessibilityState={{ disabled: !query.trim() }} onPress={submit} style={[styles.send, !query.trim() && ui.disabled]}>
@@ -57,12 +64,14 @@ const styles = StyleSheet.create({
   greeting: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 12 },
   greetingText: { flex: 1, minWidth: 170, gap: 6 },
   assistant: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  assistantAvatar: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: 21, backgroundColor: palette.goldSoft },
+  answer: { backgroundColor: palette.background, padding: 14, borderRadius: 16, borderTopLeftRadius: 5 },
   context: { paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: palette.line, flexDirection: 'row', alignItems: 'center', gap: 8 },
-  user: { alignSelf: 'flex-end', maxWidth: '90%', backgroundColor: palette.goldSoft, borderRadius: 14, padding: 14 },
-  route: { gap: 8, borderLeftWidth: 3, borderLeftColor: palette.accent, paddingLeft: 16 },
+  user: { alignSelf: 'flex-end', maxWidth: '90%', backgroundColor: palette.goldSoft, borderRadius: 18, borderBottomRightRadius: 5, padding: 14 },
+  route: { gap: 8, backgroundColor: palette.paper, borderWidth: 1, borderColor: palette.line, borderRadius: 18, padding: 16 },
   overline: { fontWeight: '600', color: palette.secondary }, accent: { color: palette.accent },
   followups: { gap: 10, alignItems: 'flex-start', paddingTop: 8 },
   composer: { flexDirection: 'row', gap: 8, alignItems: 'center' },
-  input: { flex: 1, minWidth: 0, minHeight: 50, paddingVertical: 12, paddingHorizontal: 14, backgroundColor: palette.background, borderRadius: 12, borderWidth: 1, borderColor: palette.line },
-  send: { width: 50, flexShrink: 0, minHeight: 50, borderRadius: 12, backgroundColor: palette.accent, justifyContent: 'center', alignItems: 'center' },
+  input: { flex: 1, minWidth: 0, minHeight: 54, maxHeight: 120, paddingVertical: 12, paddingHorizontal: 14, backgroundColor: palette.background, borderRadius: 18, borderWidth: 1, borderColor: palette.line, textAlignVertical: 'center' },
+  send: { width: 50, flexShrink: 0, minHeight: 50, borderRadius: 17, backgroundColor: palette.accent, justifyContent: 'center', alignItems: 'center' },
 });

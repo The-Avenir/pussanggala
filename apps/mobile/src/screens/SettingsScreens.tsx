@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { Button, CatMark, Gaile, Icon, ListRow, Notice, Section, palette, type, ui } from '../ui/travel';
+import { Button, Gaile, Icon, ListRow, Notice, Section, palette, type, ui } from '../ui/travel';
 import { summarizeReadiness } from '../assets/readiness';
 import type { SavedRouteRow, TripHistoryRow } from '../store/tripStore';
 import { PreferenceChips } from './Preferences';
@@ -58,12 +58,12 @@ export function PrivacyScreen({ onDelete }: { onDelete: () => void }): React.JSX
   </View>;
 }
 export function AboutScreen(): React.JSX.Element {
-  return <View style={ui.screen}><View style={ui.row}><CatMark/><Text accessibilityRole="header" style={type.title}>Pusang Gala</Text></View>
+  return <View style={ui.screen}><View style={ui.row}><Gaile pose="idle" height={40}/><Text accessibilityRole="header" style={type.title}>Pusang Gala</Text></View>
     <Text style={type.secondary}>Travel utility · UI design preview</Text>
     <Section title="READING ROUTE INFORMATION"><Text style={type.body}>Community reports are dated accounts, not field-verified or live information. Confirm your signboard and alighting point before boarding.</Text>
       <Text style={type.body}>Unknown fares and hours stay unknown. Conflicting reports remain separate. Dashed links and stop diagrams show order, not the road path.</Text></Section>
     <Section title="DATA & ATTRIBUTION"><Text style={type.secondary}>Production route facts: paraphrased community evidence from r/HowToGetTherePH, with source references. This preview uses synthetic walkthrough records, without source dates or links.</Text>
-      <Text style={type.secondary}>Gaile mascot: supplied Pusang Gala assets. Interface icons and stop diagram: app vectors. Typography: device system font. Actual map and model licences must accompany their bundled assets.</Text></Section>
+      <Text style={type.secondary}>Gaile mascot: supplied Pusang Gala assets. Interface icons and stop diagram: app vectors. Typography: bundled Nunito headings and DM Sans body text. Actual map and model licences must accompany their bundled assets.</Text></Section>
   </View>;
 }
 export function SavedScreen({ saved, history, segment, onSegment, onOpen, onOpenHistory, onDelete, onRename, onClearHistory, onDeleteHistory, onPlan }: {

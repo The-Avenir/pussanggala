@@ -20,7 +20,7 @@ Reference accuracy problems are functional, not aesthetic: Masinag is outside th
 
 ## 2. Navigation and journeys
 
-Use **Plan · Map · Trips**, with Settings in the toolbar. Plan contains both manual endpoint entry and a prominent “Ask Pusang Gala” entry to a full conversation. This is not a decorative assistant widget. The conversation also opens from directions and an active trip, keeping the selected route and manual step in context.
+Use **Plan · Map · Trips**, with Settings in the toolbar. Plan now leads with “Where to go?” and a chat composer. Sending a question opens the conversation with the exact message retained. Manual From/To entry is available through “Enter landmarks”, so it remains accessible without competing with the conversational start. The conversation also opens from directions and an active trip, keeping the selected route and manual step in context.
 
 Why three tabs: an Explore tab would promise destination discovery the installed pack does not currently support; a separate Chat tab and Plan tab would duplicate the start of the same commute; Profile has no account task. These choices are a task analysis, not a claim of completed user testing. If discovery becomes approved scope, replace Plan with Explore only after place coverage and discovery content exist.
 
@@ -28,7 +28,7 @@ Keep an independent navigation stack per tab. Switching tabs preserves the curre
 
 Primary journeys:
 
-1. Plan → edit From/To or ask in Taglish → compare → continuous directions → Start → manually advance → finish → save / new directed return search.
+1. Plan → ask in Taglish or English → conversation → compare → continuous directions → Start → manually advance → finish → save / new directed return search. Manual alternative: Plan → Enter landmarks → edit From/To → Find routes.
 2. Ask → route facts first → explanation or explicitly unavailable summary → comparison / directions / map without reentry.
 3. Map → stop diagram if basemap missing → inspect a numbered step → directions → Start.
 4. Trips → Saved / History → revalidated route → directions; manage a name or delete with confirmation.
@@ -56,12 +56,16 @@ The [visual review](ux-review.html) shows the high-fidelity screens, the shared 
 
 Brand correction: the initial utility redesign muted the supplied Sunset Playful palette, reduced Gaile to a small mark and moved onboarding behind a link. That weakened recognition. The revised system restores warm cream, golden yellow, orange and brown, with the existing mascot artwork at useful moments. Clear hierarchy and accessibility do not require a neutral brand. Directions retain their focused instruction hierarchy while onboarding, home, conversation, empty trips and completion carry the personality.
 
+Latest direction: the owner supplied a playful learning-app reference and requested an iOS / Duolingo-like visual direction with ChatGPT-like conversation. We translate its strong mascot header, friendly typography, round controls and clear header-to-content relationship into a commute utility. “Where to go?” replaces course content; we keep the existing sunset colors and Gaile assets rather than importing purple, game mechanics or unrelated artwork. The custom SVG cat logo is removed from the live app; supplied mascot artwork carries the brand. Functional vector icons remain. The app remains the existing React Native Android preview with iOS-inspired styling.
+
+Implementation and independent UX/browser review are coordinated through Orca with two Luna workers on `feat/t46-playful-commute-chat`. The worker review is [recorded separately](playful-chat-review.md); rendered captures and final build/browser evidence are maintained by the coordinator.
+
 ### Screen hierarchy
 
 | Screen | Primary goal | Most important information | Primary action | Secondary disclosure |
 |---|---|---|---|---|
 | Onboarding | Understand the companion and begin | Gaile, supported NCR journeys, conversation and manual progression | Plan a journey | Replay later from Plan; no account choice |
-| Plan / home | Start a commute | Starting landmark and intended destination | Find routes | Location, conversation, resource status, optional introduction |
+| Plan / home | Start a commute conversation | Where to go, suggested questions, composer | Send question | Enter landmarks for From/To, location, resource status, introduction replay |
 | Conversation | Understand a journey and ask follow-ups | Journey context, deterministic route facts, then explanation | Send a question | Comparison, map, directions; new-conversation confirmation |
 | Route options | Choose a tradeoff | Time, fare, transfers in a consistent reading order | See directions for the selected route | Sort by reported fare/time/transfers; limitations below the list |
 | Directions | Understand the whole commute | Numbered continuous sequence, boarding/alighting landmarks and signboard | Start trip | Expand a step in place; sources, map, saving and conversation |
@@ -76,7 +80,7 @@ Brand correction: the initial utility redesign muted the supplied Sunset Playful
 
 | Token | Value / use |
 |---|---|
-| Typography | Device system font: System on iOS, sans-serif on Android, system-ui on web; no font-loading launch gate |
+| Typography | Existing bundled Nunito ExtraBold/Bold headings and DM Sans body text; app remains available while local fonts load |
 | Type hierarchy | 34/40 display, 28/34 title, 20/27 heading, 17/25 body, 16/23 action, 15/22 secondary, 13/19 caption |
 | Primary text | Warm brown `#2E1C14` on cream `#FFF9EF`; measured contrast 15.51:1 |
 | Secondary text | `#756052` on cream; 5.65:1; captions never contain the only boarding instruction |
@@ -84,9 +88,9 @@ Brand correction: the initial utility redesign muted the supplied Sunset Playful
 | Surfaces | Cream `#FFF9EF` content, peach `#FFF0DD` utility surface, pale gold `#FFF0C6` home greeting/chat bubble, `#FFE9D8` selected route / active-trip strip |
 | Meaningful color | `#345D73` transit links, neutral dashed walking links, `#80531D` warnings on `#FBF2DD`, `#A83229` destructive actions |
 | Spacing | 4-point base; 8/12/16/20/24/32; page margin 20; aligned text and control edges |
-| Shape | 8-point signboards, 10-point segmented controls, 12-point inputs/actions, 20-point sheet top corners; lists use separators, not repeated containers |
+| Shape | Round inputs/actions and selected route surfaces, with consistent 16–20-point corners; tactile primary actions use a solid lower edge; management lists keep separators |
 | Touch targets | At least 44 × 44 logical units; common controls 48–50 high; numbered timeline glyphs belong to a much larger tappable row |
-| Mascot | Supplied Gaile wave on onboarding, map on home, think in conversation, binoculars in empty saved trips, cheer on completion; artwork remains clear of route instructions |
+| Mascot | Supplied Gaile idle replaces the SVG brand mark and identifies chat replies; wave on onboarding, map on home, think in empty conversation, binoculars in empty saved trips, cheer on completion |
 
 Text remains scalable with React Native's default font scaling. No `numberOfLines` truncation or maximum scaling cap hides essential content. Row heights grow, metrics wrap, numbering grows with text, and sheets scroll when space is limited. The composer can shrink at narrow widths without sending its action offscreen. These are implementation provisions, not a claim that native Dynamic Type or TalkBack has been device-certified.
 
@@ -136,7 +140,7 @@ Test with first-time NCR commuters, including older readers and people using Tal
 ### Validation record
 
 - Mobile and root TypeScript checks passed; root core tests: 424 passed in 18 files.
-- Existing UI asset verification: 37 allowlisted files match hashes/dimensions. The redesigned bundle uses system text and five existing mascot poses.
+- Existing UI asset verification: 37 allowlisted files match hashes/dimensions. The redesigned bundle reuses the existing fonts and six existing mascot poses; no new artwork is generated.
 - Source-content scan passed; 12 existing source-content regression tests passed.
 - Browser flows cover 320/390/430 px, keyboard sheets, independent tab stacks, real-query versus example separation, route comparison, continuous directions, saved/history management, manual progression, trip-context questions, completion and unavailable resources. Final measured results are in [validation.json](ux-screens/validation.json).
 - Contrast checks use actual token pairs; text enlargement stress checks cover onboarding, Plan, conversation, directions, active trip and Settings at 200%. Browser checks verify the first-session welcome, replay flow and home mascot. This is CSS text stress evidence, not a substitute for native Dynamic Type/TalkBack testing.
@@ -148,7 +152,7 @@ Reproduce: `npm run typecheck` and `npm test` at root; `npm run typecheck`, `npm
 
 - [Tab bars](https://developer.apple.com/design/human-interface-guidelines/tab-bars): persistent top-level destinations support orientation. Plan / Map / Trips are content destinations; settings and conversation follow task context.
 - [Sheets](https://developer.apple.com/design/human-interface-guidelines/sheets): use focused, dismissible context for endpoint editing and short decisions; preserve the underlying journey.
-- [Accessibility](https://developer.apple.com/design/human-interface-guidelines/accessibility): system text, adaptable layouts, adequate contrast, large targets and labels supplementing color support commuters outdoors and people using assistive technology.
+- [Accessibility](https://developer.apple.com/design/human-interface-guidelines/accessibility): scalable text, adaptable layouts, adequate contrast, large targets and labels supplementing color support commuters outdoors and people using assistive technology.
 - [Apple design Q&A](https://developer.apple.com/news/?id=s8sl4tpa): progressive disclosure reduces overcrowded rows; retain tabs through navigation.
 - [Generative AI](https://developer.apple.com/design/human-interface-guidelines/generative-ai): identify AI use, support refinement/retry, communicate availability, and preserve a useful experience when generation is unavailable. Route facts and explanation are separate, with cards surviving inference failure.
 - [Machine learning](https://developer.apple.com/design/human-interface-guidelines/machine-learning): actionable corrections, attribution and understood limitations protect trust; no invented confidence percentage or field-verification label.

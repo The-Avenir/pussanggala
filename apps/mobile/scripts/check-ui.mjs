@@ -26,15 +26,24 @@ const browser = await chromium.launch({ headless: true,
 const runtimeErrors = [];
 const externalRequests = [];
 const checks = [];
+const travelSource = fs.readFileSync(path.join(root, 'src/ui/travel.tsx'), 'utf8');
+const shellSource = fs.readFileSync(path.join(root, 'src/screens/MobileShell.tsx'), 'utf8');
+assert.doesNotMatch(shellSource, /\bCatMark\b/, 'The app shell uses Gaile artwork instead of a custom SVG cat brand mark');
+assert.doesNotMatch(travelSource, /\b(?:export\s+)?function\s+CatMark\b/, 'The custom SVG cat brand mark is removed while functional SVG icons remain available');
+const paletteBody = travelSource.match(/export const palette = \{([\s\S]*?)\} as const;/)?.[1];
+assert.ok(paletteBody, 'Read the live UI color tokens for contrast checks');
+const palette = Object.fromEntries([...paletteBody.matchAll(/(\w+):\s*'(#[\da-fA-F]{6})'/g)].map(([, name, value]) => [name, value]));
 function luminance(hex) {
   const values = hex.replace('#', '').match(/../g).map(item => parseInt(item, 16) / 255)
     .map(value => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
   return values[0] * 0.2126 + values[1] * 0.7152 + values[2] * 0.0722;
 }
 const contrast = [];
-for (const [foreground, background] of [['#2E1C14', '#FFF9EF'], ['#756052', '#FFF9EF'],
-  ['#BA3B16', '#FFF9EF'], ['#FFFFFF', '#BA3B16'], ['#80531D', '#FBF2DD'], ['#E3EDE6', '#253C36'],
-  ['#756052', '#FFF0DD'], ['#BA3B16', '#FFE9D8'], ['#756052', '#FFF0C6'], ['#BA3B16', '#FFF0C6']]) {
+for (const [foregroundToken, backgroundToken] of [['ink', 'paper'], ['secondary', 'paper'], ['accent', 'paper'], ['white', 'accent'],
+  ['warning', 'warningSoft'], ['white', 'dark'], ['secondary', 'background'], ['accent', 'accentSoft'],
+  ['secondary', 'goldSoft'], ['accent', 'goldSoft'], ['ink', 'gold']]) {
+  const foreground = palette[foregroundToken], background = palette[backgroundToken];
+  assert.ok(foreground && background, `Contrast tokens ${foregroundToken}/${backgroundToken} exist in the live palette`);
   const a = luminance(foreground), b = luminance(background);
   const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
   assert.ok(ratio >= 4.5, foreground + ' on ' + background + ': ' + ratio);
@@ -69,7 +78,7 @@ try {
     }
     async function largeText(name) {
       await page.evaluate(() => {
-        for (const node of document.querySelectorAll('[dir="auto"]')) {
+        for (const node of document.querySelectorAll('[dir="auto"], input, textarea')) {
           node.dataset.originalFont = node.style.fontSize;
           node.dataset.originalLine = node.style.lineHeight;
           const size = parseFloat(getComputedStyle(node).fontSize);
@@ -78,7 +87,7 @@ try {
         }
       });
       await capture(name + '-text-200');
-      const overflow = await page.locator('[dir="auto"]').evaluateAll(nodes => nodes.filter(node => {
+      const overflow = await page.locator('[dir="auto"], input, textarea').evaluateAll(nodes => nodes.filter(node => {
         const r = node.getBoundingClientRect();
         return r.width && (r.left < -1 || r.right > innerWidth + 1 || node.scrollWidth > node.clientWidth + 2);
       }).map(node => node.textContent));
@@ -99,15 +108,54 @@ try {
     await page.evaluate(async urls => Promise.all(urls.map(url => new Promise(resolve => {
       const img = new Image(); img.onload = resolve; img.onerror = resolve; img.src = url;
     }))), assets.map(file => base + '/assets/' + file.replaceAll('\\', '/')));
+    await page.waitForFunction(() => [...document.fonts].some(font => font.family === 'NunitoExtraBold' && font.status === 'loaded')
+      && [...document.fonts].some(font => font.family === 'DMSans' && font.status === 'loaded'));
+    await page.evaluate(() => document.fonts.ready);
     await context.setOffline(true);
     await capture('welcome');
     await largeText('welcome');
     await button('Plan a journey').click();
-    assert.ok(await page.getByTestId('gaile-map').isVisible(), 'Gaile remains part of home');
+    assert.ok(await page.getByRole('heading', { name: 'Where to go?', exact: true }).isVisible(), 'Home leads with the destination question');
+    const homeGaile = page.locator('[data-testid^="gaile-"]');
+    assert.ok(await homeGaile.count() > 0 && await homeGaile.first().isVisible(), 'Home uses the supplied Gaile artwork');
+    assert.ok(await page.getByRole('textbox', { name: 'Ask Pusang Gala', exact: true }).isVisible(), 'Home has a conversational entry');
+    assert.ok(await button('Enter landmarks').isVisible(), 'Manual endpoint entry is available as a disclosure');
+    assert.equal(await button('Enter landmarks').getAttribute('aria-expanded'), 'false', 'Manual entry announces its collapsed state');
+    assert.equal(await button('Find routes').count(), 0, 'Manual controls are initially collapsed');
+    await capture('home');
     await capture('plan');
+    await largeText('home');
+    const composer = page.getByRole('textbox', { name: 'Ask Pusang Gala', exact: true });
+    await composer.fill('Paano pumunta');
+    await composer.press('Shift+Enter');
+    await page.keyboard.type('sa Cubao?');
+    assert.equal(await composer.inputValue(), 'Paano pumunta\nsa Cubao?', 'Shift+Enter inserts a newline without sending');
+    assert.equal(await page.getByText('Paano pumunta', { exact: true }).count(), 0, 'A newline does not send the draft');
+    const keyboardQuery = 'Paano pumunta sa Cubao from Monumento?';
+    await composer.fill(keyboardQuery);
+    await composer.press('Enter');
+    await page.getByText(keyboardQuery, { exact: true }).waitFor();
+    assert.equal(await page.getByText(keyboardQuery, { exact: true }).count(), 1, 'Enter sends the home query exactly once');
+    await button('Go back').click();
+    const homeQuery = 'How do I get to Masinag from Cubao?';
+    await page.getByRole('textbox', { name: 'Ask Pusang Gala', exact: true }).fill(homeQuery);
+    await button('Send question').click();
+    await page.getByText(homeQuery, { exact: true }).waitFor();
+    assert.equal(await page.getByText(homeQuery, { exact: true }).count(), 1, 'Home sends the exact question once');
+    assert.ok(await page.getByText(/outside (Metro Manila|NCR)|covers NCR only|NCR-only/i).isVisible(), 'Out-of-scope destination gets a clear scope failure');
+    assert.equal(await page.getByText(/ROUTE INFORMATION · EXAMPLE/i).count(), 0, 'A real query never silently produces synthetic route data');
+    await capture('home-query-out-of-scope');
+    await button('Go back').click();
+    await button('Enter landmarks').click();
+    assert.equal(await button('Enter landmarks').getAttribute('aria-expanded'), 'true', 'Manual entry announces its expanded state');
+    assert.ok(await button('Find routes').isVisible(), 'Enter landmarks reveals the existing manual route form');
+    assert.ok(await page.getByRole('button', { name: 'Edit starting point', exact: true }).isVisible());
+    assert.ok(await page.getByRole('button', { name: 'Edit destination', exact: true }).isVisible());
+    await capture('home-landmarks-open');
     await button('How Pusang Gala works').click();
     assert.ok(await page.getByTestId('gaile-wave').isVisible(), 'Onboarding can be revisited');
     await button('Plan a journey').click();
+    assert.equal(await button('Enter landmarks').getAttribute('aria-expanded'), 'true', 'Onboarding replay retains the manual disclosure');
     assert.ok(await button('Find routes').isVisible(), 'Replaying onboarding returns to planning');
     await button('Find routes').click();
     await page.getByRole('textbox', { name: 'Landmark name' }).fill('Monumento');
@@ -124,6 +172,7 @@ try {
     assert.ok(await page.getByText(/no resource was downloaded/).isVisible());
     await capture('offline');
     await button('Go back').click();
+    assert.ok(await button('Find routes').isVisible(), 'Returning from resources preserves the open manual form');
     await button('Try an example journey').click();
     await capture('options');
     assert.equal(await page.getByRole('radio').count(), 3);
@@ -184,7 +233,8 @@ try {
     assert.ok(await page.getByText(/Forward steps haven’t been reused/).isVisible());
     assert.equal(await button('Directions').count(), 0);
     await send('Paano pumunta sa Masinag from Cubao?');
-    assert.ok(await page.getByText(/outside Metro Manila/).isVisible());
+    assert.equal(await page.getByText('Paano pumunta sa Masinag from Cubao?', { exact: true }).count(), 1);
+    assert.ok(await page.getByText(/outside Metro Manila/).last().isVisible());
     await capture('chat-outside-ncr');
     await button('New').click();
     await button('New conversation').click();

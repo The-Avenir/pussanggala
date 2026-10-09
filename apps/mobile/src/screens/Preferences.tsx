@@ -17,8 +17,8 @@ export function PreferenceChips({ preference, onSelect }: {
     </Pressable>)}</View>;
 }
 const styles = StyleSheet.create({
-  control: { flexDirection: 'row', backgroundColor: palette.background, borderRadius: 10, padding: 3, gap: 3 },
-  segment: { flex: 1, minHeight: 44, justifyContent: 'center', alignItems: 'center', padding: 8, borderRadius: 8 },
-  selected: { backgroundColor: palette.paper, borderWidth: 1, borderColor: palette.line },
+  control: { flexDirection: 'row', backgroundColor: palette.background, borderRadius: 16, padding: 4, gap: 4 },
+  segment: { flex: 1, minHeight: 44, justifyContent: 'center', alignItems: 'center', padding: 8, borderRadius: 12 },
+  selected: { backgroundColor: palette.paper, borderWidth: 1, borderColor: palette.gold },
   text: { color: palette.secondary }, active: { color: palette.accent },
 });
