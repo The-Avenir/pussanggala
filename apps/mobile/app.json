@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "Pusang Gala",
+    "slug": "pusang-gala",
+    "version": "0.0.0",
+    "orientation": "portrait",
+    "newArchEnabled": true,
+    "android": {
+      "package": "com.pusanggala.app"
+    },
+    "plugins": [],
+    "extra": {
+      "offlineOnly": true,
+      "harnessNote": "T40 ugly-first placeholder. No OTA, no network, no analytics. MapLibre + llama.rn land in T42/S1-S2."
+    }
+  }
+}
