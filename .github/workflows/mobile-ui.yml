@@ -1,0 +1,46 @@
+name: mobile-ui
+
+on:
+  push:
+    paths:
+      - 'apps/mobile/**'
+      - 'packages/core/**'
+      - '.github/workflows/mobile-ui.yml'
+  pull_request:
+    paths:
+      - 'apps/mobile/**'
+      - 'packages/core/**'
+      - '.github/workflows/mobile-ui.yml'
+
+jobs:
+  screens:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            apps/mobile/package-lock.json
+      - name: Install core dependencies
+        run: npm ci
+      - name: Install mobile dependencies
+        run: npm ci
+        working-directory: apps/mobile
+      - name: Typecheck and verify local UI assets
+        run: npm run typecheck && npm run check:ui-assets
+        working-directory: apps/mobile
+      - name: Install browser for UI checks
+        run: npx playwright install --with-deps chromium
+        working-directory: apps/mobile
+      - name: Check offline screen flows and geometry
+        run: npm run test:ui
+        working-directory: apps/mobile
+      - name: Upload screen evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-ui-screens
+          path: apps/mobile/dist/screenshots

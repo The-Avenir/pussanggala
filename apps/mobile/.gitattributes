@@ -1,0 +1,4 @@
+# Preserve exact exported bytes so manifest hashes work on Windows and Linux.
+assets/figma/*.svg -text
+assets/fonts/*.ttf binary
+assets/licences/*.txt -text -diff

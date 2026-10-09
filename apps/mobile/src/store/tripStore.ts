@@ -23,7 +23,7 @@
 // ---------------------------------------------------------------------------
 
 /** Routing preference carried verbatim (part of the persisted key). */
-export type TripPreference = 'least-walk' | 'fewest-transfers' | 'balanced';
+export type TripPreference = 'cheapest' | 'fastest' | 'least-walk' | 'fewest-transfers' | 'balanced';
 
 /** Ordered record IDs only — exact field list settled with Member-2 (T00). */
 export interface RouteIds {
@@ -179,6 +179,7 @@ export interface TripStore {
   // SAVED_ROUTE (explicit save/delete only, PRD F15)
   saveRoute(input: Omit<SavedRouteRow, 'saved_id' | 'created_at'> & { label: string }): SavedRouteRow;
   listSavedRoutes(): readonly SavedRouteRow[];
+  renameSavedRoute(saved_id: string, label: string): boolean;
   deleteSavedRoute(saved_id: string): boolean;
   // TRIP_HISTORY (explicit per-row delete + clear-all)
   appendHistory(input: Omit<TripHistoryRow, 'history_id' | 'at'>): TripHistoryRow;
@@ -258,6 +259,13 @@ export function createTripStore(): TripStore {
 
     listSavedRoutes(): readonly SavedRouteRow[] {
       return [...saved.values()];
+    },
+
+    renameSavedRoute(saved_id: string, label: string): boolean {
+      const row = saved.get(saved_id);
+      if (row === undefined) return false;
+      saved.set(saved_id, { ...row, label });
+      return true;
     },
 
     deleteSavedRoute(saved_id: string): boolean {
