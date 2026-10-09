@@ -7,8 +7,8 @@
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android --device",
-    "typecheck": "tsc --noEmit --strict --skipLibCheck --jsx react-jsx --target ES2022 --module ESNext --moduleResolution Bundler --lib ES2022,DOM --allowSyntheticDefaultImports --esModuleInterop --isolatedModules --verbatimModuleSyntax --noUncheckedIndexedAccess --exactOptionalPropertyTypes App.tsx src/core/index.ts",
-    "test": "echo \"mobile: no tests yet (device checks land in T45)\""
+    "typecheck": "tsc --noEmit --strict --skipLibCheck --jsx react-jsx --target ES2022 --module ESNext --moduleResolution Bundler --lib ES2022,DOM --allowSyntheticDefaultImports --esModuleInterop --isolatedModules --verbatimModuleSyntax --noUncheckedIndexedAccess --exactOptionalPropertyTypes App.tsx src/core/index.ts src/assets/allowlist.ts src/assets/loader.ts src/assets/readiness.ts src/assets/nativePackAdapter.ts src/assets/expoNativePorts.ts src/assets/nativePackAdapter.test.ts",
+    "test": "vitest run src"
   },
   "dependencies": {
     "@maplibre/maplibre-react-native": "^11.5.0",
@@ -16,6 +16,7 @@
     "expo": "~57.0.27",
     "expo-asset": "~57.0.19",
     "expo-build-properties": "~57.0.22",
+    "expo-crypto": "~57.0.3",
     "expo-dev-client": "~57.0.19",
     "expo-file-system": "~57.0.7",
     "expo-location": "~57.0.20",
@@ -27,7 +28,8 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.4",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "vitest": "5.0.3"
   },
   "engines": {
     "node": ">=22.13"
