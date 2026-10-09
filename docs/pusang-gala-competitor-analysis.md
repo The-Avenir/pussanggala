@@ -1,6 +1,6 @@
-# Daanan: Competitor Analysis and Niche Selection
+# Pusang Gala: Competitor Analysis and Niche Selection
 
-**Companion to `daanan-proposal.md` · Draft v0.1 · October 2026**
+**Companion to `pusang-gala-proposal.md` · Draft v0.1 · October 2026**
 
 ---
 
@@ -11,7 +11,7 @@
 3. **No competitor answers conversational questions with sources.** Existing tools ask for an origin and destination on a map. None take a Taglish question, combine community knowledge, and show where each step came from.
 4. **The case for working offline is weaker than we assumed.** Mobile data has dropped to about **₱7/GB** (Ookla via [Philstar, Aug 2026](https://www.philstar.com/business/2026/08/21/2550650/mobile-data-costs-down-drastically-p7gb)). Offline still matters for provincial dead zones, travel between islands and low-end phones, but it should be a supporting feature, not the main pitch.
 
-**Recommendation:** position Daanan as **the commute guide for trips between provinces and cities in Luzon**. The first niche is **Metro Manila ↔ CALABARZON (Region IV-A)**, starting with students, workers and weekend travelers who are making a trip for the first time. This changes the proposal's MVP corridor (see §6).
+**Recommendation:** position Pusang Gala as **the commute guide for trips between provinces and cities in Luzon**. The first niche is **Metro Manila ↔ CALABARZON (Region IV-A)**, starting with students, workers and weekend travelers who are making a trip for the first time. This changes the proposal's MVP corridor (see §6).
 
 ---
 
@@ -72,7 +72,7 @@
                       CONVERSATIONAL / Q&A
                                ▲
                                │
-          r/HowToGetTherePH ●  │            ★ DAANAN (target)
+          r/HowToGetTherePH ●  │            ★ Pusang Gala (target)
           FB commuter groups   │
                                │      ● Komyut (claims AI)
   WITHIN ONE CITY ─────────────┼─────────────────── BETWEEN CITIES / PROVINCES
@@ -85,13 +85,13 @@
                       MAP / FORM-BASED PLANNER
 ```
 
-The upper-right quadrant (conversational trips between provinces) has **human forums and nothing else**. That's the gap Daanan should fill.
+The upper-right quadrant (conversational trips between provinces) has **human forums and nothing else**. That's the gap Pusang Gala should fill.
 
 ---
 
 ## 5. Niche Evaluation
 
-Each candidate is scored 1–5. A higher score is better for Daanan.
+Each candidate is scored 1–5. A higher score is better for Pusang Gala.
 
 | Candidate niche | Demand | Competition gap | Data availability | Offline value | Feasible for a small team | **Total** |
 |---|---|---|---|---|---|---|
@@ -152,7 +152,7 @@ How the scores were set:
 | **Works offline along the corridor** | A useful extra on long bus trips |
 | **Partners rather than rebuilds** | Link to Sakay.ph or Lugar.ph for city legs; link to bustickets.ph for booking |
 
-**Positioning statement:** *For Filipinos making a trip between provinces for the first time, Daanan is the commute guide that answers like a local kababayan, from your doorstep to your destination, including the jeep, the bus and the tricycle, with every step backed by commuters who've made the trip.*
+**Positioning statement:** *For Filipinos making a trip between provinces for the first time, Pusang Gala is the commute guide that answers like a local kababayan, from your doorstep to your destination, including the jeep, the bus and the tricycle, with every step backed by commuters who've made the trip.*
 
 ---
 
@@ -174,6 +174,6 @@ How the scores were set:
 2. **Interview 15–20 people** from the four segments in §6.
 3. **List the corridor's data:** provincial bus operators, terminals, and LPTRPs for Cavite and Batangas LGUs.
 4. **Contact Lugar.ph and Sansa Sakay** about data sharing or cross-linking.
-5. **Update `daanan-proposal.md`** with the new MVP corridor and positioning.
+5. **Update `pusang-gala-proposal.md`** with the new MVP corridor and positioning.
 
 *Scores, segment sizes and threat likelihoods are desk-research estimates as of October 2026. Competitor features come from their public pages and may be out of date.*

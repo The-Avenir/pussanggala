@@ -1,12 +1,12 @@
-# Daanan — Offline Commute Assistant
+# Pusang Gala — Offline Commute Assistant
 
 Feasibility assessment and proposed MVP · 9 October 2026
 
-Based on [Daanan_Hackathon_Proposal_Validation.md](Daanan_Hackathon_Proposal_Validation.md) and [daanan-system-architecture.md](daanan-system-architecture.md). This standalone document follows the requested React Native + Expo and strictly less-than-1-billion-parameter model constraints. SPINE is skipped at the owner's instruction.
+Based on [Pusang_Gala_Hackathon_Proposal_Validation.md](Pusang_Gala_Hackathon_Proposal_Validation.md) and [pusang-gala-system-architecture.md](pusang-gala-system-architecture.md). This standalone document follows the requested React Native + Expo and strictly less-than-1-billion-parameter model constraints. SPINE is skipped at the owner's instruction.
 
 ## 1. Decision
 
-**Proceed with an Android-first, one-corridor prototype using MapLibre and Expo Location.** React Native + Expo provides the app shell, MapLibre renders the downloaded corridor map, and Expo Location supplies foreground GPS updates. A sub-1B language model is a plausible local intent parser, subject to testing on Taglish queries and the actual phone. Daanan computes its own transit paths and walking links. Google Maps is an optional later handoff.
+**Proceed with an Android-first, one-corridor prototype using MapLibre and Expo Location.** React Native + Expo provides the app shell, MapLibre renders the downloaded corridor map, and Expo Location supplies foreground GPS updates. A sub-1B language model is a plausible local intent parser, subject to testing on Taglish queries and the actual phone. Pusang Gala computes its own transit paths and walking links. Google Maps is an optional later handoff.
 
 | Component | Verdict | Recommended decision |
 |---|---|---|
@@ -16,7 +16,7 @@ Based on [Daanan_Hackathon_Proposal_Validation.md](Daanan_Hackathon_Proposal_Val
 | Sub-1B local AI | Conditional go | Evaluate Qwen3-0.6B in 4-bit GGUF through `llama.rn`; restrict it to extracting user intent. |
 | Google Maps external offline viewer | Conditional go | Pass coordinates; require user preparation and device testing. |
 | Embedded downloadable Google offline map | No-go for this design | The consumer app's downloaded areas are not an app-owned offline map package. |
-| Offline Google walking/transit navigation | No-go | Daanan supplies stored walking instructions and its own transit paths. |
+| Offline Google walking/transit navigation | No-go | Pusang Gala supplies stored walking instructions and its own transit paths. |
 | In-app offline street map | Conditional go for the MVP | MapLibre Native with licensed corridor resources and verified offline rendering. |
 | Foreground offline GPS | Feasible, subject to device testing | Expo Location updates the commuter's position during an active foreground trip. |
 | Background/screen-off tracking | Later milestone | Additional permissions, native configuration, and lifecycle testing required. |
@@ -26,7 +26,7 @@ These are engineering judgments based on the sources below, not results of a wor
 
 ## 2. Product idea and minimum useful experience
 
-**Daanan helps commuters identify the right signboard, boarding point, transfer, and alighting landmark even when mobile data is unavailable.** Start with one verified corridor, such as Cubao–Masinag, selected according to the team's ability to validate the data.
+**Pusang Gala helps commuters identify the right signboard, boarding point, transfer, and alighting landmark even when mobile data is unavailable.** Start with one verified corridor, such as Cubao–Masinag, selected according to the team's ability to validate the data.
 
 A commuter asks a Taglish question, confirms ambiguous locations, and receives step cards with signboards, landmarks, walking instructions, estimated fare ranges, and data freshness. The core experience works after the model, route database, and offline map resources are installed, without an account or network connection. During an active foreground trip, the map displays the commuter's position when a usable location fix is available.
 
@@ -53,7 +53,7 @@ Several assumptions need correction:
 | Existing claim or approach | Assessment and required change |
 |---|---|
 | Qwen 1.5B–3B as the main model | Outside the requested parameter limit. Quantization reduces storage and compute requirements; it does not turn a 1.5B model into a sub-1B model. |
-| Large general benchmarks imply reliable Taglish parsing | They do not establish performance on Daanan's queries. Use a labeled local evaluation set. |
+| Large general benchmarks imply reliable Taglish parsing | They do not establish performance on Pusang Gala's queries. Use a labeled local evaluation set. |
 | An 8K context window disqualifies a model | The proposed extraction task should fit in 1K–2K tokens. Long context is unnecessary for the MVP. |
 | GPU acceleration must always be disabled | Use CPU as the reproducible baseline. Any speed advantage depends on phone, backend, and build; the original report's anecdotes do not prove a universal result. |
 | Flutter/LiteRT-LM and GGUF runtimes are interchangeable | Match the exact model artifact to the chosen runtime. The Expo proposal uses `llama.rn` and GGUF, eliminating the Flutter dependency. |
@@ -138,7 +138,7 @@ Store model files on disk and pass their paths to native inference; avoid loadin
 
 ### Selected stack: MapLibre + Expo Location
 
-MapLibre is the primary embedded map for the MVP. Its Expo integration requires a native build, and its OfflineManager supports regional downloads and pack status. Map rendering is separate from Daanan's transit and walking-link routing. [MapLibre Expo setup](https://maplibre.org/maplibre-react-native/docs/setup/expo/), [OfflineManager](https://maplibre.org/maplibre-react-native/docs/modules/offline-manager/)
+MapLibre is the primary embedded map for the MVP. Its Expo integration requires a native build, and its OfflineManager supports regional downloads and pack status. Map rendering is separate from Pusang Gala's transit and walking-link routing. [MapLibre Expo setup](https://maplibre.org/maplibre-react-native/docs/setup/expo/), [OfflineManager](https://maplibre.org/maplibre-react-native/docs/modules/offline-manager/)
 
 GPS receivers calculate position from satellite signals without requiring internet or a map service. Buildings and indoor locations can degrade reception. Keep device location services enabled during airplane-mode tests; map readiness and GPS availability are separate states. [GPS overview](https://www.gps.gov/gps), [GPS accuracy](https://www.gps.gov/gps-accuracy)
 
@@ -180,23 +180,23 @@ Later alighting reminders can compare reliable positions against the selected st
 
 Google's consumer Maps app supports downloaded areas. Offline walking, cycling, and transit directions are unavailable; offline driving requires the entire route to lie within downloaded coverage. Areas expire and require updating. [Google Maps offline help](https://support.google.com/maps/answer/6291838?hl=en)
 
-| Requirement | Feasibility | Daanan behavior |
+| Requirement | Feasibility | Pusang Gala behavior |
 |---|---|---|
 | Open a known boarding/alighting coordinate | Documented intent; offline display must be tested | Pass stored coordinates and a label to Google Maps. |
 | Show downloaded map coverage in Google's app | Conditional on its local data | Treat as a convenience, independent of route success. |
 | Open directly into the offline-area downloader | No supported public handoff found in the reviewed docs | Open Maps and provide manual setup instructions. |
 | Verify coverage downloaded/expired in Google Maps | No supported public status API found in the reviewed docs | Show “Preparation not verified” or a dated user confirmation. |
-| Offline walking or jeepney directions from Google | Unavailable | Display Daanan's stored steps. |
-| Read Google's offline tiles from Daanan | No supported integration identified | Use an in-app sketch, or a separately provisioned MapLibre map. |
+| Offline walking or jeepney directions from Google | Unavailable | Display Pusang Gala's stored steps. |
+| Read Google's offline tiles from Pusang Gala | No supported integration identified | Use an in-app sketch, or a separately provisioned MapLibre map. |
 | Use offline driving navigation as tricycle guidance | Reject | Show only independently verified tricycle stops and legs. |
 
 Use Android `ACTION_VIEW` with package `com.google.android.apps.maps` and `geo:0,0?q={latitude},{longitude}({encodedLabel})`. Coordinate-based requests avoid relying on online name resolution. Google's intent documentation defines this handoff, but does not guarantee every intent's offline behavior. [Google Maps Android intents](https://developer.android.com/guide/components/google-maps-intents)
 
 Expo's IntentLauncher accepts action, URI data, and target package parameters. Catch launch failures, retain the selected trip, and restore it when the user returns. If performing package discovery, configure Android package visibility appropriately. A successful launch establishes neither map coverage nor navigation success. [Expo IntentLauncher](https://docs.expo.dev/versions/latest/sdk/intent-launcher/)
 
-**Do not confuse online embedding with offline tile distribution.** Embedding Google Maps through its supported SDK is possible subject to its terms. Creating Daanan-owned offline Google tile packs is not the proposed supported path: Google's terms restrict scraping and caching except for stated exceptions. Wrapping the SDK in React Native does not add an offline download entitlement. [Google Maps Platform terms, §3.2.3](https://cloud.google.com/maps-platform/terms)
+**Do not confuse online embedding with offline tile distribution.** Embedding Google Maps through its supported SDK is possible subject to its terms. Creating Pusang Gala-owned offline Google tile packs is not the proposed supported path: Google's terms restrict scraping and caching except for stated exceptions. Wrapping the SDK in React Native does not add an offline download entitlement. [Google Maps Platform terms, §3.2.3](https://cloud.google.com/maps-platform/terms)
 
-If the optional handoff is implemented, manually prepare Google's corridor area and test the coordinate launch with Wi-Fi and mobile data off. Test missing Maps and unusable coverage too. Daanan's own map, route cards, and GPS experience must not depend on this handoff.
+If the optional handoff is implemented, manually prepare Google's corridor area and test the coordinate launch with Wi-Fi and mobile data off. Test missing Maps and unusable coverage too. Pusang Gala's own map, route cards, and GPS experience must not depend on this handoff.
 
 ### Map resource requirements
 

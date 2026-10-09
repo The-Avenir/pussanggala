@@ -1,10 +1,10 @@
-# Daanan: Local-AI Commute Directions for the Philippines
+# Pusang Gala: Local-AI Commute Directions for the Philippines
 
 **Project proposal · Draft v0.1 · October 2026**
 
 | | |
 |---|---|
-| Working name | Daanan ("pathway") |
+| Working name | Pusang Gala |
 | Team | appBuilders |
 | Platforms | Android first, then iOS |
 | Status | Seeking approval for a 6-week prototype |
@@ -15,7 +15,7 @@ A phone app that answers "Paano pumunta sa…?" the way a helpful local would: w
 
 ## 1. Summary
 
-Filipino commuters already solve this problem by asking each other. [r/HowToGetTherePH](https://gummysearch.com/r/HowToGetTherePH/) has about 297,000 members posting and answering route questions, many of them outside Metro Manila. Daanan turns that kind of local, informal-transit knowledge into a structured route database. A small language model on the phone then answers questions in Taglish from that database. Unlike existing apps, it covers jeepneys, UV Express, tricycles and provincial buses outside NCR, and it keeps working when the signal drops.
+Filipino commuters already solve this problem by asking each other. [r/HowToGetTherePH](https://gummysearch.com/r/HowToGetTherePH/) has about 297,000 members posting and answering route questions, many of them outside Metro Manila. Pusang Gala turns that kind of local, informal-transit knowledge into a structured route database. A small language model on the phone then answers questions in Taglish from that database. Unlike existing apps, it covers jeepneys, UV Express, tricycles and provincial buses outside NCR, and it keeps working when the signal drops.
 
 **Example answer** (illustrative; fares and routes are not verified)
 
@@ -37,7 +37,7 @@ Informal transit is mostly missing from route apps.
 - **Asking takes hours.** A Reddit question can take hours to get a good answer, and the answer gets buried. The same corridors are asked about again and again.
 - **Data is unreliable on the road.** Commuters hit dead zones, ration prepaid data, or run phones low on battery. Cloud-only AI fails exactly when they need it.
 
-| Existing option | Strength | Gap Daanan fills |
+| Existing option | Strength | Gap Pusang Gala fills |
 |---|---|---|
 | [Sakay.ph](https://apps.apple.com/ph/app/sakay-ph-commute-directions/id937998546) | Jeep, bus and train routing with fares in NCR | Regions outside Metro Manila; conversational questions |
 | [Sansa Sakay](https://www.sansasakay.com/) | Crowd-reported live route status | Route planning from A to B |

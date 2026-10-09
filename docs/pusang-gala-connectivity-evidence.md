@@ -1,6 +1,6 @@
-# Daanan: Connectivity Evidence
+# Pusang Gala: Connectivity Evidence
 
-**Supporting statistics for offline-first design · Companion to `daanan-proposal.md` and `daanan-competitor-analysis.md` · October 2026**
+**Supporting statistics for offline-first design · Companion to `pusang-gala-proposal.md` and `pusang-gala-competitor-analysis.md` · October 2026**
 
 ---
 
@@ -12,7 +12,7 @@ No published study we found directly measures *"Filipinos losing mobile data whi
 2. **Access depends on budget.** Nearly all mobile users are prepaid, cost is the most common reason people are offline, and connectivity varies widely by region.
 3. **Many phones are on older networks.** About 7 in 10 users have not moved to 4G voice (VoLTE) ahead of the December 2026 3G shutdown.
 
-**Counter-evidence to be honest about:** mobile data prices have fallen by about two-thirds since 2023. "Data is too expensive" is a weaker argument than it used to be. Daanan's offline case should rest on **coverage gaps, prepaid load running out, and older phones**, not on price per GB alone.
+**Counter-evidence to be honest about:** mobile data prices have fallen by about two-thirds since 2023. "Data is too expensive" is a weaker argument than it used to be. Pusang Gala's offline case should rest on **coverage gaps, prepaid load running out, and older phones**, not on price per GB alone.
 
 ---
 
@@ -26,7 +26,7 @@ No published study we found directly measures *"Filipinos losing mobile data whi
 | Mobile dead zones ("not-spots") identified | **4,846 – 12,626** unconnected map cells (2024) | [M2Catalyst Philippines Mobile Quality Report 2024](https://irp.cdn-website.com/c4709c5a/files/uploaded/Philippines_Quality_Global_Mobile_Insights_Report_M2Catalyst.pdf) |
 | Users spending under 1% of their time with no signal (best operator, 2023) | 88.3% (Globe), so **~1 in 9 users have no signal more often than that**; worse on Smart and DITO | [Opensignal, Aug 2023](https://insights.opensignal.com/2023/08/10/increased-spending-shakes-up-the-mobile-market-in-the-philippines) |
 
-**Why it matters for Daanan:** routes between provinces (Metro Manila → Batangas, Quezon, Laguna) pass through the rural and mountain areas where these gaps are concentrated. The commuter is most likely to lose signal at the exact moment they need to know where to get off.
+**Why it matters for Pusang Gala:** routes between provinces (Metro Manila → Batangas, Quezon, Laguna) pass through the rural and mountain areas where these gaps are concentrated. The commuter is most likely to lose signal at the exact moment they need to know where to get off.
 
 ---
 
@@ -43,7 +43,7 @@ No published study we found directly measures *"Filipinos losing mobile data whi
 | Average monthly mobile budget (ITU basket) | US$8.90, **up 29%** from the previous year (2025) | [WorldData / ITU](https://www.worlddata.info/asia/philippines/telecommunication.php) |
 | Daily minimum wage, 2026 | ₱755 (NCR) down to **₱455** (MIMAROPA, Region V) | [NWPC, Jul 2026](https://nwpc.dole.gov.ph/wp-content/uploads/2026/07/current-statistics-on-wages-as-of-July-9_2026.pdf) |
 
-**Why it matters for Daanan:** prepaid users buy data in short promos (daily, 3-day, 7-day). When a promo expires or the load runs out partway through a trip, a cloud-only app stops working. The phone is almost always the only device people have.
+**Why it matters for Pusang Gala:** prepaid users buy data in short promos (daily, 3-day, 7-day). When a promo expires or the load runs out partway through a trip, a cloud-only app stops working. The phone is almost always the only device people have.
 
 ### Regional gap: household internet access (2024)
 
@@ -51,7 +51,7 @@ No published study we found directly measures *"Filipinos losing mobile data whi
 |---|---|
 | NCR | 68.7% |
 | Central Luzon (III) | 61.3% |
-| **CALABARZON (IV-A)**, Daanan's target niche | **53.2%** |
+| **CALABARZON (IV-A)**, Pusang Gala's target niche | **53.2%** |
 | National | 48.8% |
 | BARMM | 27.7% |
 | Zamboanga Peninsula (IX) | 21.2% |
@@ -73,7 +73,7 @@ Sources: [InsiderPH / 2024 NICTHS](https://insiderph.com/internet-access-in-ph-e
 
 **Note:** the 70% figure is about *voice* technology (VoLTE adoption), not data. DICT's 15% figure counts people using basic 2G/3G phones. Use the 15% figure when talking about users who may lose data access after the shutdown, and cite the 70% only as a sign of how slowly users are moving to newer networks.
 
-**Why it matters for Daanan:** around the 3G shutdown, a portion of users on low-end phones may have unreliable data. An app that works offline keeps working during the transition.
+**Why it matters for Pusang Gala:** around the 3G shutdown, a portion of users on low-end phones may have unreliable data. An app that works offline keeps working during the transition.
 
 ---
 

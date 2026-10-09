@@ -1,8 +1,8 @@
-# Daanan: System Architecture
+# Pusang Gala: System Architecture
 
 **Hybrid RAG + rule-based pipeline with a Google Maps Offline handoff · AppBuilders 2026 Hackathon build · v0.1**
 
-Inputs: `Daanan Hackathon Proposal Validation.pdf`, `daanan-proposal.md`, `daanan-competitor-analysis.md`, `daanan-connectivity-evidence.md`.
+Inputs: `Pusang Gala Hackathon Proposal Validation.pdf`, `pusang-gala-proposal.md`, `pusang-gala-competitor-analysis.md`, `pusang-gala-connectivity-evidence.md`.
 
 ---
 
@@ -198,14 +198,14 @@ See §4.
 | Embedding Google tiles in *our* app for offline use (Maps SDK) | ❌ **Not allowed**: the terms forbid pre-fetching or caching content | [Map Tiles API Policies](https://developers.google.com/maps/documentation/tile/policies) |
 | Offline maps expire and must be refreshed | ⚠ Auto-updates over Wi-Fi when ≤ 15 days remain | [Google Maps Help](https://support.google.com/maps/answer/6291838?hl=en) |
 
-**What this means for the design:** Daanan uses **the user's own Google Maps app with a downloaded offline area** as its map viewer. We hand it pins and driving routes through Android intents. We **don't** embed or cache Google tiles ourselves, and we **don't** rely on Google for walking or jeepney routing. Daanan's pre-computed data handles those parts.
+**What this means for the design:** Pusang Gala uses **the user's own Google Maps app with a downloaded offline area** as its map viewer. We hand it pins and driving routes through Android intents. We **don't** embed or cache Google tiles ourselves, and we **don't** rely on Google for walking or jeepney routing. Pusang Gala's pre-computed data handles those parts.
 
 ### 4.2 Integration flow
 
 ```mermaid
 sequenceDiagram
   participant U as Commuter
-  participant D as Daanan app
+  participant D as Pusang Gala app
   participant G as Google Maps app (offline area)
 
   Note over U,D: Before the trip (online, at home or on Wi-Fi)
@@ -222,7 +222,7 @@ sequenceDiagram
   G-->>U: Pin shown on offline map
   U->>D: Tap "📍 Babaan" on step 1
   D->>G: Intent geo:...?q=lat,lng(Babaan: SM Masinag)
-  Note over D,G: Walking legs: Daanan shows its own pre-computed text<br/>("~350 m, 5 min, kanan sa overpass") + pin, since Google walking is online-only
+  Note over D,G: Walking legs: Pusang Gala shows its own pre-computed text<br/>("~350 m, 5 min, kanan sa overpass") + pin, since Google walking is online-only
 ```
 
 ### 4.3 Intent catalogue
@@ -235,7 +235,7 @@ All intents use `Intent.ACTION_VIEW`, `setPackage("com.google.android.apps.maps"
 | 📍 Babaan (alight point) | `geo:0,0?q={lat},{lng}({label})` | ✅ |
 | 🚗 Taxi / Grab / private car leg (optional) | `google.navigation:q={lat},{lng}&mode=d` | ✅ driving only |
 | 🛺 Tricycle leg (show road path) | `google.navigation:q={lat},{lng}&mode=d` | ✅ (a driving route approximates the tricycle path) |
-| 🚶 Walking leg | Daanan text + `geo:` pin for the endpoint | ✅ (Google walking directions are online-only) |
+| 🚶 Walking leg | Pusang Gala text + `geo:` pin for the endpoint | ✅ (Google walking directions are online-only) |
 | 🗺 Whole trip overview | Sequential pins (one per stop); no multi-stop transit view offline | ✅ |
 
 ```dart
@@ -410,8 +410,8 @@ The order puts the risky parts behind a working core. After each block, the demo
 
 ## 12. Known Limitations
 
-- **Walking directions in Google Maps don't work offline.** Daanan's pre-computed walking text covers it, but it's only as good as the seed data.
+- **Walking directions in Google Maps don't work offline.** Pusang Gala's pre-computed walking text covers it, but it's only as good as the seed data.
 - **Google Maps offline areas need to be downloaded ahead of time and expire.** Users must download them while online, so the pre-trip card is essential.
-- **Embedding Google tiles in Daanan isn't allowed**, so there is no in-app Google map. Use a sketch fallback now and MapLibre with OSM tiles later.
+- **Embedding Google tiles in Pusang Gala isn't allowed**, so there is no in-app Google map. Use a sketch fallback now and MapLibre with OSM tiles later.
 - **Coverage = seed data.** Questions outside the corridor get an honest "no data yet", never a guess.
 - **Fare values must come from the current LTFRB fare matrix.** All numbers in this document are placeholders.
