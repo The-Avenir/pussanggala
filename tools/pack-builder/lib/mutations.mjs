@@ -28,19 +28,56 @@ export const MUTATIONS = [
     name: "shape with two owners",
     group: "invalid-record",
     expect: "shape_owner_count",
-    apply(t) { t.shape[0].walk_id = t.walk_link[0].walk_id; },
+    apply(t) {
+      // Real packs may ship zero shapes; create one so the defect is always planted.
+      if (!t.shape.length) {
+        t.shape.push({
+          shape_id: "sh_mut0001",
+          leg_id: t.leg[0]?.leg_id ?? "lg_mut",
+          walk_id: null,
+          geojson: '{"type":"LineString","coordinates":[[0,0],[1,1]]}',
+          geometry_kind: "schematic",
+        });
+      }
+      const s = t.shape[0];
+      if (s.leg_id == null) s.leg_id = t.leg[0]?.leg_id ?? "lg_mut";
+      s.walk_id = t.walk_link[0]?.walk_id ?? "wk_mut";
+    },
   },
   {
     name: "note_link with no owner",
     group: "invalid-record",
     expect: "note_link_owner_count",
-    apply(t) { Object.assign(t.note_link[0], { leg_id: null, stop_id: null }); },
+    apply(t) {
+      if (!t.note.length) t.note.push({ note_id: "nt_mut", body: "fixture note", kind: "tip" });
+      if (!t.note_link.length) {
+        t.note_link.push({
+          link_id: Math.max(0, ...t.note_link.map((l) => l.link_id)) + 1,
+          note_id: t.note[0].note_id,
+          leg_id: t.leg[0]?.leg_id ?? "lg_mut",
+          stop_id: null,
+        });
+      }
+      Object.assign(t.note_link[0], { leg_id: null, stop_id: null });
+    },
   },
   {
     name: "unpaired coordinates",
     group: "invalid-record",
     expect: "coords_unpaired",
-    apply(t) { const p = t.place.find((x) => x.lat != null); p.lng = null; },
+    apply(t) {
+      let p = t.place[0];
+      if (!p) {
+        p = {
+          place_id: "pl_mut", region_id: t.region[0].region_id, name: "Mut Place",
+          kind: "other", area: "Metro Manila", ncr_status: "accepted",
+          lat: 14.6, lng: 121.0, mapping_status: "unmapped",
+        };
+        t.place.push(p);
+      }
+      if (p.lat == null) p.lat = 14.6;
+      p.lng = null;
+    },
   },
   {
     name: "negative duration",
