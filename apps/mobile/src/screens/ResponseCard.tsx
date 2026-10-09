@@ -35,9 +35,14 @@ export function RouteSummaryCard({ route, origin, destination, optionCount = 3, 
 }): React.JSX.Element {
   const rides = route.steps.filter(step => step.mode === 'ride').length;
   const endpoints = origin || destination ? (origin || 'Choose origin') + ' → ' + (destination || 'Choose destination') : route.title;
-  const fare = !route.fare ? 'Fare not reported'
+  const fare = route.fareUnknown || !route.fare ? 'Fare not reported'
     : unreportedLegs > 0 ? route.fare + ' + ' + unreportedLegs + ' ride' + (unreportedLegs > 1 ? 's' : '') + ' not reported'
     : route.fare + ' reported';
+  const time = route.timeUnknown || !route.time ? 'Time not reported' : 'about ' + route.time + ' (reported)';
+  const allWarnings = [...new Set([
+    ...(route.steps.some(step => (step.fareReports?.length ?? 0) > 1) ? ['Reports disagree on fare'] : []),
+    ...(route.steps.some(step => step.oldReport) ? ['Some reports are over 180 days old'] : []),
+    ...(warnings ?? [])])];
   return <View style={styles.card}>
     <Text style={[type.caption, styles.overline]}>ROUTE SUMMARY · EXAMPLE DATA</Text>
     <Text accessibilityRole="header" style={type.heading}>{endpoints}</Text>
@@ -51,12 +56,12 @@ export function RouteSummaryCard({ route, origin, destination, optionCount = 3, 
     </View>)}</View>
     <Text style={type.body}>{rides} ride{rides === 1 ? '' : 's'} · {route.transfers === 0 ? 'no transfers' : route.transfers + ' transfer' + (route.transfers > 1 ? 's' : '')}</Text>
     <View style={styles.metrics}>
-      <View><Text style={type.label}>{fare}</Text><Text style={type.caption}>total fare</Text></View>
-      <View><Text style={type.label}>{route.time ? 'about ' + route.time + ' (reported)' : 'Time not reported'}</Text>
+      <View style={styles.metric}><Text style={type.label}>{fare}</Text><Text style={type.caption}>total fare</Text></View>
+      <View style={styles.metric}><Text style={type.label}>{time}</Text>
         <Text style={type.caption}>travel time</Text></View>
     </View>
-    <Text style={type.caption}>{sourceLine}</Text>
-    {warnings?.map(warning => <View key={warning} style={styles.warning}>
+    <Text style={type.caption}>{route.sourceLine ?? sourceLine}</Text>
+    {allWarnings.map(warning => <View key={warning} style={styles.warning}>
       <Text style={[type.secondary, styles.warningText]}>⚠ {warning}</Text></View>)}
     <View style={styles.actions}>
       {onStartTrip ? <Button variant="secondary" icon="arrow" label="Start trip" onPress={onStartTrip}/> : null}
@@ -153,6 +158,7 @@ const styles = StyleSheet.create({
   leg: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   legArrow: { color: palette.secondary, fontSize: 14 },
   metrics: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 22, rowGap: 8 },
+  metric: { flexShrink: 1, minWidth: 0 },
   warning: { backgroundColor: palette.warningSoft, borderLeftWidth: 3, borderLeftColor: palette.warning, padding: 10, borderRadius: 8 },
   warningText: { color: palette.warning },
   actions: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8, paddingTop: 4 },

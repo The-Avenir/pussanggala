@@ -77,7 +77,7 @@ export function AskScreen({ turns, route, origin, destination, activeStep, onEdi
 function ContextChip({ label, marker, accessibilityLabel, onPress }: {
   label: string; marker?: string; accessibilityLabel: string; onPress?: (() => void) | undefined;
 }): React.JSX.Element {
-  const content = <Text style={[type.secondary, styles.chipText]} numberOfLines={1}>{label}{marker ? ' ' + marker : ''}</Text>;
+  const content = <Text style={[type.secondary, styles.chipText]}>{label}{marker ? ' ' + marker : ''}</Text>;
   return onPress
     ? <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel} onPress={onPress}
         style={({ pressed }) => [styles.chip, styles.editableChip, pressed && ui.pressed]}>{content}</Pressable>

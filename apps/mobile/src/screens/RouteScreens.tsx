@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
   tips: { gap: 6, backgroundColor: palette.background, borderRadius: 14, padding: 14 },
   tipsLabel: { fontWeight: '600', letterSpacing: 0.4 },
   fareConflict: { gap: 4, borderLeftWidth: 3, borderLeftColor: palette.gold, backgroundColor: palette.goldSoft, padding: 12 },
-  sourceRow: { flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 40 },
+  sourceRow: { flexDirection: 'row', alignItems: 'center', gap: 6, minHeight: 44 },
   diagram: { paddingTop: 20 }, diagramRow: { flexDirection: 'row', gap: 18, minHeight: 70 },
   diagramRail: { minWidth: 26, alignItems: 'center' },
   node: { minWidth: 26, minHeight: 26, padding: 2, borderRadius: 24, borderWidth: 2, borderColor: palette.rail, backgroundColor: palette.paper, alignItems: 'center', justifyContent: 'center' },

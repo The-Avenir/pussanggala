@@ -12,6 +12,7 @@ import { ProfileScreen } from './ProfileScreen';
 import { HelpScreen } from './HelpScreen';
 import { AskComposer, AskScreen } from './AskScreen';
 import type { ConversationTurn } from './AskScreen';
+import { LocationConfirmSheet, NearbyLandmarkSheet, PlaceClarifySheet, SAMPLE_PLACES } from './ClarificationSheets';
 import { ActiveTripScreen, RouteMapScreen, RouteOptionsScreen, RouteStepsScreen, TripCompleteScreen } from './RouteScreens';
 import { AboutScreen, OfflineDataScreen, PrivacyScreen, SavedScreen, SettingsScreen } from './SettingsScreens';
 import { EXAMPLE_ROUTE, PREVIEW_ROUTES } from './previewJourney';
@@ -62,6 +63,7 @@ export function MobileShell(): React.JSX.Element {
   const [completedRoute, setCompletedRoute] = useState<PreviewRoute | null>(null);
   const [schematic, setSchematic] = useState(true);
   const [sheet, setSheet] = useState<Sheet | null>(null);
+  const [customSheet, setCustomSheet] = useState<{ title: string; note?: string; node: React.JSX.Element } | null>(null);
   const [editing, setEditing] = useState<Endpoint | null>(null);
   const [endpointText, setEndpointText] = useState('');
   const [checkedAt, setCheckedAt] = useState<string | null>(null);
@@ -78,7 +80,7 @@ export function MobileShell(): React.JSX.Element {
   const chatRoute = tripConversation && activeRoute ? activeRoute : route;
   const mapRoute = route ?? activeRoute;
   const selected = route ?? EXAMPLE_ROUTE;
-  const modalOpen = sheet !== null || editing !== null;
+  const modalOpen = sheet !== null || editing !== null || customSheet !== null;
 
   function navigate(next: Screen): void {
     setError(null);
@@ -94,6 +96,7 @@ export function MobileShell(): React.JSX.Element {
     setStacks(current => ({ ...current, [tab]: current[tab].length > 1 ? current[tab].slice(0, -1) : current[tab] }));
   }
   function updateStore(): void { refresh(value => value + 1); }
+  function closeOverlays(): void { setSheet(null); setEditing(null); setCustomSheet(null); }
   function notice(title: string, body: string): void {
     setSheet({ title, body, action: 'Got it', onConfirm: () => setSheet(null) });
   }
@@ -114,7 +117,7 @@ export function MobileShell(): React.JSX.Element {
   useEffect(() => { if (screen === 'ask' && turns.length) scrollRef.current?.scrollToEnd({ animated: false }); }, [screen, turns.length]);
   useEffect(() => {
     const listener = BackHandler.addEventListener('hardwareBackPress', () => {
-      if (modalOpen) { setSheet(null); setEditing(null); return true; }
+      if (modalOpen) { closeOverlays(); return true; }
       if (stacks[tab].length > 1) { back(); return true; }
       if (tab !== 'ask') { openTab('ask'); return true; }
       return false;
@@ -196,6 +199,27 @@ export function MobileShell(): React.JSX.Element {
     if (exampleMode && normalized.includes('monumento') && normalized.includes('one ayala')) {
       appendTurn(query, 'These are example route facts, not installed data. Open Directions to see the supported layout and transfer sequence.', selected); return;
     }
+    // §4a: an ambiguous mall alias opens the clarification sheet — a tap chooses, never a guess (INV-6).
+    if (/(^|\s)sm(\s|$)|mall/.test(normalized)) {
+      setCustomSheet({ title: 'Which place?', note: 'Simulated candidates — the place resolver isn’t installed in this preview.',
+        node: <PlaceClarifySheet candidates={SAMPLE_PLACES.ambiguous}
+          onPick={index => { const place = SAMPLE_PLACES.ambiguous[index]!; setCustomSheet(null);
+            setDestination(place.name); setExampleMode(false);
+            appendTurn(query, 'Got it — ' + place.name + ' (' + place.area + '). The route pack isn’t installed in this preview, so I can’t search that trip yet.'); }}
+          onNone={() => { setCustomSheet(null);
+            appendTurn(query, 'No problem — type the full name of a supported landmark and I’ll try that.'); }}/> });
+      return;
+    }
+    // §4c: a typed street address isn’t a supported place — offer nearby landmarks.
+    if (/blk|lot |street|\bst\b|bahay|house|subdivision|brgy|barangay/.test(normalized)) {
+      setCustomSheet({ title: 'Nearby supported landmark', note: 'Simulated candidates — the place resolver isn’t installed in this preview.',
+        node: <NearbyLandmarkSheet places={SAMPLE_PLACES.landmarks}
+          onPick={index => { const place = SAMPLE_PLACES.landmarks[index]!; setCustomSheet(null);
+            setOrigin(place.name); setExampleMode(false);
+            appendTurn(query, 'I’ll use ' + place.name + ' as the starting point. The route pack isn’t installed in this preview, so I can’t search that trip yet.'); }}
+          onDismiss={() => setCustomSheet(null)}/> });
+      return;
+    }
     appendTurn(query, 'The route pack and local assistant aren’t installed in this preview. I can’t answer this journey yet. Use the example question to explore the design.');
   }
   function findRoutes(): void {
@@ -212,18 +236,18 @@ export function MobileShell(): React.JSX.Element {
   }
   function choosePreference(value: Preference): void { setPreference(value); }
   function resumeTrip(): void { navigate('active'); }
-  function beginTrip(): void {
-    if (!route) return;
+  function beginTrip(itinerary: PreviewRoute): void {
     store.upsertActiveTrip({ pack_id: 'SYNTHETIC-walkthrough', schema_version: 1, origin_place_id: 'SYNTHETIC-monumento',
-      destination_place_id: 'SYNTHETIC-one-ayala', preference, route: selected.ids, current_step: 0, started_at: new Date().toISOString() });
-    setActiveRoute(selected); setCompletedRoute(null); updateStore(); navigate('active');
+      destination_place_id: 'SYNTHETIC-one-ayala', preference, route: itinerary.ids, current_step: 0, started_at: new Date().toISOString() });
+    setActiveRoute(itinerary); setCompletedRoute(null); updateStore(); navigate('active');
   }
-  function startTrip(): void {
-    if (!route) return;
+  function startTrip(itinerary: PreviewRoute | null = route): void {
+    if (!itinerary) return;
     setSheet({ title: activeRoute ? 'Replace your active trip?' : 'Start this example trip?',
       body: activeRoute ? 'Your current progress will end. The new example starts at its first step.'
         : 'This is a design walkthrough, not travel guidance. GPS is unavailable. Mark each step yourself; progress lasts for this session.',
-      action: activeRoute ? 'Replace trip' : 'Start example trip', onConfirm: () => { setSheet(null); beginTrip(); } });
+      action: activeRoute ? 'Replace trip' : 'Start example trip',
+      onConfirm: () => { setSheet(null); setRoute(itinerary); setExampleMode(true); beginTrip(itinerary); } });
   }
   function nextStep(): void {
     if (!activeRoute || !active) return;
@@ -263,7 +287,24 @@ export function MobileShell(): React.JSX.Element {
     locationPrompted.current = true;
     setSheet({ title: 'Use your location?', action: 'Allow', cancelLabel: 'Not now',
       body: 'Pusang Gala uses your location only while the app is open, to suggest a nearby starting point and show you on the map. It stays on your phone.',
-      onConfirm: () => notice('Choose your starting point', 'GPS isn’t connected in this preview, so no position is shown. In the release, nearby supported origins still need your confirmation; accuracy and fix age stay visible.') });
+      onConfirm: () => { setSheet(null); setCustomSheet({ title: 'Start from here?',
+        note: 'Simulated candidates — GPS is off in this preview, so distances are examples.',
+        node: <LocationConfirmSheet places={SAMPLE_PLACES.nearby}
+          onConfirm={place => { setCustomSheet(null); setOrigin(place.name); setExampleMode(false); setTripConversation(false);
+            notice('Starting point set', place.name + ' is your From. Ask a question or plan with landmarks.'); }}
+          onDismiss={() => setCustomSheet(null)}/> }); } });
+  }
+  function startFromPlace(name: string): void {
+    setOrigin(name); setExampleMode(false);
+    notice('Starting point set', name + ' is your From. Ask Gaile where you’re headed or plan with landmarks.');
+  }
+  function goToPlace(name: string): void {
+    setDestination(name); setExampleMode(false);
+    notice('Destination set', name + ' is your To. Pick a starting point or ask a question.');
+  }
+  function cyclePreference(): void {
+    const order: readonly Preference[] = ['cheapest', 'fastest', 'fewest-transfers'];
+    setPreference(current => order[(order.indexOf(current) + 1) % order.length]!);
   }
   function deleteData(): void {
     setSheet({ title: 'Delete all your data?', body: 'This clears saved routes, history, preferences, conversation and active-trip progress.', action: 'Delete all data', destructive: true,
@@ -271,6 +312,7 @@ export function MobileShell(): React.JSX.Element {
         store.listSavedRoutes().forEach(row => store.deleteSavedRoute(row.saved_id)); store.clearHistory(); store.clearActiveTrip();
         setActiveRoute(null); setCompletedRoute(null); setRoute(null); setTurns([]); setPreference('cheapest'); setOrigin(''); setDestination('');
         setExampleMode(false); setTripConversation(false); updateStore(); setSheet(null);
+        setStacks({ ask: ['ask'], map: ['map'], saved: ['saved'], profile: ['profile'] });
       } });
   }
   function newConversation(): void {
@@ -290,21 +332,24 @@ export function MobileShell(): React.JSX.Element {
       case 'ask': return <AskScreen turns={turns} route={chatRoute} origin={tripConversation && activeRoute ? 'LRT-1 Monumento' : origin}
         destination={tripConversation && activeRoute ? 'One Ayala' : destination} activeStep={tripConversation && activeRoute ? activeStep : null}
         onEdit={() => { setTripConversation(false); editEndpoint('destination'); }} onOptions={() => { if (chatRoute) setRoute(chatRoute); navigate('options'); }}
-        onSteps={item => openDirections(item)} onMap={item => { setRoute(item); openMap(); }} onPrompt={submit} onExample={askExample}/>;
+        onSteps={item => openDirections(item)} onMap={item => { setRoute(item); openMap(); }} onPrompt={submit} onExample={askExample}
+        onStartTrip={item => startTrip(item)} onSave={item => save(item)} optionCount={PREVIEW_ROUTES.length}/>;
       case 'plan': return <PlanScreen origin={origin} destination={destination} onEdit={editEndpoint}
         onSwap={() => { setOrigin(destination); setDestination(origin); setRoute(null); setExampleMode(false); }}
         onFind={findRoutes} onExample={chooseExample} onResources={() => navigate('offline')} onLocation={location}/>;
       case 'options': return route ? <RouteOptionsScreen selected={selected} preference={preference}
-        onSelect={item => { setRoute(item); setDetailStep(0); }} onPreference={choosePreference}/>
+        onSelect={item => { setRoute(item); setDetailStep(0); }} onPreference={choosePreference}
+        onViewSteps={item => { setRoute(item); setDetailStep(0); navigate('steps'); }}/>
         : <Notice action="Choose an example journey" onAction={chooseExample}>Your planning context was cleared. No route is selected.</Notice>;
       case 'steps': return route ? <RouteStepsScreen route={selected} stepIndex={detailStep} onStep={setDetailStep} onMap={openMap}
         onSave={() => save()} onAsk={() => openAsk()} onSources={sources}/>
         : <Notice action="Choose an example journey" onAction={chooseExample}>No route is selected. Start a new search or choose the labelled example.</Notice>;
       case 'map': return <RouteMapScreen route={mapRoute} schematic={schematic} onMode={setSchematic} onLocation={location}
         onSteps={() => { if (mapRoute) openDirections(mapRoute); }} onResources={() => navigate('offline')}
-        onStep={index => { if (mapRoute) openDirections(mapRoute, index); }}/>;
+        onStep={index => { if (mapRoute) openDirections(mapRoute, index); }}
+        onStartFrom={startFromPlace} onGoHere={goToPlace}/>;
       case 'active': return activeRoute ? <ActiveTripScreen route={activeRoute} stepIndex={activeStep} onEnd={endTrip}
-        onAsk={() => openAsk(true)} onSteps={() => openDirections(activeRoute, activeStep)}/>
+        onAsk={() => openAsk(true)} onSteps={() => openDirections(activeRoute, activeStep)} onSave={() => save(activeRoute)}/>
         : <Notice action="Ask a question" onAction={() => openTab('ask')}>No active trip. Choose a route first.</Notice>;
       case 'complete': return completedRoute ? <TripCompleteScreen onSave={() => save(completedRoute)} onReturn={() => {
         setRoute(null); setExampleMode(false); setOrigin('One Ayala'); setDestination('LRT-1 Monumento'); setTripConversation(false);
@@ -328,7 +373,8 @@ export function MobileShell(): React.JSX.Element {
         onSignIn={() => notice('Accounts are coming later', 'Sign-in needs internet and isn’t part of this preview. You can use everything without an account — nothing leaves this phone.')}
         onSaved={() => openSavedTab('saved')} onHistory={() => openSavedTab('history')}
         onSettings={() => navigate('settings')} onHelp={() => navigate('help')}/>;
-      case 'settings': return <SettingsScreen preference={preference} onPreference={choosePreference} onOpen={navigate} onLocation={location}/>;
+      case 'settings': return <SettingsScreen preference={preference} onPreference={choosePreference} onOpen={navigate} onLocation={location}
+        onAccount={() => notice('Accounts are coming later', 'Sign-in needs internet and isn’t part of this preview. You can use everything without an account — nothing leaves this phone.')}/>;
       case 'offline': return <OfflineDataScreen checkedAt={checkedAt} onCheck={() => setCheckedAt(new Date().toLocaleTimeString())}/>;
       case 'privacy': return <PrivacyScreen onDelete={deleteData}/>;
       case 'about': return <AboutScreen/>;
@@ -336,9 +382,11 @@ export function MobileShell(): React.JSX.Element {
     }
   }
   function footer(): React.JSX.Element | null {
-    if (screen === 'ask') return <AskComposer onSubmit={submit}/>;
+    if (screen === 'ask') return <AskComposer onSubmit={submit} onLocation={location}
+      origin={origin} destination={destination} preference={preference}
+      onEditEndpoint={editEndpoint} onEditPreference={cyclePreference}/>;
     if (screen === 'options' && route) return <Button label="See directions" icon="arrow" onPress={() => navigate('steps')}/>;
-    if (screen === 'steps' && route) return <Button label="Start example trip" icon="arrow" onPress={startTrip}/>;
+    if (screen === 'steps' && route) return <Button label="Start example trip" icon="arrow" onPress={() => startTrip()}/>;
     if (screen === 'active' && activeRoute) return <View style={ui.row}>
       <IconButton name="back" label="Back a step" disabled={activeStep === 0} onPress={previousStep}/>
       <Button label={activeStep === activeRoute.steps.length - 1 ? 'I’m here · Finish trip' : 'I’m here · Next step'} onPress={nextStep} style={ui.flex}/>
@@ -348,11 +396,11 @@ export function MobileShell(): React.JSX.Element {
   const bottomAction = footer();
   const isRoot = stacks[tab].length === 1;
   if (phase === 'readiness') return <SafeAreaView style={styles.safe}>
-    <ScrollView style={styles.page} contentContainerStyle={styles.content}>
+    <ScrollView testID="main-scroll" style={styles.page} contentContainerStyle={styles.content}>
       <ReadinessScreen onDone={() => setPhase('welcome')}/></ScrollView>
   </SafeAreaView>;
   if (phase === 'welcome') return <SafeAreaView style={styles.safe}>
-    <ScrollView style={styles.page} contentContainerStyle={styles.content}>
+    <ScrollView testID="main-scroll" style={styles.page} contentContainerStyle={styles.content}>
       <WelcomeScreen onContinue={() => setPhase('main')}/></ScrollView>
   </SafeAreaView>;
   return <SafeAreaView style={styles.safe}>
@@ -381,10 +429,7 @@ export function MobileShell(): React.JSX.Element {
           onAction={() => { if (error.recovery === 'resources') navigate('offline'); else editEndpoint(error.recovery); }}>{error.message}</Notice> : null}
         {content()}
         {screen === 'ask' && turns.length === 0 ? <View style={styles.askExtras}>
-          <View style={styles.hint}><Icon name="chat" size={18} color={palette.accent}/>
-            <Text style={[type.secondary, ui.flex]}>Ask in Taglish or English. Example: “Paano pumunta sa One Ayala galing Monumento?”</Text></View>
           <ListRow title="Plan with landmarks" detail="Pick a starting point and a destination" icon="pin" onPress={() => navigate('plan')}/>
-          <Text style={type.caption}>Your questions stay on this phone.</Text>
         </View> : null}
       </ScrollView>
       {bottomAction ? <View style={styles.footer}>{bottomAction}</View> : null}
@@ -400,11 +445,11 @@ export function MobileShell(): React.JSX.Element {
         {tab === item.id ? <View style={styles.tabIndicator}/> : null}
       </Pressable>)}</View>
     </KeyboardAvoidingView>
-    {modalOpen ? <Modal transparent visible animationType="none" onRequestClose={() => { setSheet(null); setEditing(null); }}>
+    {modalOpen ? <Modal transparent visible animationType="none" onRequestClose={closeOverlays}>
       <KeyboardAvoidingView style={styles.scrim} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <View accessibilityViewIsModal role="dialog" aria-modal accessibilityLabel={editing ? 'Edit ' + editing : sheet?.title}
+        <View accessibilityViewIsModal role="dialog" aria-modal accessibilityLabel={editing ? 'Edit ' + editing : customSheet?.title ?? sheet?.title}
           {...(Platform.OS === 'web' ? { onKeyDown: (event: { key: string; preventDefault: () => void }) => {
-            if (event.key === 'Escape') { event.preventDefault(); setSheet(null); setEditing(null); }
+            if (event.key === 'Escape') { event.preventDefault(); closeOverlays(); }
             if (event.key === 'Tab') {
               const dialog = (sheetHeading.current as unknown as HTMLElement | null)?.closest('[role="dialog"]');
               const nodes = dialog?.querySelectorAll<HTMLElement>('button, input, [role="button"][tabindex="0"]');
@@ -416,8 +461,8 @@ export function MobileShell(): React.JSX.Element {
             }
           } } : {})} style={styles.sheet}>
           <View style={ui.between}><Text ref={sheetHeading} {...(Platform.OS === 'web' ? { tabIndex: -1 } : {})} accessibilityRole="header" style={[type.heading, ui.flex]}>
-            {editing ? editing === 'origin' ? 'Starting landmark' : 'Destination' : sheet?.title}</Text>
-            {sheet?.hideCancel ? null : <IconButton name="close" label="Close sheet" onPress={() => { setSheet(null); setEditing(null); }}/>}</View>
+            {editing ? editing === 'origin' ? 'Starting landmark' : 'Destination' : customSheet ? '' : sheet?.title}</Text>
+            {sheet?.hideCancel ? null : <IconButton name="close" label="Close sheet" onPress={closeOverlays}/>}</View>
           <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ gap: 16 }}>
             {editing ? <><Text style={type.secondary}>Use a supported NCR landmark. Editing keeps your active trip, but starts a new route search.</Text>
               <TextInput accessibilityLabel="Landmark name" value={endpointText} onChangeText={setEndpointText}
@@ -425,7 +470,9 @@ export function MobileShell(): React.JSX.Element {
                 returnKeyType="done" onSubmitEditing={commitEndpoint}/>
               <Text style={type.caption}>The route pack is unavailable. This field keeps your input without guessing a place or walking connection.</Text>
               <Button label="Use this landmark" disabled={!endpointText.trim()} onPress={commitEndpoint}/>
-            </> : sheet ? <><Text style={type.body}>{sheet.body}</Text>
+            </> : customSheet ? <>{customSheet.node}
+              {customSheet.note ? <Text style={type.caption}>{customSheet.note}</Text> : null}</>
+            : sheet ? <><Text style={type.body}>{sheet.body}</Text>
               <Button label={sheet.action} variant={sheet.destructive ? 'danger' : 'primary'} onPress={sheet.onConfirm}/>
               {sheet.secondaryLabel && sheet.onSecondary
                 ? <Button label={sheet.secondaryLabel} variant={sheet.secondaryDestructive ? 'danger' : 'secondary'} onPress={sheet.onSecondary}/>
