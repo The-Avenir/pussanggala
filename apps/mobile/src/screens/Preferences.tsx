@@ -3,8 +3,8 @@ import { palette, type } from '../ui/travel';
 import type { Preference } from './previewJourney';
 
 export const PREFERENCES: readonly { value: Preference; label: string }[] = [
-  { value: 'cheapest', label: 'Fare' }, { value: 'fastest', label: 'Time' },
-  { value: 'fewest-transfers', label: 'Transfers' },
+  { value: 'cheapest', label: 'Cheapest' }, { value: 'fastest', label: 'Fastest' },
+  { value: 'fewest-transfers', label: 'Fewest transfers' },
 ];
 export function PreferenceChips({ preference, onSelect }: {
   preference: Preference; onSelect: (preference: Preference) => void;
