@@ -2,7 +2,7 @@
 
 This directory holds the production artwork for Gaile, the Pusang Gala mascot. The source images are 1254x1254 RGBA PNGs with real transparency (alpha range 0–255) and transparent padding around the character.
 
-`Gaile App Icon.png` is the launcher icon source (1254x1254 RGBA with the badge artwork centered inside a ~62%-of-canvas blob). `assets/icon.png`, `assets/adaptive-icon.png` and `assets/favicon.png` are derived from it — see `app.json` (`expo.icon`, `android.adaptiveIcon`, `web.favicon`).
+`Gaile App Icon.png` is the launcher icon source (1666x1666 RGBA rounded-square artwork, ~99% of canvas with transparent corners). `assets/icon.png`, `assets/adaptive-icon.png` and `assets/favicon.png` are derived from it — see `app.json` (`expo.icon`, `android.adaptiveIcon`, `web.favicon`) and regenerate with `python scripts/update-app-icon.py`. The adaptive foreground scales the artwork down so all opaque pixels stay inside the 72dp safe circle; the `#FFF0DD` `iconBackground` colour fills the rest of the canvas.
 
 `trimmed/` contains one variant per pose for layout work: each image is cropped to the visible artwork (pixels with alpha above a small threshold, discarding a faint halo present in the sources) and resized with a single scale factor shared by all nine poses, so Gaile keeps a consistent size across screens. Canvas sizes therefore vary; only `gaile-walk`, the tallest pose, reaches 512 px tall. The halo pixels are also cleared in these files, so no ghost edges appear over coloured backgrounds. Use the trimmed files in Figma frames and other mock-ups where tight bounding boxes and consistent scale matter; use the full-size files as the canonical source.
 
