@@ -2,10 +2,24 @@
 
 **Snapshot** `d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3` (`howtogetthereph_dataset/ncr_routes.json`)
 **Scope** T10–T16 (audit → extract → evidence → places → eligible → pack → acceptance → seed)
-**Status** Regenerated 2026-10-10 on `feat/t14-t16-seed-handoff` via `node tools/corpus/run-pipeline.mjs`.
-T11 is a new conservative `extract.mjs` (~6.6k candidates vs historical 19.7k). T12 part B AI
-verdicts are **not** re-applied (IDs stale). Cleaned handoff: `data/seed/`. Pre-clean reference:
-`data/reference/howtogetthereph_dataset-precleaned/`. Acceptance: **21/21 PASS**.
+**Status** Pipeline and technical acceptance completed on `feat/t14-t16-seed-handoff` via `node tools/corpus/run-pipeline.mjs`; validated parent commit `e9318bd8c55344636619b99a6753ea134e343968`.
+
+T11's grounded extractor produced **5,713 candidates** across 2,186 answered posts, each with one outcome.
+T12 part A (deterministic): **5,583 `second_passed` / 130 `needs_review` / 0 rejected / 0 accepted**.
+Heuristic part B sampled **313** and quarantined **21**; this is deterministic screening, not independent AI review or a source-supported judgment.
+Effective states after overrides: **5,562 `second_passed` / 151 `needs_review` / 0 rejected / 0 accepted**; human queue **151 items across 106 posts**.
+T14 uses the effective review state including `ai_override`, so quarantined candidates cannot enter eligible tables.
+
+Final pack: **134 legs / 69 routes / 59 stops / 91 places / 21 walk links / 0 fare reports / 0 hours reports / 276 notes / 1,719 provenance links**.
+Answered-post dispositions: **405 included / 91 pending / 497 rejected / 1,193 filtered = 2,186**.
+Pack SHA-256: `9203234afd1b503186b607c28b16d758ae66fa8cd96a586a30c234a973f6bb10`; size **851,968 bytes**.
+Parent runtime: Node `v24.5.0` / SQLite writer `3.50.3`. Schema SQL is normalized to LF; byte reproducibility requires the same source and SQLite writer runtime.
+Acceptance: **22/22 PASS** (integrity 3/3, invalid-record 12/12, ambiguity 4/4, source-content 3/3).
+Final reproduction and validation evidence: [T16 acceptance](t16-acceptance.md).
+
+Cleaned handoff: `data/seed/`. Pre-clean reference: `data/reference/howtogetthereph_dataset-precleaned/`.
+T12 actual AI review and designated human decisions remain pending; T16 source-backed T26 evaluation and reviewer sign-off remain pending.
+Agents never set `accepted`; no field-verified badge is claimed. The narrative below is an earlier snapshot, not current validation evidence.
 
 ---
 
