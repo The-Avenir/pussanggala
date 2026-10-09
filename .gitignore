@@ -17,6 +17,11 @@ GEMINI.md
 data/raw/
 *.reddit.json
 
+# Pre-cleaned reference copy: keep README + SHA256SUMS; large duplicates stay local.
+data/reference/howtogetthereph_dataset-precleaned/*
+!data/reference/howtogetthereph_dataset-precleaned/README.md
+!data/reference/howtogetthereph_dataset-precleaned/SHA256SUMS.txt
+
 # Dependencies and build outputs
 node_modules/
 dist/

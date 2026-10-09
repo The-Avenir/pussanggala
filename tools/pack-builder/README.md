@@ -127,8 +127,13 @@ every cited `reddit_thread` source must belong to an `included` post and every
 
 `created_at` is taken from here (never the clock) so identical input produces an
 identical `pack.sqlite` and `pack_sha256`. `input_sha256`, `input_posts` and
-`answered_posts` are re-derived from `--raw` and must match (`--no-verify-input`
-skips this; tests do not use it).
+`answered_posts` are re-derived from `--raw` and must match. Snapshot hashes use
+UTF-8 with CRLF replaced by LF only; there is no trimming, JSON reserialization,
+or other normalization. SQLite pack hashes always cover the exact file bytes.
+Reddit `record_source` rows must carry this same snapshot hash and resolve to an
+answered raw post; a non-null `comment_index` must index that post's `answers`.
+Non-Reddit sources may retain null snapshot/comment locators. The legacy
+`--no-verify-input` option does not bypass snapshot/provenance acceptance checks.
 
 ## Outputs (`--out <dir>`)
 
@@ -150,3 +155,23 @@ skips this; tests do not use it).
 `lib/spec.mjs` `toRawPackTables()` converts the pack tables to the T20
 `RawPackTables` shape (`regions`, `places`, `place_aliases`, ... , `manifest`), and
 `acceptance.mjs` `readPack()` reads a built pack back into that form.
+
+Acceptance also rechecks raw snapshot identity/counts/locators, distinct cited
+Reddit post counts against `included_posts`, and source dates against cited sources.
+`checkCompanion(companion, manifest, packPath)` is exported from `acceptance.mjs`
+for promotion consumers. It returns an array of issues (empty means valid), reads
+the actual pack bytes, and compares top-level metadata, every nested manifest
+column (including staleness), pack filename/bytes/hash, and the single pack asset.
+It preserves the existing companion v1 format and never modifies files.
+
+Privacy scanning covers all string columns, JSON geometry properties and the
+SQLite manifest, including source license and locator fields. Source author,
+username and user fields supply bare-name matches when the raw input contains
+them. Reddit thread permalink slugs are exempt from copied-word matching;
+username/profile patterns are still checked there, and cited Reddit URLs must
+match the raw post's permalink (or remain null). Extra companion fields or pack
+tables/columns fail acceptance so they cannot carry unscanned text. JSON escape
+sequences are decoded when checking geometry properties. Negative fixtures add
+missing prerequisites only to an in-memory copy; sparse coverage stays sparse in
+the real pack. This deterministic scan is a
+guardrail, not human paraphrase approval or a physical-verification claim.

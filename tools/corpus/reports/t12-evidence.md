@@ -1,36 +1,31 @@
 # T12 evidence pass — counts
 
-Snapshot `d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3`. 19709 candidates checked deterministically (part A). Counts only; no source text.
+Snapshot `d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3`. 5713 candidates checked deterministically (part A). Counts only; no source text.
 
 ## Review state × record kind
 
 | state | place | ride | walk | fare | hours | service_status | note | total |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| second_passed | 11295 | 3695 | 1368 | 87 | 101 | 8 | 913 | 17467 |
-| needs_review | 0 | 2097 | 64 | 54 | 15 | 11 | 0 | 2241 |
-| rejected | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 1 |
+| second_passed | 4088 | 961 | 205 | 29 | 24 | 0 | 276 | 5583 |
+| needs_review | 0 | 91 | 0 | 31 | 4 | 4 | 0 | 130 |
+| rejected | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | accepted | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
 ## Flags
 
 | flag | candidates | second_passed | needs_review | rejected |
 | --- | ---: | ---: | ---: | ---: |
-| incomplete_connection | 1383 | 0 | 1383 | 0 |
-| hedged | 1123 | 727 | 396 | 0 |
-| question_missing | 968 | 667 | 301 | 0 |
-| long_identifier | 689 | 475 | 214 | 0 |
-| value_not_in_source | 438 | 0 | 438 | 0 |
-| fare_unscoped | 23 | 12 | 11 | 0 |
-| conflict | 18 | 0 | 18 | 0 |
-| inactive_service | 11 | 0 | 11 | 0 |
-| fare_open_range | 1 | 1 | 0 | 0 |
-| raw_wording | 1 | 0 | 0 | 1 |
+| question_missing | 299 | 241 | 58 | 0 |
+| hedged | 264 | 209 | 55 | 0 |
+| fare_unscoped | 51 | 21 | 30 | 0 |
+| conflict | 25 | 0 | 25 | 0 |
+| inactive_service | 4 | 0 | 4 | 0 |
 
-Conflict pairs: 12.
+Conflict pairs: 14.
 
 ## Review queue
 
-1194 posts / 2241 items (1189 posts with route-critical items), in data/raw/t12/review-queue.{jsonl,md} (not committed).
+85 posts / 130 items (70 posts with route-critical items), in data/raw/t12/review-queue.{jsonl,md} (not committed).
 
 ## Reviewer instructions
 
@@ -46,50 +41,38 @@ Conflict pairs: 12.
 - Second pass is a text-evidence check, not field verification; no field-verified badge.
 - Place/board/alight/from/to grounding accepts ≥0.8 token overlap with the cited text or the post title/question; signboards must match the cited text.
 
-## Part B — independent AI evidence audit
+## Part B — heuristic rule screen
 
-Independent audit of 415 sampled candidates (seed 20261009): 366 supported, 49 flagged to needs_review. Counts only; no source text.
+Deterministic rule screen of 313 sampled candidates (seed 20261009, judge `heuristic-part-B`): 292 unflagged, 21 flagged to needs_review. Counts only; no source text.
 
-| record_kind | sampled | supported | flagged | defect_rate |
+| record_kind | sampled | unflagged | flagged | flag_rate |
 | --- | ---: | ---: | ---: | ---: |
-| ride | 200 | 192 | 8 | 4% |
-| walk | 60 | 59 | 1 | 1.7% |
-| fare | 87 | 58 | 29 | 33.3% |
-| hours | 60 | 49 | 11 | 18.3% |
-| service_status | 8 | 8 | 0 | 0% |
+| ride | 200 | 200 | 0 | 0% |
+| walk | 60 | 60 | 0 | 0% |
+| fare | 29 | 8 | 21 | 72.4% |
+| hours | 24 | 24 | 0 | 0% |
+| service_status | 0 | 0 | 0 | 0% |
 
 Flagged by reason_code:
 
 | reason_code | count |
 | --- | ---: |
-| fare_unscoped | 11 |
-| fare_approximate_as_exact | 4 |
-| fare_open_range_as_exact | 4 |
-| fare_cross_comment_scope_unclear | 3 |
-| fare_hedged | 3 |
-| question_premise_as_hours_fact | 3 |
-| fare_conditional_compressed | 2 |
-| question_premise_unconfirmed | 2 |
-| alight_inferred | 1 |
-| alight_not_stated | 1 |
-| board_place_not_a_place | 1 |
-| direction_text_mismatch | 1 |
-| fare_discount_scope_lost | 1 |
-| fare_is_route_total | 1 |
-| hours_ambiguous_clock_resolved | 1 |
-| hours_guess_hardened | 1 |
-| hours_hearsay_in_question | 1 |
-| hours_hedged_mode_mismatch | 1 |
-| hours_linked_to_wrong_ride | 1 |
-| hours_scope_upstream_terminal | 1 |
-| hours_text_adds_unsourced_detail | 1 |
-| hours_two_values_in_days_text | 1 |
-| incomplete_connection | 1 |
-| ride_fields_from_question_only | 1 |
-| walk_text_adds_unsourced_duration | 1 |
+| fare_unscoped | 21 |
 
-Effective review-state totals after overrides: second_passed 17418, needs_review 2290, rejected 1.
+Effective review-state totals after overrides: second_passed 5562, needs_review 151.
 
-- This pass only quarantines: it never set accepted or rejected, so the designated human reviewer still owns every queued item.
-- The deterministic part-A pass held up well for ride and walk records but was systematically weak on fare and hours value semantics, where almost all defects concentrate.
-- The dominant failure modes are open-ended or approximate amounts recorded as exact, fares carrying no ride scope, and clock values hardened out of hedged or asker-supplied statements.
+Part-A review-state totals (before overrides): second_passed 5583, needs_review 130.
+
+Part-A queue (before overrides): 85 posts / 130 items. The part-A counts above remain separate from the effective queue artifacts.
+
+Effective human review queue: 106 posts / 151 items (70 posts with route-critical items), including 21 override items. Rebuilt data/raw/t12/review-queue.{jsonl,md} includes all effective items and their override reason codes.
+
+Queued overrides by reason_code:
+
+| reason_code | items |
+| --- | ---: |
+| fare_unscoped | 21 |
+
+- Part B is a deterministic heuristic rule screen, not an independent source-reading audit.
+- Unflagged means no rule fired; the source was not judged supported. Flag rates measure rule hits, not source-confirmed defect rates or value-semantics conclusions.
+- Rules can miss defects; every override remains quarantined for the designated human reviewer. This pass never sets accepted or rejected.

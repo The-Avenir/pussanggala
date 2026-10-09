@@ -1,0 +1,252 @@
+[
+  {
+    "ambiguity_id": 1,
+    "alias_norm": "ayala",
+    "place_id": "pl_ayala-center-d46d28"
+  },
+  {
+    "ambiguity_id": 2,
+    "alias_norm": "ayala",
+    "place_id": "pl_mrt3-ayala-404889"
+  },
+  {
+    "ambiguity_id": 3,
+    "alias_norm": "ayala",
+    "place_id": "pl_one-ayala-c9df31"
+  },
+  {
+    "ambiguity_id": 4,
+    "alias_norm": "ayala station",
+    "place_id": "pl_mrt3-ayala-404889"
+  },
+  {
+    "ambiguity_id": 5,
+    "alias_norm": "ayala station",
+    "place_id": "pl_one-ayala-c9df31"
+  },
+  {
+    "ambiguity_id": 6,
+    "alias_norm": "buendia",
+    "place_id": "pl_buendia-avenue-f7e6a8"
+  },
+  {
+    "ambiguity_id": 7,
+    "alias_norm": "buendia",
+    "place_id": "pl_lrt1-gil-puyat-34b3b2"
+  },
+  {
+    "ambiguity_id": 8,
+    "alias_norm": "buendia",
+    "place_id": "pl_mrt3-buendia-be6647"
+  },
+  {
+    "ambiguity_id": 9,
+    "alias_norm": "buendia station",
+    "place_id": "pl_lrt1-gil-puyat-34b3b2"
+  },
+  {
+    "ambiguity_id": 10,
+    "alias_norm": "buendia station",
+    "place_id": "pl_mrt3-buendia-be6647"
+  },
+  {
+    "ambiguity_id": 11,
+    "alias_norm": "cubao",
+    "place_id": "pl_araneta-city-cubao-432026"
+  },
+  {
+    "ambiguity_id": 12,
+    "alias_norm": "cubao",
+    "place_id": "pl_lrt2-araneta-cubao-8ac903"
+  },
+  {
+    "ambiguity_id": 13,
+    "alias_norm": "cubao",
+    "place_id": "pl_mrt3-araneta-cubao-0c4bc2"
+  },
+  {
+    "ambiguity_id": 14,
+    "alias_norm": "cubao station",
+    "place_id": "pl_lrt2-araneta-cubao-8ac903"
+  },
+  {
+    "ambiguity_id": 15,
+    "alias_norm": "cubao station",
+    "place_id": "pl_mrt3-araneta-cubao-0c4bc2"
+  },
+  {
+    "ambiguity_id": 16,
+    "alias_norm": "edsa station",
+    "place_id": "pl_edsa-corridor-83965b"
+  },
+  {
+    "ambiguity_id": 17,
+    "alias_norm": "edsa station",
+    "place_id": "pl_lrt1-edsa-8894e2"
+  },
+  {
+    "ambiguity_id": 18,
+    "alias_norm": "edsa taft",
+    "place_id": "pl_lrt1-edsa-8894e2"
+  },
+  {
+    "ambiguity_id": 19,
+    "alias_norm": "edsa taft",
+    "place_id": "pl_mrt3-taft-avenue-818567"
+  },
+  {
+    "ambiguity_id": 20,
+    "alias_norm": "edsa taft station",
+    "place_id": "pl_lrt1-edsa-8894e2"
+  },
+  {
+    "ambiguity_id": 21,
+    "alias_norm": "edsa taft station",
+    "place_id": "pl_mrt3-taft-avenue-818567"
+  },
+  {
+    "ambiguity_id": 22,
+    "alias_norm": "katipunan",
+    "place_id": "pl_katipunan-avenue-9b2129"
+  },
+  {
+    "ambiguity_id": 23,
+    "alias_norm": "katipunan",
+    "place_id": "pl_lrt2-katipunan-5634a2"
+  },
+  {
+    "ambiguity_id": 24,
+    "alias_norm": "lrt edsa taft",
+    "place_id": "pl_lrt1-edsa-8894e2"
+  },
+  {
+    "ambiguity_id": 25,
+    "alias_norm": "lrt edsa taft",
+    "place_id": "pl_mrt3-taft-avenue-818567"
+  },
+  {
+    "ambiguity_id": 26,
+    "alias_norm": "lrt mrt edsa taft",
+    "place_id": "pl_lrt1-edsa-8894e2"
+  },
+  {
+    "ambiguity_id": 27,
+    "alias_norm": "lrt mrt edsa taft",
+    "place_id": "pl_mrt3-taft-avenue-818567"
+  },
+  {
+    "ambiguity_id": 28,
+    "alias_norm": "mrt edsa",
+    "place_id": "pl_lrt1-edsa-8894e2"
+  },
+  {
+    "ambiguity_id": 29,
+    "alias_norm": "mrt edsa",
+    "place_id": "pl_mrt3-taft-avenue-818567"
+  },
+  {
+    "ambiguity_id": 30,
+    "alias_norm": "mrt edsa taft",
+    "place_id": "pl_lrt1-edsa-8894e2"
+  },
+  {
+    "ambiguity_id": 31,
+    "alias_norm": "mrt edsa taft",
+    "place_id": "pl_mrt3-taft-avenue-818567"
+  },
+  {
+    "ambiguity_id": 32,
+    "alias_norm": "ortigas",
+    "place_id": "pl_mrt3-ortigas-3f274b"
+  },
+  {
+    "ambiguity_id": 33,
+    "alias_norm": "ortigas",
+    "place_id": "pl_ortigas-center-6371a3"
+  },
+  {
+    "ambiguity_id": 34,
+    "alias_norm": "ortigas station",
+    "place_id": "pl_mrt3-ortigas-3f274b"
+  },
+  {
+    "ambiguity_id": 35,
+    "alias_norm": "ortigas station",
+    "place_id": "pl_ortigas-center-6371a3"
+  },
+  {
+    "ambiguity_id": 36,
+    "alias_norm": "santolan",
+    "place_id": "pl_lrt2-santolan-faada1"
+  },
+  {
+    "ambiguity_id": 37,
+    "alias_norm": "santolan",
+    "place_id": "pl_mrt3-santolan-annapolis-dd8212"
+  },
+  {
+    "ambiguity_id": 38,
+    "alias_norm": "santolan station",
+    "place_id": "pl_lrt2-santolan-faada1"
+  },
+  {
+    "ambiguity_id": 39,
+    "alias_norm": "santolan station",
+    "place_id": "pl_mrt3-santolan-annapolis-dd8212"
+  },
+  {
+    "ambiguity_id": 40,
+    "alias_norm": "shaw",
+    "place_id": "pl_edsa-crossing-bd45b7"
+  },
+  {
+    "ambiguity_id": 41,
+    "alias_norm": "shaw",
+    "place_id": "pl_mrt3-shaw-6856fd"
+  },
+  {
+    "ambiguity_id": 42,
+    "alias_norm": "shaw",
+    "place_id": "pl_shaw-boulevard-ffd89a"
+  },
+  {
+    "ambiguity_id": 43,
+    "alias_norm": "taft",
+    "place_id": "pl_mrt3-taft-avenue-818567"
+  },
+  {
+    "ambiguity_id": 44,
+    "alias_norm": "taft",
+    "place_id": "pl_taft-avenue-manila-8f3b38"
+  },
+  {
+    "ambiguity_id": 45,
+    "alias_norm": "taft avenue",
+    "place_id": "pl_mrt3-taft-avenue-818567"
+  },
+  {
+    "ambiguity_id": 46,
+    "alias_norm": "taft avenue",
+    "place_id": "pl_taft-avenue-manila-8f3b38"
+  },
+  {
+    "ambiguity_id": 47,
+    "alias_norm": "taft avenue station",
+    "place_id": "pl_mrt3-taft-avenue-818567"
+  },
+  {
+    "ambiguity_id": 48,
+    "alias_norm": "taft avenue station",
+    "place_id": "pl_taft-avenue-manila-8f3b38"
+  },
+  {
+    "ambiguity_id": 49,
+    "alias_norm": "taft station",
+    "place_id": "pl_mrt3-taft-avenue-818567"
+  },
+  {
+    "ambiguity_id": 50,
+    "alias_norm": "taft station",
+    "place_id": "pl_taft-avenue-manila-8f3b38"
+  }
+]
