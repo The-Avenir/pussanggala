@@ -16,64 +16,29 @@ export function EndpointFields({ origin, destination, onEdit, onSwap }: {
     <IconButton name="swap" label="Swap starting point and destination" onPress={onSwap}/>
   </View>;
 }
-export function PlanScreen({ origin, destination, landmarksOpen, onLandmarksOpen, onEdit, onSwap, onFind, onExample, onResources, onLocation, onIntro, onSuggestion }: {
+// Manual place selection (F1 fallback), pushed from the Ask empty state.
+export function PlanScreen({ origin, destination, onEdit, onSwap, onFind, onExample, onResources, onLocation }: {
   origin: string; destination: string; onEdit: (slot: 'origin' | 'destination') => void; onSwap: () => void;
-  landmarksOpen: boolean; onLandmarksOpen: (open: boolean) => void;
-  onFind: () => void; onExample: () => void; onResources: () => void; onLocation: () => void; onIntro: () => void;
-  onSuggestion: (query: string) => void;
+  onFind: () => void; onExample: () => void; onResources: () => void; onLocation: () => void;
 }): React.JSX.Element {
   return <View style={ui.screen}>
-    <View style={styles.greeting}><View style={styles.greetingText}><Text style={[type.caption, styles.eyebrow]}>YOUR NCR COMMUTE COMPANION</Text>
-      <Text accessibilityRole="header" accessibilityLabel="Where to go?" style={type.display}>Where to go?</Text>
-      <Text style={type.secondary}>Tell Gaile where you’re headed.</Text></View><Gaile pose="map" height={164}/></View>
-    <View style={styles.intro}><View style={styles.avatar}><Gaile pose="idle" height={46}/></View>
-      <View style={ui.flex}><Text style={type.heading}>Hi, I’m Gaile!</Text>
-        <Text style={type.secondary}>Ask about a commute in Taglish or English.</Text></View></View>
-    <Pressable accessibilityRole="button" accessibilityLabel="Enter landmarks" accessibilityState={{ expanded: landmarksOpen }} aria-expanded={landmarksOpen}
-      onPress={() => onLandmarksOpen(!landmarksOpen)} style={({ pressed }) => [styles.disclosure, pressed && ui.pressed]}>
-      <View style={ui.flex}><Text style={type.label}>Enter landmarks</Text>
-        <Text style={type.caption}>{landmarksOpen ? 'Type your starting point and destination' : 'Prefer to plan with From and To?'}</Text></View>
-      <Text style={styles.disclosureIcon}>{landmarksOpen ? '−' : '+'}</Text>
-    </Pressable>
-    {landmarksOpen ? <View style={styles.landmarks}>
-      <EndpointFields origin={origin} destination={destination} onEdit={onEdit} onSwap={onSwap}/>
-      <Button label="Find routes" icon="arrow" onPress={onFind}/>
-      <Button label="Use my location" icon="location" variant="text" onPress={onLocation}/>
-    </View> : null}
-    <View style={styles.suggestions}>
-      <Text style={[type.caption, styles.eyebrow]}>ASK A QUICK QUESTION</Text>
-      <View style={styles.suggestionRow}>
-        <Pressable accessibilityRole="button" accessibilityLabel="Paano pumunta sa One Ayala?" onPress={() => onSuggestion('Paano pumunta sa One Ayala?')}
-          style={({ pressed }) => [styles.suggestion, pressed && ui.pressed]}>
-          <Text style={[type.secondary, styles.suggestionText]}>Paano pumunta sa One Ayala?</Text>
-        </Pressable>
-        <Pressable accessibilityRole="button" accessibilityLabel="Saan ako bababa?" onPress={() => onSuggestion('Saan ako bababa?')}
-          style={({ pressed }) => [styles.suggestion, pressed && ui.pressed]}>
-          <Text style={[type.secondary, styles.suggestionText]}>Saan ako bababa?</Text>
-        </Pressable>
-      </View>
-    </View>
+    <View style={styles.greeting}><View style={styles.greetingText}><Text style={[type.caption, styles.eyebrow]}>MANUAL ENTRY</Text>
+      <Text accessibilityRole="header" style={type.title}>Plan with landmarks</Text>
+      <Text style={type.secondary}>Pick a supported starting landmark and destination inside Metro Manila.</Text></View>
+      <Gaile pose="map" height={110}/></View>
+    <EndpointFields origin={origin} destination={destination} onEdit={onEdit} onSwap={onSwap}/>
+    <Button label="Find routes" icon="arrow" onPress={onFind}/>
+    <Button label="Use my location" icon="location" variant="text" onPress={onLocation}/>
     <Section title="QUICK LINKS"><ListRow title="Try an example journey" detail="Monumento → One Ayala · design walkthrough" icon="bus" onPress={onExample}/>
-      <ListRow title="Offline resources" detail="See what’s available on this phone" icon="map" onPress={onResources}/>
-      <ListRow title="How Pusang Gala works" icon="info" onPress={onIntro}/></Section>
+      <ListRow title="Offline resources" detail="See what’s available on this phone" icon="map" onPress={onResources}/></Section>
+    <Text style={type.caption}>The route pack isn’t installed in this preview, so manual entry keeps your input without guessing a place.</Text>
   </View>;
 }
 const styles = StyleSheet.create({
-  greeting: { marginHorizontal: -20, marginTop: -24, paddingHorizontal: 20, paddingVertical: 20, minHeight: 220, backgroundColor: palette.gold,
+  greeting: { marginHorizontal: -20, marginTop: -24, paddingHorizontal: 20, paddingVertical: 16, backgroundColor: palette.gold,
     borderBottomWidth: 7, borderBottomColor: palette.orange, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 4 },
   greetingText: { flex: 1, minWidth: 175, gap: 8 },
   eyebrow: { color: palette.ink, fontWeight: '700', letterSpacing: 1.2 },
-  intro: { minHeight: 84, flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: palette.goldSoft, padding: 14, borderRadius: 20 },
-  avatar: { width: 54, height: 54, alignItems: 'center', justifyContent: 'center', overflow: 'hidden', borderRadius: 27, backgroundColor: palette.paper },
-  disclosure: { minHeight: 64, paddingHorizontal: 16, paddingVertical: 10, borderWidth: 1, borderColor: palette.line, borderRadius: 16,
-    backgroundColor: palette.paper, flexDirection: 'row', alignItems: 'center', gap: 12 },
-  disclosureIcon: { color: palette.accent, fontSize: 28, lineHeight: 32, paddingHorizontal: 5 },
-  landmarks: { gap: 12, padding: 14, backgroundColor: palette.background, borderRadius: 18 },
-  suggestions: { gap: 8 },
-  suggestionRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  suggestion: { maxWidth: '100%', minHeight: 44, paddingHorizontal: 14, paddingVertical: 9, justifyContent: 'center', borderRadius: 16,
-    backgroundColor: palette.background, borderWidth: 1, borderColor: palette.line },
-  suggestionText: { color: palette.ink },
   endpoints: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: palette.line, borderRadius: 16, backgroundColor: palette.paper, paddingHorizontal: 14 },
   endpoint: { minHeight: 72, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', gap: 14 },
   endpointRule: { borderBottomWidth: 1, borderBottomColor: palette.line },
