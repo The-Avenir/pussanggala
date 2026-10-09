@@ -12,3 +12,5 @@ export * from "./contracts/explanation";
 export * from "./contracts/api";
 export * from "./route/graph";
 export * from "./route/search";
+export * from "./route/rank";
+export * from "./route/route";
