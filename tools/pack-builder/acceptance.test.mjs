@@ -62,6 +62,24 @@ test("built SQLite fixture loads through the actual core loader and excludes qua
   assert.equal(accept(packPath).ok, true);
 });
 
+test("checked-out seed builds, accepts and loads with its actual raw snapshot", () => {
+  const root = new URL("../../", import.meta.url);
+  const raw = new URL("howtogetthereph_dataset/ncr_routes.json", root);
+  const result = make({
+    tables: readEligibleDir(fileURLToPath(new URL("data/seed/eligible/", root))),
+    dispositions: fileURLToPath(new URL("data/seed/dispositions.json", root)),
+    run: fileURLToPath(new URL("data/seed/run.json", root)),
+    rawDatasetPath: raw,
+  });
+  const read = readPack(result.packPath);
+  const loaded = loadPack(toRawPackTables(read.tables, read.manifests[0]));
+  assert.equal(loaded.ok, true, JSON.stringify(loaded.error));
+  const acceptance = accept(result.packPath, raw);
+  assert.equal(acceptance.ok, true, JSON.stringify(acceptance.checks.filter((c) => !c.ok)));
+  const graph = getGraph(loaded.value);
+  assert.equal([...graph.outByStop.values()].flat().filter((e) => e.kind === "leg").length, result.report.eligibility.leg.ready);
+});
+
 for (const [label, mutate, expected] of [
   ["top-level schema", (c) => c.schema_version = 2, "companion_metadata_mismatch"],
   ["top-level created date", (c) => c.created_at = "2020-01-01", "companion_metadata_mismatch"],
@@ -78,6 +96,8 @@ for (const [label, mutate, expected] of [
   ["asset bytes", (c) => c.assets[0].bytes += 1, "companion_asset_mismatch"],
   ["asset path", (c) => c.assets[0].path = "../pack.sqlite", "companion_asset_mismatch"],
   ["missing assets", (c) => c.assets = [], "companion_asset_mismatch"],
+  ["unsupported top-level text", (c) => c.raw_text = "Unreviewed synthetic text", "companion_invalid"],
+  ["unsupported asset text", (c) => c.assets[0].raw_text = "Unreviewed synthetic text", "companion_asset_mismatch"],
 ]) test(`acceptance rejects companion disagreement: ${label}`, () => {
   const { packPath, companion } = make();
   mutate(companion);
@@ -120,6 +140,7 @@ for (const [label, mutate, expected, sql] of [
   ["missing snapshot hash", (t, r) => r.snapshot_sha256 = null, "snapshot_mismatch", "UPDATE record_source SET snapshot_sha256 = NULL WHERE source_id = 'src_fx001'"],
   ["comment bounds", (t, r) => r.comment_index = 999, "source_locator_invalid", "UPDATE record_source SET comment_index = 999 WHERE source_id = 'src_fx001'"],
   ["missing post", (t) => t.source.find((s) => s.source_id === "src_fx001").post_id = "absent", "source_locator_invalid", "UPDATE source SET post_id = 'absent' WHERE source_id = 'src_fx001'"],
+  ["permalink", (t) => t.source.find((s) => s.source_id === "src_fx001").url = "https://www.reddit.com/r/test/comments/fx001/forged/", "source_locator_invalid", "UPDATE source SET url = 'https://www.reddit.com/r/test/comments/fx001/forged/' WHERE source_id = 'src_fx001'"],
 ]) test(`builder and acceptance reject forged ${label}`, () => {
   const tables = structuredClone(base);
   mutate(tables, tables.record_source.find((r) => r.source_id === "src_fx001"));
@@ -139,6 +160,18 @@ test("source dates are checked against cited sources after build", () => {
   const { packPath } = make();
   tamper(packPath, "UPDATE pack_manifest SET source_date_min = '2000-01-01'");
   assert.ok(codes(accept(packPath)).includes("manifest_dates_mismatch"));
+});
+
+test("acceptance rejects unscanned extra SQLite tables and columns even with an updated checksum", () => {
+  for (const [sql, expected] of [
+    ["CREATE TABLE raw_dump (body TEXT); INSERT INTO raw_dump VALUES ('u/synthetic_author')", "schema_tables_invalid"],
+    ["CREATE TABLE sqliteXraw (body TEXT); INSERT INTO sqliteXraw VALUES ('u/synthetic_author')", "schema_tables_invalid"],
+    ["ALTER TABLE note ADD COLUMN raw_text TEXT; UPDATE note SET raw_text = 'u/synthetic_author'", "schema_columns_invalid"],
+  ]) {
+    const { packPath } = make();
+    tamper(packPath, sql);
+    assert.ok(codes(accept(packPath)).includes(expected));
+  }
 });
 
 test("privacy scan covers geometry properties, license, locator text and pack manifest", () => {
@@ -174,6 +207,37 @@ test("bare source author identities are rejected without rejecting unrelated sub
   }
   tables.note[0].body = "A synthetic_authority location";
   assert.deepEqual(leakScan(tables, path), []);
+});
+
+test("JSON unicode escapes cannot hide source copies or usernames in geometry", () => {
+  const tables = structuredClone(base);
+  const gram = loadSourceNgrams(rawPath).values().next().value;
+  const escaped = (value) => [...value].map((c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, "0")}`).join("");
+  for (const [value, expected] of [[gram, "leak_ngram"], ["u/synthetic_author", "leak_handle"]]) {
+    tables.shape[0].geojson = `{"properties":{"note":"${escaped(value)}"}}`;
+    assert.ok(leakScan(tables, rawPath).some((i) => i.code === expected));
+    failsBuild({ tables }, expected);
+  }
+});
+
+test("sparse facts and entirely excluded edges can pass acceptance without manufactured coverage", () => {
+  const tables = Object.fromEntries(Object.keys(base).map((name) => [name, []]));
+  tables.region = structuredClone(base.region);
+  tables.record_source = structuredClone(base.record_source.filter((r) => r.record_kind === "region"));
+  tables.source = structuredClone(base.source.filter((s) => tables.record_source.some((r) => r.source_id === s.source_id)));
+  const { packPath } = make({ tables, dispositions: { fx001: "filtered", fx002: "filtered", fx003: "filtered" } });
+  const before = readPack(packPath);
+  assert.equal(accept(packPath).ok, true);
+  assert.deepEqual(readPack(packPath), before, "fixtures must never change the pack");
+  const excluded = structuredClone(base);
+  for (const table of ["leg", "walk_link", "place_stop"]) for (const r of excluded[table]) r.eligibility = "excluded";
+  for (const r of excluded.route) r.service_status = "retired";
+  const other = make({ tables: excluded });
+  assert.equal(accept(other.packPath).ok, true);
+  const raw = readPack(other.packPath);
+  const loaded = loadPack(toRawPackTables(raw.tables, raw.manifests[0]));
+  assert.equal(loaded.ok, true);
+  assert.equal(getGraph(loaded.value).outByStop.size, 0);
 });
 
 test("unsafe integer rows rejected by core are rejected by builder before SQLite", () => {

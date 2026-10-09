@@ -168,5 +168,10 @@ Privacy scanning covers all string columns, JSON geometry properties and the
 SQLite manifest, including source license and locator fields. Source author,
 username and user fields supply bare-name matches when the raw input contains
 them. Reddit thread permalink slugs are exempt from copied-word matching;
-username/profile patterns are still checked there. This deterministic scan is a
+username/profile patterns are still checked there, and cited Reddit URLs must
+match the raw post's permalink (or remain null). Extra companion fields or pack
+tables/columns fail acceptance so they cannot carry unscanned text. JSON escape
+sequences are decoded when checking geometry properties. Negative fixtures add
+missing prerequisites only to an in-memory copy; sparse coverage stays sparse in
+the real pack. This deterministic scan is a
 guardrail, not human paraphrase approval or a physical-verification claim.

@@ -23,6 +23,8 @@ export function checkCompanion(companion, manifest, packPath) {
   if (!companion || typeof companion !== "object" || Array.isArray(companion)) {
     return [{ code: "companion_invalid", table: null, id: null, detail: "companion must be an object" }];
   }
+  const columns = ["pack_id", "schema_version", "created_at", "input_sha256", "pack_file", "pack_sha256", "pack_bytes", "assets", "manifest"];
+  if (Object.keys(companion).some((key) => !columns.includes(key))) add("companion_invalid", "companion has unsupported fields");
   const sha = sha256File(packPath);
   const bytes = statSync(packPath).size;
   if (companion.pack_sha256 !== sha) add("pack_sha256_mismatch", "companion pack_sha256 does not match pack file");
@@ -38,6 +40,7 @@ export function checkCompanion(companion, manifest, packPath) {
   if (companion.pack_bytes !== bytes) add("companion_bytes_mismatch", "pack_bytes differs from the actual file size");
   const assets = companion.assets;
   if (!Array.isArray(assets) || assets.length !== 1 || !assets[0]
+    || Object.keys(assets[0]).some((key) => !["path", "kind", "sha256", "bytes"].includes(key))
     || assets[0].kind !== "pack" || assets[0].path !== basename(packPath)
     || assets[0].sha256 !== sha || assets[0].bytes !== bytes) {
     add("companion_asset_mismatch", "assets must describe the built pack with its actual path, checksum and bytes");
@@ -58,6 +61,14 @@ export function readPack(packPath) {
     const manifests = db.prepare(`SELECT ${MANIFEST_COLS.join(", ")} FROM pack_manifest`).all()
       .map((r) => Object.fromEntries(MANIFEST_COLS.map((c) => [c, r[c]])));
     const integrity = sqliteChecks(db);
+    const names = [...TABLES.map((t) => t.name), "pack_manifest"];
+    const actual = db.prepare("SELECT name FROM sqlite_master WHERE type IN ('table', 'view') AND name NOT GLOB 'sqlite_*'").all();
+    if (actual.length !== names.length || actual.some((r) => !names.includes(r.name))) integrity.push({ code: "schema_tables_invalid", table: null, id: null, detail: "pack contains unsupported tables/views" });
+    for (const name of names) {
+      const expected = name === "pack_manifest" ? MANIFEST_COLS : Object.keys(TABLES.find((t) => t.name === name).cols);
+      const columns = db.prepare(`PRAGMA table_info(${name})`).all().map((r) => r.name);
+      if (columns.length !== expected.length || columns.some((c) => !expected.includes(c))) integrity.push({ code: "schema_columns_invalid", table: name, id: null, detail: "table contains unsupported columns" });
+    }
     return { tables, manifests, integrity };
   } finally {
     db.close();

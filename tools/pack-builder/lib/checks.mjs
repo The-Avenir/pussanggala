@@ -299,6 +299,7 @@ export function checkSourceSnapshot(tables, manifest, rawDatasetPath) {
     const post = postById.get(s.post_id);
     if (rs.snapshot_sha256 !== sha) issues.push(issue("snapshot_mismatch", "record_source", rs.link_id, "snapshot_sha256 differs from the raw snapshot"));
     if (!post || !Array.isArray(post.answers) || post.answers.length === 0
+      || (s.url !== null && s.url !== post.permalink)
       || (rs.comment_index !== null && (!Number.isSafeInteger(rs.comment_index) || rs.comment_index < 0 || rs.comment_index >= post.answers.length))) {
       issues.push(issue("source_locator_invalid", "record_source", rs.link_id, "post/comment locator is not in an answered raw post"));
     }
@@ -422,6 +423,15 @@ export function leakScan(tables, rawDatasetPathOrGrams, manifest) {
         if (!["text", "id"].includes(spec.t) || typeof v !== "string") continue;
         const rid = row[t.pk];
         scan(t.name, rid, col, v, t.name === "source" && col === "url" && row.kind === "reddit_thread" && /^https?:\/\/(?:www\.)?reddit\.com\/r\/[^/]+\/comments\/[^/]+(?:\/|$)/i.test(v));
+        if (col === "geojson" || col === "boundary_geojson") {
+          // JSON escapes must not hide copied words or handles in feature properties.
+          const scanJson = (value) => {
+            if (typeof value === "string") scan(t.name, rid, col, value);
+            else if (Array.isArray(value)) value.forEach(scanJson);
+            else if (value && typeof value === "object") for (const [key, item] of Object.entries(value)) { scanJson(key); scanJson(item); }
+          };
+          try { scanJson(JSON.parse(v)); } catch { /* Raw string was scanned above. */ }
+        }
       }
     }
   }
