@@ -19,7 +19,7 @@ reconciled: 2026-10-09
 
 **Implementation:** Core implementation and mobile UI harness in progress; no device/release gate claimed passed
 
-UI work: [travel utility redesign, audit and validation](ux-redesign.md), [visual review](ux-review.html) and [low-fidelity wireframes](ux-wireframes.html). The [original nine-screen implementation](ui-figma-implementation.md) is retained as the comparison baseline. The app uses explicitly labelled examples until T45 connects native/data adapters; no device/release gate is claimed passed.
+UI work: [travel utility redesign, audit and validation](ux-redesign.md), [visual review](ux-review.html) and [low-fidelity wireframes](ux-wireframes.html). The current revision restores Gaile-led onboarding and the warm Sunset Playful identity across the clearer journey structure. The [original nine-screen implementation](ui-figma-implementation.md) is retained as the comparison baseline. The app uses explicitly labelled examples until T45 connects native/data adapters; no device/release gate is claimed passed.
 
 ## 1. Current document suite
 

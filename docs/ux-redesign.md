@@ -6,7 +6,7 @@ Design review, 10 October 2026. Based on `Reference.png`, the nine screenshots i
 
 | Experience | Visual issue | Usability / architecture issue | Preserve | Change |
 |---|---|---|---|---|
-| Welcome / home | Large mascot and feature tiles displace the task | Returning commuters must pass marketing content to plan; account language introduces an irrelevant choice | Cat identity, friendly Taglish | Small mascot in optional introduction; planning is the default entry |
+| Welcome / home | Feature tiles compete with the introduction and planning | Account language introduces an irrelevant choice; first-time and returning users need different entry points | Gaile, sunset colors, friendly Taglish, onboarding | Restore mascot-led first-run onboarding; then a compact Gaile greeting above planning |
 | Ask | Multiple pastel accents, repeated headings and outlined containers compete | One question and one answer replace conversation; no usable endpoint editing; advice and route facts share a surface | Cards before explanation; Taglish input | Dedicated conversation with editable journey context; route facts separated from assistant prose |
 | Options | Large fare on every card; repeated badges and full-width controls | Differences are hard to compare; “fastest” overstates overlapping reported time ranges | Fare / time / transfer comparisons | Compact selectable rows; one selected-route action; qualified sort labels |
 | Directions | Bus illustration repeats without helping boarding | A step picker hides the rest of the journey; planning and physical progress are confused | Signboard, boarding / alighting cues | Continuous numbered timeline; expand details in place; one Start action |
@@ -34,6 +34,8 @@ Primary journeys:
 4. Trips → Saved / History → revalidated route → directions; manage a name or delete with confirmation.
 5. Settings → Offline resources → see which capabilities are unavailable → recheck local files. No in-app download exists in the approved release.
 
+First-time users begin with Gaile's welcome, a concise explanation of routes, conversation and manual steps, and one “Plan a journey” action. Returning users should open Plan; “How Pusang Gala works” replays the introduction. The current preview shows onboarding once per fresh app session because native settings persistence is not connected. The release integration must persist only an onboarding-completed flag and skip the introduction on later launches.
+
 The initial prototype uses an explicit Example mode. Leaving example mode clears its selected planning route. Synthetic routes are never returned as real search results. Native AI is never simulated with timed typing dots.
 
 ## 3. Low-fidelity validation
@@ -50,12 +52,15 @@ The current implementation keeps NCR-only, bundled assets, source-reported value
 
 ## 5. Visual system, interaction states and validation
 
-The [visual review](ux-review.html) shows the high-fidelity screens, the shared visual system, and error/recovery references. The [eight-screen overview](ux-overview.png) is a shareable image. These are actual captures of the redesigned React Native preview, rather than independent pictures with inconsistent components. Source: `apps/mobile/src/ui/travel.tsx`.
+The [visual review](ux-review.html) shows the high-fidelity screens, the shared visual system, and error/recovery references. The [screen overview](ux-overview.png) is a shareable image. These are actual captures of the redesigned React Native preview, rather than independent pictures with inconsistent components. Source: `apps/mobile/src/ui/travel.tsx`.
+
+Brand correction: the initial utility redesign muted the supplied Sunset Playful palette, reduced Gaile to a small mark and moved onboarding behind a link. That weakened recognition. The revised system restores warm cream, golden yellow, orange and brown, with the existing mascot artwork at useful moments. Clear hierarchy and accessibility do not require a neutral brand. Directions retain their focused instruction hierarchy while onboarding, home, conversation, empty trips and completion carry the personality.
 
 ### Screen hierarchy
 
 | Screen | Primary goal | Most important information | Primary action | Secondary disclosure |
 |---|---|---|---|---|
+| Onboarding | Understand the companion and begin | Gaile, supported NCR journeys, conversation and manual progression | Plan a journey | Replay later from Plan; no account choice |
 | Plan / home | Start a commute | Starting landmark and intended destination | Find routes | Location, conversation, resource status, optional introduction |
 | Conversation | Understand a journey and ask follow-ups | Journey context, deterministic route facts, then explanation | Send a question | Comparison, map, directions; new-conversation confirmation |
 | Route options | Choose a tradeoff | Time, fare, transfers in a consistent reading order | See directions for the selected route | Sort by reported fare/time/transfers; limitations below the list |
@@ -73,15 +78,15 @@ The [visual review](ux-review.html) shows the high-fidelity screens, the shared 
 |---|---|
 | Typography | Device system font: System on iOS, sans-serif on Android, system-ui on web; no font-loading launch gate |
 | Type hierarchy | 34/40 display, 28/34 title, 20/27 heading, 17/25 body, 16/23 action, 15/22 secondary, 13/19 caption |
-| Primary text | `#222B29` on white; measured contrast 14.53:1 |
-| Secondary text | `#5C6662` on white; 5.95:1; captions never contain the only boarding instruction |
-| Brand accent | `#AD3D22`; 6.06:1 with white text; selection, primary actions and discreet cat mark |
-| Surfaces | White content, `#F5F5F0` quiet utility surface, `#F8EAE3` selected example / active-trip strip |
+| Primary text | Warm brown `#2E1C14` on cream `#FFF9EF`; measured contrast 15.51:1 |
+| Secondary text | `#756052` on cream; 5.65:1; captions never contain the only boarding instruction |
+| Brand palette | Golden yellow `#FFB729` welcomes users; sunset orange `#F34B16` defines hero separators; deeper orange `#BA3B16` supports accessible text/actions |
+| Surfaces | Cream `#FFF9EF` content, peach `#FFF0DD` utility surface, pale gold `#FFF0C6` home greeting/chat bubble, `#FFE9D8` selected route / active-trip strip |
 | Meaningful color | `#345D73` transit links, neutral dashed walking links, `#80531D` warnings on `#FBF2DD`, `#A83229` destructive actions |
 | Spacing | 4-point base; 8/12/16/20/24/32; page margin 20; aligned text and control edges |
 | Shape | 8-point signboards, 10-point segmented controls, 12-point inputs/actions, 20-point sheet top corners; lists use separators, not repeated containers |
 | Touch targets | At least 44 × 44 logical units; common controls 48–50 high; numbered timeline glyphs belong to a much larger tappable row |
-| Brand | Small vector cat in the Plan toolbar; existing Gaile art only in optional introduction and completion; no generated decoration |
+| Mascot | Supplied Gaile wave on onboarding, map on home, think in conversation, binoculars in empty saved trips, cheer on completion; artwork remains clear of route instructions |
 
 Text remains scalable with React Native's default font scaling. No `numberOfLines` truncation or maximum scaling cap hides essential content. Row heights grow, metrics wrap, numbering grows with text, and sheets scroll when space is limited. The composer can shrink at narrow widths without sending its action offscreen. These are implementation provisions, not a claim that native Dynamic Type or TalkBack has been device-certified.
 
@@ -131,10 +136,10 @@ Test with first-time NCR commuters, including older readers and people using Tal
 ### Validation record
 
 - Mobile and root TypeScript checks passed; root core tests: 424 passed in 18 files.
-- Existing UI asset verification: 37 allowlisted files match hashes/dimensions. The redesigned bundle uses system text and only two existing mascot poses.
+- Existing UI asset verification: 37 allowlisted files match hashes/dimensions. The redesigned bundle uses system text and five existing mascot poses.
 - Source-content scan passed; 12 existing source-content regression tests passed.
 - Browser flows cover 320/390/430 px, keyboard sheets, independent tab stacks, real-query versus example separation, route comparison, continuous directions, saved/history management, manual progression, trip-context questions, completion and unavailable resources. Final measured results are in [validation.json](ux-screens/validation.json).
-- Contrast checks use actual token pairs; text enlargement stress checks cover Plan, conversation, directions, active trip and Settings at 200%. This is CSS text stress evidence, not a substitute for native Dynamic Type/TalkBack testing.
+- Contrast checks use actual token pairs; text enlargement stress checks cover onboarding, Plan, conversation, directions, active trip and Settings at 200%. Browser checks verify the first-session welcome, replay flow and home mascot. This is CSS text stress evidence, not a substitute for native Dynamic Type/TalkBack testing.
 - Android/iOS Hermes and web export compilation were checked. iOS export is a compatibility check, not a new release target. Actual Android APK / device / cold-offline acceptance remains pending.
 
 Reproduce: `npm run typecheck` and `npm test` at root; `npm run typecheck`, `npm run check:ui-assets` and `npm run test:ui` in `apps/mobile`. On this Windows host set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to the installed Edge executable. `UI_SCREENSHOTS` selects the capture destination. Run `npm run web` in `apps/mobile` for the live interactive preview.

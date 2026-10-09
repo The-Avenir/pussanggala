@@ -31,7 +31,8 @@ const normalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9 ]/g, 
 const exampleQuestion = 'Paano pumunta sa One Ayala galing Monumento?';
 
 export function MobileShell(): React.JSX.Element {
-  const [stacks, setStacks] = useState<Record<Tab, Screen[]>>({ plan: ['plan'], map: ['map'], trips: ['trips'] });
+  // Until native settings persistence is wired, onboarding appears once per app session.
+  const [stacks, setStacks] = useState<Record<Tab, Screen[]>>({ plan: ['welcome'], map: ['map'], trips: ['trips'] });
   const [tab, setTab] = useState<Tab>('plan');
   const [store] = useState(createTripStore);
   const [, refresh] = useState(0);
@@ -236,7 +237,10 @@ export function MobileShell(): React.JSX.Element {
 
   function content(): React.JSX.Element {
     switch (screen) {
-      case 'welcome': return <WelcomeScreen onContinue={back}/>;
+      case 'welcome': return <WelcomeScreen onContinue={() => {
+        if (stacks[tab].length > 1) back();
+        else setStacks(current => ({ ...current, plan: ['plan'] }));
+      }}/>;
       case 'plan': return <PlanScreen origin={origin} destination={destination} onEdit={editEndpoint}
         onSwap={() => { setOrigin(destination); setDestination(origin); setRoute(null); setExampleMode(false); }}
         onFind={findRoutes} onAsk={() => openAsk()} onExample={chooseExample} onResources={() => navigate('offline')} onLocation={location} onIntro={() => navigate('welcome')}/>;
@@ -296,9 +300,9 @@ export function MobileShell(): React.JSX.Element {
       accessibilityElementsHidden={modalOpen} importantForAccessibility={modalOpen ? 'no-hide-descendants' : 'auto'}
       {...(Platform.OS === 'web' ? { inert: modalOpen ? true : undefined } : {})}>
       <View style={styles.header} ref={returnFocus} tabIndex={-1}>
-        {isRoot ? screen === 'plan' ? <CatMark/> : <Icon name={tab === 'map' ? 'map' : 'trips'} color={palette.accent}/> : <IconButton name="back" label="Go back" onPress={back}/>}
-        <Text style={[type.label, ui.flex]}>{TITLES[screen]}</Text>
-        {screen === 'ask' ? <Button label="New" variant="text" onPress={newConversation}/> : <IconButton name="settings" label="Open settings" onPress={() => { if (screen !== 'settings') navigate('settings'); }}/>}
+        {isRoot ? screen === 'plan' || screen === 'welcome' ? <CatMark/> : <Icon name={tab === 'map' ? 'map' : 'trips'} color={palette.accent}/> : <IconButton name="back" label="Go back" onPress={back}/>}
+        <Text style={[type.label, ui.flex]}>{screen === 'welcome' ? 'Pusang Gala' : TITLES[screen]}</Text>
+        {screen === 'welcome' ? null : screen === 'ask' ? <Button label="New" variant="text" onPress={newConversation}/> : <IconButton name="settings" label="Open settings" onPress={() => { if (screen !== 'settings') navigate('settings'); }}/>}
       </View>
       {exampleMode || activeRoute ? <View style={styles.preview}><Text style={[type.caption, ui.flex]}>Example mode · not travel guidance</Text>
         <Pressable accessibilityRole="button" accessibilityLabel="Leave example mode" onPress={() => {
@@ -316,12 +320,12 @@ export function MobileShell(): React.JSX.Element {
         <Icon name="arrow" size={19} color={palette.accent}/><View style={ui.flex}><Text style={type.label}>Continue to One Ayala</Text>
           <Text style={type.caption}>{'Step ' + (activeStep + 1) + ' of ' + activeRoute.steps.length + ' · manual progress'}</Text></View>
       </Pressable> : null}
-      <View style={styles.tabs}>{TABS.map(item => <Pressable key={item.id} accessibilityRole="tab" accessibilityLabel={item.label}
+      {screen !== 'welcome' ? <View style={styles.tabs}>{TABS.map(item => <Pressable key={item.id} accessibilityRole="tab" accessibilityLabel={item.label}
         accessibilityState={{ selected: tab === item.id }} aria-selected={tab === item.id} onPress={() => openTab(item.id)} style={styles.tab}>
         <Icon name={item.icon} color={tab === item.id ? palette.accent : palette.secondary}/>
         <Text style={[type.caption, tab === item.id && styles.activeTab]}>{item.label}</Text>
         {tab === item.id ? <View style={styles.tabIndicator}/> : null}
-      </Pressable>)}</View>
+      </Pressable>)}</View> : null}
     </KeyboardAvoidingView>
     {modalOpen ? <Modal transparent visible animationType="none" onRequestClose={() => { setSheet(null); setEditing(null); }}>
       <KeyboardAvoidingView style={styles.scrim} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>

@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Button, Icon, IconButton, ListRow, Section, palette, type, ui } from '../ui/travel';
+import { Button, Gaile, Icon, IconButton, ListRow, Section, palette, type, ui } from '../ui/travel';
 
 export function EndpointFields({ origin, destination, onEdit, onSwap }: {
   origin: string; destination: string; onEdit: (slot: 'origin' | 'destination') => void; onSwap: () => void;
@@ -21,9 +21,9 @@ export function PlanScreen({ origin, destination, onEdit, onSwap, onFind, onAsk,
   onFind: () => void; onAsk: () => void; onExample: () => void; onResources: () => void; onLocation: () => void; onIntro: () => void;
 }): React.JSX.Element {
   return <View style={ui.screen}>
-    <View style={{ gap: 8 }}><Text style={[type.caption, styles.eyebrow]}>METRO MANILA</Text>
+    <View style={styles.greeting}><View style={styles.greetingText}><Text style={[type.caption, styles.eyebrow]}>METRO MANILA</Text>
       <Text accessibilityRole="header" style={type.display}>Saan tayo?</Text>
-      <Text style={type.secondary}>Plan your next NCR commute.</Text></View>
+      <Text style={type.secondary}>Let’s find your way,{ '\n' }one sakay at a time.</Text></View><Gaile pose="map" height={125}/></View>
     <View style={{ gap: 12 }}><EndpointFields origin={origin} destination={destination} onEdit={onEdit} onSwap={onSwap}/>
       <Button label="Find routes" icon="arrow" onPress={onFind}/>
       <Button label="Use my location" icon="location" variant="text" onPress={onLocation}/></View>
@@ -38,6 +38,9 @@ export function PlanScreen({ origin, destination, onEdit, onSwap, onFind, onAsk,
   </View>;
 }
 const styles = StyleSheet.create({
+  greeting: { marginHorizontal: -20, marginTop: -20, paddingHorizontal: 20, paddingVertical: 20, backgroundColor: palette.goldSoft,
+    borderBottomWidth: 3, borderBottomColor: palette.orange, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 },
+  greetingText: { flex: 1, minWidth: 150, gap: 8 },
   eyebrow: { color: palette.accent, fontWeight: '700', letterSpacing: 1.6 },
   endpoints: { flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: palette.line, borderRadius: 12, backgroundColor: palette.paper, paddingHorizontal: 14 },
   endpoint: { minHeight: 72, paddingVertical: 12, flexDirection: 'row', alignItems: 'center', gap: 14 },
@@ -45,5 +48,5 @@ const styles = StyleSheet.create({
   point: { width: 11, height: 11, borderRadius: 6, borderWidth: 2, borderColor: palette.secondary },
   destination: { backgroundColor: palette.accent, borderColor: palette.accent, borderRadius: 2 },
   placeholder: { color: palette.secondary },
-  ask: { flexDirection: 'row', alignItems: 'center', gap: 14, borderTopWidth: 1, borderBottomWidth: 1, borderColor: palette.line, paddingVertical: 22 },
+  ask: { flexDirection: 'row', alignItems: 'center', gap: 14, borderTopWidth: 1, borderBottomWidth: 1, borderColor: palette.gold, paddingVertical: 22 },
 });

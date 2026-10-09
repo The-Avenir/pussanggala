@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { Button, CatMark, Icon, ListRow, Notice, Section, palette, type, ui } from '../ui/travel';
+import { Button, CatMark, Gaile, Icon, ListRow, Notice, Section, palette, type, ui } from '../ui/travel';
 import { summarizeReadiness } from '../assets/readiness';
 import type { SavedRouteRow, TripHistoryRow } from '../store/tripStore';
 import { PreferenceChips } from './Preferences';
@@ -81,7 +81,7 @@ export function SavedScreen({ saved, history, segment, onSegment, onOpen, onOpen
       accessibilityLabel={value === 'saved' ? 'Saved routes' : 'Trip history'} accessibilityState={{ selected: segment === value }}
       onPress={() => onSegment(value)} style={[styles.segment, segment === value && styles.selected]}>
       <Text style={[type.label, segment === value && { color: palette.accent }]}>{value === 'saved' ? 'Saved' : 'History'}</Text></Pressable>)}</View>
-    {segment === 'saved' ? saved.length === 0 ? <View style={{ gap: 12, paddingVertical: 16 }}><Icon name="save" size={30} color={palette.secondary}/>
+    {segment === 'saved' ? saved.length === 0 ? <View style={{ gap: 12, paddingVertical: 16 }}><Gaile pose="binoculars" height={115}/>
       <Text style={type.heading}>A route worth keeping?</Text><Text style={type.body}>Save it from Directions. Your saved journeys will appear here.</Text>
       <Button variant="text" label="Plan a journey" icon="arrow" onPress={onPlan}/></View>
       : <View>{saved.map(row => <View key={row.saved_id} style={styles.savedRow}>

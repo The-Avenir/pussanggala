@@ -32,9 +32,9 @@ function luminance(hex) {
   return values[0] * 0.2126 + values[1] * 0.7152 + values[2] * 0.0722;
 }
 const contrast = [];
-for (const [foreground, background] of [['#222B29', '#FFFFFF'], ['#5C6662', '#FFFFFF'],
-  ['#AD3D22', '#FFFFFF'], ['#FFFFFF', '#AD3D22'], ['#80531D', '#FBF2DD'], ['#E3EDE6', '#253C36'],
-  ['#5C6662', '#F5F5F0'], ['#AD3D22', '#F8EAE3']]) {
+for (const [foreground, background] of [['#2E1C14', '#FFF9EF'], ['#756052', '#FFF9EF'],
+  ['#BA3B16', '#FFF9EF'], ['#FFFFFF', '#BA3B16'], ['#80531D', '#FBF2DD'], ['#E3EDE6', '#253C36'],
+  ['#756052', '#FFF0DD'], ['#BA3B16', '#FFE9D8'], ['#756052', '#FFF0C6'], ['#BA3B16', '#FFF0C6']]) {
   const a = luminance(foreground), b = luminance(background);
   const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
   assert.ok(ratio >= 4.5, foreground + ' on ' + background + ': ' + ratio);
@@ -91,17 +91,24 @@ try {
       });
     }
     await page.goto(base);
-    await button('Find routes').waitFor();
+    await button('Plan a journey').waitFor();
+    assert.ok(await page.getByTestId('gaile-wave').isVisible(), 'Gaile welcomes first-time users');
+    assert.equal(await page.getByRole('tab').count(), 0, 'Onboarding has one clear way into planning');
     // Warm browser assets before blocking networking. This is not native cold-start evidence.
     const assets = fs.readdirSync(path.join(dist, 'assets'), { recursive: true }).filter(file => file.endsWith('.png'));
     await page.evaluate(async urls => Promise.all(urls.map(url => new Promise(resolve => {
       const img = new Image(); img.onload = resolve; img.onerror = resolve; img.src = url;
     }))), assets.map(file => base + '/assets/' + file.replaceAll('\\', '/')));
     await context.setOffline(true);
+    await capture('welcome');
+    await largeText('welcome');
+    await button('Plan a journey').click();
+    assert.ok(await page.getByTestId('gaile-map').isVisible(), 'Gaile remains part of home');
     await capture('plan');
     await button('How Pusang Gala works').click();
-    await capture('welcome');
+    assert.ok(await page.getByTestId('gaile-wave').isVisible(), 'Onboarding can be revisited');
     await button('Plan a journey').click();
+    assert.ok(await button('Find routes').isVisible(), 'Replaying onboarding returns to planning');
     await button('Find routes').click();
     await page.getByRole('textbox', { name: 'Landmark name' }).fill('Monumento');
     await button('Use this landmark').click();
@@ -181,6 +188,8 @@ try {
     await capture('chat-outside-ncr');
     await button('New').click();
     await button('New conversation').click();
+    assert.ok(await page.getByTestId('gaile-think').isVisible(), 'Gaile introduces the conversation');
+    await capture('chat-empty');
     await button('Try the example question').click();
     await capture('chat');
     await largeText('chat');

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { Button, Icon, palette, type, ui } from '../ui/travel';
+import { Button, Gaile, Icon, palette, type, ui } from '../ui/travel';
 import type { PreviewRoute } from './previewJourney';
 
 export interface ConversationTurn { id: number; query: string; answer: string; route?: PreviewRoute; }
@@ -14,7 +14,9 @@ export function AskScreen({ turns, route, origin, destination, activeStep, onEdi
         {activeStep !== null ? ' · Step ' + (activeStep + 1) : ''}</Text><Text style={[type.label, styles.accent]}>Edit</Text>
     </Pressable> : null}
     {turns.length === 0 ? <View style={{ gap: 16 }}>
-      <Text accessibilityRole="header" style={type.title}>Let’s figure out{ '\n' }your commute.</Text>
+      <View style={styles.greeting}><View style={styles.greetingText}>
+        <Text style={[type.caption, styles.accent]}>ASK GAILE</Text>
+        <Text accessibilityRole="header" style={type.title}>Let’s figure out{ '\n' }your commute.</Text></View><Gaile pose="think" height={110}/></View>
       <Text style={type.body}>Ask how to get somewhere, compare your options, or understand a transfer.</Text>
       <Text style={type.secondary}>The local assistant isn’t connected in this preview. Example questions show the conversation layout.</Text>
       <Button variant="secondary" label="Try the example question" onPress={onExample}/>
@@ -28,7 +30,8 @@ export function AskScreen({ turns, route, origin, destination, activeStep, onEdi
         <View style={ui.row}><Button variant="text" label="Directions" icon="arrow" onPress={() => onSteps(turn.route!)}/>
           <Button variant="text" label="Map" onPress={() => onMap(turn.route!)}/></View>
       </View> : null}
-      <View style={{ gap: 6 }}><Text style={[type.caption, styles.overline]}>BASIC SUMMARY · AI UNAVAILABLE</Text>
+      <View style={{ gap: 6 }}><View style={styles.assistant}><Gaile pose="think" height={36}/>
+        <View style={ui.flex}><Text style={type.label}>Gaile</Text><Text style={[type.caption, styles.overline]}>BASIC SUMMARY · AI UNAVAILABLE</Text></View></View>
         <Text style={type.body}>{turn.answer}</Text></View>
     </View>)}
     {route && turns.length > 0 ? <View style={styles.followups}>
@@ -51,8 +54,11 @@ export function AskComposer({ onSubmit }: { onSubmit: (query: string) => void })
   </View>;
 }
 const styles = StyleSheet.create({
+  greeting: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 12 },
+  greetingText: { flex: 1, minWidth: 170, gap: 6 },
+  assistant: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   context: { paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: palette.line, flexDirection: 'row', alignItems: 'center', gap: 8 },
-  user: { alignSelf: 'flex-end', maxWidth: '90%', backgroundColor: palette.background, borderRadius: 14, padding: 14 },
+  user: { alignSelf: 'flex-end', maxWidth: '90%', backgroundColor: palette.goldSoft, borderRadius: 14, padding: 14 },
   route: { gap: 8, borderLeftWidth: 3, borderLeftColor: palette.accent, paddingLeft: 16 },
   overline: { fontWeight: '600', color: palette.secondary }, accent: { color: palette.accent },
   followups: { gap: 10, alignItems: 'flex-start', paddingTop: 8 },

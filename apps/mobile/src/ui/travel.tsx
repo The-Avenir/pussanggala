@@ -3,10 +3,11 @@ import { Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native
 import type { StyleProp, ViewStyle } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-// Travel utility tokens. The earlier Figma theme remains available to legacy harnesses.
+// Sunset Playful identity, with darker text/action tones for outdoor readability.
 export const palette = {
-  ink: '#222B29', secondary: '#5C6662', accent: '#AD3D22', accentSoft: '#F8EAE3',
-  paper: '#FFFFFF', background: '#F5F5F0', line: '#DCDDD5',
+  ink: '#2E1C14', secondary: '#756052', accent: '#BA3B16', accentSoft: '#FFE9D8',
+  orange: '#F34B16', gold: '#FFB729', goldSoft: '#FFF0C6',
+  paper: '#FFF9EF', background: '#FFF0DD', line: '#E8D3BE',
   rail: '#345D73', success: '#286249', warning: '#80531D', warningSoft: '#FBF2DD',
   destructive: '#A83229', dark: '#253C36', white: '#FFFFFF',
 } as const;
@@ -48,12 +49,16 @@ export function CatMark(): React.JSX.Element {
     <Path d="m12 18 2 1 2-1M2 16l5 1m-4 4 5-1m18-4-5 1m4 4-5-1" stroke={palette.ink} strokeWidth={1.2} strokeLinecap="round" />
   </Svg>;
 }
-export function Gaile({ pose, height }: { pose: 'map' | 'cheer'; height: number }): React.JSX.Element {
-  // Only the two used poses enter this screen bundle. Existing mascot utilities remain untouched.
-  const art = pose === 'map'
-    ? { source: require('../../assets/mascot/trimmed/gaile-map.png'), width: 404, height: 506 }
-    : { source: require('../../assets/mascot/trimmed/gaile-cheer.png'), width: 409, height: 495 };
-  return <Image source={art.source} accessible={false} accessibilityIgnoresInvertColors resizeMode="contain"
+const gaileArt = {
+  wave: { source: require('../../assets/mascot/trimmed/gaile-wave.png'), width: 383, height: 507 },
+  map: { source: require('../../assets/mascot/trimmed/gaile-map.png'), width: 404, height: 506 },
+  think: { source: require('../../assets/mascot/trimmed/gaile-think.png'), width: 363, height: 499 },
+  binoculars: { source: require('../../assets/mascot/trimmed/gaile-binoculars.png'), width: 413, height: 505 },
+  cheer: { source: require('../../assets/mascot/trimmed/gaile-cheer.png'), width: 409, height: 495 },
+} as const;
+export function Gaile({ pose, height }: { pose: keyof typeof gaileArt; height: number }): React.JSX.Element {
+  const art = gaileArt[pose];
+  return <Image testID={'gaile-' + pose} source={art.source} accessible={false} accessibilityIgnoresInvertColors resizeMode="contain"
     style={{ height, width: Math.round(height * art.width / art.height) }}/>
 }
 export function Button({ label, onPress, variant = 'primary', icon, disabled = false, style }: {
