@@ -8,6 +8,7 @@ const release = read('app/src/release/AndroidManifest.xml');
 const properties = read('gradle.properties');
 assert.match(main, /android:allowBackup="false"/);
 assert.match(main, /android:usesCleartextTraffic="false"/);
+assert.doesNotMatch(main, /libOpenCL\.so|libcdsprpc\.so/);
 for (const permission of ['INTERNET', 'ACCESS_NETWORK_STATE']) {
   assert.match(release, new RegExp(`android.permission.${permission}" tools:node="remove"`));
 }

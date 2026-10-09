@@ -26,7 +26,7 @@
       "expo-file-system",
       ["expo-sqlite", { "enableFTS": true, "useSQLCipher": false }],
       ["expo-location", { "isAndroidBackgroundLocationEnabled": false, "isAndroidForegroundServiceEnabled": false }],
-      ["llama.rn", { "enableOpenCL": false }],
+      ["llama.rn", { "enableOpenCLAndHexagon": false }],
       "@maplibre/maplibre-react-native",
       "./plugins/with-offline-release.cjs"
     ],
