@@ -1,0 +1,284 @@
+{
+  "source": "Figma PmvJnBpOLKVXiQcQAajGt7 · nine requested nodes",
+  "note": "Explicit UI asset allowlist. SVGs are exact exports; fonts are bundled local files. No pack/model/map readiness is implied.",
+  "assets": [
+    {
+      "path": "assets/figma/08b9c.svg",
+      "bytes": 316,
+      "sha256": "207f7def7a1ca8e69c7376bb03176b58e6715157d8ef9fcd3295e93d2688b11f",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "08b9c"
+    },
+    {
+      "path": "assets/figma/18a08.svg",
+      "bytes": 1005,
+      "sha256": "0bb9067614ac0ae3e6bea18cc22c1fbd752352faab96ae87bf6c5b9845f324a7",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "18a08"
+    },
+    {
+      "path": "assets/figma/1f84b.svg",
+      "bytes": 352,
+      "sha256": "de3aff74d58df2bf7230ed75b3cfb867115c210aad8aab58e94b2ac3ae0bc165",
+      "width": 32,
+      "height": 78,
+      "nodeAsset": "1f84b"
+    },
+    {
+      "path": "assets/figma/239f2.svg",
+      "bytes": 466,
+      "sha256": "6be443335eb5b62271927629a379f194cbca5253a82631c8725c7abc1ce17542",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "239f2"
+    },
+    {
+      "path": "assets/figma/29042.svg",
+      "bytes": 361,
+      "sha256": "4b9e11cd4bbc120983329ef091e70d8c064529fa811955a437b4714958b464d0",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "29042"
+    },
+    {
+      "path": "assets/figma/2f68d.svg",
+      "bytes": 466,
+      "sha256": "5d48421b2d48fdee0b91d1ace69af28c737accafb359e323ff916c13a4629d52",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "2f68d"
+    },
+    {
+      "path": "assets/figma/2ffb3.svg",
+      "bytes": 1005,
+      "sha256": "9601239a621544ce4242d6a6b4840e82dde599f06888f3165a1b470dfe04ec86",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "2ffb3"
+    },
+    {
+      "path": "assets/figma/44e61.svg",
+      "bytes": 781,
+      "sha256": "12e14b31feee6e7a965ecf23809a0f0d4250f949be72dc7c9eb406153b6d185b",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "44e61"
+    },
+    {
+      "path": "assets/figma/47028.svg",
+      "bytes": 781,
+      "sha256": "01e36d6aab2a340cb3ba959df828950ab32ca70ff2ed809870dd6f8575b30cb8",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "47028"
+    },
+    {
+      "path": "assets/figma/4ab7b.svg",
+      "bytes": 607,
+      "sha256": "c0542a5ebe4486df4edce08f1b44033844fdb9a341a9203d1e2cae9eaa595b74",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "4ab7b"
+    },
+    {
+      "path": "assets/figma/4ce16.svg",
+      "bytes": 466,
+      "sha256": "c0d0df7b871bee7627b72f23f7a3effa1bf3e8e911d51b293c474dd7f975142e",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "4ce16"
+    },
+    {
+      "path": "assets/figma/5c959.svg",
+      "bytes": 335,
+      "sha256": "7e79b54da48765e6f5e7a271d571d1023192b129efba99d11a30c31f9070b1c1",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "5c959"
+    },
+    {
+      "path": "assets/figma/5f8e3.svg",
+      "bytes": 7380,
+      "sha256": "9d5fa91cf0864efc28b75373bb27944aa01da5c040499160ea391205a25dcaab",
+      "width": 62,
+      "height": 64.8182,
+      "nodeAsset": "5f8e3"
+    },
+    {
+      "path": "assets/figma/62fc3.svg",
+      "bytes": 5177,
+      "sha256": "4d802b01084ec4c42937484537275bb1b2aeafbe94c7cd56f7e04ffac7c8133d",
+      "width": 220,
+      "height": 230,
+      "nodeAsset": "62fc3"
+    },
+    {
+      "path": "assets/figma/787af.svg",
+      "bytes": 3183,
+      "sha256": "dbb731ebabe4ec6218dde0de5888c5901285f95ddfceb4181c40d27acbef68b8",
+      "width": 350,
+      "height": 370,
+      "nodeAsset": "787af"
+    },
+    {
+      "path": "assets/figma/7a422.svg",
+      "bytes": 2727,
+      "sha256": "19341e54f164e1fe23438c977445d9e477eacf0ec3d10b6aa798379a19e842b9",
+      "width": 350,
+      "height": 180,
+      "nodeAsset": "7a422"
+    },
+    {
+      "path": "assets/figma/7cf24.svg",
+      "bytes": 566,
+      "sha256": "5250b33a065b7ee12feb61438aca86d6c7ec4db8333e49bb3758e9cbd3b4636f",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "7cf24"
+    },
+    {
+      "path": "assets/figma/b4595.svg",
+      "bytes": 4453,
+      "sha256": "d89e75ef6b79d183646619c5e7169aa6d2e04c0aaba15f9a4d7360160062dab7",
+      "width": 350,
+      "height": 270,
+      "nodeAsset": "b4595"
+    },
+    {
+      "path": "assets/figma/b5dc8.svg",
+      "bytes": 365,
+      "sha256": "c2c99837ff36235fdfd8d05c845598a0bd3a03908abcd15437062cbfe79c18c8",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "b5dc8"
+    },
+    {
+      "path": "assets/figma/bcb41.svg",
+      "bytes": 566,
+      "sha256": "2e991d060b545f92d200e1bf5b9e315e39084af7329243d19bfe09f38e556abb",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "bcb41"
+    },
+    {
+      "path": "assets/figma/cc825.svg",
+      "bytes": 781,
+      "sha256": "14023250655f5a18881550d29bb3006c49b4378e49679a3c65649db32afceea4",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "cc825"
+    },
+    {
+      "path": "assets/figma/d4f14.svg",
+      "bytes": 7368,
+      "sha256": "b9978f234b3a5599a9bd0c5d269aeedeb505797f6aa6cc0270f195af6b1ede57",
+      "width": 84,
+      "height": 87.8182,
+      "nodeAsset": "d4f14"
+    },
+    {
+      "path": "assets/figma/d8c58.svg",
+      "bytes": 334,
+      "sha256": "827a403b4592b5b6fad29ee1f3ca088707fe3ab968fe45b1612b1a0fd6e89b47",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "d8c58"
+    },
+    {
+      "path": "assets/figma/de22a.svg",
+      "bytes": 7394,
+      "sha256": "1c129e56513aa60810f8d04b364cabf92497e81b72b6bcf5b57f162f43b2bc9b",
+      "width": 42,
+      "height": 43.9091,
+      "nodeAsset": "de22a"
+    },
+    {
+      "path": "assets/figma/e681d.svg",
+      "bytes": 929,
+      "sha256": "41822694a31a8c310d61a0357ff0ed75b780c493932e2a5266aa05298ab095dd",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "e681d"
+    },
+    {
+      "path": "assets/figma/e6da9.svg",
+      "bytes": 929,
+      "sha256": "661425726ead07753391b76acb8230dc443222a2dc80e6c7dc03adafd9ffd5b1",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "e6da9"
+    },
+    {
+      "path": "assets/figma/eed90.svg",
+      "bytes": 7343,
+      "sha256": "a6093b94adb2d7c88fcfedff903f94bedec6935df779f902ffab8f3b30204775",
+      "width": 30,
+      "height": 31.3636,
+      "nodeAsset": "eed90"
+    },
+    {
+      "path": "assets/figma/f0ea4.svg",
+      "bytes": 325,
+      "sha256": "95710b5aec99d816a2784afee447bdc73714587edece2cc66d73b3f0dc46c0b5",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "f0ea4"
+    },
+    {
+      "path": "assets/figma/f44dc.svg",
+      "bytes": 354,
+      "sha256": "d151091a739669023a3946c16d693447d6b40f0d92d3c95a097fd0f836f254f4",
+      "width": 32,
+      "height": 78,
+      "nodeAsset": "f44dc"
+    },
+    {
+      "path": "assets/figma/fb95a.svg",
+      "bytes": 576,
+      "sha256": "cba4b2fa00d3b2df2ba036c22d8b0a830db6cd9452c0e44a3976536a339712ef",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "fb95a"
+    },
+    {
+      "path": "assets/figma/ff654.svg",
+      "bytes": 540,
+      "sha256": "bc189c1be1df228633f33b9983c8b03a7725437cd80675859fd84acdfe422f13",
+      "width": 24,
+      "height": 24,
+      "nodeAsset": "ff654"
+    },
+    {
+      "path": "assets/fonts/DMSans-Bold.ttf",
+      "bytes": 56268,
+      "sha256": "3764a2ce62fa95596c3315c1a0ca379e7cf827ed397c97fc036925b9b20b74dc"
+    },
+    {
+      "path": "assets/fonts/DMSans-Regular.ttf",
+      "bytes": 56344,
+      "sha256": "20ccb90498d8ca511bb0be31a74eccd5f29fbe1161852ef72781b703929e98ec"
+    },
+    {
+      "path": "assets/fonts/Nunito-Bold.ttf",
+      "bytes": 132148,
+      "sha256": "ad443e47990c5fc4b263693b3018b7807868263b8c42ccb1115e030158931960"
+    },
+    {
+      "path": "assets/fonts/Nunito-ExtraBold.ttf",
+      "bytes": 132068,
+      "sha256": "33834506fb216047a70654dce857e073412d78943678052024a9d1cf89cec724"
+    },
+    {
+      "path": "assets/licences/DMSans-OFL.txt",
+      "bytes": 4482,
+      "sha256": "9af36190332437f5ecd09974de43c1f7c77a310a996cdd8ceb25628b458840e1"
+    },
+    {
+      "path": "assets/licences/Nunito-OFL.txt",
+      "bytes": 4385,
+      "sha256": "580df76c95a1ec5ab878ceb25bb3d85c6a076804e9c970c8c6972aea775fdf65"
+    }
+  ]
+}

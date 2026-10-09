@@ -17,7 +17,9 @@ reconciled: 2026-10-09
 
 **Scope:** Confirmed on 2026-10-09 after G01–G27
 
-**Implementation:** Not started; no device/release gate claimed passed
+**Implementation:** Core implementation and mobile UI harness in progress; no device/release gate claimed passed
+
+UI work: [travel utility redesign, audit and validation](ux-redesign.md), [visual review](ux-review.html), [low-fidelity wireframes](ux-wireframes.html) and [independent Luna review / Orca record](playful-chat-review.md). The current revision uses the owner's playful iOS-inspired direction: Gaile artwork replaces the SVG brand mark, sunset colors and bundled fonts carry the identity, and “Where to go?” starts a home conversation. The [original nine-screen implementation](ui-figma-implementation.md) is retained as the comparison baseline. The app uses explicitly labelled examples until T45 connects native/data adapters; no device/release gate is claimed passed.
 
 ## 1. Current document suite
 
