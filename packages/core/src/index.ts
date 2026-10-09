@@ -17,3 +17,6 @@ export * from "./route/route";
 export * from "./cards/sources";
 export * from "./cards/compose";
 export * from "./context/build";
+export * from "./text/distance";
+export * from "./resolve/resolve";
+export * from "./intent/parse";
