@@ -10,3 +10,5 @@ export * from "./contracts/routing";
 export * from "./contracts/cards";
 export * from "./contracts/explanation";
 export * from "./contracts/api";
+export * from "./route/graph";
+export * from "./route/search";
