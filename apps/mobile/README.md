@@ -39,3 +39,30 @@ From repo root, `npm run typecheck` still covers `packages/core`; this app is
 not yet a workspace member (kept out until the T40 device build is proven).
 Device-build commands (`prebuild --clean`, `run:android --device`) are proposed
 in `spike-t40.md` §4 and remain unrun — no device evidence claimed.
+
+## T01 gates — actual commands (Member 4)
+
+Repo checks + asset guard, run from the repo root (verified 2026-10-09,
+Node v22.21.1; CI mirrors them in `.github/workflows/member4-checks.yml`):
+
+```sh
+npm install                             # install workspace deps
+npm run typecheck                       # tsc over workspaces (packages/core)
+npm test                                # vitest in packages/core (2 passed)
+node tools/eval/allowlist-check.mjs     # INV-4 shipped-content scan + built-in self-tests (exit 0 when clean)
+node --test tools/eval/allowlist-check.test.mjs  # positive (leak rejected) + negative (clean passes) fixtures
+```
+
+App-local harness commands (from `apps/mobile/`; the app is not yet a
+workspace member, so the root commands above do not cover it):
+
+```sh
+npm install        # install harness deps (local node_modules only)
+npm run typecheck  # tsc --noEmit over App.tsx
+```
+
+The allowlist check scans `apps/mobile`, `tools/map-pack` and `data/seed`
+for raw Reddit leaks (verbatim long comment text, `u/` usernames, Reddit
+permalinks, raw-dataset imports) and fails on any hit. The supplied
+`howtogetthereph_dataset/` directory at the repo root is intentional build
+input: it is never scanned, so its mere existence never fails the gate.

@@ -1,0 +1,38 @@
+# T01 member-4 gates (typecheck, tests, shipped-content allowlist check).
+#
+# Owner: Member 4. No secrets, no network in the check steps themselves
+# (`npm install` uses the registry to fetch pinned deps; the checks below it
+# only read local files and run local tests).
+
+name: member4-checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  member4-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Typecheck workspaces
+        run: npm run typecheck
+
+      - name: Run workspace tests
+        run: npm test
+
+      - name: Shipped-content allowlist check (INV-4)
+        run: node tools/eval/allowlist-check.mjs
+
+      - name: Allowlist-check fixtures (positive + negative)
+        run: node --test tools/eval/allowlist-check.test.mjs
