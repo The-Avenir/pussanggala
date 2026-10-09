@@ -1,0 +1,8 @@
+{
+  "// REPLACEME (T40)": "Temporary typecheck scope for T33-only modules until Member 4 scaffolds apps/mobile with a real tsconfig; delete or fold into it then.",
+  "extends": "../../../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["./**/*.ts"]
+}
