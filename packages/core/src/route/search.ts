@@ -22,9 +22,10 @@ function sumKnown(values: (number | null)[]): Known<number> {
   return known(total);
 }
 
-function buildItinerary(origin: PlaceStopRow, destination: PlaceStopRow, path: Edge[], pack: Pack): Itinerary {
-  const steps: StepRef[] = [{ kind: "access", id: origin.access_id }];
-  const records = new Set([origin.place_id, destination.place_id, origin.access_id, destination.access_id, origin.stop_id, destination.stop_id]);
+export function buildItinerary(steps: StepRef[], originPlaceId: string, destinationPlaceId: string, pack: Pack): Itinerary {
+  const origin = pack.placeStops.get(steps[0]!.id)!;
+  const destination = pack.placeStops.get(steps.at(-1)!.id)!;
+  const records = new Set([originPlaceId, destinationPlaceId, origin.access_id, destination.access_id, origin.stop_id, destination.stop_id]);
   const routeIds: string[] = [];
   const fareIds: string[] = [];
   const missingLegIds: string[] = [];
@@ -33,17 +34,15 @@ function buildItinerary(origin: PlaceStopRow, destination: PlaceStopRow, path: E
   let min = 0;
   let max = 0;
   let conflict = false;
-  for (const edge of path) {
-    if (edge.kind === "walk") {
-      const walk = edge.walk;
-      steps.push({ kind: "walk", id: walk.walk_id });
+  for (const step of steps.slice(1, -1)) {
+    if (step.kind === "walk") {
+      const walk = pack.walks.get(step.id)!;
       for (const id of [walk.walk_id, walk.from_stop_id, walk.to_stop_id]) records.add(id);
       minutes.push(walk.walk_min);
       meters.push(walk.walk_m);
       continue;
     }
-    const leg = edge.leg;
-    steps.push({ kind: "leg", id: leg.leg_id });
+    const leg = pack.legs.get(step.id)!;
     routeIds.push(leg.route_id);
     for (const id of [leg.leg_id, leg.route_id, leg.board_stop_id, leg.alight_stop_id]) records.add(id);
     minutes.push(leg.ride_min);
@@ -60,12 +59,11 @@ function buildItinerary(origin: PlaceStopRow, destination: PlaceStopRow, path: E
       records.add(fare.fare_id);
     }
   }
-  steps.push({ kind: "access", id: destination.access_id });
   const fare: FareTotal = missingLegIds.length
     ? { status: "unknown", missingLegIds: missingLegIds.sort() }
     : { status: "known", min, max, currency: "PHP", conflict, fareIds: [...new Set(fareIds)].sort() };
   return {
-    id: itineraryId(steps), ref: { v: 1, steps }, originPlaceId: origin.place_id, destinationPlaceId: destination.place_id,
+    id: itineraryId(steps), ref: { v: 1, steps: steps.map((step) => ({ ...step })) }, originPlaceId, destinationPlaceId,
     rideCount: routeIds.length, transferCount: routeIds.length - 1, fare,
     reportedRideMinutes: sumKnown(minutes), walkMeters: sumKnown(meters), routeIds, recordIds: [...records].sort(),
   };
@@ -96,7 +94,12 @@ export function searchItineraries(originPlaceId: string, destinationPlaceId: str
       expansions++;
       if (rideCount > 0) {
         for (const destination of destinationsByStop.get(stopId) ?? []) {
-          const itinerary = buildItinerary(origin, destination, path, pack);
+          const steps: StepRef[] = [
+            { kind: "access", id: origin.access_id },
+            ...path.map((edge): StepRef => edge.kind === "leg" ? { kind: "leg", id: edge.leg.leg_id } : { kind: "walk", id: edge.walk.walk_id }),
+            { kind: "access", id: destination.access_id },
+          ];
+          const itinerary = buildItinerary(steps, originPlaceId, destinationPlaceId, pack);
           itineraries.set(itinerary.id, itinerary);
         }
       }
