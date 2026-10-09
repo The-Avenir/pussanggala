@@ -227,7 +227,7 @@ Exact GBNF/JSON grammar and output cap are settled by Member 3 in T30; this shap
 | `route` | T22/T23 | `(originPlaceId, destinationPlaceId, preference, pack) => RouteResult` |
 | `compose` | T24 | `(itinerary, pack, now) => Card[]` |
 | `answerHours` | T25 | `(routeIds, pack, now) => HourStatement[]` |
-| `buildContext` | T24 | `(input: { trip, cards, itineraries, comparisons, hourStatements }, pack) => EvidenceBundle` |
+| `buildContext` | T24 | `(input: { trip, cards, itineraries, comparisons, hourStatements, now }, pack) => EvidenceBundle` |
 | `applyIntent` | T25 | `(trip, intent, resolved) => TripState` — reverse swaps endpoints and clears selection (rerouted, never reversed instructions); endpoint/preference change clears selection; `new_trip` resets |
 | `validateRestoration` | T25 | `(saved, pack) => { status: 'valid'; itinerary; currentStep } \| { status: 'needs_replan'; reason }` |
 
