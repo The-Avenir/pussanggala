@@ -16,3 +16,19 @@ GEMINI.md
 # INV-4 excludes all raw source wording from shipped app, runtime pack and training assets.
 data/raw/
 *.reddit.json
+
+# Dependencies and build outputs
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Expo/native build artifacts
+.expo/
+android/build
+
+# Local environment files (template stays committed)
+.env*
+!.env.example
+
+npm-debug.log*

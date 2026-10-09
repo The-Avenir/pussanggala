@@ -1,0 +1,14 @@
+{
+  "name": "pusang-gala",
+  "private": true,
+  "workspaces": [
+    "packages/core"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
+  }
+}
