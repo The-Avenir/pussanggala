@@ -20,6 +20,7 @@ import {
   checkContent,
   scanRoots,
   runSelfTests,
+  scanAssetInventory,
 } from "./allowlist-check.mjs";
 
 const LEAKS = {
@@ -112,5 +113,83 @@ describe("allowlist-check negative fixtures (clean tree passes)", () => {
   it("built-in self-tests pass", () => {
     const self = runSelfTests();
     assert.ok(self.ok, `self-tests failed: ${JSON.stringify(self.results)}`);
+  });
+});
+
+describe("explicit asset inventory includes binary inputs", () => {
+  const withTree = (create, check) => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "t41-inventory-"));
+    const assetDir = path.join(root, "apps/mobile/assets");
+    fs.mkdirSync(assetDir, { recursive: true });
+    try { create(assetDir, root); check(scanAssetInventory(root)); }
+    finally { fs.rmSync(root, { recursive: true, force: true }); }
+  };
+  it("rejects an unlisted SQLite input without needing to decode it", () => {
+    withTree(dir => fs.writeFileSync(path.join(dir, "raw-copy.sqlite"), Buffer.from([0, 1, 2])),
+      result => assert.equal(result.findings[0]?.rule, "asset-not-allowlisted"));
+  });
+  it("rejects raw-input paths even when the content has an allowed binary extension", () => {
+    withTree(dir => {
+      const raw = path.join(dir, "HOWTOGETTHEREPH_DATASET"); fs.mkdirSync(raw);
+      fs.writeFileSync(path.join(raw, "pack.sqlite"), Buffer.from([0]));
+    }, result => assert.equal(result.findings[0]?.rule, "asset-not-allowlisted"));
+  });
+  it("accepts the exact pack path and per-file glyph paths", () => {
+    withTree(dir => {
+      fs.mkdirSync(path.join(dir, "pack")); fs.writeFileSync(path.join(dir, "pack/pack.sqlite"), Buffer.from([0]));
+      fs.mkdirSync(path.join(dir, "map/glyphs/Fixture Font"), { recursive: true });
+      fs.writeFileSync(path.join(dir, "map/glyphs/Fixture Font/0-255.pbf"), Buffer.from([0]));
+    }, result => { assert.equal(result.filesScanned, 2); assert.deepEqual(result.findings, []); });
+  });
+  it("accepts enumerated UI assets while rejecting unknown files in the same folders", () => {
+    withTree(dir => {
+      fs.mkdirSync(path.join(dir, "figma")); fs.mkdirSync(path.join(dir, "fonts"));
+      fs.writeFileSync(path.join(dir, "figma/08b9c.svg"), "<svg/>");
+      fs.writeFileSync(path.join(dir, "fonts/DMSans-Regular.ttf"), Buffer.from([0]));
+      fs.writeFileSync(path.join(dir, "figma/unlisted.svg"), "<svg/>");
+    }, result => {
+      assert.equal(result.filesScanned, 3);
+      assert.equal(result.findings.length, 1);
+      assert.equal(result.findings[0]?.rule, "asset-not-allowlisted");
+      assert.ok(result.findings[0]?.file.endsWith("unlisted.svg"));
+    });
+  });
+  it("rejects an asset symlink/junction instead of silently skipping it", () => {
+    withTree((dir, root) => {
+      const target = path.join(root, "raw-source"); fs.mkdirSync(target);
+      fs.symlinkSync(target, path.join(dir, "source-link"), "junction");
+    }, result => assert.equal(result.findings[0]?.rule, "asset-symlink"));
+  });
+});
+
+describe("source citation metadata keeps other leak rules", () => {
+  const source = { kind: "reddit_thread", post_id: "abc123",
+    url: "https://www.reddit.com/r/HowToGetTherePH/comments/abc123/fixture/" };
+  const scan = (rows, relative = "data/seed/eligible/source.json") => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "source-citation-"));
+    try {
+      const file = path.join(root, relative);
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+      fs.writeFileSync(file, JSON.stringify(rows));
+      return scanRoots([root]).findings;
+    } finally { fs.rmSync(root, { recursive: true, force: true }); }
+  };
+  it("allows only matching thread provenance in the seed SOURCE table", () => {
+    assert.deepEqual(scan([source]), []);
+    assert.ok(scan([source], "apps/mobile/source.json").some(f => f.rule === "reddit-url"));
+  });
+  it("rejects wrong post IDs, profile links, other kinds and malformed source JSON", () => {
+    for (const row of [
+      { ...source, post_id: "other" },
+      { ...source, url: "https://www.reddit.com/user/fixture/" },
+      { ...source, kind: "team_review" },
+      { ...source, url: source.url + "?raw=" },
+    ]) assert.ok(scan([row]).some(f => f.rule === "reddit-url"));
+    assert.ok(scan({ unexpected: source }).some(f => f.rule === "reddit-url"));
+  });
+  it("still rejects copied wording and handles in other source fields", () => {
+    assert.ok(scan([{ ...source, license: RAW_PHRASES[0] }]).some(f => f.rule === "raw-phrase"));
+    assert.ok(scan([{ ...source, license: "u/fixture_author" }]).some(f => f.rule === "reddit-username"));
+    assert.ok(scan([{ ...source, extra: source.url }]).some(f => f.rule === "reddit-url"));
   });
 });

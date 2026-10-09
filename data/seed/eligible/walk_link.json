@@ -1,0 +1,191 @@
+[
+  {
+    "walk_id": "wk_st-lrt2-araneta-cubao-8ac903-st-mrt3-araneta-cf32a7",
+    "from_stop_id": "st_lrt2-araneta-cubao-8ac903",
+    "to_stop_id": "st_mrt3-araneta-cubao-0c4bc2",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-trinoma-2d6bdf-st-sm-north-edsa-85d0b1-a0698a",
+    "from_stop_id": "st_trinoma-2d6bdf",
+    "to_stop_id": "st_sm-north-edsa-85d0b1",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-ortigas-3f274b-st-robinsons-galleria-23f81a",
+    "from_stop_id": "st_mrt3-ortigas-3f274b",
+    "to_stop_id": "st_robinsons-galleria-fed25a",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-ayala-404889-st-ayala-triangle-c4bcc-dee346",
+    "from_stop_id": "st_mrt3-ayala-404889",
+    "to_stop_id": "st_ayala-triangle-c4bcc8",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-ayala-404889-st-mrt3-kamuning-e7d051-3b0e8d",
+    "from_stop_id": "st_mrt3-ayala-404889",
+    "to_stop_id": "st_mrt3-kamuning-e7d051",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-pitx-813185-st-lrt1-pedro-gil-6a8aa8-295ce0",
+    "from_stop_id": "st_pitx-813185",
+    "to_stop_id": "st_lrt1-pedro-gil-6a8aa8",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-guadalupe-7da74c-st-mrt3-boni-19f73c-a2580b",
+    "from_stop_id": "st_mrt3-guadalupe-7da74c",
+    "to_stop_id": "st_mrt3-boni-19f73c",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-shaw-6856fd-st-sm-megamall-68f140-7319f4",
+    "from_stop_id": "st_mrt3-shaw-6856fd",
+    "to_stop_id": "st_sm-megamall-68f140",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-landmark-makati-75fb4e-st-one-ayala-c9df3-e72fb6",
+    "from_stop_id": "st_landmark-makati-75fb4e",
+    "to_stop_id": "st_one-ayala-c9df31",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-monumento-d88fad-st-lrt1-carriedo-d82d6f-10888b",
+    "from_stop_id": "st_monumento-d88fad",
+    "to_stop_id": "st_lrt1-carriedo-d82d6f",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-vista-transport-exchange-6a8ca1-st-mrt3-m-5a4df9",
+    "from_stop_id": "st_vista-transport-exchange-6a8ca1",
+    "to_stop_id": "st_mrt3-magallanes-f2637a",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-shaw-6856fd-st-mrt3-boni-19f73c-f2b0f8",
+    "from_stop_id": "st_mrt3-shaw-6856fd",
+    "to_stop_id": "st_mrt3-boni-19f73c",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-shaw-6856fd-st-mrt3-ayala-404889-20ccab",
+    "from_stop_id": "st_mrt3-shaw-6856fd",
+    "to_stop_id": "st_mrt3-ayala-404889",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-guadalupe-7da74c-st-ateneo-0887b0-6077b1",
+    "from_stop_id": "st_mrt3-guadalupe-7da74c",
+    "to_stop_id": "st_ateneo-0887b0",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-alabang-south-station-6b40a7-st-festival--a69c13",
+    "from_stop_id": "st_alabang-south-station-6b40a7",
+    "to_stop_id": "st_festival-mall-c5f3dc",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-boni-19f73c-st-mrt3-ortigas-3f274b-a05ab2",
+    "from_stop_id": "st_mrt3-boni-19f73c",
+    "to_stop_id": "st_mrt3-ortigas-3f274b",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-one-ayala-c9df31-st-ayala-triangle-c4bcc8-25f16e",
+    "from_stop_id": "st_one-ayala-c9df31",
+    "to_stop_id": "st_ayala-triangle-c4bcc8",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-mrt3-north-avenue-933d3a-st-sm-north-edsa-a97217",
+    "from_stop_id": "st_mrt3-north-avenue-933d3a",
+    "to_stop_id": "st_sm-north-edsa-85d0b1",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-lrt1-gil-puyat-34b3b2-st-lrt1-carriedo-d8-4aa906",
+    "from_stop_id": "st_lrt1-gil-puyat-34b3b2",
+    "to_stop_id": "st_lrt1-carriedo-d82d6f",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-lrt2-katipunan-5634a2-st-lrt2-legarda-e66-4f4fde",
+    "from_stop_id": "st_lrt2-katipunan-5634a2",
+    "to_stop_id": "st_lrt2-legarda-e664df",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  },
+  {
+    "walk_id": "wk_st-one-ayala-c9df31-st-landmark-makati-75fb4-0ab46d",
+    "from_stop_id": "st_one-ayala-c9df31",
+    "to_stop_id": "st_landmark-makati-75fb4e",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Walking connection noted.",
+    "eligibility": "ready"
+  }
+]

@@ -6,12 +6,65 @@
 // supplied raw dataset at runtime, so no source text is stored here.
 
 import { tokenize } from "./checks.mjs";
+import { TABLE_BY_NAME } from "./spec.mjs";
 
 export const clone = (v) => structuredClone(v);
 
 const firstReady = (rows) => rows.find((r) => r.eligibility === "ready");
 
-export const MUTATIONS = [
+// Sparse packs may legitimately have no fares, walks, notes or ambiguity rows.
+// Add only missing fixture prerequisites to the in-memory copy, with valid FKs and
+// provenance, so lack of optional facts does not fail corpus acceptance.
+function seedMissingFixtureRows(t) {
+  const unique = (name, prefix) => {
+    let n = 1;
+    const pk = TABLE_BY_NAME[name].pk;
+    while (t[name].some((r) => r[pk] === `${prefix}_acceptance-${n}`)) n += 1;
+    return `${prefix}_acceptance-${n}`;
+  };
+  let fixtureSource;
+  const add = (name, row) => {
+    t[name].push(row);
+    const spec = TABLE_BY_NAME[name];
+    if (spec.kind) {
+      if (!fixtureSource) {
+        fixtureSource = unique("source", "src");
+        t.source.push({ source_id: fixtureSource, kind: "team_review", url: null, post_id: null, posted_at: null, observed_at: null, license: null });
+      }
+      t.record_source.push({ link_id: Math.max(0, ...t.record_source.map((r) => r.link_id)) + 1, record_kind: spec.kind, record_id: row[spec.pk], source_id: fixtureSource, snapshot_sha256: null, comment_index: null });
+    }
+    return row;
+  };
+  const get = (name, predicate, make) => t[name].find(predicate) ?? add(name, make());
+  const region = get("region", () => true, () => ({ region_id: unique("region", "rg"), name: "Synthetic region", boundary_geojson: "{}", boundary_sha256: "fixture" }));
+  const place = (except) => get("place", (p) => p.ncr_status === "accepted" && p.place_id !== except,
+    () => ({ place_id: unique("place", "pl"), region_id: region.region_id, name: "Synthetic location", kind: "other", area: "Metro Manila", ncr_status: "accepted", lat: null, lng: null, mapping_status: "unmapped" }));
+  const a = place();
+  const b = place(a.place_id);
+  const stop = (p) => get("stop", (s) => s.place_id === p.place_id,
+    () => ({ stop_id: unique("stop", "st"), place_id: p.place_id, name: "Synthetic stop", landmark_hint: "" }));
+  const from = stop(a);
+  const to = stop(b);
+  const route = get("route", (r) => ["unknown", "reported_active"].includes(r.service_status),
+    () => ({ route_id: unique("route", "rt"), mode: "bus", signboard: null, direction_label: "Synthetic direction", service_status: "unknown" }));
+  const leg = get("leg", (r) => r.eligibility === "ready",
+    () => ({ leg_id: unique("leg", "lg"), route_id: route.route_id, board_stop_id: from.stop_id, alight_stop_id: to.stop_id, ride_min: null, dist_km: null, eligibility: "ready" }));
+  get("walk_link", (r) => r.eligibility === "ready",
+    () => ({ walk_id: unique("walk_link", "wk"), from_stop_id: from.stop_id, to_stop_id: to.stop_id, walk_m: null, walk_min: null, walk_text: "Synthetic walking link", eligibility: "ready" }));
+  get("place_stop", (r) => r.eligibility === "ready",
+    () => ({ access_id: unique("place_stop", "ac"), place_id: a.place_id, stop_id: from.stop_id, direction: "both", walk_m: null, walk_min: null, walk_text: "Synthetic access", eligibility: "ready" }));
+  get("fare_report", () => true,
+    () => ({ fare_id: unique("fare_report", "fr"), leg_id: leg.leg_id, amount_min: 1, amount_max: 1, currency: "PHP", basis: "reported_segment", effective_at: null }));
+  get("note", () => true, () => ({ note_id: unique("note", "nt"), body: "Synthetic note", kind: "tip" }));
+  get("place_alias", () => true, () => ({ alias_id: 1, place_id: a.place_id, alias_norm: "synthetic location", alias_display: "Synthetic location" }));
+  if (!t.place_ambiguity.length) {
+    let norm = "synthetic ambiguous location";
+    while (t.place_alias.some((r) => r.alias_norm === norm)) norm += " fixture";
+    t.place_ambiguity.push({ ambiguity_id: 1, alias_norm: norm, place_id: a.place_id }, { ambiguity_id: 2, alias_norm: norm, place_id: b.place_id });
+  }
+}
+
+const DEFINITIONS = [
   {
     name: "dangling foreign key (leg -> missing stop)",
     group: "invalid-record",
@@ -172,6 +225,11 @@ export const MUTATIONS = [
     },
   },
 ];
+
+export const MUTATIONS = DEFINITIONS.map((m) => ({ ...m, apply(t, ctx) {
+  seedMissingFixtureRows(t);
+  m.apply(t, ctx);
+} }));
 
 /** True when `text` contains no 6-gram of `grams` (sanity helper for tests). */
 export function hasNgramOverlap(text, grams) {

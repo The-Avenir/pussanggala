@@ -61,6 +61,75 @@ test("needs_review and rejected candidates never emit records", () => {
   assert.equal(r.dispositions.p2, "rejected");
 });
 
+test("restrictive overrides quarantine otherwise valid ride/fare records at the pure boundary", () => {
+  const input = base();
+  input.candidates = [
+    ride("c_p1_0_0"),
+    mkCand("c_p1_0_1", "fare", { applies_to_ride: "c_p1_0_0", amount_min: 17, amount_max: 17 }),
+  ];
+  const before = buildEligible(input);
+  assert.equal(before.tables.leg.length, 1);
+  assert.equal(before.tables.fare_report.length, 1);
+  input.candidates = input.candidates.map((c) => ({ ...c, ai_override: {
+    prior_state: "second_passed", new_state: "needs_review", reason_code: "fixture_quarantine",
+  } }));
+  const snapshot = JSON.stringify(input.candidates);
+  const result = buildEligible(input);
+  for (const name of ["route", "leg", "stop", "place_stop", "fare_report"]) {
+    assert.equal(result.tables[name].length, 0, name);
+  }
+  assert.deepEqual(result.stats.candidates_in, { second_passed: 0, needs_review: 2, rejected: 0 });
+  assert.equal(result.dispositions.p1, "pending");
+  assert.ok(result.recordSources.every((s) => s.source_id === "src_gazetteer"));
+  assert.equal(JSON.stringify(input.candidates), snapshot, "base states and provenance stay untouched");
+  assert.deepEqual(buildEligible(input), result, "reruns remain deterministic");
+});
+
+test("a quarantined fare cannot emit against an otherwise eligible ride", () => {
+  const input = base();
+  input.candidates = [ride("c_p1_0_0"), {
+    ...mkCand("c_p1_0_1", "fare", { applies_to_ride: "c_p1_0_0", amount_min: 17, amount_max: 17 }),
+    ai_override: { new_state: "needs_review", reason_code: "fixture_quarantine" },
+  }];
+  const result = buildEligible(input);
+  assert.equal(result.tables.leg.length, 1);
+  assert.equal(result.tables.fare_report.length, 0);
+  assert.deepEqual(result.dispositions.p1, ["included", "pending"]);
+});
+
+test("overridden inactive status still suppresses a ride without asserting the claim", () => {
+  const input = base();
+  input.candidates = [ride("c_p1_0_0"), {
+    ...mkCand("c_p1_0_1", "service_status", { applies_to_ride: "c_p1_0_0", status: "retired" }),
+    ai_override: { new_state: "needs_review", reason_code: "fixture_quarantine" },
+  }];
+  const result = buildEligible(input);
+  assert.equal(result.tables.leg[0].eligibility, "excluded");
+  assert.equal(result.tables.route[0].service_status, "unknown");
+  assert.equal(result.stats.service_status.verified, 0);
+  assert.equal(result.stats.service_status.suppressed_routes, 1);
+});
+
+test("promotion and malformed overrides fail closed, including base human decisions", () => {
+  for (const baseState of ["accepted", "rejected", "needs_review", "second_passed"]) {
+    for (const new_state of ["accepted", "second_passed", "unknown", null]) {
+      const input = base();
+      input.candidates = [{ ...ride("c_p1_0_0", {}, "p1", baseState), ai_override: { new_state } }];
+      const result = buildEligible(input);
+      assert.equal(result.tables.leg.length, 0, `${baseState}/${new_state}`);
+      assert.equal(result.stats.candidates_in.second_passed, 0);
+      assert.equal(input.candidates[0].review_state, baseState);
+      if (baseState === "rejected") assert.equal(result.dispositions.p1, "rejected");
+      if (baseState === "needs_review" || baseState === "second_passed") assert.equal(result.dispositions.p1, "pending");
+    }
+  }
+  const input = base();
+  input.candidates = [{ ...ride("c_p1_0_0"), ai_override: { new_state: "rejected" } }];
+  const result = buildEligible(input);
+  assert.equal(result.tables.leg.length, 0);
+  assert.equal(result.dispositions.p1, "rejected");
+});
+
 test("ambiguous aliases resolve to nothing; unresolved places drop the ride", () => {
   const input = base();
   input.ambiguities = [{ alias_norm: "beta", place_key: "beta" }, { alias_norm: "beta", place_key: "alpha" }];

@@ -1,16 +1,16 @@
 # T13 places engine — counts
 
-Snapshot `d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3`. 21326 place-name mentions across 5125 distinct normalized aliases. Counts only; no source text.
+Snapshot `d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3`. 6420 place-name mentions across 2418 distinct normalized aliases. Counts only; no source text.
 
 ## Resolution
 
 | bucket | count |
 | --- | ---: |
 | canonical places | 91 |
-| aliases resolved | 271 (269 observed) |
+| aliases resolved | 271 (191 observed) |
 | ambiguous aliases | 23 (50 place refs) |
-| unresolved alias_norms | 4833 (11959 mentions) |
-| coverage (resolved mentions / total) | 37.29% |
+| unresolved alias_norms | 2209 (3596 mentions) |
+| coverage (resolved mentions / total) | 38.29% |
 
 ## Places by ncr_status
 

@@ -17,18 +17,28 @@ GEMINI.md
 data/raw/
 *.reddit.json
 
+# Pre-cleaned reference copy: keep README + SHA256SUMS; large duplicates stay local.
+data/reference/howtogetthereph_dataset-precleaned/*
+!data/reference/howtogetthereph_dataset-precleaned/README.md
+!data/reference/howtogetthereph_dataset-precleaned/SHA256SUMS.txt
+
 # Dependencies and build outputs
 node_modules/
 dist/
 coverage/
 *.tsbuildinfo
 
-# Expo/native build artifacts
+# Expo/native build artifacts (CNG regenerates android/ios; never commit)
 .expo/
 android/build
+apps/mobile/android/
+apps/mobile/ios/
 
 # Local environment files (template stays committed)
 .env*
 !.env.example
 
 npm-debug.log*
+
+# model
+model/

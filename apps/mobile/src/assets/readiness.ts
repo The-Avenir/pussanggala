@@ -1,9 +1,9 @@
 /**
  * T41 readiness states + installed-footprint recorder (spike §§5–6).
  *
- * Pure TypeScript: no native, storage, or network imports. The Expo adapter
- * persists LocatedAsset rows to INSTALLED_ASSET (SDD §3.3) and attaches
- * FootprintSnapshot rows to T47 release evidence; this module only shapes the
+ * Pure TypeScript: no native, storage, or network imports. T44 owns any
+ * INSTALLED_ASSET persistence. T47 can attach measured footprint rows to
+ * release evidence; this module only shapes the
  * data and aggregates states. Asset errors never crash the app and never
  * trigger a network fallback (PRD-F8) — that policy lives in the consumers.
  */
@@ -27,6 +27,7 @@ export type FailureReason =
   | "model_incompatible"
   | "licence"
   | "raw_dataset_path"
+  | "allowlist"
   | "bad_hash_format";
 
 /** One located asset: where the APK carries it plus the native path actually opened. */
@@ -41,8 +42,8 @@ export interface LocatedAsset {
   readonly version: string;
   /** Measured SHA-256 of the copied file ("" until measured). */
   readonly sha256: string;
-  /** Measured copied bytes. */
-  readonly bytes: number;
+  /** Measured copied bytes, null when I/O prevented measurement. */
+  readonly bytes: number | null;
   readonly state: AssetState;
   /** Licence/attribution reference for this asset. */
   readonly license: string;
@@ -100,11 +101,13 @@ export interface FootprintComponent {
 
 export interface FootprintInput {
   /** Judged release APK bytes on the reference phone. */
-  readonly apkBytes: number;
+  readonly apkBytes?: number;
   /** Copied native-readable components (pack + model + map tree). */
-  readonly copied: readonly FootprintComponent[];
+  readonly copied?: readonly FootprintComponent[];
   /** user.sqlite bytes (INSTALLED_ASSET dump included). */
-  readonly userBytes: number;
+  readonly userBytes?: number;
+  /** Measured duplicated storage, not inferred from compressed APK bytes. */
+  readonly duplicatedBytes?: number;
   /** Peak PSS during the S4 soak, when measured (TBD until device runs). */
   readonly peakPssBytes?: number;
   /** Defaults to the time of recording. */
@@ -113,33 +116,43 @@ export interface FootprintInput {
 
 export interface FootprintSnapshot {
   readonly recordedAt: string;
-  readonly apkBytes: number;
-  readonly copiedBytes: number;
-  readonly userBytes: number;
-  readonly totalBytes: number;
-  /**
-   * Bytes double-counted on purpose: the copied tree duplicates APK bytes on
-   * Android. Expected, reported explicitly — never hidden (spike §6, PRD M9).
-   */
-  readonly duplicatedBytes: number;
+  readonly apkBytes: number | null;
+  readonly copiedBytes: number | null;
+  readonly userBytes: number | null;
+  readonly totalBytes: number | null;
+  /** Physical duplication, unknown until measured; compressed APK bytes differ. */
+  readonly duplicatedBytes: number | null;
   readonly peakPssBytes?: number;
   readonly note: string;
 }
 
 /** Record one installed-footprint snapshot (APK + copies + user data). */
 export function recordFootprint(input: FootprintInput): FootprintSnapshot {
-  let copiedBytes = 0;
-  for (const component of input.copied) copiedBytes += component.bytes;
+  const measured = (value: number | undefined): number | null => {
+    if (value === undefined) return null;
+    if (!Number.isSafeInteger(value) || value < 0) throw new Error("Footprint requires measured nonnegative integer bytes.");
+    return value;
+  };
+  const copiedBytes = input.copied === undefined ? null : input.copied.reduce(
+    (total, component) => total + (measured(component.bytes) ?? 0), 0,
+  );
+  const apkBytes = measured(input.apkBytes);
+  const userBytes = measured(input.userBytes);
+  const totalBytes = apkBytes === null || copiedBytes === null || userBytes === null
+    ? null : apkBytes + copiedBytes + userBytes;
+  if (copiedBytes !== null) measured(copiedBytes);
+  if (totalBytes !== null) measured(totalBytes);
+  if (input.peakPssBytes !== undefined) measured(input.peakPssBytes);
   const base = {
     recordedAt: input.recordedAt ?? new Date().toISOString(),
-    apkBytes: input.apkBytes,
+    apkBytes,
     copiedBytes,
-    userBytes: input.userBytes,
-    totalBytes: input.apkBytes + copiedBytes + input.userBytes,
-    duplicatedBytes: copiedBytes,
+    userBytes,
+    totalBytes,
+    duplicatedBytes: measured(input.duplicatedBytes),
     note:
-      "APK bytes + copied native-readable bytes count the same logical " +
-      "assets twice (expected Android duplication, PRD M9).",
+      "File-byte accounting only; unmeasured values are unknown. APK compression, " +
+      "unpacked installation and duplicated storage require device measurements.",
   };
   if (input.peakPssBytes === undefined) return base;
   return { ...base, peakPssBytes: input.peakPssBytes };

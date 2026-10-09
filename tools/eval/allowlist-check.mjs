@@ -4,7 +4,8 @@
  *
  * Scans the shippable source trees — apps/mobile, tools/map-pack, data/seed —
  * for leaked raw Reddit content (verbatim long comment text, Reddit usernames,
- * Reddit permalinks, raw-dataset imports) and FAILS (exit 1) when found.
+ * misplaced Reddit links, raw-dataset imports) and FAILS (exit 1) when found.
+ * Canonical SOURCE.url thread provenance is metadata allowed by the documented SOURCE contract.
  *
  * The supplied `howtogetthereph_dataset/` snapshot at the repo root is
  * intentional off-device build input. It is NEVER scanned, so this check
@@ -30,6 +31,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { isPackagedPath, NON_SHIPPED_ASSET_DOCS } from "../../apps/mobile/src/assets/shipping-policy.mjs";
 
 /** Shippable trees, relative to the repo root. `howtogetthereph_dataset/` is intentionally absent. */
 export const SCAN_SUBDIRS = ["apps/mobile", "tools/map-pack", "data/seed"];
@@ -236,6 +238,23 @@ export function collectFiles(scanDirs) {
   return out.sort();
 }
 
+/** SOURCE.url is citation metadata; all other seed fields retain the leak rules. */
+function maskSeedThreadLinks(text) {
+  let rows;
+  try { rows = JSON.parse(text); } catch { return text; }
+  if (!Array.isArray(rows)) return text;
+  return JSON.stringify(rows.map(row => {
+    if (!row || row.kind !== "reddit_thread" || typeof row.url !== "string"
+      || typeof row.post_id !== "string" || USERNAME_RE.test(row.url)) return row;
+    let url;
+    try { url = new URL(row.url); } catch { return row; }
+    const match = url.pathname.match(new RegExp("^/r/HowToGetTherePH/comments/([a-z0-9]+)/(?:[^/]+/?)?$"));
+    if (url.protocol !== "https:" || !["reddit.com", "www.reddit.com"].includes(url.host)
+      || url.username || url.password || url.search || url.hash || match?.[1] !== row.post_id) return row;
+    return { ...row, url: "[source thread citation]" };
+  }), null, 2);
+}
+
 export function scanFile(absPath) {
   let stat;
   try {
@@ -251,6 +270,7 @@ export function scanFile(absPath) {
     return [];
   }
   if (text.includes("\0")) return [];
+  if (absPath.split(path.sep).join("/").endsWith("/data/seed/eligible/source.json")) text = maskSeedThreadLinks(text);
   const isCodeFile = CODE_EXTS.has(path.extname(absPath).toLowerCase());
   return checkContent(text, isCodeFile).map((f) => ({ file: absPath, ...f }));
 }
@@ -260,6 +280,32 @@ export function scanRoots(scanDirs) {
   const findings = [];
   for (const file of files) findings.push(...scanFile(file));
   return { filesScanned: files.length, findings };
+}
+
+/** Validate every asset input, including binaries the wording scan cannot read. */
+export function scanAssetInventory(repoRoot) {
+  const appRoot = path.join(repoRoot, "apps/mobile");
+  const assetRoot = path.join(appRoot, "assets");
+  const findings = [];
+  let filesScanned = 0;
+  const report = (file, rule) => findings.push({ file, line: 1, rule, snippet: "Asset input rejected by explicit packaging policy." });
+  const visit = (file) => {
+    let stat;
+    try { stat = fs.lstatSync(file); } catch { report(file, "asset-unreadable"); return; }
+    if (stat.isSymbolicLink()) { report(file, "asset-symlink"); return; }
+    if (stat.isDirectory()) {
+      let names;
+      try { names = fs.readdirSync(file); } catch { report(file, "asset-unreadable"); return; }
+      for (const name of names) visit(path.join(file, name));
+      return;
+    }
+    if (!stat.isFile()) { report(file, "asset-not-file"); return; }
+    filesScanned += 1;
+    const relative = path.relative(appRoot, file).split(path.sep).join("/");
+    if (!NON_SHIPPED_ASSET_DOCS.includes(relative) && !isPackagedPath(relative)) report(file, "asset-not-allowlisted");
+  };
+  if (fs.existsSync(assetRoot)) visit(assetRoot);
+  return { filesScanned, findings };
 }
 
 // ---------------------------------------------------------------------------
@@ -461,7 +507,11 @@ function main() {
       `(${fs.existsSync(datasetDir) ? "present" : "absent"}).`,
   );
 
-  const { filesScanned, findings } = scanRoots(scanDirs);
+  const content = scanRoots(scanDirs);
+  const inventory = scanAssetInventory(repoRoot);
+  const filesScanned = content.filesScanned;
+  const findings = [...content.findings, ...inventory.findings];
+  console.log(`asset inventory: ${inventory.filesScanned} input file(s) checked against explicit paths (including binaries).`);
   console.log(
     `scanned ${filesScanned} file(s) in ${scanDirs.map((d) => path.relative(repoRoot, d)).join(", ")}.`,
   );

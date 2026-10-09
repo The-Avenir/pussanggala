@@ -1,12 +1,14 @@
-# data/seed — reviewed seed facts (placeholder)
+# data/seed - cleaned eligible pack inputs
 
-**Owner:** Member 1 (corpus and evidence).
+Promoted by tools/corpus/promote-seed.mjs after a deterministic builder validation.
 
-**Tasks:** T14 (eligible ride/walk/fare/hour records), T15 (pack build),
-T16 (acceptance/handoff).
+eligible/*.json contains only pack tables; dispositions.json and run.json describe
+the same build. pack.manifest.json is the builder companion. pack.sha256 is the
+checksum of data/raw/out/pack.sqlite (the pack itself is not shipped here).
 
-Guardrails (BUILD §5): reviewed facts and paraphrases only — no raw Reddit
-wording or usernames (INV-4); every record traces to post/index/hash evidence
-locators; unknown fares/times stay unknown, conflicts and dates preserved
-(INV-5); extraction intermediates and `data/raw/` stay out of git and out of
-mobile assets.
+No raw Reddit wording/usernames. Unknowns remain unknown; conflicts are preserved.
+Human needs_review items are not auto-accepted. Source dates are post dates.
+Ignored raw reference bytes are audit inputs only, outside shipped assets.
+
+Rebuild: node tools/corpus/run-pipeline.mjs
+Promote after a successful build: node tools/corpus/promote-seed.mjs

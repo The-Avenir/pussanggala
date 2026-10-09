@@ -1,0 +1,8 @@
+[
+  {
+    "region_id": "rg_ncr",
+    "name": "National Capital Region",
+    "boundary_geojson": "{\"type\":\"Polygon\",\"coordinates\":[[[120.9,14.35],[121.15,14.35],[121.15,14.8],[120.9,14.8],[120.9,14.35]]]}",
+    "boundary_sha256": "1eeaacf216fde7d1fb1314bb04a65230f07b7f1121d43870e76480e8f42db646"
+  }
+]

@@ -3,6 +3,7 @@
 // record text, so they are safe to print or write into reports (INV-4).
 
 import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import {
   DATE_PREFIX_RE, HHMM_RE, MANIFEST_COLS, SCHEMA_VERSION, STABLE_ID_RE, TABLES,
   TABLE_BY_KIND, TABLE_BY_NAME, normalizeAlias,
@@ -52,7 +53,7 @@ function checkValue(col, spec, value) {
       if (spec.prefix && !value.startsWith(`${spec.prefix}_`)) return `${col} must start with ${spec.prefix}_`;
       return null;
     case "int":
-      if (!Number.isInteger(value)) return `${col} must be an integer`;
+      if (!Number.isSafeInteger(value)) return `${col} must be a safe integer`;
       if (spec.nonneg && value < 0) return `${col} must be >= 0`;
       return null;
     case "real":
@@ -253,10 +254,13 @@ export function checkManifest(m, tables) {
   const ints = ["schema_version", "stale_after_days", "input_posts", "answered_posts", "included_posts",
     "filtered_posts", "pending_posts", "rejected_posts"];
   for (const k of ints) {
-    if (!Number.isInteger(m[k]) || m[k] < 0) issues.push(issue("manifest_invalid", "pack_manifest", m.pack_id, `${k} must be a nonnegative integer`));
+    if (!Number.isSafeInteger(m[k]) || m[k] < 0) issues.push(issue("manifest_invalid", "pack_manifest", m.pack_id, `${k} must be a nonnegative safe integer`));
   }
   for (const k of ["pack_id", "bbox", "created_at", "input_sha256"]) {
     if (typeof m[k] !== "string" || m[k] === "") issues.push(issue("manifest_invalid", "pack_manifest", m.pack_id, `${k} must be text`));
+  }
+  for (const k of ["source_date_min", "source_date_max"]) {
+    if (m[k] !== null && typeof m[k] !== "string") issues.push(issue("manifest_invalid", "pack_manifest", m.pack_id, `${k} must be text or null`));
   }
   if (typeof m.region_id !== "string" || !STABLE_ID_RE.test(m.region_id) || !m.region_id.startsWith("rg_")) {
     issues.push(issue("manifest_invalid", "pack_manifest", m.pack_id, "region_id is not an rg_ stable ID"));
@@ -268,6 +272,40 @@ export function checkManifest(m, tables) {
     || m.included_posts + m.filtered_posts + m.pending_posts + m.rejected_posts !== m.answered_posts) {
     issues.push(issue("manifest_counts_mismatch", "pack_manifest", m.pack_id, "post dispositions do not sum to answered_posts (or answered > input)"));
   }
+  return issues;
+}
+
+/** Snapshot identity is UTF-8 with CRLF replaced by LF only (no JSON reserialization). */
+export function sourceSnapshotSha256(path) {
+  return createHash("sha256").update(readFileSync(path, "utf8").replace(/\r\n/g, "\n")).digest("hex");
+}
+
+/** Verify every Reddit evidence locator against the supplied snapshot, including excluded rows. */
+export function checkSourceSnapshot(tables, manifest, rawDatasetPath) {
+  const posts = JSON.parse(readFileSync(rawDatasetPath, "utf8"));
+  const issues = [];
+  if (!Array.isArray(posts)) return [issue("raw_invalid", null, null, "raw dataset must be an array")];
+  const sha = sourceSnapshotSha256(rawDatasetPath);
+  const postById = new Map(posts.map((p) => [String(p.id), p]));
+  const answered = posts.filter((p) => Array.isArray(p.answers) && p.answers.length > 0).length;
+  if (manifest.input_sha256 !== sha) issues.push(issue("input_mismatch", "pack_manifest", manifest.pack_id, "input_sha256 differs from the LF-normalized raw snapshot"));
+  if (manifest.input_posts !== posts.length || manifest.answered_posts !== answered) issues.push(issue("input_mismatch", "pack_manifest", manifest.pack_id, "input/answered counts differ from the raw snapshot"));
+  if (postById.size !== posts.length) issues.push(issue("raw_invalid", null, null, "raw dataset has duplicate post IDs"));
+  const sources = new Map((tables.source ?? []).map((s) => [s.source_id, s]));
+  const citedPosts = new Set();
+  for (const rs of tables.record_source ?? []) {
+    const s = sources.get(rs.source_id);
+    if (s?.kind !== "reddit_thread") continue;
+    const post = postById.get(s.post_id);
+    if (rs.snapshot_sha256 !== sha) issues.push(issue("snapshot_mismatch", "record_source", rs.link_id, "snapshot_sha256 differs from the raw snapshot"));
+    if (!post || !Array.isArray(post.answers) || post.answers.length === 0
+      || (s.url !== null && s.url !== post.permalink)
+      || (rs.comment_index !== null && (!Number.isSafeInteger(rs.comment_index) || rs.comment_index < 0 || rs.comment_index >= post.answers.length))) {
+      issues.push(issue("source_locator_invalid", "record_source", rs.link_id, "post/comment locator is not in an answered raw post"));
+    }
+    if (post) citedPosts.add(s.post_id);
+  }
+  if (manifest.included_posts !== citedPosts.size) issues.push(issue("manifest_counts_mismatch", "pack_manifest", manifest.pack_id, "included_posts differs from distinct cited Reddit posts"));
   return issues;
 }
 
@@ -304,7 +342,6 @@ const HANDLE_RES = [
 ];
 // Profile links are checked in every text column, including URLs.
 const PROFILE_RE = /reddit\.com\/(?:u|user)\/[a-z0-9_-]+/i;
-const NO_SCAN_COLS = new Set(["boundary_geojson", "boundary_sha256", "geojson", "snapshot_sha256"]);
 
 /** Lowercase, strip diacritics, split on anything that is not a letter/digit. */
 export function tokenize(value) {
@@ -325,6 +362,8 @@ export function loadSourceNgrams(rawDatasetPath) {
   const posts = JSON.parse(readFileSync(rawDatasetPath, "utf8"));
   if (!Array.isArray(posts)) throw new Error("raw dataset must be a JSON array of posts");
   const grams = new Set();
+  // Keep the public Set API; author identities are additional privacy evidence.
+  grams.usernames = new Set();
   const add = (v) => {
     if (typeof v !== "string" || v === "") return;
     for (const g of ngrams(tokenize(v))) grams.add(g);
@@ -333,6 +372,12 @@ export function loadSourceNgrams(rawDatasetPath) {
     add(p.title);
     add(p.question);
     for (const a of p.answers ?? []) add(typeof a === "string" ? a : a?.text);
+    for (const record of [p, ...(p.answers ?? []).filter((a) => a && typeof a === "object")]) {
+      for (const field of ["author", "username", "user"]) {
+        const value = record[field];
+        if (typeof value === "string" && value && !["[deleted]", "[removed]"].includes(value)) grams.usernames.add(value.toLowerCase());
+      }
+    }
   }
   return grams;
 }
@@ -343,28 +388,54 @@ export function loadSourceNgrams(rawDatasetPath) {
  * @param rawDatasetPathOrGrams path to the raw dataset JSON, or a prebuilt Set of 6-grams
  * @returns issues listing table / record ID / column only
  */
-export function leakScan(tables, rawDatasetPathOrGrams) {
+export function leakScan(tables, rawDatasetPathOrGrams, manifest) {
   const grams = rawDatasetPathOrGrams instanceof Set ? rawDatasetPathOrGrams : loadSourceNgrams(rawDatasetPathOrGrams);
   const issues = [];
+  const scan = (table, rid, col, v, permalink = false) => {
+    if (typeof v !== "string") return;
+    const usernames = grams.usernames ?? new Set();
+    const lower = v.toLowerCase();
+    const hasAuthor = [...usernames].some((name) => {
+      let start = lower.indexOf(name);
+      while (start !== -1) {
+        const before = lower[start - 1] ?? "";
+        const after = lower[start + name.length] ?? "";
+        if (!/[a-z0-9_-]/i.test(before) && !/[a-z0-9_-]/i.test(after)) return true;
+        start = lower.indexOf(name, start + 1);
+      }
+      return false;
+    });
+    if (HANDLE_RES.some((re) => re.test(v)) || PROFILE_RE.test(v) || hasAuthor) issues.push(issue("leak_handle", table, rid, `${col} contains a username/handle`));
+    // A Reddit thread's actual permalink slug is metadata; other text/JSON/URLs are scanned.
+    if (!permalink) {
+      for (const g of ngrams(tokenize(v))) {
+        if (grams.has(g)) {
+          issues.push(issue("leak_ngram", table, rid, `${col} shares a ${LEAK_NGRAM}-word sequence with source text`));
+          break;
+        }
+      }
+    }
+  };
   for (const t of TABLES) {
     for (const row of tables[t.name] ?? []) {
       for (const [col, spec] of Object.entries(t.cols)) {
         const v = row?.[col];
-        if (spec.t !== "text" || typeof v !== "string" || NO_SCAN_COLS.has(col)) continue;
+        if (!["text", "id"].includes(spec.t) || typeof v !== "string") continue;
         const rid = row[t.pk];
-        if ((spec.scan && HANDLE_RES.some((re) => re.test(v))) || PROFILE_RE.test(v)) issues.push(issue("leak_handle", t.name, rid, `${col} contains a username/handle pattern`));
-        // URLs legitimately carry the permalink slug; only human-text columns get the n-gram scan.
-        if (spec.scan) {
-          for (const g of ngrams(tokenize(v))) {
-            if (grams.has(g)) {
-              issues.push(issue("leak_ngram", t.name, rid, `${col} shares a ${LEAK_NGRAM}-word sequence with source text`));
-              break;
-            }
-          }
+        scan(t.name, rid, col, v, t.name === "source" && col === "url" && row.kind === "reddit_thread" && /^https?:\/\/(?:www\.)?reddit\.com\/r\/[^/]+\/comments\/[^/]+(?:\/|$)/i.test(v));
+        if (col === "geojson" || col === "boundary_geojson") {
+          // JSON escapes must not hide copied words or handles in feature properties.
+          const scanJson = (value) => {
+            if (typeof value === "string") scan(t.name, rid, col, value);
+            else if (Array.isArray(value)) value.forEach(scanJson);
+            else if (value && typeof value === "object") for (const [key, item] of Object.entries(value)) { scanJson(key); scanJson(item); }
+          };
+          try { scanJson(JSON.parse(v)); } catch { /* Raw string was scanned above. */ }
         }
       }
     }
   }
+  if (manifest) for (const [col, value] of Object.entries(manifest)) scan("pack_manifest", manifest.pack_id, col, value);
   return issues;
 }
 
