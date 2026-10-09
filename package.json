@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "pusang-gala",
   "private": true,
   "workspaces": [
@@ -18,5 +18,8 @@
     "android:prebuild": "npm run android:prebuild --workspace @pusang-gala/mobile",
     "android:development": "npm run android:development --workspace @pusang-gala/mobile",
     "android:release": "npm run android:release --workspace @pusang-gala/mobile"
+  },
+  "dependencies": {
+    "react-native-safe-area-context": "^5.10.1"
   }
 }

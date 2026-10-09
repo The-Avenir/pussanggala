@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-10-09T17:00:00.320Z",
+  "generated_at": "2026-10-09T23:14:49.112Z",
   "preliminary": true,
   "preliminary_reason": "SUT is the deterministic stub (stub-rules-v0). Scores validate the harness and floor the acceptance gates; model-backed numbers await T32/T33/T34 integration (see EVALUATION-NOTES.md). Latency is host-side harness timing only; device latency and T30 model scores are NOT claimed.",
   "sut": "stub-rules-v0",
   "environment": {
-    "node": "v24.5.0",
+    "node": "v24.14.1",
     "platform": "win32",
     "arch": "x64"
   },
@@ -87,24 +87,24 @@
   "latency_ms": {
     "parse": {
       "n": 65,
-      "mean": 0.442,
-      "p50": 0.182,
-      "p95": 2.149,
-      "max": 6.242
+      "mean": 0.205,
+      "p50": 0.092,
+      "p95": 0.875,
+      "max": 2.381
     },
     "respond": {
       "n": 146,
-      "mean": 0.634,
-      "p50": 0.258,
-      "p95": 1.323,
-      "max": 23.41
+      "mean": 0.267,
+      "p50": 0.108,
+      "p95": 0.511,
+      "max": 9.748
     },
     "guard_stream": {
       "n": 24,
-      "mean": 0.243,
-      "p50": 0.188,
-      "p95": 0.473,
-      "max": 1.161
+      "mean": 0.107,
+      "p50": 0.053,
+      "p95": 0.226,
+      "max": 0.92
     }
   },
   "gates": {
