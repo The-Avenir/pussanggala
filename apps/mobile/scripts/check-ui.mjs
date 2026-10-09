@@ -75,7 +75,9 @@ try {
     async function send(query) {
       await page.getByRole('textbox', { name: 'Ask Pusang Gala', exact: true }).fill(query);
       await button('Send question').click();
+      await settleReply();
     }
+    async function settleReply() { await page.waitForFunction(() => !document.querySelector('[aria-label="Stop reply"]')); }
     async function largeText(name) {
       await page.evaluate(() => {
         for (const node of document.querySelectorAll('[dir="auto"], input, textarea')) {
@@ -135,12 +137,14 @@ try {
     await composer.fill(keyboardQuery);
     await composer.press('Enter');
     await page.getByText(keyboardQuery, { exact: true }).waitFor();
+    await settleReply();
     assert.equal(await page.getByText(keyboardQuery, { exact: true }).count(), 1, 'Enter sends the home query exactly once');
     await button('Go back').click();
     const homeQuery = 'How do I get to Masinag from Cubao?';
     await page.getByRole('textbox', { name: 'Ask Pusang Gala', exact: true }).fill(homeQuery);
     await button('Send question').click();
     await page.getByText(homeQuery, { exact: true }).waitFor();
+    await settleReply();
     assert.equal(await page.getByText(homeQuery, { exact: true }).count(), 1, 'Home sends the exact question once');
     assert.ok(await page.getByText(/outside (Metro Manila|NCR)|covers NCR only|NCR-only/i).isVisible(), 'Out-of-scope destination gets a clear scope failure');
     assert.equal(await page.getByText(/ROUTE INFORMATION · EXAMPLE/i).count(), 0, 'A real query never silently produces synthetic route data');
@@ -167,7 +171,8 @@ try {
     assert.ok(await page.getByText(/Route data isn’t installed. Your endpoints/).isVisible(), 'Real manual query must not produce a fixture');
     await capture('route-unavailable');
     await button('Check offline resources').click();
-    assert.equal(await page.getByText('Missing', { exact: true }).count(), 2);
+    assert.equal(await page.getByText('Missing', { exact: true }).count(), 1, 'Only the basemap is missing on web');
+    assert.ok(await page.getByText('unsupported', { exact: true }).isVisible(), 'Bundled route data requires a native build');
     assert.ok(await page.getByText('Requires Android or iOS', { exact: true }).isVisible());
     assert.equal(await button('Recheck local files').isDisabled(), true, 'Web cannot validate native model files');
     assert.ok(await page.getByText('Use a native development or release build to install the assistant.', { exact: true }).isVisible());
@@ -231,6 +236,7 @@ try {
     await button('I’m here · Finish trip').click();
     await capture('complete');
     await button('Plan return trip').click();
+    await settleReply();
     assert.ok(await page.getByText(/Forward steps haven’t been reused/).isVisible());
     assert.equal(await button('Directions').count(), 0);
     await send('Paano pumunta sa Masinag from Cubao?');
@@ -242,6 +248,7 @@ try {
     assert.ok(await page.getByTestId('gaile-think').isVisible(), 'Gaile introduces the conversation');
     await capture('chat-empty');
     await button('Try the example question').click();
+    await settleReply();
     await capture('chat');
     await largeText('chat');
     await send('Saan ako bababa?');

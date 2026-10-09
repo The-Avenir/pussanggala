@@ -16,6 +16,11 @@ import type { Preference, PreviewRoute } from './previewJourney';
 import { useLocalAssistant } from '../inference/useLocalAssistant';
 import { previewAnswerContext, renderSafeExplanation } from '../inference/explanationContext';
 import { AiRuntimeError } from '@pusang-gala/ai';
+import { useRoutePack } from '../routing/useRoutePack';
+import { routeReply } from '../routing/routeReply';
+import { conversationalReply } from '../routing/conversationalReply';
+import { parse } from '@pusang-gala/core';
+import { ResponseStream } from '../inference/responseStream';
 
 type Screen = 'plan' | 'welcome' | 'ask' | 'options' | 'steps' | 'map' | 'active' | 'complete'
   | 'trips' | 'settings' | 'offline' | 'privacy' | 'about';
@@ -46,7 +51,17 @@ export function MobileShell(): React.JSX.Element {
   const [landmarksOpen, setLandmarksOpen] = useState(false);
   const [exampleMode, setExampleMode] = useState(false);
   const [turns, setTurns] = useState<ConversationTurn[]>([]);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const replyMounted = useRef(true);
+  const [replyStream] = useState(() => new ResponseStream((id, text, streaming) => {
+    if (!replyMounted.current) return;
+    setTurns(current => current.map(turn => turn.id === id ? { ...turn, answer: text, streaming } : turn));
+    setIsStreaming(streaming);
+  }));
   const assistant = useLocalAssistant();
+  const routePack = useRoutePack();
+  const planning = useRef(false);
+  const [isPlanning, setIsPlanning] = useState(false);
   const conversationVersion = useRef(0);
   const turnSequence = useRef(0);
   const [tripConversation, setTripConversation] = useState(false);
@@ -61,6 +76,7 @@ export function MobileShell(): React.JSX.Element {
   const [checkedAt, setCheckedAt] = useState<string | null>(null);
   const [tripSegment, setTripSegment] = useState<'saved' | 'history'>('saved');
   const scrollRef = useRef<ScrollView>(null);
+  const followReply = useRef(true);
   const returnFocus = useRef<View>(null);
   const sheetHeading = useRef<Text>(null);
   const wasModalOpen = useRef(false);
@@ -71,6 +87,9 @@ export function MobileShell(): React.JSX.Element {
   const mapRoute = route ?? activeRoute;
   const selected = route ?? EXAMPLE_ROUTE;
   const modalOpen = sheet !== null || editing !== null;
+  useEffect(() => { replyMounted.current = true; return () => { replyMounted.current = false; replyStream.cancel(); }; }, [replyStream]);
+
+  function stopResponse(): void { replyStream.cancel(); if (assistant.phase !== 'idle') assistant.cancel(); }
 
   function navigate(next: Screen): void {
     setError(null);
@@ -96,10 +115,11 @@ export function MobileShell(): React.JSX.Element {
   function commitEndpoint(): void {
     if (!editing || !endpointText.trim()) return;
     if (editing === 'origin') setOrigin(endpointText.trim()); else setDestination(endpointText.trim());
+    conversationVersion.current += 1; stopResponse(); routePack.conversation.current?.newTrip();
     setRoute(null); setError(null); setEditing(null); setExampleMode(false);
   }
   useEffect(() => { scrollRef.current?.scrollTo({ y: 0, animated: false }); }, [screen, detailStep, activeStep]);
-  useEffect(() => { if (screen === 'ask' && turns.length) scrollRef.current?.scrollToEnd({ animated: false }); }, [screen, turns.length]);
+  useEffect(() => { if (screen === 'ask' && turns.length) { followReply.current = true; scrollRef.current?.scrollToEnd({ animated: false }); } }, [screen, turns.length]);
   useEffect(() => {
     const listener = BackHandler.addEventListener('hardwareBackPress', () => {
       if (modalOpen) { setSheet(null); setEditing(null); return true; }
@@ -128,33 +148,74 @@ export function MobileShell(): React.JSX.Element {
     updateStore();
   }
   function chooseExample(): void {
+    conversationVersion.current += 1; stopResponse(); routePack.conversation.current?.newTrip(); setTurns([]);
     setExampleMode(true); setOrigin('LRT-1 Monumento'); setDestination('One Ayala'); setRoute(EXAMPLE_ROUTE); setDetailStep(0);
     history('looked_up', EXAMPLE_ROUTE); navigate('options');
   }
-  function appendTurn(query: string, answer: string, itinerary?: PreviewRoute): void {
+  function appendTurn(query: string, answer: string, itinerary?: PreviewRoute,
+    facts?: Omit<ConversationTurn, 'id' | 'query' | 'answer'>): void {
     const id = ++turnSequence.current;
     const version = conversationVersion.current;
-    setTurns(current => [...current.slice(-11), { id, query, answer, ...(itinerary ? { route: itinerary } : {}) }]);
-    if (assistant.model.phase !== 'installed' || assistant.phase !== 'idle') return;
+    setTurns(current => [...current.slice(-11), { id, query, answer: '', streaming: true, ...facts, ...(itinerary ? { route: itinerary } : {}) }]);
+    replyStream.start(id); replyStream.append(id, answer);
+    if (!itinerary || assistant.model.phase !== 'installed' || assistant.phase !== 'idle') {
+      replyStream.finish(id); return;
+    }
     const context = previewAnswerContext(answer);
-    const explanations: string[] = [];
+    let emitted = 0;
     void assistant.explainContext(context, unit => {
       if (conversationVersion.current !== version) return;
-      explanations.push(renderSafeExplanation(unit, context));
-      setTurns(current => current.map(turn => turn.id === id ? { ...turn, answer: explanations.join('\n\n'), localAi: true } : turn));
-    }).catch(error => {
+      const text = renderSafeExplanation(unit, context);
+      if (!text) return;
+      emitted += 1;
+      replyStream.append(id, '\n\n' + text);
+      setTurns(current => current.map(turn => turn.id === id ? { ...turn, localAi: true } : turn));
+    }).then(() => replyStream.finish(id)).catch(error => {
       if (conversationVersion.current !== version) return;
       const stopped = error instanceof AiRuntimeError && error.kind === 'cancelled';
-      setTurns(current => current.map(turn => turn.id === id ? { ...turn, answer, localAi: false,
-        aiNotice: stopped ? 'Explanation stopped. Basic summary shown.' : 'Local explanation unavailable. Basic summary shown.' } : turn));
+      replyStream.finish(id);
+      setTurns(current => current.map(turn => turn.id === id ? { ...turn, localAi: emitted > 0,
+        aiNotice: stopped ? 'Reply stopped. The route reports remain available.' : 'The local explanation could not finish. The route reports remain available.' } : turn));
     });
   }
   function askExample(): void {
+    conversationVersion.current += 1; stopResponse(); routePack.conversation.current?.newTrip(); setTurns([]);
     setExampleMode(true); setOrigin('LRT-1 Monumento'); setDestination('One Ayala'); setRoute(EXAMPLE_ROUTE); setTripConversation(false);
     appendTurn(exampleQuestion, 'Tara. This example uses Carousel, a walking transfer, then MRT-3. Open Directions for each boarding and alighting point.', EXAMPLE_ROUTE);
     history('looked_up', EXAMPLE_ROUTE);
   }
+  async function submitRouteQuestion(query: string): Promise<void> {
+    const manager = routePack.conversation.current;
+    if (!manager || planning.current) return;
+    planning.current = true; setIsPlanning(true);
+    const version = conversationVersion.current;
+    try {
+      const result = await manager.handleUserMessage(query);
+      if (conversationVersion.current !== version || manager !== routePack.conversation.current) return;
+      const endpoints = manager.getState().endpoints;
+      if (endpoints) { setOrigin(endpoints.origin.name); setDestination(endpoints.destination.name); }
+      const cards = result.type === 'plan' ? result.evidence.cards : result.type === 'followUp' ? result.cards : [];
+      const hours = result.type === 'plan' ? result.evidence.hourStatements : result.type === 'followUp' ? result.hourStatements : [];
+      appendTurn(query, routeReply(result, query), undefined, { packId: manager.getState().trip.packId, cards, hours,
+        ...(result.type === 'clarification' ? { candidates: result.clarification.candidates } : {}) });
+    } catch {
+      if (conversationVersion.current === version) appendTurn(query, 'The route search failed. Check Offline resources and try again.');
+    } finally { planning.current = false; setIsPlanning(false); }
+  }
   function submit(query: string, fromHome = false): void {
+    const manager = routePack.conversation.current;
+    const friendly = parse(query, manager?.getState().trip).kind === 'unrelated' ? conversationalReply(query, routePack.pack) : null;
+    if (friendly) {
+      const pending = manager?.getState().trip.pendingClarification;
+      appendTurn(query, friendly, undefined, pending ? { candidates: pending.candidates } : undefined);
+      return;
+    }
+    if (!exampleMode && routePack.conversation.current) { void submitRouteQuestion(query); return; }
+    if (!exampleMode && Platform.OS !== 'web') {
+      appendTurn(query, routePack.phase === 'checking' ? 'Verifying the bundled route pack. Please try again shortly.'
+        : routePack.error ?? 'The route pack is unavailable. Check Offline resources.');
+      return;
+    }
     const normalized = normalize(query);
     const currentChatRoute = fromHome ? route : chatRoute;
     if (/masinag|antipolo/.test(normalized)) {
@@ -188,6 +249,11 @@ export function MobileShell(): React.JSX.Element {
   }
   function findRoutes(): void {
     if (!origin || !destination) { editEndpoint(!origin ? 'origin' : 'destination'); return; }
+    if (!exampleMode && routePack.conversation.current) {
+      navigate('ask');
+      void submitRouteQuestion(`From ${origin} to ${destination} ${preference === 'cheapest' ? 'lowest fare' : preference === 'fastest' ? 'fastest' : 'fewest transfers'}`);
+      return;
+    }
     if (/masinag|antipolo/.test(normalize(origin + ' ' + destination))) {
       setRoute(null); setError({ message: 'This place is outside NCR. Choose a supported Metro Manila landmark.',
         recovery: /masinag|antipolo/.test(normalize(origin)) ? 'origin' : 'destination' }); return;
@@ -250,7 +316,7 @@ export function MobileShell(): React.JSX.Element {
   function deleteData(): void {
     setSheet({ title: 'Delete all your data?', body: 'This clears saved routes, history, preferences, conversation and active-trip progress.', action: 'Delete all data', destructive: true,
       onConfirm: () => {
-        conversationVersion.current += 1; assistant.cancel();
+        conversationVersion.current += 1; stopResponse(); routePack.conversation.current?.newTrip();
         store.listSavedRoutes().forEach(row => store.deleteSavedRoute(row.saved_id)); store.clearHistory(); store.clearActiveTrip();
         setActiveRoute(null); setCompletedRoute(null); setRoute(null); setTurns([]); setPreference('cheapest'); setOrigin(''); setDestination('');
         setExampleMode(false); setTripConversation(false); updateStore(); setSheet(null);
@@ -259,7 +325,7 @@ export function MobileShell(): React.JSX.Element {
   function newConversation(): void {
     setSheet({ title: 'Start a new conversation?', body: 'This clears the current questions and planning context. Your active trip and saved routes are kept.',
       action: 'New conversation', onConfirm: () => {
-        conversationVersion.current += 1; assistant.cancel();
+        conversationVersion.current += 1; stopResponse(); routePack.conversation.current?.newTrip();
         setTurns([]); setRoute(null); setOrigin(''); setDestination(''); setExampleMode(false); setTripConversation(false); setSheet(null);
       } });
   }
@@ -281,8 +347,8 @@ export function MobileShell(): React.JSX.Element {
         destination={tripConversation && activeRoute ? 'One Ayala' : destination} activeStep={tripConversation && activeRoute ? activeStep : null}
         onEdit={() => { setTripConversation(false); editEndpoint('destination'); }} onOptions={() => { if (chatRoute) setRoute(chatRoute); navigate('options'); }}
         onSteps={item => openDirections(item)} onMap={item => { setRoute(item); openMap(); }} onPrompt={submit} onExample={askExample}
-        assistantPhase={assistant.phase} assistantInstalled={assistant.model.phase === 'installed'}
-        onCancel={assistant.cancel} onResources={() => navigate('offline')}/>;
+        assistantPhase={assistant.phase} assistantInstalled={assistant.model.phase === 'installed'} packReady={routePack.phase === 'ready'} isStreaming={isStreaming}
+        onCancel={stopResponse} onResources={() => navigate('offline')}/>;
       case 'options': return route ? <RouteOptionsScreen selected={selected} preference={preference}
         onSelect={item => { setRoute(item); setDetailStep(0); }} onPreference={choosePreference}/>
         : <Notice action="Choose an example journey" onAction={chooseExample}>Your planning context was cleared. No route is selected.</Notice>;
@@ -303,9 +369,9 @@ export function MobileShell(): React.JSX.Element {
         setTab('plan'); setStacks(current => ({ ...current, plan: ['plan'], trips: ['trips'] })); }}/>
         : <Text style={type.body}>No completed trip. Find your saved journeys and history in Trips.</Text>;
       case 'settings': return <SettingsScreen preference={preference} onPreference={choosePreference} onOpen={navigate} onLocation={location}
-        assistantInstalled={assistant.model.phase === 'installed'}/>;
-      case 'offline': return <OfflineDataScreen checkedAt={checkedAt} assistant={assistant} onCheck={() => {
-        setCheckedAt(new Date().toLocaleTimeString()); void assistant.recheck();
+        assistantInstalled={assistant.model.phase === 'installed'} packReady={routePack.phase === 'ready'}/>;
+      case 'offline': return <OfflineDataScreen checkedAt={checkedAt} assistant={assistant} routePack={routePack} onCheck={() => {
+        setCheckedAt(new Date().toLocaleTimeString()); void assistant.recheck(); void routePack.recheck();
       }}/>;
       case 'privacy': return <PrivacyScreen onDelete={deleteData}/>;
       case 'about': return <AboutScreen/>;
@@ -322,8 +388,8 @@ export function MobileShell(): React.JSX.Element {
     }
   }
   function footer(): React.JSX.Element | null {
-    if (screen === 'ask') return <AskComposer onSubmit={submit} disabled={assistant.phase !== 'idle'}/>;
-    if (screen === 'plan') return <AskComposer onSubmit={submitFromHome} disabled={assistant.phase !== 'idle'}/>;
+    if (screen === 'ask') return <AskComposer onSubmit={submit} disabled={assistant.phase !== 'idle' || isPlanning || isStreaming}/>;
+    if (screen === 'plan') return <AskComposer onSubmit={submitFromHome} disabled={assistant.phase !== 'idle' || isPlanning || isStreaming}/>;
     if (screen === 'options' && route) return <Button label="See directions" icon="arrow" onPress={() => navigate('steps')}/>;
     if (screen === 'steps' && route) return <Button label="Start example trip" icon="arrow" onPress={startTrip}/>;
     if (screen === 'active' && activeRoute) return <View style={ui.row}>
@@ -346,10 +412,14 @@ export function MobileShell(): React.JSX.Element {
       {exampleMode || activeRoute ? <View style={styles.preview}><Text style={[type.caption, ui.flex]}>Example mode · not travel guidance</Text>
         <Pressable accessibilityRole="button" accessibilityLabel="Leave example mode" onPress={() => {
           if (activeRoute) notice('Example trip in progress', 'End the example trip first. Your current manual progress has been kept.');
-          else { setExampleMode(false); setRoute(null); setTurns([]); setOrigin(''); setDestination('');
+          else { conversationVersion.current += 1; stopResponse(); routePack.conversation.current?.newTrip();
+            setExampleMode(false); setRoute(null); setTurns([]); setOrigin(''); setDestination('');
             setTab('plan'); setStacks({ plan: ['plan'], map: ['map'], trips: ['trips'] }); }
         }} style={styles.leave}><Text style={[type.caption, { color: palette.accent }]}>Exit</Text></Pressable></View> : null}
-      <ScrollView testID="main-scroll" ref={scrollRef} keyboardShouldPersistTaps="handled" style={ui.flex} contentContainerStyle={styles.content}>
+      <ScrollView testID="main-scroll" ref={scrollRef} keyboardShouldPersistTaps="handled" style={ui.flex} contentContainerStyle={styles.content}
+        scrollEventThrottle={100} onScroll={({ nativeEvent }) => {
+          followReply.current = nativeEvent.contentSize.height - nativeEvent.contentOffset.y - nativeEvent.layoutMeasurement.height < 100;
+        }} onContentSizeChange={() => { if (screen === 'ask' && followReply.current) scrollRef.current?.scrollToEnd({ animated: false }); }}>
         {error ? <Notice title="Route unavailable" action={error.recovery === 'resources' ? 'Check offline resources' : error.recovery === 'origin' ? 'Edit starting point' : 'Edit destination'}
           onAction={() => { if (error.recovery === 'resources') navigate('offline'); else editEndpoint(error.recovery); }}>{error.message}</Notice> : null}
         {content()}
@@ -389,7 +459,7 @@ export function MobileShell(): React.JSX.Element {
               <TextInput accessibilityLabel="Landmark name" value={endpointText} onChangeText={setEndpointText}
                 style={[type.body, ui.input]} placeholder="Type a landmark" placeholderTextColor={palette.secondary} autoFocus
                 returnKeyType="done" onSubmitEditing={commitEndpoint}/>
-              <Text style={type.caption}>The route pack is unavailable. This field keeps your input without guessing a place or walking connection.</Text>
+              <Text style={type.caption}>{routePack.phase === 'ready' ? 'Landmarks are matched against the installed NCR pack. Ambiguous matches require confirmation.' : 'The route pack is unavailable. Check Offline resources.'}</Text>
               <Button label="Use this landmark" disabled={!endpointText.trim()} onPress={commitEndpoint}/>
             </> : sheet ? <><Text style={type.body}>{sheet.body}</Text>
               <Button label={sheet.action} variant={sheet.destructive ? 'danger' : 'primary'} onPress={sheet.onConfirm}/>

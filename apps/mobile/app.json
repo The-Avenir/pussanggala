@@ -72,7 +72,8 @@
       ],
       "@maplibre/maplibre-react-native",
       "./plugins/with-offline-release.cjs",
-      "./plugins/with-gradle-version.cjs"
+      "./plugins/with-gradle-version.cjs",
+      "./plugins/with-model-hash.cjs"
     ],
     "extra": {
       "offlineOnly": false,

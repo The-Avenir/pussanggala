@@ -42,6 +42,20 @@ describe('llama.rn bridge', () => {
     expect(init).not.toHaveBeenCalled();
   });
 
+  it('constrains native route output to known citation IDs and neutral prose', async () => {
+    const native = context();
+    const runtime = new LlamaRuntime(async () => native);
+    await runtime.load(spec);
+    runtime.configureExplanation(previewAnswerContext('This is an example.'));
+    for await (const _chunk of runtime.generate('explain')) { /* no tokens in this native stub */ }
+    const params = vi.mocked(native.completion).mock.calls[0]![0];
+    expect(params.grammar).toContain('root ::= unit');
+    expect(params.grammar).toContain('preview-answer-0');
+    expect(params.grammar).toContain('Here are the reported details.');
+    expect(params.grammar).not.toContain('connective prose');
+    await runtime.dispose();
+  });
+
   it('rejects cancelled loading promptly and releases a context that arrives late', async () => {
     const native = context();
     let resolve!: (value: Context) => void;

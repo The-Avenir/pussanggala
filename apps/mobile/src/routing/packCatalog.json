@@ -1,0 +1,29 @@
+[
+  {
+    "assetId": "A1-pack-db",
+    "kind": "pack",
+    "bundlePath": "assets/pack/pack.sqlite",
+    "sha256": "9431d79a74998e60e209669a6e4fabc5e4b15899316134b072ed25071483bed6",
+    "bytes": 811008,
+    "version": "pack_ncr-2026-10",
+    "license": "assets/licences/PACK-NOTICE.txt"
+  },
+  {
+    "assetId": "A2-pack-manifest",
+    "kind": "pack",
+    "bundlePath": "assets/pack/pack.manifest.json",
+    "sha256": "7bfc7b08fe218e85387f9405a880137d63bc45091dfa8032a3f4f9d7ce0cb92a",
+    "bytes": 1053,
+    "version": "pack_ncr-2026-10",
+    "license": "assets/licences/PACK-NOTICE.txt"
+  },
+  {
+    "assetId": "A10-pack-notice",
+    "kind": "licence",
+    "bundlePath": "assets/licences/PACK-NOTICE.txt",
+    "sha256": "b4cc00ef72de015d79c676d5438008f9eb4e55c40c28a84d0144314ef78eb528",
+    "bytes": 683,
+    "version": "pack_ncr-2026-10",
+    "license": "assets/licences/PACK-NOTICE.txt"
+  }
+]

@@ -4,6 +4,9 @@ import { sha256 } from '@noble/hashes/sha2.js';
 import { bytesToHex } from '@noble/hashes/utils.js';
 import { QWEN_MODEL } from './qwen';
 import type { ModelFiles } from './modelInstaller';
+import { NativeModules, Platform } from 'react-native';
+import { hashModelNative } from './modelHash';
+import type { NativeModelHasher } from './modelHash';
 
 export async function pickModelFile(): Promise<string | null> {
   const picked = await File.pickFileAsync({ mimeTypes: '*/*' });
@@ -25,6 +28,8 @@ export function createModelFiles(): ModelFiles {
     // File.move changes the source object's URI; use a fresh object on every install.
     promote: async () => { await new File(directory, QWEN_MODEL.filename + '.part').move(model); },
     hash: async (uri, token, progress) => {
+      const nativeHasher = NativeModules.PusangModelHash as NativeModelHasher | undefined;
+      if (Platform.OS === 'android' && nativeHasher) return hashModelNative(nativeHasher, uri, token, progress);
       const handle = new File(uri).open(FileMode.ReadOnly);
       const hash = sha256.create();
       try {

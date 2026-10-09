@@ -1,6 +1,7 @@
 import { AiRuntimeError, asCancellationToken, CancellationTokenSource, classifyNativeError, linkToken } from '@pusang-gala/ai';
-import type { CancellationLike, ModelRuntime, ModelSpec, RuntimeHandle } from '@pusang-gala/ai';
+import type { CancellationLike, GroundingContext, ModelRuntime, ModelSpec, RuntimeHandle } from '@pusang-gala/ai';
 import type { ContextParams, CompletionParams, LlamaContext, TokenData } from 'llama.rn';
+import { explanationGrammar } from '../inference/explanationGrammar';
 
 type NativeContext = Pick<LlamaContext, 'completion' | 'stopCompletion' | 'release'>;
 type Initialize = (params: ContextParams) => Promise<NativeContext>;
@@ -16,8 +17,11 @@ export class LlamaRuntime implements ModelRuntime {
   private loadSource: CancellationTokenSource | null = null;
   private generation: { source: CancellationTokenSource; settled: Promise<void> } | null = null;
   private sequence = 0;
+  private grammar: string | undefined;
 
   constructor(private readonly init: Initialize = initialize) {}
+
+  configureExplanation(context: GroundingContext): void { this.grammar = explanationGrammar(context); }
 
   async load(spec: ModelSpec, cancellation?: CancellationLike): Promise<RuntimeHandle> {
     const token = asCancellationToken(cancellation);
@@ -72,6 +76,7 @@ export class LlamaRuntime implements ModelRuntime {
       messages: [{ role: 'user', content: prompt }],
       n_predict: spec.budget.outputTokenCap, temperature: 0.2, top_p: 0.9,
       stop: ['<|im_end|>', '<|endoftext|>'],
+      ...(this.grammar ? { grammar: this.grammar } : {}),
     };
     const settled = context.completion(params, (data: TokenData) => {
       if (!source.token.isCancelled && data.token) { queue.push(data.token); wake?.(); }
@@ -109,6 +114,7 @@ export class LlamaRuntime implements ModelRuntime {
     const context = this.context;
     this.context = null;
     this.spec = null;
+    this.grammar = undefined;
     await context?.release();
   }
 }

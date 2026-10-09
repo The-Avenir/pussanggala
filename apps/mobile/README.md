@@ -1,11 +1,39 @@
-﻿# Pusang Gala mobile app
+# Pusang Gala mobile app
 
 Member 4 owns the native scaffold. AI/conversation, local assets and user-store
 implementations retain their separate ownership. The UI preview does not establish model, pack, map or phone readiness.
 See [T40 evidence](t40-build-evidence.md) for executed checks and unresolved gates.
 The earlier `spike-t40.md` is historical research, not the installed-version record.
 
-The current entry point is the T46 playful commute chat: Gaile-led onboarding, the Sunset Playful palette, rounded Nunito headings and a “Where to go?” home with a sticky chat composer. The supplied mascot replaces the SVG cat logo. Plan, Map and Trips remain the main destinations; “Enter landmarks” reveals manual routing. The preview shows onboarding once per fresh session; native integration must persist its completion flag for returning users. See the [audit, navigation, interactions and validation](../../docs/ux-redesign.md), [visual review](../../docs/ux-review.html), [wireframes](../../docs/ux-wireframes.html), and [independent Luna review / Orca record](../../docs/playful-chat-review.md). Run `npm run web` here to explore it. Native AI is connected through llama.rn and an explicit model download (see below). Route data, basemap, GPS and persistent storage remain unconnected; real route queries still fail honestly and examples require an explicit action. The earlier [Figma implementation](../../docs/ui-figma-implementation.md) is preserved as a comparison baseline.
+The current entry point is the T46 playful commute chat: Gaile-led onboarding, the Sunset Playful palette, rounded Nunito headings and a “Where to go?” home with a sticky chat composer. The supplied mascot replaces the SVG cat logo. Plan, Map and Trips remain the main destinations; “Enter landmarks” reveals manual routing. The preview shows onboarding once per fresh session; native integration must persist its completion flag for returning users. See the [audit, navigation, interactions and validation](../../docs/ux-redesign.md), [visual review](../../docs/ux-review.html), [wireframes](../../docs/ux-wireframes.html), and [independent Luna review / Orca record](../../docs/playful-chat-review.md). Run `npm run web` here to explore it. Native AI is connected through llama.rn and an explicit model download (see below). Route data is now bundled and connected to real queries. Basemap, GPS and persistent storage remain unconnected; synthetic examples require an explicit action. The earlier [Figma implementation](../../docs/ui-figma-implementation.md) is preserved as a comparison baseline.
+
+## Bundled route retrieval
+
+The Android app ships the validated October 2026 NCR SQLite pack: 69 routes,
+134 directed legs, 91 places. It checks database and companion hashes, SQLite
+integrity and foreign keys, then loads the complete core pack without networking.
+Ask Gaile and Enter landmarks → Find routes use core parsing, place resolution,
+directed routing, ranking and cards. Clarifications, fare/boarding/hours follow-ups,
+preferences and return trips retrieve fresh evidence. Route replies use conversational
+Taglish templates over validated cards and start immediately without loading Qwen.
+Full cards and dated source IDs are available behind Route reports & sources.
+
+Gaile also answers greetings, identity/capability questions, route coverage and
+offline-help questions locally. Replies stream into the chat with a Stop action.
+Route replies retain unknown/conflicting fares and hours without guessing. Native
+explanation sampling for explicit examples is constrained to canonical statement IDs.
+
+Rebuild with `npm run pack:bundle --workspace @pusang-gala/mobile` from the repo
+root. The build-time tool audits the local raw snapshot against the cleaned seed,
+writes SQLite/companion assets, and measures checksums into
+`src/routing/packCatalog.json`. Raw data is never imported into the application.
+Basemap, GPS and persistent trip storage remain separate integration work.
+
+Android verification uses PusangModelHash, a cancellable native SHA-256 worker with
+a 1 MB buffer. It hashes every byte without transferring the GGUF into JavaScript.
+Imports, downloads, startup and manual rechecks retain exact size and hash checks.
+The with-model-hash plugin preserves registration across prebuild. Platforms without
+the Android module use bounded JavaScript hashing.
 
 ## On-device Qwen assistant
 
@@ -37,13 +65,13 @@ The default is CPU inference with mmap, two threads, a 2,048-token context and
 384 output tokens. These are conservative defaults, not measured device budgets.
 
 `src/inference/useLocalAssistant.ts` owns installation and one inference at a time.
-Once installed, chat answers are explained on-device through `ai.explain` and its
+Once installed, explicit example answers are explained on-device through `ai.explain` and its
 existing NDJSON grounding guard. Only complete validated units reach the screen;
 invalid output or native errors restore the deterministic summary. Stop cancels
 generation, and clearing a conversation prevents late output from reappearing.
-The current shell still supplies synthetic preview answers rather than a real
-route pack or unrestricted chat. To use installed route facts, supply a real
-`GroundingContext` to `explainContext(context, onSafeUnit)`.
+Explicit example journeys keep their synthetic context. Installed route answers,
+identity/capability questions and failures do not invoke the model: retrieved facts
+are phrased locally so a commute query does not wait for native generation.
 
 Expo Go and web cannot run llama.rn. Use an Android development/release build;
 the bridge also uses llama.rn's iOS API, but this app currently targets Android
@@ -141,7 +169,7 @@ manifest/lockfile pins. New Architecture is enabled; build ABIs are `arm64-v8a` 
 `x86_64`. MapLibre `11.5.0` and llama.rn `0.12.9` are installed and their plugins
 registered. llama's newer registry `latest` is a release candidate; this scaffold
 uses the published non-prerelease `0.12.9`, with OpenCL disabled until T30 measures it.
-Neither native execution nor GPU support is claimed.
+The app uses native CPU inference; GPU support remains unmeasured.
 
 The release manifest overlay permits INTERNET for the explicit model download and
 removes ACCESS_NETWORK_STATE. Debug retains local Metro access. Android backup and OTA updates
@@ -164,6 +192,6 @@ These are installed pins and available imports, not competing adapter implementa
 | expo-location | 57.0.20 | Foreground permission/watch APIs only; T43 owns lifecycle and explicit origin confirmation. |
 
 T41 adds final explicit bundled asset references/checksums once artifacts are eligible.
-No pack, map or GGUF file is supplied by T40, and no raw curation dataset is imported.
-T30/T31 consume the installed llama native module through their existing runtime/model
-ports. A native runtime adapter and model selection are outside this task.
+The integrated app now supplies a pinned route pack and a native Qwen runtime.
+The map remains missing, and the GGUF is imported or downloaded into private storage.
+Raw curation data is never imported into the runtime.

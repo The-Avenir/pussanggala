@@ -8,7 +8,8 @@
     "start": "expo start --dev-client",
     "android": "expo run:android --device",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "node --test scripts/*.test.cjs && vitest run src/assets/nativePackAdapter.test.ts src/store/test/sqliteTripStore.test.ts src/adapters/llamaRuntime.test.ts src/inference",
+    "test": "node --test scripts/*.test.cjs && vitest run src/assets/nativePackAdapter.test.ts src/store/test/sqliteTripStore.test.ts src/adapters/llamaRuntime.test.ts src/inference src/routing",
+    "pack:bundle": "node ../../tools/pack-builder/bundle-mobile.mjs",
     "check": "expo install --check && expo config --type prebuild",
     "android:prebuild": "expo prebuild --platform android --clean --no-install",
     "android:development": "node scripts/android-build.cjs development",
@@ -17,7 +18,8 @@
     "export:android": "expo export --platform android --output-dir dist/android",
     "web": "expo start --web",
     "check:ui-assets": "node scripts/check-ui-assets.mjs",
-    "test:ui": "expo export --platform web --output-dir dist && node scripts/check-ui.mjs"
+    "test:ui": "expo export --platform web --output-dir dist && node scripts/check-ui.mjs",
+    "test:chat": "expo export --platform web --output-dir dist && node scripts/check-chat.mjs"
   },
   "dependencies": {
     "@pusang-gala/core": "*",

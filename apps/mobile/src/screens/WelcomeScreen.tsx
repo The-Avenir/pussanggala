@@ -15,7 +15,7 @@ export function WelcomeScreen({ onContinue }: { onContinue: () => void }): React
         <Text style={type.secondary}>Mark each step when you get there.</Text></View></View>
     </View>
     <Button label="Plan a journey" icon="arrow" onPress={onContinue}/>
-    <Text style={type.caption}>No account needed. This design preview uses example journeys; the local assistant isn’t connected.</Text>
+    <Text style={type.caption}>No account needed. Check Offline resources for route and assistant availability.</Text>
   </View>;
 }
 const styles = StyleSheet.create({

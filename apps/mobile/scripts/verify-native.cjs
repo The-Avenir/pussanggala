@@ -7,6 +7,8 @@ const main = read('app/src/main/AndroidManifest.xml');
 const release = read('app/src/release/AndroidManifest.xml');
 const properties = read('gradle.properties');
 const wrapperProperties = read('gradle/wrapper/gradle-wrapper.properties');
+assert.match(read('app/src/main/java/com/pusanggala/app/MainApplication.kt'), /add\(PusangModelHashPackage\(\)\)/);
+assert.match(read('app/src/main/java/com/pusanggala/app/PusangModelHashModule.kt'), /MessageDigest.getInstance\("SHA-256"\)/);
 assert.match(wrapperProperties, /gradle-9\.1\.0-bin\.zip/);
 assert.match(main, /android:allowBackup="false"/);
 assert.match(main, /android:usesCleartextTraffic="false"/);

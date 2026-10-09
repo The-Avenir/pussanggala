@@ -8,7 +8,9 @@ const mock = vi.hoisted(() => ({
   cancel: vi.fn(async () => {}), httpStatus: 200,
   selectedUri: null as string | null,
   beforeMove: vi.fn(async () => {}),
+  nativeModules: {} as Record<string, unknown>,
 }));
+vi.mock('react-native', () => ({ Platform: { OS: 'android' }, NativeModules: mock.nativeModules }));
 vi.mock('expo-file-system', () => {
   class Directory {
     uri: string;
@@ -65,7 +67,16 @@ vi.mock('expo-file-system/legacy', () => ({
 import { createModelFiles, pickModelFile } from './expoModelFiles';
 
 describe('Expo model files', () => {
-  beforeEach(() => { mock.files.clear(); mock.reads.length = 0; mock.close.mockClear(); mock.cancel.mockClear(); mock.httpStatus = 200; mock.selectedUri = null; mock.beforeMove.mockReset(); });
+  beforeEach(() => { mock.files.clear(); mock.reads.length = 0; mock.close.mockClear(); mock.cancel.mockClear(); mock.httpStatus = 200; mock.selectedUri = null; mock.beforeMove.mockReset(); delete mock.nativeModules.PusangModelHash; });
+
+  it('uses native SHA-256 for Android without copying model bytes into JS', async () => {
+    const files = createModelFiles();
+    const hashModel = vi.fn(async () => 'native-sha256');
+    mock.nativeModules.PusangModelHash = { hashModel, cancel: vi.fn() };
+    expect(await files.hash(files.modelUri, new CancellationTokenSource().token, () => {})).toBe('native-sha256');
+    expect(hashModel).toHaveBeenCalledWith(files.modelUri, expect.any(String));
+    expect(mock.reads).toHaveLength(0);
+  });
 
   it('propagates a failed native promotion instead of claiming the file is ready', async () => {
     const files = createModelFiles();

@@ -31,8 +31,9 @@ const originFirst = /\b(?:from|galing(?:\s+(?:sa|ng))?|mula(?:\s+sa)?)\s+(.+?)\s
 const destinationFirst = /\b(?:how (?:do i |can i |to )?(?:get|go|commute) to|paano (?:pumunta|pupunta|makarating|mag-?commute)(?:\s+(?:sa|papunta sa))?|papunta(?:ng)?\s+sa)\s+(.+?)\s+(?:from|galing(?:\s+sa)?|mula(?:\s+sa)?)\s+(.+)/d;
 const originOnly = /\b(?:galing|mula|from)\s+(?:sa\s+)?(.+)/d;
 const destinationInstead = /\b(?:papunta(?:ng)?|pupunta|going to|to|sa)\s+(.+?)\s+(?:na lang|instead)\b/d;
-const destinationOnly = /\b(?:papunta(?:ng)?|pupunta|going to|go to|get to)\s+(?:sa\s+)?(.+)/d;
+const destinationOnly = /\b(?:how (?:do i |can i |to )?(?:get|go|commute) to|paano (?:pumunta|pupunta|makarating|mag-?commute)(?:\s+(?:sa|papunta sa))?|papunta(?:ng)?|pupunta|going to|go to|get to)\s+(?:sa\s+)?(.+)/d;
 const barePair = /^\s*(.+?)\s+to\s+(.+)/d;
+const questionPair = /^\s*(?:paano (?:pumunta|pupunta|makarating|mag-?commute)(?:\s+sa)?|how (?:do i |can i |to )?(?:get|go|commute))\s+(.+?)\s+to\s+(.+)/d;
 
 export function parse(query: string, trip?: TripState): Intent {
   const q = query.toLowerCase();
@@ -77,7 +78,7 @@ export function parse(query: string, trip?: TripState): Intent {
     const destination = mention(match?.indices?.[reversed ? 1 : 2]);
     return origin && destination ? intent("new_trip", { origin, destination }) : undefined;
   }
-  const explicitPair = pair(originFirst.exec(q)) ?? pair(destinationFirst.exec(q), true);
+  const explicitPair = pair(originFirst.exec(q)) ?? pair(destinationFirst.exec(q), true) ?? pair(questionPair.exec(q));
   if (explicitPair) return explicitPair;
   const singleOrigin = mention(originOnly.exec(q)?.indices?.[1]);
   const singleDestination = mention((destinationInstead.exec(q) ?? destinationOnly.exec(q))?.indices?.[1]);

@@ -74,6 +74,7 @@ export function useLocalAssistant() {
         loaded.current = true;
       }
       source.token.throwIfCancelled();
+      runtime.configureExplanation(context);
       if (mounted.current) setPhase('generating');
       const report = await explain(context, runtime, unit => {
         if (mounted.current && !source.token.isCancelled) onUnit(unit);

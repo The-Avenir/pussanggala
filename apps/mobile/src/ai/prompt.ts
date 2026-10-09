@@ -89,16 +89,18 @@ export function buildExplainPrompt(
     }
   }
   lines.push("CARDS:");
+  // Provenance stays in the validated context. The model only needs citation IDs
+  // and canonical text; repeating pack record IDs consumes its small context.
   for (const card of context.cards) {
     lines.push(
-      `  CARD id="${card.cardId}" records=[${card.packRecordIds.join(",")}] title="${sanitizeDataText(card.title, nonce)}"`,
+      `  CARD id="${card.cardId}" title="${sanitizeDataText(card.title, nonce)}"`,
     );
   }
   lines.push("STATEMENTS:");
   for (const stmt of context.statements) {
     const order = stmt.role === "step" ? ` order=${stmt.stepOrder}` : "";
     lines.push(
-      `  STMT id="${stmt.id}" role=${stmt.role}${order} records=[${stmt.packRecordIds.join(",")}] text="${sanitizeDataText(stmt.text, nonce)}"`,
+      `  STMT id="${stmt.id}" role=${stmt.role}${order} text="${sanitizeDataText(stmt.text, nonce)}"`,
     );
   }
   lines.push(close, "", "Now write the explanation units as NDJSON lines only.");

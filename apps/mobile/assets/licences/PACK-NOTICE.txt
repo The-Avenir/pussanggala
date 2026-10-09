@@ -1,0 +1,12 @@
+Pusang Gala NCR route pack, October 2026
+
+Route facts were curated and paraphrased from community answers in r/HowToGetTherePH.
+The pack contains structured facts and app-authored summaries, without raw posts,
+comment wording, usernames, or Reddit URLs. Opaque source IDs, post dates, and
+comment indexes preserve offline provenance. Pending review records are excluded.
+
+Reports describe past commuter experiences, not verified or live transport data.
+Unknown values remain unknown. Conflicting reports and their dates remain visible.
+Coverage is limited to the included NCR places and directed connections.
+
+App-authored pack schema and summaries: The Avenir, Pusang Gala project.

@@ -1,3 +1,7 @@
 # Keep dataset JSON/CSV checksums stable across Windows checkouts (LF).
 howtogetthereph_dataset/** text eol=lf
 data/reference/howtogetthereph_dataset-precleaned/** text eol=lf
+apps/mobile/assets/pack/pack.sqlite binary
+apps/mobile/assets/pack/pack.manifest.json text eol=lf
+apps/mobile/assets/licences/PACK-NOTICE.txt text eol=lf
+apps/mobile/src/routing/packCatalog.json text eol=lf

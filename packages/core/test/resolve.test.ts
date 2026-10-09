@@ -29,6 +29,14 @@ function alias(raw: RawPackTables, norm: string, id: string): void {
 }
 
 describe("place resolution", () => {
+  it("resolves canonical names without requiring an alias, including typos", () => {
+    const loaded = pack(raw => {
+      raw.place_aliases = (raw.place_aliases as Array<{ place_id: string }>).filter(row => row.place_id !== "pl_demo-plaza");
+    });
+    expect(text("Demo Plaza", loaded)).toEqual({ status: "resolved", placeId: "pl_demo-plaza", match: "exact" });
+    expect(text("Demo Plza", loaded)).toEqual({ status: "resolved", placeId: "pl_demo-plaza", match: "fuzzy" });
+  });
+
   it("resolves normalized exact aliases", () => {
     expect(text("  DEMO-Plaza! ")).toEqual({ status: "resolved", placeId: "pl_demo-plaza", match: "exact" });
     expect(text("Sta. Demo Plaza")).toEqual({ status: "resolved", placeId: "pl_demo-plaza", match: "exact" });

@@ -51,6 +51,9 @@ export function resolve(mention: PlaceMention, pack: Pack, trip?: TripState): Re
   }
   const alias = pack.aliasesByNorm.get(n);
   if (alias) return checkId(alias.place_id, pack, "exact");
+  const named = [...pack.places.values()].filter(place => normalize(place.name) === n).sort(comparePlace);
+  if (named.length === 1) return checkId(named[0]!.place_id, pack, "exact");
+  if (named.length > 1) return acceptedResult(named.filter(place => place.ncr_status === "accepted"), "exact");
 
   const threshold = n.length < 5 ? 0 : n.length < 9 ? 1 : 2;
   const scores = new Map<string, number>();
@@ -58,6 +61,10 @@ export function resolve(mention: PlaceMention, pack: Pack, trip?: TripState): Re
     scores.set(id, Math.min(scores.get(id) ?? Infinity, distance));
   }
   if (threshold > 0) {
+    for (const place of pack.places.values()) {
+      const distance = osaDistance(n, normalize(place.name), threshold);
+      if (distance <= threshold) add(place.place_id, distance);
+    }
     for (const [norm, row] of pack.aliasesByNorm) {
       const distance = osaDistance(n, norm, threshold);
       if (distance <= threshold) add(row.place_id, distance);
