@@ -62,7 +62,7 @@ SDD §1.4 + §4 (`ai.explain`, `ai.extractIntent`, conversation manager) + TODO 
 
 | # | Need | Why Member-4 needs it | Open question |
 |---|------|------------------------|---------------|
-| X1 | Single TS types package + versioned migrations | Loader (T41) and user store (T44: `ACTIVE_TRIP / SAVED_ROUTE / TRIP_HISTORY / INSTALLED_ASSET`, forward-only numbered migrations) import one source of truth | TBD(Member-2): package path (`packages/core` vs. `packages/contracts`) and migration numbering rule? |
+| X1 | Single TS types package + versioned migrations | Loader (T41) and user store (T44: `ACTIVE_TRIP / SAVED_ROUTE / TRIP_HISTORY / INSTALLED_ASSET`, forward-only numbered migrations) import one source of truth | Resolved: `packages/core` (`@pusang-gala/core`), imported via `apps/mobile/src/core`; contracts in docs/contracts-pusang-gala.md. Migration numbering: forward-only integers (`0001_…`) owned by Member 4. |
 | X2 | Asset allowlist + readiness states | `INSTALLED_ASSET { asset_id, kind: model/pack/map, file_path, version, sha256, bytes, state: missing/verifying/ready/failed, license }`; allowlist excludes dataset/review intermediates from the APK (T01/T41) | TBD(Member-2): who owns the allowlist file and the `state` transition diagram? |
 | X3 | Named reference + fallback phones | S1–S4 gates run on the exact reference phone (model/ABI/Android/RAM recorded in T00) | TBD(Member-2): where are the phone identities recorded (contract PR vs. LOG) and who updates them? |
 

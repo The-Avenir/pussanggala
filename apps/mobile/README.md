@@ -66,3 +66,23 @@ for raw Reddit leaks (verbatim long comment text, `u/` usernames, Reddit
 permalinks, raw-dataset imports) and fails on any hit. The supplied
 `howtogetthereph_dataset/` directory at the repo root is intentional build
 input: it is never scanned, so its mere existence never fails the gate.
+
+## Using @pusang-gala/core
+
+App code imports the shared core only through `src/core` (`./src/core` from
+`App.tsx`, `../core` inside `src/`) — do not deep-import `packages/core`
+paths elsewhere. Prerequisite: `npm install` in `apps/mobile` (and `npm install`
+at the repo root so `packages/core`'s own dev toolchain is present for the
+root typecheck/tests).
+
+The dependency is `file:../../packages/core` (a symlink; `apps/mobile` stays
+out of the root npm workspaces). `metro.config.js` adds `packages/core` to
+`watchFolders` and keeps Metro's default hierarchical lookup: Expo's own
+lockfile nests version-conflicted deps under `node_modules/expo/node_modules`
+(`expo-asset`, `ws@8`, `zod@3`), so strict flat resolution would misresolve
+them. Core's `zod` import resolves via the symlink realpath to the repo-root
+`node_modules/zod@4.6.5` (core's pinned dep — root `npm install` is required
+before bundling/typechecking), and app code resolves `zod` to the app's own
+top-level `zod@4.6.5` — never the `zod@3` nested under `expo`. Verified by
+`npx expo export`: the bundle contains zod 4 (`$ZodType`/`_zod` internals) and
+no zod-3 copy. Do not use zod 3 APIs in app code; `zod` here is v4.
