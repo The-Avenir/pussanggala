@@ -269,6 +269,10 @@ export function summarize(r) {
   const head =
     r.record_kind === "ride" ? `${KIND_LABEL.ride}${p.mode ? ` (${p.mode})` : ""}` : KIND_LABEL[r.record_kind] ?? r.record_kind;
   const asks = r.evidence_check.flags.filter((f) => FLAG_ASK[f]).map((f) => FLAG_ASK[f]);
+  if (r.ai_override?.new_state === "needs_review") {
+    const kind = r.ai_override.audit_kind === "rule_screen" ? "rule screen" : "audit";
+    asks.push(`part-B ${kind} flagged ${r.ai_override.reason_code} — review the cited evidence before deciding`);
+  }
   return `${head}: ${asks.join("; ")}.`;
 }
 
@@ -400,7 +404,7 @@ function reportMd(r) {
   return L.join("\n");
 }
 
-function queueMd(queue, top = 100) {
+export function queueMd(queue, top = 100) {
   const L = [
     "# T12 review queue — reviewer digest",
     "",
