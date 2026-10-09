@@ -8,7 +8,7 @@
     "start": "expo start --dev-client",
     "android": "expo run:android --device",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "node --test scripts/*.test.cjs",
+    "test": "node --test scripts/*.test.cjs && vitest run src/assets/nativePackAdapter.test.ts",
     "check": "expo install --check && expo config --type prebuild",
     "android:prebuild": "expo prebuild --platform android --clean --no-install",
     "android:development": "node scripts/android-build.cjs development",
@@ -47,7 +47,8 @@
     "@types/react": "19.2.4",
     "typescript": "6.0.3",
     "playwright": "1.64.0",
-    "react-native-svg-transformer": "1.5.2"
+    "react-native-svg-transformer": "1.5.2",
+    "vitest": "5.0.3"
   },
   "engines": {
     "node": ">=22.13"

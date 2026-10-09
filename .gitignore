@@ -23,12 +23,17 @@ dist/
 coverage/
 *.tsbuildinfo
 
-# Expo/native build artifacts
+# Expo/native build artifacts (CNG regenerates android/ios; never commit)
 .expo/
 android/build
+apps/mobile/android/
+apps/mobile/ios/
 
 # Local environment files (template stays committed)
 .env*
 !.env.example
 
 npm-debug.log*
+
+# model
+model/
