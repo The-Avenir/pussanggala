@@ -127,6 +127,8 @@ test("hours only come from clock values that are not a guess", () => {
   assert.deepEqual([allDay.starts_local, allDay.ends_local, allDay.days_text], ["00:00", "23:59", "daily"]);
   assert.deepEqual(clocks("4:00 ka umalis").map((c) => c.hhmm), [], "a bare 4:00 is ambiguous");
   assert.deepEqual(clocks("16:30 ang huling biyahe").map((c) => c.hhmm), ["16:30"]);
+  assert.deepEqual(clocks("0pm 9nn 13pm").map((c) => c.hhmm), [], "invalid meridiem values cannot become clocks");
+  assert.deepEqual(clocks("12nn").map((c) => c.hhmm), ["12:00"]);
 });
 
 test("walks, service status and notes", () => {
@@ -199,6 +201,152 @@ test("sharding is stable and keeps a post whole", () => {
 
 test("extraction is deterministic", () => {
   assert.deepEqual(extractAll(POSTS, SNAPSHOT_SHA256), RESULT);
+});
+
+const authored = (text, overrides = {}) => extractPost(post("zzsafe", {
+  answers: [{ text }], ...overrides,
+})).candidates.filter((c) => c.comment_index !== null);
+const ofKind = (rows, kind) => rows.filter((c) => c.record_kind === kind);
+
+test("questions, negated advice and explicit speculation do not establish route facts", () => {
+  for (const text of [
+    "Can I take the bus from Lumina Park to Copper Hill?",
+    "Bus from Lumina Park to Copper Hill then jeep from Copper Hill to Orchid Terminal?",
+    "Maybe take the bus from Lumina Park to Copper Hill then jeep from Copper Hill to Orchid Terminal.",
+    "Do not take the bus from Lumina Park to Copper Hill.",
+    "Huwag sumakay ng jeep from Lumina Park to Copper Hill.",
+    "Baka bus from Lumina Park to Copper Hill.",
+    "Walk from Lumina Park to Copper Hill?",
+    "Bus from Lumina Park to Copper Hill ba",
+  ]) assert.deepEqual(authored(text), [], text);
+  const rows = authored("Bus from Lumina Park to Copper Hill. Fare 15 pesos? Last trip 9pm? Bus still operating? Signboard: Silver Gate?");
+  assert.deepEqual(rows.map((c) => c.record_kind), ["ride"]);
+  assert.equal(rows[0].candidate_payload.signboard, null);
+  for (const text of ["Fare is not 15 pesos.", "Maybe last trip 9pm.", "Bus is not suspended.", "Bus is not still operating."])
+    assert.deepEqual(authored(text), [], text);
+});
+
+test("preference-conditional advice and explicit single-ride facts remain supported", () => {
+  const rows = authored("If you prefer fewer rides, take the bus from Lumina Park to Copper Hill, 25 minutes. Fare 15 pesos. Last trip 9pm. Bus still operating.");
+  assert.deepEqual(rows.map((c) => c.record_kind), ["ride", "fare", "hours", "service_status"]);
+  assert.equal(rows[0].candidate_payload.ride_min, 25);
+  for (const c of rows.slice(1)) assert.equal(c.candidate_payload.applies_to_ride, rows[0].candidate_id);
+  assert.equal(rows[1].candidate_payload.amount_min, 15);
+  assert.equal(rows[2].candidate_payload.ends_local, "21:00");
+  assert.equal(rows[3].candidate_payload.status, "reported_active");
+  assert.equal(authored("Kung mas mura, jeep from Lumina Park to Copper Hill.")[0].candidate_payload.mode, "jeepney");
+});
+
+test("global and unlabeled multi-ride values stay unscoped", () => {
+  const rows = authored("Bus from Lumina Park to Copper Hill then jeep from Copper Hill to Orchid Terminal. Total fare 50 pesos. Last trip 9pm. Still operating.");
+  assert.equal(ofKind(rows, "ride").length, 2);
+  for (const kind of ["fare", "hours", "service_status"]) {
+    assert.equal(ofKind(rows, kind).length, 1);
+    assert.equal(ofKind(rows, kind)[0].candidate_payload.applies_to_ride, null, kind);
+  }
+  const ride = authored("Bus from Lumina Park to Copper Hill. Total fare for both rides 50 pesos.");
+  assert.equal(ofKind(ride, "fare")[0].candidate_payload.applies_to_ride, null);
+});
+
+test("named fare, hours and status bind to the stated service instead of the preceding ride", () => {
+  const rows = authored("Bus from Lumina Park to Copper Hill then jeep from Copper Hill to Orchid Terminal. Bus fare 15 pesos. Bus last trip 9pm. Bus still operating. Jeep fare 20 pesos. Jeep last trip 8pm. Jeep suspended.");
+  const rides = ofKind(rows, "ride");
+  for (const kind of ["fare", "hours", "service_status"])
+    assert.deepEqual(ofKind(rows, kind).map((c) => c.candidate_payload.applies_to_ride), rides.map((r) => r.candidate_id), kind);
+  const ambiguous = authored("Bus from Lumina Park to Copper Hill then bus from Copper Hill to Orchid Terminal. Bus fare 15 pesos. Bus last trip 9pm. Bus still operating.");
+  for (const kind of ["fare", "hours", "service_status"])
+    assert.equal(ofKind(ambiguous, kind)[0].candidate_payload.applies_to_ride, null, kind);
+  const otherEndpoint = authored("Bus from Lumina Park to Copper Hill. Bus to Juniper College fare 25 pesos.");
+  assert.equal(ofKind(otherEndpoint, "fare")[0].candidate_payload.applies_to_ride, null);
+});
+
+test("equal values on different legs are preserved, and repeated connections retain their scope", () => {
+  const rows = authored("Bus from Lumina Park to Copper Hill, fare 15 pesos, last trip 9pm, still operating then jeep from Copper Hill to Orchid Terminal, fare 15 pesos, last trip 9pm, still operating.");
+  const rides = ofKind(rows, "ride");
+  assert.equal(rides.length, 2);
+  for (const kind of ["fare", "hours", "service_status"])
+    assert.deepEqual(ofKind(rows, kind).map((c) => c.candidate_payload.applies_to_ride), rides.map((r) => r.candidate_id), kind);
+  const repeated = authored("Bus from Lumina Park to Copper Hill. Bus from Lumina Park to Copper Hill, fare 15 pesos.");
+  assert.equal(ofKind(repeated, "ride").length, 1);
+  assert.equal(ofKind(repeated, "fare")[0].candidate_payload.applies_to_ride, repeated[0].candidate_id);
+});
+
+test("walking past a station does not imply rail and explicit vehicle mode wins over endpoint names", () => {
+  const walk = authored("Walk from Verdant LRT to Copper Hill, 300 meters, 5 minutes.");
+  assert.deepEqual(walk.map((c) => c.record_kind), ["walk"]);
+  assert.equal(walk[0].candidate_payload.walk_m, 300);
+  assert.equal(walk[0].candidate_payload.walk_min, 5);
+  const bus = authored("Take bus from Verdant LRT to Orchid Terminal.");
+  assert.equal(bus[0].candidate_payload.mode, "bus");
+  for (const text of [
+    "Bus from Lumina Park to Copper Hill and jeep from Copper Hill to Orchid Terminal.",
+    "Bus from Lumina Park to Copper Hill, Orchid Terminal -> Juniper College.",
+    "Bus or jeep from Lumina Park to Copper Hill.",
+    "Take bus from Lumina Park to Copper Hill and walk to Juniper College.",
+    "Take jeep from left corner to right gate.",
+  ]) assert.equal(ofKind(authored(text), "ride").length, 0, text);
+});
+
+test("waits, appointments, approximate durations and non-route quantities do not become ride facts", () => {
+  for (const extra of ["wait 20 minutes", "class 45 minutes", "around 30 minutes", "10 to 20 minutes", "5.5 minutes", "10 minutes and 20 minutes"])
+    assert.equal(authored(`Bus from Lumina Park to Copper Hill, ${extra}.`)[0].candidate_payload.ride_min, null, extra);
+  for (const text of ["Fare 15 minutes.", "Fare 50 percent.", "Bus P2P.", "Lunch costs 50 pesos.", "Fare PHP 15.50."])
+    assert.equal(ofKind(authored(text), "fare").length, 0, text);
+  const unrelated = authored("Bus from Lumina Park to Copper Hill. Mall opens from 5am to 9pm. Last trip 10pm.");
+  assert.equal(ofKind(unrelated, "hours").length, 1);
+  assert.equal(ofKind(unrelated, "hours")[0].candidate_payload.applies_to_ride, null);
+  const unrelatedStatus = authored("Bus from Lumina Park to Copper Hill. Mall still operating.");
+  assert.equal(ofKind(unrelatedStatus, "service_status")[0].candidate_payload.applies_to_ride, null);
+  for (const extra of ["around 300 meters", "300-500 meters", "300+ meters"])
+    assert.equal(authored(`Walk from Lumina Park to Copper Hill, ${extra}.`)[0].candidate_payload.walk_m, null, extra);
+});
+
+test("walking continuation uses an explicit adjacent chain in the same comment", () => {
+  const rows = authored("Bus from Lumina Park to Copper Hill then walk to Orchid Terminal, 5 minutes.");
+  const walk = ofKind(rows, "walk")[0].candidate_payload;
+  assert.deepEqual([walk.from_place, walk.to_place], ["Copper Hill", "Orchid Terminal"]);
+  assert.equal(ofKind(authored("Bus from Lumina Park to Copper Hill. Walk to Orchid Terminal."), "walk").length, 0);
+});
+
+test("question-only facts and another answer never supply endpoints, numeric values or service attributes", () => {
+  const rows = authored("Take bus.", {
+    question: "From Lumina Park to Copper Hill, signboard Silver Gate, 20 minutes, northbound, last trip 9pm?",
+    answers: [{ text: "Take bus." }, { text: "Fare 15 pesos. Last trip 9pm. Still operating. Walk to Orchid Terminal." }],
+  });
+  assert.equal(ofKind(rows, "ride").length, 0);
+  assert.equal(ofKind(rows, "walk").length, 0);
+  for (const c of rows) assert.equal(c.candidate_payload.applies_to_ride, null);
+  const samePost = authored("", { answers: [{ text: "Bus from Lumina Park to Copper Hill, signboard: Silver Gate, northbound, 20 minutes." }, { text: "Bus fare 15 pesos. Bus last trip 9pm. Bus still operating." }] });
+  const ride = samePost[0];
+  assert.deepEqual([ride.candidate_payload.signboard, ride.candidate_payload.direction_text, ride.candidate_payload.ride_min], ["Silver Gate", "northbound", 20]);
+  for (const c of samePost.slice(1)) {
+    assert.equal(c.comment_index, 1);
+    assert.equal(c.candidate_payload.applies_to_ride, null);
+  }
+});
+
+test("inactive operating reports stay scoped without turning negated status into suspension", () => {
+  const rows = authored("Bus from Lumina Park to Copper Hill is no longer operating.");
+  assert.deepEqual(rows.map((c) => c.record_kind), ["ride", "service_status"]);
+  assert.equal(rows[1].candidate_payload.status, "suspended");
+  assert.equal(rows[1].candidate_payload.applies_to_ride, rows[0].candidate_id);
+  assert.equal(ofKind(authored("Bus from Lumina Park to Copper Hill. Bus is not suspended."), "service_status").length, 0);
+});
+
+test("unaffected comment IDs, same-comment locators and extracted review state remain stable", () => {
+  const text = "Bus from Lumina Park to Copper Hill, fare 15 pesos, last trip 9pm, still operating.";
+  const rows = authored(text);
+  assert.deepEqual(rows.map((c) => c.candidate_id), ["c_zzsafe_0_1", "c_zzsafe_0_2", "c_zzsafe_0_3", "c_zzsafe_0_4"]);
+  assert.deepEqual(authored(text), rows);
+  const extended = authored(text, { answers: [{ text }, { text: "Maybe jeep from Orchid Terminal to Juniper College?" }] });
+  assert.deepEqual(extended, rows);
+  for (const c of rows) {
+    assert.equal(c.comment_index, 0);
+    assert.equal(c.snapshot_sha256, SNAPSHOT_SHA256);
+    assert.equal(c.review_state, "extracted");
+    assert.equal(c.reviewer_id, null);
+    assert.equal(c.reviewed_at, null);
+  }
 });
 
 test("a full run over the snapshot writes byte-identical shards", () => {

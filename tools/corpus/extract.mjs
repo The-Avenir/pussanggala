@@ -32,12 +32,24 @@ export const norm = (s) =>
     .replace(/[^a-z0-9]+/g, " ")
     .trim();
 
-/** Sentence-ish units. Multi-leg answers chain legs with tapos/then, so those split too. */
+const CHAIN_RE = /\s+(?:tapos|then|after\s+that|pagkatapos|afterwards)\s+/i;
+const UNCERTAIN_RE = /\b(?:maybe|perhaps|possibly|might|could\s+be|may\s+be|baka|siguro|yata|ata|parang|i\s+think|not\s+sure|unsure)\b/i;
+const QUESTION_RE = /\?|\b(?:ba|bang|paano|pano|magkano|saan|how|where|whether)\b|^\s*(?:can|is|are|does|do|did|will|should|may)\b/i;
+const NEGATED_RE = /\b(?:not|no|never|cannot|can't|cant|don't|dont|do\s+not|won't|wont|hindi|di|huwag|wag|walang|wala)\b/i;
+
+// Preserve question punctuation and sentence-wide uncertainty across chained legs.
+// A question's second "then" clause is still a question, not a recommendation.
+function sourceSegments(text) {
+  return String(text ?? "").split(/(?<=[!?;\n\r•])\s*|(?<!\d)\.(?!\d)\s*|\s*[\n\r•]+\s*/)
+    .flatMap((sentence) => {
+      const asserted = !QUESTION_RE.test(sentence) && !UNCERTAIN_RE.test(sentence);
+      return sentence.split(CHAIN_RE).map((s, index) => ({ text: s.trim(), asserted, continuation: index > 0 }));
+    }).filter((s) => s.text.length > 1);
+}
+
+/** Sentence-ish units, including the punctuation needed to identify questions. */
 export function segments(text) {
-  return String(text ?? "")
-    .split(/[.!?;\n\r•]+|\s+(?:tapos|then|after\s+that|pagkatapos|afterwards)\s+/i)
-    .map((s) => s.trim())
-    .filter((s) => s.length > 1);
+  return sourceSegments(text).map((s) => s.text);
 }
 
 // Paraphrase templates. Each is ≤5 normalized tokens, so a 6-gram match is impossible.
@@ -82,7 +94,8 @@ const STOP = new Set(
    "destination destinations origin any is are am be can cant will wont would should could " +
    "there here other others another either neither both each every all some most next last " +
    "first final which what where when who why how short long connected alternative alternate " +
-   "nearest nearby closest actual exact exactly straight").split(" ")
+   "nearest nearby closest actual exact exactly straight board alight wait waiting northbound " +
+   "southbound eastbound westbound signboard signage sign operating running active suspended retired").split(" ")
 );
 // Category words that name no particular place on their own.
 const GENERIC = new Set(
@@ -214,6 +227,31 @@ function connection(seg) {
   }
   return null;
 }
+
+// A second independent endpoint pair cannot borrow the first pair's mode or values.
+function connections(seg) {
+  const pairs = new Map();
+  for (const re of [FROM_TO, ARROW, X_TO_Y]) {
+    for (const m of seg.matchAll(re)) {
+      const from = narrow(m[1], "right");
+      const to = narrow(m[2], "left");
+      if (from && to && norm(from) !== norm(to)) pairs.set(`${norm(from)}|${norm(to)}`, { from, to });
+    }
+  }
+  return [...pairs.values()];
+}
+
+function modesIn(seg) {
+  const found = new Set();
+  // Consume each match once: "modern jeep" is one mode, not two.
+  let remaining = seg;
+  for (const [mode, re] of MODE_RULES) {
+    const matches = [...remaining.matchAll(new RegExp(re.source, "gi"))];
+    if (matches.length) found.add(mode);
+    remaining = remaining.replace(new RegExp(re.source, "gi"), (s) => " ".repeat(s.length));
+  }
+  return [...found];
+}
 const single = (re, seg) => {
   const m = re.exec(seg);
   return m ? narrow(m[1], "left") : null;
@@ -226,7 +264,7 @@ const prep = (seg) => String(seg).replace(/\bpa-(?=[A-Za-zÀ-ÖØ-öø-ÿ])/gi, 
 // ---------- numbers ----------
 const APPROX_RE = /(?:~|±|approx\w*|around|about|mga|roughly|more\s+or\s+less|ish|sakto\s+ba)\s*$/i;
 const OPEN_BEFORE_RE = /(?:at\s+least|mahigit|lampas|up\s+to|less\s+than|under|starting\s+at)\s*$/i;
-const NOT_MONEY_AFTER = /^\s*(?:%|:|\d|am\b|pm\b|mins?\b|minutes?\b|minuto|oras|hours?\b|hrs?\b|km\b|kms\b|meters?\b|metro|kph|taon|years?\b|pcs\b|pax\b|am\/pm)/i;
+const NOT_MONEY_AFTER = /^\s*(?:%|percent\b|:|\d|am\b|pm\b|mins?\b|minutes?\b|minuto|oras|hours?\b|hrs?\b|km\b|kms\b|meters?\b|metro|kph|taon|years?\b|pcs\b|pax\b|am\/pm)/i;
 const money = (s) => Number(String(s).replace(/,/g, ""));
 const FARE_PREFIX = /(?:₱|\bphp|\bp(?=\s?\d))\s*(\d{1,3}(?:,\d{3})*|\d{1,4})(?:\s*(?:-|–|to|hanggang)\s*(?:₱|php|p)?\s*(\d{1,3}(?:,\d{3})*|\d{1,4}))?/gi;
 const FARE_SUFFIX = /\b(\d{1,3}(?:,\d{3})*|\d{1,4})(?:\s*(?:-|–|to|hanggang)\s*(\d{1,3}(?:,\d{3})*|\d{1,4}))?\s*(?:pesos?|pisos?|php)\b/gi;
@@ -239,13 +277,14 @@ const APPROX_INSIDE_RE = /~|approx\w*|around|about|\bmga\b|roughly|more\s+or\s+l
  * single biggest defect source in fare records.
  */
 export function fares(seg) {
+  if (QUESTION_RE.test(seg) || UNCERTAIN_RE.test(seg) || NEGATED_RE.test(seg)) return [];
   const out = [];
   for (const re of [FARE_PREFIX, FARE_SUFFIX, FARE_KW]) {
     for (const m of seg.matchAll(re)) {
       const before = seg.slice(Math.max(0, m.index - 16), m.index);
       const after = seg.slice(m.index + m[0].length);
       if (/p2p/i.test(m[0]) || APPROX_INSIDE_RE.test(m[0]) || APPROX_RE.test(before) || OPEN_BEFORE_RE.test(before)) continue;
-      if (after.startsWith("+") || /^[A-Za-z]/.test(after) || NOT_MONEY_AFTER.test(after)) continue;
+      if (/\d\.$/.test(before) || /^\.\d/.test(after) || after.startsWith("+") || /^[A-Za-z]/.test(after) || NOT_MONEY_AFTER.test(after)) continue;
       const lo = money(m[1]);
       const hi = m[2] == null ? lo : money(m[2]);
       if (!Number.isFinite(lo) || !Number.isFinite(hi) || lo < 1 || hi > 5000 || lo > hi) continue;
@@ -265,8 +304,9 @@ export function clocks(seg) {
     if (m[3]) {
       const h = Number(m[1]);
       const mi = Number(m[2] ?? 0);
-      if (h > 12 || mi > 59) continue;
+      if (h < 1 || h > 12 || mi > 59) continue;
       const mer = m[3].replace(/\./g, "").toLowerCase();
+      if (mer === "nn" && h !== 12) continue;
       const h24 = mer === "nn" ? 12 : mer === "pm" ? (h % 12) + 12 : h % 12;
       hhmm = `${String(h24).padStart(2, "0")}:${String(mi).padStart(2, "0")}`;
     } else {
@@ -295,11 +335,14 @@ const DAYS_RULES = [
 ];
 
 export function hoursIn(seg) {
+  if (QUESTION_RE.test(seg) || UNCERTAIN_RE.test(seg) || NEGATED_RE.test(seg)) return null;
   if (!SERVICE_HOURS_RE.test(seg) && !ALL_DAY_RE.test(seg)) return null;
   const days = DAYS_RULES.find(([re]) => re.test(seg))?.[1] ?? null;
   const cs = clocks(seg);
-  if (cs.length >= 2 && RANGE_JOIN_RE.test(seg.slice(cs[0].end, cs[1].index)))
+  if (cs.length > 2) return null;
+  if (cs.length === 2 && RANGE_JOIN_RE.test(seg.slice(cs[0].end, cs[1].index)))
     return { starts_local: cs[0].hhmm, ends_local: cs[1].hhmm, days_text: days };
+  if (cs.length === 2) return null;
   if (cs.length >= 1) {
     const before = seg.slice(Math.max(0, cs[0].index - 24), cs[0].index);
     if (ENDS_BEFORE_RE.test(before)) return { starts_local: null, ends_local: cs[0].hhmm, days_text: days };
@@ -313,12 +356,20 @@ const MINUTES_RE = /\b(\d{1,3})\s*(?:-|–|to)\s*\d{1,3}\s*(?:mins?|minutes?|min
 function minutesIn(seg) {
   const m = MINUTES_RE.exec(seg);
   if (!m || m[1] != null) return null; // ranges stay unrecorded; the payload holds one value
+  if (/\d\.$/.test(seg.slice(0, m.index)) || APPROX_RE.test(seg.slice(Math.max(0, m.index - 24), m.index)) ||
+      OPEN_BEFORE_RE.test(seg.slice(Math.max(0, m.index - 24), m.index)) ||
+      /^\s*(?:\+|or\s+more|ish\b)/i.test(seg.slice(m.index + m[0].length)) ||
+      /\b(?:wait|waiting|hintay|antay|queue|pila|leave|arrive|arrival|early|before|after|class|meeting|appointment)\b/i.test(seg)) return null;
+  if ([...seg.matchAll(new RegExp(MINUTES_RE.source, "gi"))].length !== 1) return null;
   const n = Number(m[2]);
   return n >= 1 && n <= 300 ? n : null;
 }
 const METERS_RE = /\b(\d{2,4})\s*(?:meters?|metro)\b/i;
 function metersIn(seg) {
   const m = METERS_RE.exec(seg);
+  if (m && (/\d\s*[-–.]\s*$/.test(seg.slice(0, m.index)) || APPROX_RE.test(seg.slice(Math.max(0, m.index - 24), m.index)) ||
+      OPEN_BEFORE_RE.test(seg.slice(Math.max(0, m.index - 24), m.index)) ||
+      /^\s*\+/i.test(seg.slice(m.index + m[0].length)))) return null;
   const n = m ? Number(m[1]) : NaN;
   return Number.isFinite(n) && n >= 10 && n <= 5000 ? n : null;
 }
@@ -329,6 +380,7 @@ const STATUS_RULES = [
   ["suspended", /\b(?:suspend(?:ed|ido)?|(?:hindi|di)\s+na\s+(?:bumibiyahe|bumabiyahe|biyahe|byahe|umaandar|tumatakbo|dumadaan|dumaraan)|wala\s+nang?\s+(?:jeep|bus|uv|biyahe|byahe)|walang\s+(?:biyahe|byahe)|no\s+longer\s+(?:operating|running|in\s+service)|not\s+operating|stopped\s+operating)\b/i],
   ["reported_active", /\b(?:still\s+(?:operating|running|active)|may\s+biyahe\s+pa|bumibiyahe\s+pa|operational\s+pa)\b/i],
 ];
+const NEGATIVE_OPERATING_RE = /\b(?:(?:hindi|di)\s+na\s+(?:bumibiyahe|bumabiyahe|biyahe|byahe|umaandar|tumatakbo|dumadaan|dumaraan)|wala\s+nang?\s+(?:jeep|bus|uv|biyahe|byahe)|walang\s+(?:biyahe|byahe)|no\s+longer\s+(?:operating|running|in\s+service)|not\s+operating)\b/i;
 // Fixed bodies, ≤4 words each: a note never carries source wording (INV-4).
 const NOTE_RULES = [
   [/\b(?:delikado|mag-?ingat|be\s+careful|watch\s+out|holdap|snatcher|hindi\s+ligtas|unsafe)\b/i, "Safety caution noted.", "warning"],
@@ -389,42 +441,57 @@ function extractComment(post, sha, ci, text) {
     out.push(r);
     return r;
   };
-  const segs = segments(text);
+  const units = sourceSegments(text);
+  const segs = units.map((s) => prep(s.text));
 
-  // Pass A — connections. A fare/hours/status record later scopes to the ride nearest above it.
+  // Pass A — only affirmative, unambiguous connections from this cited comment.
   const rideBySeg = new Array(segs.length).fill(null);
   const rides = [];
-  const seenRide = new Set();
+  const seenRide = new Map();
   const seenWalk = new Set();
-  segs.forEach((raw, i) => {
-    const seg = prep(raw);
-    const mode = detectMode(seg);
+  segs.forEach((seg, i) => {
+    if (!units[i].asserted) return;
+    const status = STATUS_RULES.find(([, re]) => re.test(seg))?.[0];
+    // Negative operating reports can identify an inactive connection; a negated
+    // boarding recommendation cannot establish a usable one.
+    if (NEGATED_RE.test(seg) && !(status === "suspended" && NEGATIVE_OPERATING_RE.test(seg) && !/\b(?:take|ride|sakay|sumakay)\b/i.test(seg))) return;
+    const pairs = connections(seg);
+    if (pairs.length > 1 || [...seg.matchAll(/\b(?:sakay|sumakay|sasakay|magsakay|sumasakay|board|take)\b/gi)].length > 1 ||
+        [...seg.matchAll(/\b(?:baba|bumaba|bababa|pababa|ibaba|magpababa|get\s+off|alight)\b/gi)].length > 1) return;
     const conn = connection(seg);
+    const withoutEndpoints = [conn?.from, conn?.to].filter(Boolean).reduce((s, name) => s.replace(name, " "), seg);
+    const modes = modesIn(withoutEndpoints);
+    const mode = modes.length === 1 ? modes[0] : modes.length === 0 ? detectMode(seg) : null;
     let ride = null;
-    if (mode) {
+    if (mode && !WALK_KW.test(seg)) {
       const board = conn?.from ?? firstOf([BOARD_RE, BOARD_REV_RE, BOARD_FROM_RE, BOARD_LEAD_RE], seg);
       const alight = conn?.to ?? single(ALIGHT_RE, seg);
       const key = `${mode}|${norm(board)}|${norm(alight)}`;
-      if (board && alight && norm(board) !== norm(alight) && !seenRide.has(key)) {
-        seenRide.add(key);
-        const sign = narrow(SIGN_PRE_RE.exec(seg)?.[1], "right") ?? single(SIGN_POST_RE, seg);
-        ride = push("ride", {
-          mode,
-          signboard: sign && norm(sign) !== norm(board) && norm(sign) !== norm(alight) ? sign : null,
-          board_place: board,
-          alight_place: alight,
-          direction_text: DIRECTION_RE.exec(seg)?.[0] ?? null,
-          ride_min: WALK_KW.test(seg) ? null : minutesIn(seg),
-        });
+      if (board && alight && norm(board) !== norm(alight)) {
+        ride = seenRide.get(key) ?? null;
+        if (!ride) {
+          const sign = narrow(SIGN_PRE_RE.exec(seg)?.[1], "right") ?? single(SIGN_POST_RE, seg);
+          ride = push("ride", {
+            mode,
+            signboard: sign && norm(sign) !== norm(board) && norm(sign) !== norm(alight) ? sign : null,
+            board_place: board,
+            alight_place: alight,
+            direction_text: DIRECTION_RE.exec(seg)?.[0] ?? null,
+            ride_min: minutesIn(seg),
+          });
+          seenRide.set(key, ride);
+          rides.push(ride);
+        }
         rideBySeg[i] = ride;
-        rides.push(ride);
       }
     }
     if (!WALK_KW.test(seg)) return;
-    const walkConn = mode && ride ? null : conn;
+    // Mixed walk/ride prose without a chain separator has no unique endpoint pair.
+    if (modes.length && /\b(?:take|ride|sakay|sumakay|board)\b/i.test(seg)) return;
+    const walkConn = conn;
     let from = walkConn?.from ?? null;
     let to = walkConn?.to ?? single(DEST_RE, seg);
-    if (!from && to) from = rides.at(-1)?.candidate_payload.alight_place ?? null; // walk continues the last leg
+    if (!from && to && units[i].continuation) from = rideBySeg[i - 1]?.candidate_payload.alight_place ?? null;
     if (!from || !to || norm(from) === norm(to)) return;
     const key = `${norm(from)}|${norm(to)}`;
     if (seenWalk.has(key)) return;
@@ -432,39 +499,69 @@ function extractComment(post, sha, ci, text) {
     push("walk", { from_place: from, to_place: to, walk_text: WALK_TEXT, walk_m: metersIn(seg), walk_min: minutesIn(seg) });
   });
 
-  // Pass B — values, scoped to a ride when one is unambiguous.
+  // Pass B — never bind a global amount or a different service to a nearby ride.
+  const NON_ROUTE_VALUE_RE = /\b(?:total|overall|combined|budget|all\s+(?:rides|legs)|both|meal|food|lunch|rent|salary|tuition|parking|entrance|admission|delivery|shopping|class|meeting|appointment|bring|cash|allowance|baon|taxi|grab|angkas|joyride|motorcycle|different|other|another|ibang)\b/i;
   const scope = (i) => {
-    for (let j = i; j >= 0; j--) if (rideBySeg[j]) return rideBySeg[j].candidate_id;
-    for (let j = i + 1; j < rideBySeg.length; j++) if (rideBySeg[j]) return rideBySeg[j].candidate_id;
+    const seg = segs[i];
+    if (NON_ROUTE_VALUE_RE.test(seg) || WALK_KW.test(seg)) return null;
+    if (rideBySeg[i]) return rideBySeg[i].candidate_id;
+    // A named service may refer back within this comment, but only if it singles
+    // out one ride. Endpoints disambiguate two rides using the same mode.
+    const modes = modesIn(seg);
+    if (modes.length > 1) return null;
+    if (modes.length === 1) {
+      let matches = rides.filter((r) => r.candidate_payload.mode === modes[0]);
+      const pair = connection(seg);
+      if (pair) matches = matches.filter((r) =>
+        (!pair.from || norm(r.candidate_payload.board_place) === norm(pair.from)) &&
+        (!pair.to || norm(r.candidate_payload.alight_place) === norm(pair.to)));
+      if (!pair && matches.length > 1) return null;
+      return matches.length === 1 ? matches[0].candidate_id : null;
+    }
+    // Contiguous fact-only follow-ups may describe a sole ride. An intervening
+    // topic, question, walk or differently named connection breaks that context.
+    if (rides.length !== 1 || connection(seg) || /\b(?:mall|shop|store|office|school)\b/i.test(seg)) return null;
+    for (let j = i - 1; j >= 0; j--) {
+      if (!units[j].asserted || NON_ROUTE_VALUE_RE.test(segs[j]) || WALK_KW.test(segs[j])) return null;
+      if (rideBySeg[j]) return rideBySeg[j].candidate_id;
+      if (modesIn(segs[j]).length || !(fares(segs[j]).length || hoursIn(segs[j]) || STATUS_RULES.some(([, re]) => re.test(segs[j])))) return null;
+    }
     return null;
   };
   const seenFare = new Set();
   const seenHours = new Set();
   const seenStatus = new Set();
   segs.forEach((seg, i) => {
+    if (!units[i].asserted) return;
+    const target = scope(i);
     for (const f of fares(seg)) {
-      const key = `${f.amount_min}|${f.amount_max}`;
+      if (/\b(?:meal|food|lunch|rent|salary|tuition|parking|entrance|admission|delivery|shopping)\b/i.test(seg)) continue;
+      const key = `${target}|${f.amount_min}|${f.amount_max}`;
       if (seenFare.has(key)) continue;
       seenFare.add(key);
-      push("fare", { applies_to_ride: scope(i), amount_min: f.amount_min, amount_max: f.amount_max, currency: "PHP" });
+      push("fare", { applies_to_ride: target, amount_min: f.amount_min, amount_max: f.amount_max, currency: "PHP" });
     }
     const h = hoursIn(seg);
-    if (h) {
-      const key = `${h.starts_local}|${h.ends_local}|${h.days_text}`;
+    const owner = rides.find((r) => r.candidate_id === target)?.candidate_payload;
+    const hoursSubject = [owner?.board_place, owner?.alight_place].filter(Boolean).reduce((s, name) => s.replace(name, " "), seg);
+    if (h && !/\b(?:mall|shop|store|office|school|class|meeting|appointment)\b/i.test(hoursSubject)) {
+      const key = `${target}|${h.starts_local}|${h.ends_local}|${h.days_text}`;
       if (!seenHours.has(key)) {
         seenHours.add(key);
-        push("hours", { applies_to_ride: scope(i), hours_text: HOURS_TEXT, ...h });
+        push("hours", { applies_to_ride: target, hours_text: HOURS_TEXT, ...h });
       }
     }
     const status = STATUS_RULES.find(([, re]) => re.test(seg))?.[0];
-    if (status && !seenStatus.has(status)) {
-      seenStatus.add(status);
-      push("service_status", { applies_to_ride: scope(i), status });
+    const key = `${target}|${status}`;
+    if (status && (!NEGATED_RE.test(seg) || (status === "suspended" && NEGATIVE_OPERATING_RE.test(seg))) && !seenStatus.has(key)) {
+      seenStatus.add(key);
+      push("service_status", { applies_to_ride: target, status });
     }
   });
 
   // Pass C — at most one note per comment, from the first trigger that fires.
-  const note = NOTE_RULES.find(([re]) => re.test(text));
+  const note = NOTE_RULES.find(([re]) => units.some((s) => s.asserted &&
+    (!NEGATED_RE.test(s.text) || /\bhindi\s+ligtas\b/i.test(s.text)) && re.test(s.text)));
   if (note) push("note", { body: note[1], kind: note[2] });
   return out;
 }
