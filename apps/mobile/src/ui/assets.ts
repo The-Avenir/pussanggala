@@ -69,4 +69,3 @@ export const Layers = asset(LayersSource, '29042');
 export const Storage = asset(StorageSource, 'bcb41');
 export const PinkStorage = asset(PinkStorageSource, '7cf24');
 export const Info = asset(InfoSource, 'ff654');
-
