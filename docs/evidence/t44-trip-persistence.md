@@ -3,7 +3,10 @@
 Task lead: T44 Orca worker in the independent `t44-trip-persistence` checkout.
 Branch: `feat/t44-trip-persistence`. Evidence date: 2026-10-10 (Asia/Shanghai).
 Base: `ae42517be873d181e2f7ceb4c6e43d995bcc97fb`, fetched current `origin/main`
-before implementation and fast-forward checked in this checkout. PR: pending creation.
+before implementation and fast-forward checked in this checkout. Draft PR:
+[#22](https://github.com/The-Avenir/pussanggala/pull/22). Implementation commit:
+`ce7d0fd4b6a41efdd58a5d89be8d13476fbf9344`; task-only evidence/status follow-up
+records the final check rerun and PR link. No merge, main push or force-push.
 
 Status: host implementation and validation complete; draft review, T41/T45 native
 wiring and actual Android/device/data gates remain open. T44 is not marked Done.
@@ -83,7 +86,7 @@ Host: Windows x64; Node **v26.11.1**. Device: **none**. Only synthetic pack fixt
 | Strict raw-extra/nested-extra rejection, ID-only JSON/schema dump, explicit labels and deletes | Passed; exactly five tables and contracted column names; no raw chat/query/GPS persistence fields. |
 | `npm run typecheck` in `apps/mobile` | Exit 0. App-local harness types also pass; this does not mount the new controls or prove a build. |
 | `npm test` at root | Exit 0: core **427**, conversation **52**, AI **88**, evaluation **10** tests passed (**577 total**, 36 files). |
-| `npm run typecheck` at root | **Exit 1**: unchanged conversation tests fail at `test/evalSut.test.ts:9` (`ImportMeta.url`) and `test/guardrails.test.ts:17` (`URL`, `ImportMeta.url`). Core, AI and eval workspace checks proceeded. This predates T44; files/config are unchanged and remain with their owner. |
+| `npm run typecheck` at root (final rerun after app-local install completed) | **Exit 0**: all four workspace typechecks pass. The initial attempt, while app-local dependencies were still installing, reported errors in unchanged conversation `test/evalSut.test.ts:9` (`ImportMeta.url`) and `test/guardrails.test.ts:17` (`URL`, `ImportMeta.url`). Those errors did not recur after installation; no conversation/config source fix was made. |
 | `node tools/eval/allowlist-check.mjs` | Exit 0: **15/15** detector self-tests; **88** scannable files at this run; no runtime/training raw-content finding. Raw build-input directory intentionally excluded. |
 | `node --test tools/eval/allowlist-check.test.mjs` | Exit 0: **12/12** fixtures passed, including planted-leak rejection. |
 | `git diff --check` | Exit 0. |
@@ -95,8 +98,9 @@ conversation or phone-performance numbers as release evidence.
 
 ## Unresolved gates and integration requirements
 
-- Root CI's typecheck remains blocked by the pre-existing conversation test types.
-  Another member's approval and affected-owner review are still required.
+- Another member's approval and affected-owner review are still required. Root
+  typecheck passes after dependency installation; shared CI has not yet executed
+  this branch and does not currently register the dedicated T44 command.
 - T40/T41 must pin/install native SQLite, supply the app-private writable connection
   and use this single user migration entry point. The declared Expo method surface is
   researched from [official SDK 57 documentation](https://docs.expo.dev/versions/v57.0.0/sdk/sqlite/);
