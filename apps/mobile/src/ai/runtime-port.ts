@@ -2,9 +2,8 @@
  * The single local model runtime port.
  *
  * This is the one and only seam between the AI layer and the native model.
- * `FakeModelRuntime` (tests/) implements it for tests; the pinned native
- * adapter (llama.rn/GGUF per BUILD §2) is **TODO, owned by T30/T40** and is
- * not present in this package — see README.md.
+ * `FakeModelRuntime` (tests/) implements it for tests; the llama.rn native
+ * adapter lives in ../adapters/llamaRuntime.ts, outside this pure package.
  *
  * Port contract the native adapter MUST honor:
  *  - `load` rejects promptly when its token is cancelled (including after a

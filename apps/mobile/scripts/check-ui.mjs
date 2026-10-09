@@ -167,9 +167,10 @@ try {
     assert.ok(await page.getByText(/Route data isn’t installed. Your endpoints/).isVisible(), 'Real manual query must not produce a fixture');
     await capture('route-unavailable');
     await button('Check offline resources').click();
-    assert.equal(await page.getByText('Missing', { exact: true }).count(), 3);
-    await button('Recheck local files').click();
-    assert.ok(await page.getByText(/no resource was downloaded/).isVisible());
+    assert.equal(await page.getByText('Missing', { exact: true }).count(), 2);
+    assert.ok(await page.getByText('Requires Android or iOS', { exact: true }).isVisible());
+    assert.equal(await button('Recheck local files').isDisabled(), true, 'Web cannot validate native model files');
+    assert.ok(await page.getByText('Use a native development or release build to install the assistant.', { exact: true }).isVisible());
     await capture('offline');
     await button('Go back').click();
     assert.ok(await button('Find routes').isVisible(), 'Returning from resources preserves the open manual form');

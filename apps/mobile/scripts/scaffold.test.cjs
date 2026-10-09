@@ -15,8 +15,9 @@ test('build preflight rejects partial SDKs and accepts required Windows componen
   assert.match(sdkIssues('sdk', (file) => files.has(file), 'win32')[0], /android-36/);
 });
 
-test('release overlay removes network permissions, while debug remains available for Metro', () => {
-  assert.match(releaseManifest, /android.permission.INTERNET" tools:node="remove"/);
+test('release overlay permits model downloads and retains private storage and disabled updates', () => {
+  assert.match(releaseManifest, /android.permission.INTERNET" \/>/);
+  assert.doesNotMatch(releaseManifest, /android.permission.INTERNET" tools:node="remove"/);
   assert.match(releaseManifest, /android.permission.ACCESS_NETWORK_STATE" tools:node="remove"/);
   const config = require('../app.json').expo;
   assert.equal(config.android.allowBackup, false);

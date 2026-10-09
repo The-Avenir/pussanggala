@@ -3,6 +3,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { entryForBundlePath } from '../src/assets/shipping-policy.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'assets/ui-manifest.json'), 'utf8'));
@@ -21,7 +22,8 @@ for (const asset of manifest.assets) {
 }
 for (const dir of ['figma', 'fonts', 'licences']) {
   for (const file of fs.readdirSync(path.join(root, 'assets', dir))) {
-    assert.ok(allowed.has(`assets/${dir}/${file}`), `UI asset missing from allowlist: ${file}`);
+    const assetPath = `assets/${dir}/${file}`;
+    assert.ok(allowed.has(assetPath) || entryForBundlePath(assetPath)?.kind === 'licence', `Asset missing from allowlist: ${file}`);
   }
 }
 const registry = fs.readFileSync(path.join(root, 'src/ui/assets.ts'), 'utf8');

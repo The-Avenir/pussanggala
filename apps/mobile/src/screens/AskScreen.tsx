@@ -2,11 +2,14 @@ import { useState } from 'react';
 import { Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Button, Gaile, Icon, palette, type, ui } from '../ui/travel';
 import type { PreviewRoute } from './previewJourney';
+import type { AssistantPhase } from '../inference/useLocalAssistant';
 
-export interface ConversationTurn { id: number; query: string; answer: string; route?: PreviewRoute; }
-export function AskScreen({ turns, route, origin, destination, activeStep, onEdit, onOptions, onSteps, onMap, onPrompt, onExample }: {
+export interface ConversationTurn { id: number; query: string; answer: string; route?: PreviewRoute; localAi?: boolean; aiNotice?: string; }
+export function AskScreen({ turns, route, origin, destination, activeStep, onEdit, onOptions, onSteps, onMap, onPrompt, onExample,
+  assistantPhase, assistantInstalled, onCancel, onResources }: {
   turns: readonly ConversationTurn[]; route: PreviewRoute | null; origin: string; destination: string; activeStep: number | null;
   onEdit: () => void; onOptions: () => void; onSteps: (route: PreviewRoute) => void; onMap: (route: PreviewRoute) => void; onPrompt: (query: string) => void; onExample: () => void;
+  assistantPhase: AssistantPhase; assistantInstalled: boolean; onCancel: () => void; onResources: () => void;
 }): React.JSX.Element {
   return <View style={ui.screen}>
     {(origin || destination) ? <Pressable accessibilityRole="button" accessibilityLabel="Edit journey context" onPress={onEdit} style={styles.context}>
@@ -18,7 +21,9 @@ export function AskScreen({ turns, route, origin, destination, activeStep, onEdi
         <Text style={[type.caption, styles.accent]}>ASK GAILE</Text>
         <Text accessibilityRole="header" style={type.title}>Let’s figure out{ '\n' }your commute.</Text></View><Gaile pose="think" height={110}/></View>
       <Text style={type.body}>Ask how to get somewhere, compare your options, or understand a transfer.</Text>
-      <Text style={type.secondary}>The local assistant isn’t connected in this preview. Example questions show the conversation layout.</Text>
+      <Text style={type.secondary}>{assistantInstalled ? 'On-device explanations are ready. Route data is still a labelled example in this preview.'
+        : 'Download the local assistant from Offline resources for on-device explanations.'}</Text>
+      {!assistantInstalled ? <Button variant="text" label="Set up local assistant" onPress={onResources}/> : null}
       <Button variant="secondary" label="Try the example question" onPress={onExample}/>
     </View> : turns.map(turn => <View key={turn.id} style={{ gap: 18 }}>
       <View style={styles.user}><Text style={type.body}>{turn.query}</Text></View>
@@ -31,9 +36,12 @@ export function AskScreen({ turns, route, origin, destination, activeStep, onEdi
           <Button variant="text" label="Map" onPress={() => onMap(turn.route!)}/></View>
       </View> : null}
       <View style={{ gap: 8 }}><View style={styles.assistant}><View style={styles.assistantAvatar}><Gaile pose="idle" height={34}/></View>
-        <View style={ui.flex}><Text style={type.label}>Gaile</Text><Text style={[type.caption, styles.overline]}>BASIC SUMMARY · AI UNAVAILABLE</Text></View></View>
-        <Text style={[type.body, styles.answer]}>{turn.answer}</Text></View>
+        <View style={ui.flex}><Text style={type.label}>Gaile</Text><Text style={[type.caption, styles.overline]}>{turn.localAi ? 'ON-DEVICE AI · EXAMPLE CONTEXT' : 'BASIC SUMMARY · AI UNAVAILABLE'}</Text></View></View>
+        <Text style={[type.body, styles.answer]}>{turn.answer}</Text>
+        {turn.aiNotice ? <Text style={type.secondary}>{turn.aiNotice}</Text> : null}</View>
     </View>)}
+    {assistantPhase !== 'idle' ? <View style={{ gap: 8 }}><Text style={type.secondary}>{assistantPhase === 'loading' ? 'Loading the local assistant…' : 'Writing an on-device explanation…'}</Text>
+      <Button label="Stop explanation" variant="secondary" onPress={onCancel}/></View> : null}
     {route && turns.length > 0 ? <View style={styles.followups}>
       <Button variant="secondary" label="Other options" onPress={onOptions}/>
       <Button variant="secondary" label="Where do I get off?" onPress={() => onPrompt('Saan ako bababa?')}/>
@@ -41,9 +49,9 @@ export function AskScreen({ turns, route, origin, destination, activeStep, onEdi
     </View> : null}
   </View>;
 }
-export function AskComposer({ onSubmit }: { onSubmit: (query: string) => void }): React.JSX.Element {
+export function AskComposer({ onSubmit, disabled = false }: { onSubmit: (query: string) => void; disabled?: boolean }): React.JSX.Element {
   const [query, setQuery] = useState('');
-  function submit(): void { if (query.trim()) { onSubmit(query.trim()); setQuery(''); } }
+  function submit(): void { if (!disabled && query.trim()) { onSubmit(query.trim()); setQuery(''); } }
   function handleWebKeyPress(event: unknown): void {
     const keyEvent = event as { key: string; shiftKey: boolean; preventDefault: () => void };
     if (keyEvent.key !== 'Enter' || keyEvent.shiftKey) return;
@@ -55,8 +63,8 @@ export function AskComposer({ onSubmit }: { onSubmit: (query: string) => void })
       value={query} onChangeText={setQuery} returnKeyType="send" multiline blurOnSubmit={false}
       onKeyPress={Platform.OS === 'web' ? handleWebKeyPress : undefined}
       style={[type.body, styles.input]}/>
-    <Pressable accessibilityRole="button" accessibilityLabel="Send question" disabled={!query.trim()}
-      accessibilityState={{ disabled: !query.trim() }} onPress={submit} style={[styles.send, !query.trim() && ui.disabled]}>
+    <Pressable accessibilityRole="button" accessibilityLabel="Send question" disabled={disabled || !query.trim()}
+      accessibilityState={{ disabled: disabled || !query.trim() }} onPress={submit} style={[styles.send, (disabled || !query.trim()) && ui.disabled]}>
       <Icon name="send" color={palette.white} size={20}/></Pressable>
   </View>;
 }

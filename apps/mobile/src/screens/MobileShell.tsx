@@ -13,6 +13,9 @@ import { ActiveTripScreen, RouteMapScreen, RouteOptionsScreen, RouteStepsScreen,
 import { AboutScreen, OfflineDataScreen, PrivacyScreen, SavedScreen, SettingsScreen } from './SettingsScreens';
 import { EXAMPLE_ROUTE, PREVIEW_ROUTES } from './previewJourney';
 import type { Preference, PreviewRoute } from './previewJourney';
+import { useLocalAssistant } from '../inference/useLocalAssistant';
+import { previewAnswerContext, renderSafeExplanation } from '../inference/explanationContext';
+import { AiRuntimeError } from '@pusang-gala/ai';
 
 type Screen = 'plan' | 'welcome' | 'ask' | 'options' | 'steps' | 'map' | 'active' | 'complete'
   | 'trips' | 'settings' | 'offline' | 'privacy' | 'about';
@@ -43,6 +46,9 @@ export function MobileShell(): React.JSX.Element {
   const [landmarksOpen, setLandmarksOpen] = useState(false);
   const [exampleMode, setExampleMode] = useState(false);
   const [turns, setTurns] = useState<ConversationTurn[]>([]);
+  const assistant = useLocalAssistant();
+  const conversationVersion = useRef(0);
+  const turnSequence = useRef(0);
   const [tripConversation, setTripConversation] = useState(false);
   const [error, setError] = useState<{ message: string; recovery: Endpoint | 'resources' } | null>(null);
   const [detailStep, setDetailStep] = useState(0);
@@ -126,7 +132,22 @@ export function MobileShell(): React.JSX.Element {
     history('looked_up', EXAMPLE_ROUTE); navigate('options');
   }
   function appendTurn(query: string, answer: string, itinerary?: PreviewRoute): void {
-    setTurns(current => [...current.slice(-11), { id: Date.now() + current.length, query, answer, ...(itinerary ? { route: itinerary } : {}) }]);
+    const id = ++turnSequence.current;
+    const version = conversationVersion.current;
+    setTurns(current => [...current.slice(-11), { id, query, answer, ...(itinerary ? { route: itinerary } : {}) }]);
+    if (assistant.model.phase !== 'installed' || assistant.phase !== 'idle') return;
+    const context = previewAnswerContext(answer);
+    const explanations: string[] = [];
+    void assistant.explainContext(context, unit => {
+      if (conversationVersion.current !== version) return;
+      explanations.push(renderSafeExplanation(unit, context));
+      setTurns(current => current.map(turn => turn.id === id ? { ...turn, answer: explanations.join('\n\n'), localAi: true } : turn));
+    }).catch(error => {
+      if (conversationVersion.current !== version) return;
+      const stopped = error instanceof AiRuntimeError && error.kind === 'cancelled';
+      setTurns(current => current.map(turn => turn.id === id ? { ...turn, answer, localAi: false,
+        aiNotice: stopped ? 'Explanation stopped. Basic summary shown.' : 'Local explanation unavailable. Basic summary shown.' } : turn));
+    });
   }
   function askExample(): void {
     setExampleMode(true); setOrigin('LRT-1 Monumento'); setDestination('One Ayala'); setRoute(EXAMPLE_ROUTE); setTripConversation(false);
@@ -156,7 +177,9 @@ export function MobileShell(): React.JSX.Element {
     if (exampleMode && normalized.includes('monumento') && normalized.includes('one ayala')) {
       appendTurn(query, 'These are example route facts, not installed data. Open Directions to see the supported layout and transfer sequence.', selected); return;
     }
-    appendTurn(query, 'The route pack and local assistant aren’t installed in this preview. I can’t answer this journey yet. Use the example question to explore the design.');
+    appendTurn(query, assistant.model.phase === 'installed'
+      ? 'The route pack isn’t installed in this preview. I can’t answer this journey yet. Use the example question to explore the design.'
+      : 'The route pack and local assistant aren’t installed in this preview. I can’t answer this journey yet. Use the example question to explore the design.');
   }
   function submitFromHome(query: string): void {
     setTripConversation(false);
@@ -227,6 +250,7 @@ export function MobileShell(): React.JSX.Element {
   function deleteData(): void {
     setSheet({ title: 'Delete all your data?', body: 'This clears saved routes, history, preferences, conversation and active-trip progress.', action: 'Delete all data', destructive: true,
       onConfirm: () => {
+        conversationVersion.current += 1; assistant.cancel();
         store.listSavedRoutes().forEach(row => store.deleteSavedRoute(row.saved_id)); store.clearHistory(); store.clearActiveTrip();
         setActiveRoute(null); setCompletedRoute(null); setRoute(null); setTurns([]); setPreference('cheapest'); setOrigin(''); setDestination('');
         setExampleMode(false); setTripConversation(false); updateStore(); setSheet(null);
@@ -235,6 +259,7 @@ export function MobileShell(): React.JSX.Element {
   function newConversation(): void {
     setSheet({ title: 'Start a new conversation?', body: 'This clears the current questions and planning context. Your active trip and saved routes are kept.',
       action: 'New conversation', onConfirm: () => {
+        conversationVersion.current += 1; assistant.cancel();
         setTurns([]); setRoute(null); setOrigin(''); setDestination(''); setExampleMode(false); setTripConversation(false); setSheet(null);
       } });
   }
@@ -255,7 +280,9 @@ export function MobileShell(): React.JSX.Element {
       case 'ask': return <AskScreen turns={turns} route={chatRoute} origin={tripConversation && activeRoute ? 'LRT-1 Monumento' : origin}
         destination={tripConversation && activeRoute ? 'One Ayala' : destination} activeStep={tripConversation && activeRoute ? activeStep : null}
         onEdit={() => { setTripConversation(false); editEndpoint('destination'); }} onOptions={() => { if (chatRoute) setRoute(chatRoute); navigate('options'); }}
-        onSteps={item => openDirections(item)} onMap={item => { setRoute(item); openMap(); }} onPrompt={submit} onExample={askExample}/>;
+        onSteps={item => openDirections(item)} onMap={item => { setRoute(item); openMap(); }} onPrompt={submit} onExample={askExample}
+        assistantPhase={assistant.phase} assistantInstalled={assistant.model.phase === 'installed'}
+        onCancel={assistant.cancel} onResources={() => navigate('offline')}/>;
       case 'options': return route ? <RouteOptionsScreen selected={selected} preference={preference}
         onSelect={item => { setRoute(item); setDetailStep(0); }} onPreference={choosePreference}/>
         : <Notice action="Choose an example journey" onAction={chooseExample}>Your planning context was cleared. No route is selected.</Notice>;
@@ -275,8 +302,11 @@ export function MobileShell(): React.JSX.Element {
       }} onDone={() => { setRoute(null); setCompletedRoute(null); setExampleMode(false); setTurns([]); setOrigin(''); setDestination(''); setTripConversation(false);
         setTab('plan'); setStacks(current => ({ ...current, plan: ['plan'], trips: ['trips'] })); }}/>
         : <Text style={type.body}>No completed trip. Find your saved journeys and history in Trips.</Text>;
-      case 'settings': return <SettingsScreen preference={preference} onPreference={choosePreference} onOpen={navigate} onLocation={location}/>;
-      case 'offline': return <OfflineDataScreen checkedAt={checkedAt} onCheck={() => setCheckedAt(new Date().toLocaleTimeString())}/>;
+      case 'settings': return <SettingsScreen preference={preference} onPreference={choosePreference} onOpen={navigate} onLocation={location}
+        assistantInstalled={assistant.model.phase === 'installed'}/>;
+      case 'offline': return <OfflineDataScreen checkedAt={checkedAt} assistant={assistant} onCheck={() => {
+        setCheckedAt(new Date().toLocaleTimeString()); void assistant.recheck();
+      }}/>;
       case 'privacy': return <PrivacyScreen onDelete={deleteData}/>;
       case 'about': return <AboutScreen/>;
       case 'trips': return <SavedScreen saved={store.listSavedRoutes()} history={store.listHistory()} segment={tripSegment} onSegment={setTripSegment}
@@ -292,8 +322,8 @@ export function MobileShell(): React.JSX.Element {
     }
   }
   function footer(): React.JSX.Element | null {
-    if (screen === 'ask') return <AskComposer onSubmit={submit}/>;
-    if (screen === 'plan') return <AskComposer onSubmit={submitFromHome}/>;
+    if (screen === 'ask') return <AskComposer onSubmit={submit} disabled={assistant.phase !== 'idle'}/>;
+    if (screen === 'plan') return <AskComposer onSubmit={submitFromHome} disabled={assistant.phase !== 'idle'}/>;
     if (screen === 'options' && route) return <Button label="See directions" icon="arrow" onPress={() => navigate('steps')}/>;
     if (screen === 'steps' && route) return <Button label="Start example trip" icon="arrow" onPress={startTrip}/>;
     if (screen === 'active' && activeRoute) return <View style={ui.row}>

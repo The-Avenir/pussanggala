@@ -71,11 +71,12 @@
         }
       ],
       "@maplibre/maplibre-react-native",
-      "./plugins/with-offline-release.cjs"
+      "./plugins/with-offline-release.cjs",
+      "./plugins/with-gradle-version.cjs"
     ],
     "extra": {
-      "offlineOnly": true,
-      "harnessNote": "Technical harness; assets/device gates pending. Release networking and backup disabled. Development client uses local Metro."
+      "offlineOnly": false,
+      "harnessNote": "Explicit model download requires networking. Inference stays on-device. Backup disabled; route pack, map and device gates pending."
     }
   }
 }

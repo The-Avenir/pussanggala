@@ -1,10 +1,12 @@
 import { useFonts } from 'expo-font';
+import { useAssets } from 'expo-asset';
 import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { MobileShell } from './src/screens/MobileShell';
 import { palette } from './src/ui/travel';
 
 function App(): React.JSX.Element {
+  useAssets([require('./assets/licences/MODEL-LICENCE.txt')]);
   // Keep the app usable immediately; bundled fonts replace the system fallback when ready.
   useFonts({
     DMSans: require('./assets/fonts/DMSans-Regular.ttf'),

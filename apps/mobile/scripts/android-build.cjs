@@ -56,7 +56,8 @@ function build(mode) {
     const mergedManifest = manifestCandidates.find((file) => fs.existsSync(file));
     if (!mergedManifest) throw new Error('Release compiled but merged-manifest permission evidence could not be located.');
     const xml = fs.readFileSync(mergedManifest, 'utf8');
-    for (const permission of ['INTERNET', 'ACCESS_NETWORK_STATE', 'ACCESS_BACKGROUND_LOCATION', 'RECORD_AUDIO']) {
+    if (!xml.includes('android.permission.INTERNET')) throw new Error('Release is missing the model download INTERNET permission.');
+    for (const permission of ['ACCESS_NETWORK_STATE', 'ACCESS_BACKGROUND_LOCATION', 'RECORD_AUDIO']) {
       if (xml.includes(`android.permission.${permission}`)) {
         throw new Error(`Release permission audit failed: ${permission}`);
       }

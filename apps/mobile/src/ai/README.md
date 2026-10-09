@@ -65,16 +65,16 @@ There is **no** local fork: no `unit:"explanation_unit"` tag, and no
 per NDJSON line; this package adds grounding rules on top of the schema, never
 a different shape.
 
-## Native adapter: TODO (T30/T40)
+## Native adapter
 
-**There is no native `ModelRuntime` implementation in this package yet.** The
-pinned on-device runtime (llama.rn + GGUF per BUILD §2) is owned by **T30**
-(compatibility/safe-output spike, model selection with T31) and wired into the
-app by **T40**. Until it lands:
+The native `ModelRuntime` implementation is `../adapters/llamaRuntime.ts`, outside
+this platform-pure package. The app installs Qwen2.5-0.5B-Instruct Q4_K_M into
+private storage and supplies its verified local path. See the mobile README for
+installation, runtime budgets and the remaining native device checks.
 
 - `tests/fake-runtime.ts` (`FakeModelRuntime`) is **test-only** and must never
   be imported by production code or shipped;
-- the adapter must satisfy the contract documented at the top of
+- the adapter follows the contract documented at the top of
   `runtime-port.ts` — raw text chunks, prompt cancel, idempotent
   `cancel`/`dispose`, no leaks across repeated cycles, no network;
 - constrained decoding (JSON/GBNF) is *recommended* hardening but correctness

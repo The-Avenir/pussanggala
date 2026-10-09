@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Button, Gaile, Icon, ListRow, Notice, Section, palette, type, ui } from '../ui/travel';
-import { summarizeReadiness } from '../assets/readiness';
+import { LocalAssistantResource } from './LocalAssistantResource';
+import type { LocalAssistant } from '../inference/useLocalAssistant';
 import type { SavedRouteRow, TripHistoryRow } from '../store/tripStore';
 import { PreferenceChips } from './Preferences';
 import type { Preference } from './previewJourney';
 
 export type SettingsPage = 'settings' | 'offline' | 'privacy' | 'about';
-export function SettingsScreen({ preference, onPreference, onOpen, onLocation }: {
+export function SettingsScreen({ preference, onPreference, onOpen, onLocation, assistantInstalled }: {
   preference: Preference; onPreference: (value: Preference) => void;
   onOpen: (page: SettingsPage) => void; onLocation: () => void;
+  assistantInstalled: boolean;
 }): React.JSX.Element {
   const [showPreference, setShowPreference] = useState(false);
   return <View style={ui.screen}>
@@ -20,21 +22,20 @@ export function SettingsScreen({ preference, onPreference, onOpen, onLocation }:
       <ListRow title="Location" value="Unavailable" icon="location" onPress={onLocation}/>
       <Text style={[type.secondary, { paddingTop: 8 }]}>Position is used only while the app is open. Steps advance when you mark them.</Text>
     </Section>
-    <Section title="ON THIS PHONE"><ListRow title="Offline resources" icon="map" value="3 missing" onPress={() => onOpen('offline')}/>
+    <Section title="ON THIS PHONE"><ListRow title="Offline resources" icon="map" value={assistantInstalled ? '2 missing' : '3 missing'} onPress={() => onOpen('offline')}/>
       <ListRow title="Storage & privacy" icon="save" onPress={() => onOpen('privacy')}/></Section>
     <Section title="ABOUT"><ListRow title="Reading route reports" icon="info" onPress={() => onOpen('about')}/>
       <ListRow title="Licences & attribution" onPress={() => onOpen('about')}/></Section>
     <Text style={type.secondary}>Text follows your device’s accessibility settings.</Text>
   </View>;
 }
-export function OfflineDataScreen({ checkedAt, onCheck }: { checkedAt: string | null; onCheck: () => void }): React.JSX.Element {
-  const readiness = summarizeReadiness([]);
+export function OfflineDataScreen({ checkedAt, onCheck, assistant }: { checkedAt: string | null; onCheck: () => void; assistant: LocalAssistant }): React.JSX.Element {
   return <View style={ui.screen}>
     <View style={{ gap: 8 }}><Text accessibilityRole="header" style={type.title}>What works{ '\n' }offline</Text>
-      <Text style={type.body}>Resources ship with the Android app. This preview doesn’t include them.</Text></View>
+      <Text style={type.body}>Install the local assistant here. Route data and the basemap aren’t included in this preview.</Text></View>
+    <LocalAssistantResource assistant={assistant}/>
     <View>{[
       { name: 'Route data', detail: 'New route searches unavailable. Version and source dates unknown.', icon: 'bus' as const },
-      { name: 'Local assistant', detail: 'AI explanations unavailable. Existing route cards stay readable.', icon: 'chat' as const },
       { name: 'NCR basemap', detail: 'Street map unavailable. Existing routes can use a stop diagram.', icon: 'map' as const },
     ].map(item => <View key={item.name} style={styles.resource}>
       <Icon name={item.icon} color={palette.secondary}/>
@@ -42,10 +43,11 @@ export function OfflineDataScreen({ checkedAt, onCheck }: { checkedAt: string | 
         <Text style={[type.secondary, { color: palette.warning }]}>Missing</Text></View>
         <Text style={type.secondary}>{item.detail}</Text></View>
     </View>)}</View>
-    <ListRow title="Installed size" value="Not measured"/>
+    <ListRow title="Installed model size" value={assistant.model.phase === 'installed' ? '491 MB' : 'Not installed'}/>
     <Notice>Example journeys are available to explore the design. They aren’t installed route data.</Notice>
-    <Button label="Recheck local files" variant="secondary" onPress={onCheck}/>
-    {checkedAt ? <Text accessibilityRole="alert" style={type.secondary}>Checked {checkedAt}. Status: {readiness.state}. File validation isn’t connected; no resource was downloaded.</Text> : null}
+    <Button label="Recheck local files" variant="secondary" onPress={onCheck}
+      disabled={assistant.model.phase === 'unsupported' || ['checking', 'selecting', 'importing', 'downloading', 'verifying'].includes(assistant.model.phase) || assistant.phase !== 'idle'}/>
+    {checkedAt ? <Text accessibilityRole="alert" style={type.secondary}>Checked {checkedAt}. Local assistant: {assistant.model.phase}. Route data and basemap are missing.</Text> : null}
   </View>;
 }
 export function PrivacyScreen({ onDelete }: { onDelete: () => void }): React.JSX.Element {
@@ -63,7 +65,7 @@ export function AboutScreen(): React.JSX.Element {
     <Section title="READING ROUTE INFORMATION"><Text style={type.body}>Community reports are dated accounts, not field-verified or live information. Confirm your signboard and alighting point before boarding.</Text>
       <Text style={type.body}>Unknown fares and hours stay unknown. Conflicting reports remain separate. Dashed links and stop diagrams show order, not the road path.</Text></Section>
     <Section title="DATA & ATTRIBUTION"><Text style={type.secondary}>Production route facts: paraphrased community evidence from r/HowToGetTherePH, with source references. This preview uses synthetic walkthrough records, without source dates or links.</Text>
-      <Text style={type.secondary}>Gaile mascot: supplied Pusang Gala assets. Interface icons and stop diagram: app vectors. Typography: bundled Nunito headings and DM Sans body text. Actual map and model licences must accompany their bundled assets.</Text></Section>
+      <Text style={type.secondary}>Gaile mascot: supplied Pusang Gala assets. Interface icons and stop diagram: app vectors. Typography: bundled Nunito headings and DM Sans body text. Local assistant: Qwen2.5-0.5B-Instruct by Qwen, Apache 2.0; llama.cpp and llama.rn, MIT. Map licences must accompany their assets.</Text></Section>
   </View>;
 }
 export function SavedScreen({ saved, history, segment, onSegment, onOpen, onOpenHistory, onDelete, onRename, onClearHistory, onDeleteHistory, onPlan }: {
