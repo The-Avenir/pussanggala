@@ -7,7 +7,8 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "./lib/sqlite.mjs";
 import {
-  BuildError, DISPOSITION_PRECEDENCE, SCHEMA_SQL_PATH, build, leakScan, readEligibleDir, resolveDispositions,
+  BuildError, DISPOSITION_PRECEDENCE, SCHEMA_SQL_PATH, build, leakScan, normalizeSchemaSql,
+  readEligibleDir, readSchemaSql, resolveDispositions, sha256File,
 } from "./build.mjs";
 import { readPack, runAcceptance } from "./acceptance.mjs";
 import { MUTATIONS, clone } from "./lib/mutations.mjs";
@@ -189,10 +190,32 @@ test("ambiguous alias in unique place_alias is rejected", () => {
   assertBuildFails({ tables: mutated((t) => { t.place_ambiguity.pop(); }) }, "ambiguity_too_few");
 });
 
+test("schema.sql CRLF vs LF normalizes to identical empty-pack bytes", () => {
+  const lf = readFileSync(SCHEMA_SQL_PATH, "utf8").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  const crlf = lf.replace(/\n/g, "\r\n");
+  assert.notEqual(crlf, lf);
+  assert.equal(normalizeSchemaSql(crlf), lf);
+  assert.equal(normalizeSchemaSql(lf), lf);
+  assert.equal(readSchemaSql(), lf);
+
+  const hashEmpty = (sql) => {
+    const p = join(tmp(), "schema-eol.sqlite");
+    const db = new DatabaseSync(p);
+    try {
+      db.exec("PRAGMA foreign_keys = ON");
+      db.exec(normalizeSchemaSql(sql));
+    } finally {
+      db.close();
+    }
+    return sha256File(p);
+  };
+  assert.equal(hashEmpty(crlf), hashEmpty(lf));
+});
+
 test("SQLite schema itself enforces constraints (defence in depth)", () => {
   const db = new DatabaseSync(":memory:");
   try {
-    db.exec(readFileSync(SCHEMA_SQL_PATH, "utf8"));
+    db.exec(readSchemaSql());
     db.exec(`INSERT INTO region VALUES ('rg_x','R','{}','h');
       INSERT INTO place VALUES ('pl_a','rg_x','A','k','ar','accepted',NULL,NULL,'unmapped');
       INSERT INTO place VALUES ('pl_b','rg_x','B','k','ar','accepted',NULL,NULL,'unmapped');
@@ -227,7 +250,7 @@ test("SQLite schema itself enforces constraints (defence in depth)", () => {
   }
   const db2 = new DatabaseSync(":memory:");
   try {
-    db2.exec(readFileSync(SCHEMA_SQL_PATH, "utf8"));
+    db2.exec(readSchemaSql());
     db2.exec("INSERT INTO region VALUES ('rg_x','R','{}','h')");
     assert.throws(() => db2.exec("INSERT INTO pack_manifest VALUES ('p',1,'rg_x','b','c',NULL,NULL,180,'h',3,2,1,0,0,0)"), /CHECK/);
   } finally {

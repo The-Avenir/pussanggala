@@ -45,6 +45,16 @@ export class BuildError extends Error {
 const readJson = (p) => JSON.parse(readFileSync(p, "utf8"));
 export const sha256File = (p) => createHash("sha256").update(readFileSync(p)).digest("hex");
 
+/** Normalize schema.sql newlines so CRLF vs LF checkouts do not change pack bytes. */
+export function normalizeSchemaSql(sql) {
+  return String(sql).replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+}
+
+/** Read pack DDL with LF-normalized newlines before `db.exec`. */
+export function readSchemaSql(path = SCHEMA_SQL_PATH) {
+  return normalizeSchemaSql(readFileSync(path, "utf8"));
+}
+
 /** Read `<dir>/<table>.json` for each pack table; a missing file is an empty table. */
 export function readEligibleDir(dir) {
   const tables = emptyTables();
@@ -136,7 +146,7 @@ function writeSqlite(path, tables, manifestRow) {
   const db = new DatabaseSync(path);
   try {
     db.exec("PRAGMA foreign_keys = ON");
-    db.exec(readFileSync(SCHEMA_SQL_PATH, "utf8"));
+    db.exec(readSchemaSql());
     db.exec("BEGIN");
     try {
       for (const t of TABLES) {
