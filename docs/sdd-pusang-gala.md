@@ -157,7 +157,7 @@ Paths are proposed; none exists yet.
 
 ## 3. Data model
 
-There is no implemented schema. Agree this proposed schema in T00, then create versioned migrations and shared TypeScript contracts. No legacy `verified` or `last_verified` state is used as a publication requirement.
+There is no implemented schema. Agree this proposed schema in T00, then create versioned migrations and shared TypeScript contracts. No legacy `verified` or `last_verified` state is used as a publication requirement. Contracts v1 are recorded in [contracts-pusang-gala.md](contracts-pusang-gala.md) and implemented in `packages/core/src/schema` and `packages/core/src/contracts`.
 
 ### 3.1 Pack relationships
 
