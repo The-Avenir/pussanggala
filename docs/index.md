@@ -17,7 +17,9 @@ reconciled: 2026-10-09
 
 **Scope:** Confirmed on 2026-10-09 after G01–G27
 
-**Implementation:** Not started; no device/release gate claimed passed
+**Implementation:** Core implementation and mobile UI harness in progress; no device/release gate claimed passed
+
+UI work: [nine-screen Figma implementation and validation](ui-figma-implementation.md), using explicitly labelled walkthrough fixtures until T45 connects native/data adapters. No device/release gate is claimed passed by this preview.
 
 ## 1. Current document suite
 

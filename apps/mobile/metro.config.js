@@ -5,6 +5,9 @@ const workspaceRoot = path.resolve(projectRoot, "../..");
 const config = getDefaultConfig(projectRoot);
 config.watchFolders = [path.join(workspaceRoot, "packages/core")];
 config.resolver.nodeModulesPaths = [path.join(projectRoot, "node_modules")];
+config.transformer.babelTransformerPath = require.resolve("react-native-svg-transformer/expo");
+config.resolver.assetExts = config.resolver.assetExts.filter((ext) => ext !== "svg");
+config.resolver.sourceExts.push("svg");
 // Hierarchical lookup stays enabled: apps/mobile's lockfile nests
 // version-conflicted deps under node_modules/expo/node_modules
 // (expo-asset, ws@8, accepts@1, zod@3), which flat lookup would misresolve.

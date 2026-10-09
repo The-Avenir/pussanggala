@@ -1,4 +1,4 @@
-# apps/mobile — Expo app (placeholder)
+# apps/mobile — Expo app
 
 **Owner:** Member 4 (mobile, maps, GPS, release). `src/ai/` and
 `src/conversation/` are owned by Member 3.
@@ -7,13 +7,15 @@
 (offline basemap), T43 (foreground GPS), T44 (persistence), T45 (integration),
 T46 (UI), T47 (judged APK).
 
-The Expo application is created in T40 — no app manifest exists yet. Guardrails
+The current entry point is the T46 Figma UI preview. See [screen mapping, screenshots, validation, and remaining integration](../../docs/ui-figma-implementation.md). Run `npm run web` from this directory to explore it. The route data, AI, map, GPS and persistence adapters remain pending; the preview labels example journeys and missing assets explicitly.
+
+Guardrails
 (BUILD §5): the supplied `howtogetthereph_dataset/` raw input must never appear
 in app assets; the APK uses an explicit asset allowlist (pack/model/map/style/
 glyph/sprite/licence files, with hashes); no runtime networking, analytics or
 crash-upload SDKs; no raw chat or GPS-coordinate persistence.
 
-## T40 minimal harness (ugly-first, offline-first)
+## Historical T40 minimal harness (ugly-first, offline-first)
 
 **Research:** SDK-57 direction per `spike-t40.md` (RESEARCH-ONLY until a device
 build proves it). Harness pins: `expo@57.0.23`, `react-native@0.86.3`,
@@ -23,8 +25,8 @@ requires it). No OTA, no network/cloud/analytics SDKs, no
 
 **Files:** `package.json` (deps + `typecheck` script), `app.json` (Expo config:
 `com.pusanggala.app`, no plugins yet), `App.tsx` (single-file entry, registers
-root component; renders offline banner + 3 synthetic placeholder cards + offline
-map box). Ugly UI is intentional — polish follows functional integration (T46).
+root component; originally rendered offline banner + 3 synthetic placeholder cards + offline
+map box). That entry point has been replaced by the nine-screen Figma implementation.
 Native modules (`llama.rn`, MapLibre), pack loader (T41), GPS (T43) and real
 device evidence (S1/S2) land in later tasks.
 

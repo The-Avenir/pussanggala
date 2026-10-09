@@ -1,0 +1,72 @@
+/// <reference path="./svg.d.ts" />
+import { createElement } from 'react';
+import type { ComponentType } from 'react';
+import type { SvgProps } from 'react-native-svg';
+import WelcomeCatSource from '../../assets/figma/62fc3.svg';
+import HeaderCatSource from '../../assets/figma/eed90.svg';
+import AnswerCatSource from '../../assets/figma/de22a.svg';
+import BrandCatSource from '../../assets/figma/d4f14.svg';
+import PositionCatSource from '../../assets/figma/5f8e3.svg';
+import BusIllustrationSource from '../../assets/figma/7a422.svg';
+import MapIllustrationSource from '../../assets/figma/787af.svg';
+import ActiveMapIllustrationSource from '../../assets/figma/b4595.svg';
+import RailSource from '../../assets/figma/1f84b.svg';
+import EndRailSource from '../../assets/figma/f44dc.svg';
+import BackSource from '../../assets/figma/f0ea4.svg';
+import GearSource from '../../assets/figma/4ab7b.svg';
+import MapIconSource from '../../assets/figma/239f2.svg';
+import GreenMapSource from '../../assets/figma/4ce16.svg';
+import OrangeMapSource from '../../assets/figma/2f68d.svg';
+import BusSource from '../../assets/figma/18a08.svg';
+import OrangeBusSource from '../../assets/figma/2ffb3.svg';
+import SparkSource from '../../assets/figma/b5dc8.svg';
+import CheckSource from '../../assets/figma/08b9c.svg';
+import BluePinSource from '../../assets/figma/e681d.svg';
+import OrangePinSource from '../../assets/figma/e6da9.svg';
+import SendSource from '../../assets/figma/5c959.svg';
+import BoltSource from '../../assets/figma/d8c58.svg';
+import WalkSource from '../../assets/figma/fb95a.svg';
+import TargetSource from '../../assets/figma/44e61.svg';
+import BlueTargetSource from '../../assets/figma/47028.svg';
+import GreenTargetSource from '../../assets/figma/cc825.svg';
+import LayersSource from '../../assets/figma/29042.svg';
+import StorageSource from '../../assets/figma/bcb41.svg';
+import PinkStorageSource from '../../assets/figma/7cf24.svg';
+import InfoSource from '../../assets/figma/ff654.svg';
+
+// Exact local Figma exports. Keep root dimensions; size their wrappers instead.
+function asset(Source: ComponentType<SvgProps>, id: string): ComponentType<SvgProps> {
+  return props => createElement(Source, { ...props, testID: `figma-${id}` });
+}
+export const WelcomeCat = asset(WelcomeCatSource, '62fc3');
+export const HeaderCat = asset(HeaderCatSource, 'eed90');
+export const AnswerCat = asset(AnswerCatSource, 'de22a');
+export const BrandCat = asset(BrandCatSource, 'd4f14');
+export const PositionCat = asset(PositionCatSource, '5f8e3');
+export const BusIllustration = asset(BusIllustrationSource, '7a422');
+export const MapIllustration = asset(MapIllustrationSource, '787af');
+export const ActiveMapIllustration = asset(ActiveMapIllustrationSource, 'b4595');
+export const Rail = asset(RailSource, '1f84b');
+export const EndRail = asset(EndRailSource, 'f44dc');
+export const Back = asset(BackSource, 'f0ea4');
+export const Gear = asset(GearSource, '4ab7b');
+export const MapIcon = asset(MapIconSource, '239f2');
+export const GreenMap = asset(GreenMapSource, '4ce16');
+export const OrangeMap = asset(OrangeMapSource, '2f68d');
+export const Bus = asset(BusSource, '18a08');
+export const OrangeBus = asset(OrangeBusSource, '2ffb3');
+export const Spark = asset(SparkSource, 'b5dc8');
+export const Check = asset(CheckSource, '08b9c');
+export const BluePin = asset(BluePinSource, 'e681d');
+export const OrangePin = asset(OrangePinSource, 'e6da9');
+export const Send = asset(SendSource, '5c959');
+export const Bolt = asset(BoltSource, 'd8c58');
+export const Walk = asset(WalkSource, 'fb95a');
+export const Target = asset(TargetSource, '44e61');
+export const BlueTarget = asset(BlueTargetSource, '47028');
+export const GreenTarget = asset(GreenTargetSource, 'cc825');
+export const Layers = asset(LayersSource, '29042');
+export const Storage = asset(StorageSource, 'bcb41');
+export const PinkStorage = asset(PinkStorageSource, '7cf24');
+export const Info = asset(InfoSource, 'ff654');
+
