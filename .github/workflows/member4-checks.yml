@@ -33,6 +33,11 @@ jobs:
       - name: Run workspace tests
         run: npm test
 
+      - name: Check corpus and pack-builder handoff
+        run: |
+          node tools/corpus/extract.mjs
+          node --test tools/corpus/*.test.mjs tools/pack-builder/*.test.mjs
+
       - name: Check persistence types and builder-compatible asset loader
         run: |
           node apps/mobile/src/store/check.mjs

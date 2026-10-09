@@ -1,6 +1,6 @@
 # Mobile PR integration
 
-PR #18 integrates the UI redesign (#18), native scaffold (#21), SQLite trip persistence (#22), native pack adapter (#23), and validated offline asset setup (#24). Merge commits preserve each original head.
+PR #25 integrates the UI redesign (#18), native scaffold (#21), SQLite trip persistence (#22), native pack adapter (#23), and validated offline asset setup (#24), and the cleaned corpus seed handoff (#25). PR #18 merged independently during integration; the remaining original heads are included in #25. Merge commits preserve each original head.
 
 ## Compatibility decisions
 
@@ -14,9 +14,13 @@ PR #18 integrates the UI redesign (#18), native scaffold (#21), SQLite trip pers
 
 ## Validation
 
-On Windows with Node v26, a clean root npm ci passed. All workspace typechecks passed. Root tests passed: 427 core, 3 scaffold, 26 native adapter, 34 SQLite store, 52 conversation, 88 AI and 10 evaluation tests (640 total). The dedicated builder-compatible asset suite passed 81 tests; packaging regression tests passed 17. Shipped-content checks passed.
+On Windows with Node v26, a clean root npm ci passed. All workspace typechecks passed. Root tests passed: 428 core, 3 scaffold, 26 native adapter, 34 SQLite store, 52 conversation, 88 AI and 10 evaluation tests (641 total). The dedicated builder-compatible asset suite passed 81 tests; packaging regression tests passed 20; the corpus and pack-builder suite passed 156. Shipped-content checks passed.
 
 Expo dependency/plugin checks, clean Android prebuild and generated offline configuration checks passed. Android Hermes and web exports compiled. The browser suite passed at 320/390/430 px with 96 captures, 200% text, minimum 44 px targets, AA contrast, and no runtime errors or external requests. All 37 UI asset hash/dimension checks passed.
+
+## Corpus compatibility
+
+The seed SOURCE table retains documented thread citation URLs. The shipped-content guard permits only canonical matching post links in that table, while rejecting copied wording, handles, wrong post IDs, profile URLs, other fields and links in app code. Regression tests cover those boundaries. The synthetic T41 builder fixture now supplies the actual fixture snapshot hash for thread locators; the strengthened builder remains unchanged.
 
 ## Remaining integration
 

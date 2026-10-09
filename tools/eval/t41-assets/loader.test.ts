@@ -23,9 +23,17 @@ const uri = (path: string) => pathToFileURL(path).href;
 beforeAll(async () => {
   fixtureRoot = mkdtempSync(join(tmpdir(), "pusang-gala-t41-"));
   // Consume the checked-in builder and synthetic inputs; no real data is accepted here.
-  const { build } = await import(pathToFileURL(resolve("tools/pack-builder/build.mjs")).href);
+  const { build, readEligibleDir } = await import(pathToFileURL(resolve("tools/pack-builder/build.mjs")).href);
+  const tables = readEligibleDir(resolve("tools/pack-builder/fixtures/eligible")) as {
+    source: { source_id: string; kind: string }[];
+    record_source: { source_id: string; snapshot_sha256: string | null }[];
+  };
+  const run = JSON.parse(readFileSync(resolve("tools/pack-builder/fixtures/run.json"), "utf8"));
+  // Match the strengthened builder's evidence identity without changing raw fixtures.
+  const threadSources = new Set(tables.source.filter(row => row.kind === "reddit_thread").map(row => row.source_id));
+  for (const link of tables.record_source) if (threadSources.has(link.source_id)) link.snapshot_sha256 = run.input_sha256;
   build({
-    eligibleDir: resolve("tools/pack-builder/fixtures/eligible"),
+    tables,
     dispositions: resolve("tools/pack-builder/fixtures/dispositions.json"),
     run: resolve("tools/pack-builder/fixtures/run.json"),
     rawDatasetPath: resolve("tools/pack-builder/fixtures/raw-dataset.json"), outDir: join(fixtureRoot, "built"),

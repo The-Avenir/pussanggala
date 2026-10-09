@@ -161,3 +161,35 @@ describe("explicit asset inventory includes binary inputs", () => {
     }, result => assert.equal(result.findings[0]?.rule, "asset-symlink"));
   });
 });
+
+describe("source citation metadata keeps other leak rules", () => {
+  const source = { kind: "reddit_thread", post_id: "abc123",
+    url: "https://www.reddit.com/r/HowToGetTherePH/comments/abc123/fixture/" };
+  const scan = (rows, relative = "data/seed/eligible/source.json") => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "source-citation-"));
+    try {
+      const file = path.join(root, relative);
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+      fs.writeFileSync(file, JSON.stringify(rows));
+      return scanRoots([root]).findings;
+    } finally { fs.rmSync(root, { recursive: true, force: true }); }
+  };
+  it("allows only matching thread provenance in the seed SOURCE table", () => {
+    assert.deepEqual(scan([source]), []);
+    assert.ok(scan([source], "apps/mobile/source.json").some(f => f.rule === "reddit-url"));
+  });
+  it("rejects wrong post IDs, profile links, other kinds and malformed source JSON", () => {
+    for (const row of [
+      { ...source, post_id: "other" },
+      { ...source, url: "https://www.reddit.com/user/fixture/" },
+      { ...source, kind: "team_review" },
+      { ...source, url: source.url + "?raw=" },
+    ]) assert.ok(scan([row]).some(f => f.rule === "reddit-url"));
+    assert.ok(scan({ unexpected: source }).some(f => f.rule === "reddit-url"));
+  });
+  it("still rejects copied wording and handles in other source fields", () => {
+    assert.ok(scan([{ ...source, license: RAW_PHRASES[0] }]).some(f => f.rule === "raw-phrase"));
+    assert.ok(scan([{ ...source, license: "u/fixture_author" }]).some(f => f.rule === "reddit-username"));
+    assert.ok(scan([{ ...source, extra: source.url }]).some(f => f.rule === "reddit-url"));
+  });
+});
