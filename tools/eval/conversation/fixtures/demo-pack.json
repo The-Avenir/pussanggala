@@ -1,0 +1,310 @@
+{
+  "pack_id": "pk-demo-conv-1",
+  "synthetic": true,
+  "notice": "Fully synthetic evaluation pack for the T35 conversation/grounding harness. All places, routes, fares, hours and notes are invented for fixtures and contain no source-dataset wording (INV-4). It exercises the conversation contract only; it is not a real NCR pack and must never ship in the app.",
+  "places": [
+    {
+      "place_id": "pl-bayan",
+      "name": "Bayan Central",
+      "area": "North Quarter",
+      "ncr_status": "accepted",
+      "mapping_status": "mapped",
+      "aliases": ["bayan", "bayan central", "bayan terminal", "bct"]
+    },
+    {
+      "place_id": "pl-mercado",
+      "name": "Mercado Public Market",
+      "area": "Old Town",
+      "ncr_status": "accepted",
+      "mapping_status": "mapped",
+      "aliases": ["mercado", "mercado public market", "old market"]
+    },
+    {
+      "place_id": "pl-harbor",
+      "name": "Harborview Pier",
+      "area": "Coastal Strip",
+      "ncr_status": "accepted",
+      "mapping_status": "mapped",
+      "aliases": ["harborview", "harborview pier", "the pier", "pier"]
+    },
+    {
+      "place_id": "pl-riverbend",
+      "name": "Riverbend Station",
+      "area": "Riverside",
+      "ncr_status": "accepted",
+      "mapping_status": "mapped",
+      "aliases": ["riverbend", "riverbend station", "the bend"]
+    },
+    {
+      "place_id": "pl-verde",
+      "name": "Verde Plaza",
+      "area": "Uptown",
+      "ncr_status": "accepted",
+      "mapping_status": "mapped",
+      "aliases": ["verde", "verde plaza"]
+    },
+    {
+      "place_id": "pl-hillside",
+      "name": "Hillside Heights",
+      "area": "Hill District",
+      "ncr_status": "accepted",
+      "mapping_status": "mapped",
+      "aliases": ["hillside", "hillside heights"]
+    },
+    {
+      "place_id": "pl-acacia-park",
+      "name": "Acacia Park",
+      "area": "East Grove",
+      "ncr_status": "accepted",
+      "mapping_status": "mapped",
+      "aliases": []
+    },
+    {
+      "place_id": "pl-acacia-wharf",
+      "name": "Acacia Wharf",
+      "area": "South Docks",
+      "ncr_status": "accepted",
+      "mapping_status": "mapped",
+      "aliases": []
+    },
+    {
+      "place_id": "pl-lakewood",
+      "name": "Lakewood Town Proper",
+      "area": "Lakewood Province",
+      "ncr_status": "outside",
+      "mapping_status": "unmapped",
+      "aliases": ["lakewood"]
+    }
+  ],
+  "ambiguous_aliases": [
+    {
+      "alias_norm": "acacia",
+      "candidates": ["pl-acacia-park", "pl-acacia-wharf"]
+    }
+  ],
+  "stops": [
+    { "stop_id": "st-bayan-t1", "place_id": "pl-bayan", "name": "Bayan Terminal Bay 1" },
+    { "stop_id": "st-mercado-gate", "place_id": "pl-mercado", "name": "Mercado Main Gate" },
+    { "stop_id": "st-harbor-p2", "place_id": "pl-harbor", "name": "Pier 2 Loading Area" },
+    { "stop_id": "st-riverbend-nb", "place_id": "pl-riverbend", "name": "Riverbend Northbound Platform" },
+    { "stop_id": "st-verde-vg", "place_id": "pl-verde", "name": "Verde Plaza Stop" }
+  ],
+  "routes": [
+    {
+      "route_id": "rt-jep-bh",
+      "name": "Bayan-Harbor Jeepney",
+      "mode": "jeepney",
+      "signboard": "BAYAN-HARBOR",
+      "service_status": "reported_active"
+    },
+    {
+      "route_id": "rt-jep-bm",
+      "name": "Bayan-Mercado Jeepney",
+      "mode": "jeepney",
+      "signboard": "BAYAN-MKT",
+      "service_status": "reported_active"
+    },
+    {
+      "route_id": "rt-uvx-hr",
+      "name": "Harbor-Riverbend UV Express",
+      "mode": "uv_express",
+      "signboard": "HR-UV",
+      "service_status": "reported_active"
+    },
+    {
+      "route_id": "rt-jep-rm",
+      "name": "Riverbend-Mercado Jeepney",
+      "mode": "jeepney",
+      "signboard": "RIVER-MKT",
+      "service_status": "reported_active"
+    },
+    {
+      "route_id": "rt-bus-bv",
+      "name": "Bayan-Verde Bus",
+      "mode": "bus",
+      "signboard": "BAYAN-VERDE",
+      "service_status": "suspended"
+    }
+  ],
+  "legs": [
+    {
+      "leg_id": "lg-bh-1",
+      "route_id": "rt-jep-bh",
+      "board_stop_id": "st-bayan-t1",
+      "alight_stop_id": "st-harbor-p2",
+      "ride_min": 25,
+      "eligibility": "ready",
+      "fare_reports": [
+        { "fare_id": "fare-bh-1a", "amount_min": 13, "amount_max": 13, "currency": "PHP", "effective_at": "2025-08-14" }
+      ]
+    },
+    {
+      "leg_id": "lg-bh-2",
+      "route_id": "rt-jep-bh",
+      "board_stop_id": "st-harbor-p2",
+      "alight_stop_id": "st-bayan-t1",
+      "ride_min": 25,
+      "eligibility": "ready",
+      "fare_reports": [
+        { "fare_id": "fare-bh-2a", "amount_min": 13, "amount_max": 13, "currency": "PHP", "effective_at": "2025-08-14" }
+      ]
+    },
+    {
+      "leg_id": "lg-bm-1",
+      "route_id": "rt-jep-bm",
+      "board_stop_id": "st-bayan-t1",
+      "alight_stop_id": "st-mercado-gate",
+      "ride_min": 15,
+      "eligibility": "ready",
+      "fare_reports": []
+    },
+    {
+      "leg_id": "lg-bm-2",
+      "route_id": "rt-jep-bm",
+      "board_stop_id": "st-mercado-gate",
+      "alight_stop_id": "st-bayan-t1",
+      "ride_min": 15,
+      "eligibility": "ready",
+      "fare_reports": []
+    },
+    {
+      "leg_id": "lg-hr-1",
+      "route_id": "rt-uvx-hr",
+      "board_stop_id": "st-harbor-p2",
+      "alight_stop_id": "st-riverbend-nb",
+      "ride_min": 20,
+      "eligibility": "ready",
+      "fare_reports": [
+        { "fare_id": "fare-hr-old", "amount_min": 40, "amount_max": 40, "currency": "PHP", "effective_at": "2025-06-10" },
+        { "fare_id": "fare-hr-new", "amount_min": 45, "amount_max": 45, "currency": "PHP", "effective_at": "2025-12-01" }
+      ]
+    },
+    {
+      "leg_id": "lg-hr-2",
+      "route_id": "rt-uvx-hr",
+      "board_stop_id": "st-riverbend-nb",
+      "alight_stop_id": "st-harbor-p2",
+      "ride_min": 20,
+      "eligibility": "ready",
+      "fare_reports": [
+        { "fare_id": "fare-hr2-old", "amount_min": 40, "amount_max": 40, "currency": "PHP", "effective_at": "2025-06-10" },
+        { "fare_id": "fare-hr2-new", "amount_min": 45, "amount_max": 45, "currency": "PHP", "effective_at": "2025-12-01" }
+      ]
+    },
+    {
+      "leg_id": "lg-rm-1",
+      "route_id": "rt-jep-rm",
+      "board_stop_id": "st-riverbend-nb",
+      "alight_stop_id": "st-mercado-gate",
+      "ride_min": null,
+      "eligibility": "ready",
+      "fare_reports": [
+        { "fare_id": "fare-rm-1a", "amount_min": 15, "amount_max": 15, "currency": "PHP", "effective_at": "2025-07-21" }
+      ]
+    },
+    {
+      "leg_id": "lg-rm-2",
+      "route_id": "rt-jep-rm",
+      "board_stop_id": "st-mercado-gate",
+      "alight_stop_id": "st-riverbend-nb",
+      "ride_min": null,
+      "eligibility": "ready",
+      "fare_reports": [
+        { "fare_id": "fare-rm-2a", "amount_min": 15, "amount_max": 15, "currency": "PHP", "effective_at": "2025-07-21" }
+      ]
+    },
+    {
+      "leg_id": "lg-bv-1",
+      "route_id": "rt-bus-bv",
+      "board_stop_id": "st-bayan-t1",
+      "alight_stop_id": "st-verde-vg",
+      "ride_min": 35,
+      "eligibility": "excluded",
+      "fare_reports": [
+        { "fare_id": "fare-bv-1a", "amount_min": 30, "amount_max": 30, "currency": "PHP", "effective_at": "2024-03-05" }
+      ]
+    }
+  ],
+  "hours_reports": [
+    {
+      "hours_id": "hrs-bh-1",
+      "route_id": "rt-jep-bh",
+      "hours_text": "Reported 05:00-21:00 daily (community report, not a timetable)",
+      "source_date": "2025-09-02"
+    }
+  ],
+  "notes": [
+    {
+      "note_id": "nt-change",
+      "kind": "tip",
+      "leg_id": "lg-bh-1",
+      "stop_id": null,
+      "body": "Passengers report that conductors on this jeepney often run out of small change, so bringing smaller bills is suggested."
+    },
+    {
+      "note_id": "nt-queue",
+      "kind": "tip",
+      "leg_id": null,
+      "stop_id": "st-harbor-p2",
+      "body": "The loading queue here is reported to get long during the evening rush."
+    },
+    {
+      "note_id": "nt-hr-conflict",
+      "kind": "conflict",
+      "leg_id": "lg-hr-1",
+      "stop_id": null,
+      "body": "Two dated fare reports exist for this crossing and they disagree; both are listed on the card."
+    }
+  ],
+  "trip_states": {
+    "ts-none": { "active": false },
+    "ts-bh": {
+      "active": true,
+      "origin_place_id": "pl-bayan",
+      "destination_place_id": "pl-harbor",
+      "preference": "fewest_transfers",
+      "selected_leg_ids": ["lg-bh-1"],
+      "current_step": 0
+    },
+    "ts-bm": {
+      "active": true,
+      "origin_place_id": "pl-bayan",
+      "destination_place_id": "pl-mercado",
+      "preference": "fewest_transfers",
+      "selected_leg_ids": ["lg-bm-1"],
+      "current_step": 0
+    },
+    "ts-hr": {
+      "active": true,
+      "origin_place_id": "pl-harbor",
+      "destination_place_id": "pl-riverbend",
+      "preference": "fewest_transfers",
+      "selected_leg_ids": ["lg-hr-1"],
+      "current_step": 0
+    },
+    "ts-mb": {
+      "active": true,
+      "origin_place_id": "pl-mercado",
+      "destination_place_id": "pl-bayan",
+      "preference": "fewest_transfers",
+      "selected_leg_ids": ["lg-bm-2"],
+      "current_step": 0
+    },
+    "ts-rm": {
+      "active": true,
+      "origin_place_id": "pl-riverbend",
+      "destination_place_id": "pl-mercado",
+      "preference": "fewest_transfers",
+      "selected_leg_ids": ["lg-rm-1"],
+      "current_step": 0
+    },
+    "ts-hm": {
+      "active": true,
+      "origin_place_id": "pl-harbor",
+      "destination_place_id": "pl-mercado",
+      "preference": "fewest_transfers",
+      "selected_leg_ids": ["lg-hr-1", "lg-rm-1"],
+      "current_step": 0
+    }
+  }
+}

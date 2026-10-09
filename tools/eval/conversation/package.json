@@ -1,0 +1,20 @@
+{
+  "name": "@pusang-gala/eval-conversation",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "run": "vitest run src/harness.test.ts --reporter=verbose",
+    "eval": "npm run run",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@pusang-gala/core": "0.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.4",
+    "typescript": "6.0.3",
+    "vitest": "5.0.3"
+  }
+}
