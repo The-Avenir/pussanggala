@@ -9,22 +9,27 @@ import {
   legsFromPlaceToPlace,
   type DemoPack,
   type TripState,
-} from "./evalHarness/pack.ts";
+} from "./evalHarness/pack";
 import {
   guardStream as evalGuardStream,
   parseUnit,
   validateUnit,
-} from "./evalHarness/guard.ts";
-import type { ExplanationUnit } from "./evalHarness/guard.ts";
-import { EvalRulesSut } from "./evalHarness/rulesSut.ts";
-import type { StreamOutcome } from "./evalHarness/sutTypes.ts";
+} from "./evalHarness/guard";
+import type { ExplanationUnit } from "./evalHarness/guard";
+import { EvalRulesSut } from "./evalHarness/rulesSut";
+import type {
+  ParseOutcome,
+  RespondOutcome,
+  StreamOutcome,
+  SystemUnderTest,
+} from "./evalHarness/sutTypes";
 
 export type {
   ParseOutcome,
   RespondOutcome,
   StreamOutcome,
   SystemUnderTest,
-} from "./evalHarness/sutTypes.ts";
+} from "./evalHarness/sutTypes";
 
 type AiModuleDuck = {
   guardStream?: (
@@ -182,7 +187,7 @@ class ConversationAiBridgeSut implements SystemUnderTest {
 export function createConversationEvalSut(options: {
   pack: unknown;
   aiModule: unknown;
-}): SystemUnderTest | Promise<SystemUnderTest> {
+}): SystemUnderTest {
   if (!isDemoPack(options.pack)) {
     throw new Error("createConversationEvalSut: pack is not a DemoPack-shaped object");
   }

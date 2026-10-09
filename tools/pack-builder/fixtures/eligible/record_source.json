@@ -1,0 +1,170 @@
+[
+  {
+    "link_id": 1,
+    "record_kind": "region",
+    "record_id": "rg_fixture-ncr",
+    "source_id": "src_fixture-geo",
+    "snapshot_sha256": null,
+    "comment_index": null
+  },
+  {
+    "link_id": 2,
+    "record_kind": "place",
+    "record_id": "pl_sample-plaza",
+    "source_id": "src_fixture-geo",
+    "snapshot_sha256": null,
+    "comment_index": null
+  },
+  {
+    "link_id": 3,
+    "record_kind": "place",
+    "record_id": "pl_example-market",
+    "source_id": "src_fixture-geo",
+    "snapshot_sha256": null,
+    "comment_index": null
+  },
+  {
+    "link_id": 4,
+    "record_kind": "place",
+    "record_id": "pl_mock-terminal",
+    "source_id": "src_fx003",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 0
+  },
+  {
+    "link_id": 5,
+    "record_kind": "place",
+    "record_id": "pl_faraway-town",
+    "source_id": "src_fixture-geo",
+    "snapshot_sha256": null,
+    "comment_index": null
+  },
+  {
+    "link_id": 6,
+    "record_kind": "stop",
+    "record_id": "st_plaza-bay",
+    "source_id": "src_fx001",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 0
+  },
+  {
+    "link_id": 7,
+    "record_kind": "stop",
+    "record_id": "st_market-front",
+    "source_id": "src_fx001",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 0
+  },
+  {
+    "link_id": 8,
+    "record_kind": "stop",
+    "record_id": "st_market-rear",
+    "source_id": "src_fx003",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 0
+  },
+  {
+    "link_id": 9,
+    "record_kind": "stop",
+    "record_id": "st_terminal-bay",
+    "source_id": "src_fx003",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 0
+  },
+  {
+    "link_id": 10,
+    "record_kind": "place_stop",
+    "record_id": "ac_plaza-bay",
+    "source_id": "src_fx001",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 0
+  },
+  {
+    "link_id": 11,
+    "record_kind": "place_stop",
+    "record_id": "ac_market-front",
+    "source_id": "src_fx001",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 0
+  },
+  {
+    "link_id": 12,
+    "record_kind": "place_stop",
+    "record_id": "ac_terminal-bay",
+    "source_id": "src_fx003",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 0
+  },
+  {
+    "link_id": 13,
+    "record_kind": "route",
+    "record_id": "rt_violet-loop",
+    "source_id": "src_fx001",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 0
+  },
+  {
+    "link_id": 14,
+    "record_kind": "route",
+    "record_id": "rt_orange-coastal",
+    "source_id": "src_fx003",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 0
+  },
+  {
+    "link_id": 15,
+    "record_kind": "leg",
+    "record_id": "lg_violet-1",
+    "source_id": "src_fx001",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 0
+  },
+  {
+    "link_id": 16,
+    "record_kind": "leg",
+    "record_id": "lg_orange-1",
+    "source_id": "src_fx003",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 0
+  },
+  {
+    "link_id": 17,
+    "record_kind": "walk_link",
+    "record_id": "wk_market-to-terminal",
+    "source_id": "src_fx003",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 0
+  },
+  {
+    "link_id": 18,
+    "record_kind": "fare_report",
+    "record_id": "fr_violet-1a",
+    "source_id": "src_fx001",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 1
+  },
+  {
+    "link_id": 19,
+    "record_kind": "hours_report",
+    "record_id": "hr_violet-1",
+    "source_id": "src_fx001",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 0
+  },
+  {
+    "link_id": 20,
+    "record_kind": "shape",
+    "record_id": "sh_violet-1",
+    "source_id": "src_fx001",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 0
+  },
+  {
+    "link_id": 21,
+    "record_kind": "note",
+    "record_id": "nt_violet-fare",
+    "source_id": "src_fx001",
+    "snapshot_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "comment_index": 1
+  }
+]

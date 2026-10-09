@@ -1,0 +1,16 @@
+[
+  {
+    "route_id": "rt_violet-loop",
+    "mode": "jeepney",
+    "signboard": "VIOLET LOOP",
+    "direction_label": "Plaza to Market",
+    "service_status": "reported_active"
+  },
+  {
+    "route_id": "rt_orange-coastal",
+    "mode": "bus",
+    "signboard": null,
+    "direction_label": "Coastal line",
+    "service_status": "suspended"
+  }
+]

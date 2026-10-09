@@ -17,8 +17,8 @@ import {
   type ExplanationUnitKind,
 } from "@pusang-gala/core";
 
-import { stopNameVariants } from "./pack.ts";
-import type { BundleCard, EvidenceBundle } from "./pack.ts";
+import { stopNameVariants } from "./pack";
+import type { BundleCard, EvidenceBundle } from "./pack";
 
 export type { ExplanationUnit } from "@pusang-gala/core";
 

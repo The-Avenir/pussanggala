@@ -1,0 +1,20 @@
+[
+  {
+    "leg_id": "lg_violet-1",
+    "route_id": "rt_violet-loop",
+    "board_stop_id": "st_plaza-bay",
+    "alight_stop_id": "st_market-front",
+    "ride_min": 15,
+    "dist_km": 3.2,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_orange-1",
+    "route_id": "rt_orange-coastal",
+    "board_stop_id": "st_terminal-bay",
+    "alight_stop_id": "st_market-front",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "excluded"
+  }
+]

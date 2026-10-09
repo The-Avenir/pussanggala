@@ -1,0 +1,10 @@
+[
+  {
+    "hours_id": "hr_violet-1",
+    "route_id": "rt_violet-loop",
+    "hours_text": "Reported daytime service",
+    "starts_local": "05:30",
+    "ends_local": "21:00",
+    "days_text": "Weekdays"
+  }
+]

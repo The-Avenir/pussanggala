@@ -26,25 +26,25 @@ import {
   normalize,
   routeSearch,
   stopNameVariants,
-} from "./pack.ts";
+} from "./pack";
 import type {
   BundleCard,
   DemoPack,
   EvidenceBundle,
   Leg,
   TripState,
-} from "./pack.ts";
+} from "./pack";
 import {
   guardStream as guardStreamImpl,
   validateUnit,
-} from "./guard.ts";
-import type { ExplanationUnit } from "./guard.ts";
+} from "./guard";
+import type { ExplanationUnit } from "./guard";
 import type {
   ParseOutcome,
   RespondOutcome,
   StreamOutcome,
   SystemUnderTest,
-} from "./sutTypes.ts";
+} from "./sutTypes";
 
 const MODE_LABEL: Record<string, string> = {
   jeepney: "jeepney",

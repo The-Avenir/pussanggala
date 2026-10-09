@@ -1,0 +1,27 @@
+{
+  "name": "@pusang-gala/mobile",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Pusang Gala offline-first Expo app placeholder (T40 minimal harness, ugly-first)",
+  "main": "App.tsx",
+  "scripts": {
+    "start": "expo start --dev-client",
+    "android": "expo run:android --device",
+    "typecheck": "tsc --noEmit --strict --skipLibCheck --jsx react-jsx --target ES2022 --module ESNext --moduleResolution Bundler --lib ES2022,DOM --allowSyntheticDefaultImports --esModuleInterop --isolatedModules --verbatimModuleSyntax --noUncheckedIndexedAccess --exactOptionalPropertyTypes App.tsx src/core/index.ts",
+    "test": "echo \"mobile: no tests yet (device checks land in T45)\""
+  },
+  "dependencies": {
+    "@pusang-gala/core": "file:../../packages/core",
+    "expo": "57.0.23",
+    "react": "19.2.3",
+    "react-native": "0.86.3",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.3",
+    "typescript": "6.0.3"
+  },
+  "engines": {
+    "node": ">=22.13"
+  }
+}

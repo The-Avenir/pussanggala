@@ -1,6 +1,6 @@
-import type { EvidenceBundle } from "./pack.ts";
-import type { ExplanationUnit } from "./guard.ts";
-import type { TripState } from "./pack.ts";
+import type { EvidenceBundle } from "./pack";
+import type { ExplanationUnit } from "./guard";
+import type { TripState } from "./pack";
 
 export interface ParseOutcome {
   intent: string;

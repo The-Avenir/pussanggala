@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import { createConversationEvalSut, validateEvalUnitForTrip } from "../src/evalSut";
-import type { DemoPack, TripState } from "../src/evalHarness/pack.ts";
+import type { DemoPack, TripState } from "../src/evalHarness/pack";
 
 const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..", "..", "..");
 const pack = JSON.parse(
