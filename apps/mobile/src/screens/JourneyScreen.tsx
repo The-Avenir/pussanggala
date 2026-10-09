@@ -77,16 +77,18 @@ const SYNTHETIC_CARDS: readonly SyntheticCard[] = [
   },
 ];
 
-const SYNTHETIC_FAILURE_TEXT: Record<FailureKind, string> = {
-  'outside-NCR':
-    'SYNTHETIC failure [outside-NCR]: SYNTHETIC place outside NCR pack — offline NCR only, no SYNTHETIC route (SYNTHETIC detail)',
-  ambiguous:
-    'SYNTHETIC failure [ambiguous]: SYNTHETIC query matched multiple SYNTHETIC places — confirm one SYNTHETIC pick (SYNTHETIC detail)',
-  'no-route':
-    'SYNTHETIC failure [no-route]: no SYNTHETIC offline route for this SYNTHETIC query — try another SYNTHETIC query (SYNTHETIC detail)',
-  'missing-asset':
-    'SYNTHETIC failure [missing-asset]: SYNTHETIC pack asset missing — restore offline pack, no network fallback (SYNTHETIC detail)',
-};
+function syntheticFailureText(kind: FailureKind): string {
+  if (kind === 'outside-NCR') {
+    return 'SYNTHETIC failure [outside-NCR]: SYNTHETIC place outside NCR pack — offline NCR only, no SYNTHETIC route (SYNTHETIC detail)';
+  }
+  if (kind === 'ambiguous') {
+    return 'SYNTHETIC failure [ambiguous]: SYNTHETIC query matched multiple SYNTHETIC places — confirm one SYNTHETIC pick (SYNTHETIC detail)';
+  }
+  if (kind === 'no-route') {
+    return 'SYNTHETIC failure [no-route]: no SYNTHETIC offline route for this SYNTHETIC query — try another SYNTHETIC query (SYNTHETIC detail)';
+  }
+  return 'SYNTHETIC failure [missing-asset]: SYNTHETIC pack asset missing — restore offline pack, no network fallback (SYNTHETIC detail)';
+}
 
 function classifySyntheticQuery(origin: string, destination: string): FailureKind | null {
   const q = `${origin} ${destination}`.toLowerCase();
@@ -113,7 +115,7 @@ export function JourneyScreen(): React.JSX.Element {
   const store = useMemo(() => createTripStore(), []);
 
   const assetLine = useMemo(() => {
-    const pinned = syntheticPinnedAssets('synthetic-t45.0');
+    const pinned = syntheticPinnedAssets('SYNTHETIC-t45.0');
     const snaps = syntheticSnapshotsPresent();
     const files = simulateMissing ? snaps.slice(1) : snaps;
     const located = runValidationPipeline({ baseDir: 'SYNTHETIC-base', files, pinned });
@@ -122,7 +124,7 @@ export function JourneyScreen(): React.JSX.Element {
   }, [simulateMissing]);
 
   const assetNotReady = useMemo(() => {
-    const pinned = syntheticPinnedAssets('synthetic-t45.0');
+    const pinned = syntheticPinnedAssets('SYNTHETIC-t45.0');
     const snaps = syntheticSnapshotsPresent();
     const files = simulateMissing ? snaps.slice(1) : snaps;
     const located = runValidationPipeline({ baseDir: 'SYNTHETIC-base', files, pinned });
@@ -214,7 +216,7 @@ export function JourneyScreen(): React.JSX.Element {
 
       {failure !== null ? (
         <View style={styles.failureBox}>
-          <Text style={styles.failureText}>{SYNTHETIC_FAILURE_TEXT[failure]}</Text>
+          <Text style={styles.failureText}>{syntheticFailureText(failure)}</Text>
           <Button title={`SYNTHETIC Retry ${failure} (SYNTHETIC)`} onPress={handleRetry} />
         </View>
       ) : (

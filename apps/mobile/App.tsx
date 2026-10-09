@@ -7,6 +7,7 @@
  */
 import { registerRootComponent } from 'expo';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { JourneyScreen } from './src/screens/JourneyScreen';
 
 interface PlaceholderCard {
   readonly id: string;
@@ -63,6 +64,7 @@ function App(): React.JSX.Element {
     <ScrollView style={styles.root} contentContainerStyle={styles.content}>
       <Text style={styles.heading}>Pusang Gala</Text>
       <OfflineBanner />
+      <JourneyScreen />
       {PLACEHOLDER_CARDS.map((card) => (
         <PlaceholderCardView key={card.id} card={card} />
       ))}
