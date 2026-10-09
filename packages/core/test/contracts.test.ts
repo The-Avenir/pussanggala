@@ -179,4 +179,33 @@ describe("explanation units", () => {
         .success,
     ).toBe(false);
   });
+
+  it("accepts optional inserts citing canonical statement IDs", () => {
+    expect(
+      ExplanationUnitSchema.safeParse({
+        kind: "step",
+        cardRef: "card:ride-1",
+        inserts: ["stmt:step-1", "stmt:step-2"],
+        text: "Then transfer at the indicated stop.",
+      }).success,
+    ).toBe(true);
+  });
+
+  it("rejects empty insert IDs", () => {
+    expect(
+      ExplanationUnitSchema.safeParse({
+        kind: "summary",
+        inserts: [""],
+        text: "ok",
+      }).success,
+    ).toBe(false);
+  });
+
+  it("rejects unknown kinds from abandoned forks", () => {
+    for (const kind of ["steps", "warning", "unknowns", "failure", "note"]) {
+      expect(
+        ExplanationUnitSchema.safeParse({ kind, text: "nope" }).success,
+      ).toBe(false);
+    }
+  });
 });
