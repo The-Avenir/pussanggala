@@ -1,0 +1,29 @@
+[
+  {
+    "source_id": "src_fx001",
+    "kind": "reddit_thread",
+    "url": "https://example.invalid/r/fixture/comments/fx001/",
+    "post_id": "fx001",
+    "posted_at": "2025-01-01",
+    "observed_at": null,
+    "license": null
+  },
+  {
+    "source_id": "src_fx003",
+    "kind": "reddit_thread",
+    "url": "https://example.invalid/r/fixture/comments/fx003/",
+    "post_id": "fx003",
+    "posted_at": "2025-03-01",
+    "observed_at": null,
+    "license": null
+  },
+  {
+    "source_id": "src_fixture-geo",
+    "kind": "geography",
+    "url": "https://example.invalid/geo",
+    "post_id": null,
+    "posted_at": null,
+    "observed_at": "2024-12-15",
+    "license": "CC0-1.0"
+  }
+]

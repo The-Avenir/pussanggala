@@ -1,0 +1,46 @@
+[
+  {
+    "place_id": "pl_sample-plaza",
+    "region_id": "rg_fixture-ncr",
+    "name": "Sample Plaza",
+    "kind": "landmark",
+    "area": "Fixture City",
+    "ncr_status": "accepted",
+    "lat": 14.6,
+    "lng": 121,
+    "mapping_status": "mapped"
+  },
+  {
+    "place_id": "pl_example-market",
+    "region_id": "rg_fixture-ncr",
+    "name": "Example Market",
+    "kind": "market",
+    "area": "Fixture City",
+    "ncr_status": "accepted",
+    "lat": 14.61,
+    "lng": 121.01,
+    "mapping_status": "mapped"
+  },
+  {
+    "place_id": "pl_mock-terminal",
+    "region_id": "rg_fixture-ncr",
+    "name": "Mock Terminal",
+    "kind": "terminal",
+    "area": "Fixture City",
+    "ncr_status": "accepted",
+    "lat": null,
+    "lng": null,
+    "mapping_status": "unmapped"
+  },
+  {
+    "place_id": "pl_faraway-town",
+    "region_id": "rg_fixture-ncr",
+    "name": "Faraway Town",
+    "kind": "town",
+    "area": "Fixture City",
+    "ncr_status": "outside",
+    "lat": null,
+    "lng": null,
+    "mapping_status": "unmapped"
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "ambiguity_id": 1,
+    "alias_norm": "fixture center",
+    "place_id": "pl_sample-plaza"
+  },
+  {
+    "ambiguity_id": 2,
+    "alias_norm": "fixture center",
+    "place_id": "pl_example-market"
+  }
+]

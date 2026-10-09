@@ -1,0 +1,26 @@
+[
+  {
+    "alias_id": 1,
+    "place_id": "pl_sample-plaza",
+    "alias_norm": "sample plaza",
+    "alias_display": "Sample Plaza"
+  },
+  {
+    "alias_id": 2,
+    "place_id": "pl_example-market",
+    "alias_norm": "example market",
+    "alias_display": "Example Market"
+  },
+  {
+    "alias_id": 3,
+    "place_id": "pl_mock-terminal",
+    "alias_norm": "mock terminal",
+    "alias_display": "Mock Terminal"
+  },
+  {
+    "alias_id": 4,
+    "place_id": "pl_faraway-town",
+    "alias_norm": "faraway town",
+    "alias_display": "Faraway Town"
+  }
+]

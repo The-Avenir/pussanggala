@@ -1,0 +1,9 @@
+[
+  {
+    "shape_id": "sh_violet-1",
+    "leg_id": "lg_violet-1",
+    "walk_id": null,
+    "geojson": "{\"type\":\"LineString\",\"coordinates\":[[121.0,14.6],[121.01,14.61]]}",
+    "geometry_kind": "schematic"
+  }
+]

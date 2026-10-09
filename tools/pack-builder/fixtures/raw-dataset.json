@@ -1,0 +1,61 @@
+[
+  {
+    "id": "fx001",
+    "title": "Sample Plaza to Example Market",
+    "question": "How do I get from Sample Plaza to Example Market on a weekday morning?",
+    "created_utc": 1735689600,
+    "score": 1,
+    "num_comments": 2,
+    "permalink": "https://example.invalid/r/fixture/comments/fx001/",
+    "answer_count": 2,
+    "answers": [
+      { "score": 3, "text": "Ride the violet loop jeep from the Sample Plaza bay and get off at the fountain gate corner near the market." },
+      { "score": 1, "text": "Fare was around twelve to fifteen pesos last time, ask the driver if unsure." }
+    ],
+    "origin": "Sample Plaza",
+    "destination": "Example Market"
+  },
+  {
+    "id": "fx002",
+    "title": "Mock Terminal question",
+    "question": "Is the orange coastal bus still running from Mock Terminal?",
+    "created_utc": 1738368000,
+    "score": 1,
+    "num_comments": 1,
+    "permalink": "https://example.invalid/r/fixture/comments/fx002/",
+    "answer_count": 1,
+    "answers": [
+      { "score": 1, "text": "Not sure anymore, someone said it stopped operating recently." }
+    ],
+    "origin": "Mock Terminal",
+    "destination": "Example Market"
+  },
+  {
+    "id": "fx003",
+    "title": "Example Market to Mock Terminal",
+    "question": "Any walking route from the market rear gate to Mock Terminal?",
+    "created_utc": 1740787200,
+    "score": 1,
+    "num_comments": 1,
+    "permalink": "https://example.invalid/r/fixture/comments/fx003/",
+    "answer_count": 1,
+    "answers": [
+      { "score": 2, "text": "Walk straight past the bakery then cross at the yellow footbridge to reach the terminal." }
+    ],
+    "origin": "Example Market",
+    "destination": "Mock Terminal"
+  },
+  {
+    "id": "fx004",
+    "title": "Unanswered sample post",
+    "question": "Placeholder question with no answers.",
+    "created_utc": 1743465600,
+    "score": 0,
+    "num_comments": 0,
+    "permalink": "https://example.invalid/r/fixture/comments/fx004/",
+    "answer_count": 0,
+    "answers": [],
+    "origin": "Sample Plaza",
+    "destination": "Mock Terminal"
+  }
+]

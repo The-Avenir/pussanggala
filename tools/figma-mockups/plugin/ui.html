@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { font: 13px/1.4 -apple-system, "Segoe UI", sans-serif; margin: 0; padding: 12px; color: #2e1c14; }
+  h1 { font-size: 14px; margin: 0 0 8px; }
+  button { font: inherit; padding: 6px 14px; margin-right: 8px; cursor: pointer; }
+  button:disabled { opacity: 0.4; cursor: default; }
+  #log { margin-top: 10px; padding: 8px; background: #fff9ef; border: 1px solid #efdcca;
+         white-space: pre-wrap; font: 11px/1.5 ui-monospace, monospace; max-height: 340px; overflow: auto; }
+  .err { color: #b3261e; }
+</style>
+</head>
+<body>
+  <h1>Pusang Gala Mockup Builder</h1>
+  <button id="inventory" disabled>Inventory</button>
+  <button id="build" disabled>Build</button>
+  <div id="log">Loading spec…</div>
+<script>
+const BASE = 'http://127.0.0.1:5577';
+const POSES = ['compass','wave','think','pointing','map','walk','cheer','binoculars','idle'];
+const logEl = document.getElementById('log');
+function log(msg, isErr) {
+  const line = document.createElement('div');
+  line.textContent = msg;
+  if (isErr) line.className = 'err';
+  logEl.appendChild(line);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+let spec = null;
+
+async function loadSpec() {
+  try {
+    const [tokens, screens] = await Promise.all([
+      fetch(BASE + '/spec/tokens.json').then(r => { if (!r.ok) throw new Error('tokens ' + r.status); return r.json(); }),
+      fetch(BASE + '/spec/screens.json').then(r => { if (!r.ok) throw new Error('screens ' + r.status); return r.json(); }),
+    ]);
+    const images = {};
+    for (const pose of POSES) {
+      const r = await fetch(BASE + '/assets/gaile-' + pose + '.png');
+      if (!r.ok) throw new Error('gaile-' + pose + ' ' + r.status);
+      images[pose] = new Uint8Array(await r.arrayBuffer());
+    }
+    spec = { tokens, screens, images };
+    logEl.textContent = 'Spec loaded: ' + screens.screens.length + ' screens, ' + POSES.length + ' poses.';
+    document.getElementById('inventory').disabled = false;
+    document.getElementById('build').disabled = false;
+  } catch (e) {
+    logEl.textContent = 'Failed to load spec from ' + BASE + ' — is serve.mjs running?\n' + e.message;
+  }
+}
+loadSpec();
+
+document.getElementById('inventory').onclick = () =>
+  parent.postMessage({ pluginMessage: { type: 'inventory' } }, '*');
+document.getElementById('build').onclick = () =>
+  parent.postMessage({ pluginMessage: { type: 'build', spec } }, '*');
+
+onmessage = async (event) => {
+  const msg = event.data.pluginMessage;
+  if (!msg) return;
+  if (msg.type === 'inventory-result') {
+    logEl.textContent = msg.text;
+    try {
+      const r = await fetch(BASE + '/inventory', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(msg.data),
+      });
+      log(r.ok ? 'Inventory saved to tools/figma-mockups/inventory.json' : 'Inventory POST failed: ' + r.status, !r.ok);
+    } catch (e) {
+      log('Inventory POST failed: ' + e.message, true);
+    }
+  } else if (msg.type === 'log') {
+    log(msg.text, msg.isErr);
+  } else if (msg.type === 'done') {
+    logEl.textContent = '';
+    log(msg.text);
+    for (const e of (msg.errors || [])) log('ERROR: ' + e, true);
+    for (const w of (msg.warnings || [])) log('note: ' + w);
+  }
+};
+</script>
+</body>
+</html>

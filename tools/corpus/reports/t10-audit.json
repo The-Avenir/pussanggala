@@ -1,0 +1,427 @@
+{
+  "task": "T10",
+  "generator": "tools/corpus/audit.mjs",
+  "content_policy": "Metadata and counts only. No titles, questions, answers, endpoints text or usernames. Post-ID lists live in data/raw/t10/ (gitignored).",
+  "snapshot": {
+    "dataset_dir": "howtogetthereph_dataset",
+    "source_commit": "3732824",
+    "ncr_routes_json_sha256": "d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3"
+  },
+  "input_files": {
+    "ncr_routes.json": {
+      "sha256": "d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3",
+      "bytes": 2695540
+    },
+    "routes.json": {
+      "sha256": "3df4b15c7fca9d896c0e7d15f8b380988795a7286cee001af2db50e6ca20c4a1",
+      "bytes": 10904223
+    },
+    "ncr_routes.csv": {
+      "sha256": "6efa7285b853de3f7c4403181cc21575a7e7d93c5cc81af354efb657ed2a02f3",
+      "bytes": 1017945
+    },
+    "routes.csv": {
+      "sha256": "2f5dc8aee3c822ef1a97351a26796222a6478f2409fb6b7df76b637aaac567d6",
+      "bytes": 2951163
+    },
+    "README.md": {
+      "sha256": "1cc55c8aa666cc22115d1e6980d24d36ecc7bee7b3b926e32841729f92777e3e",
+      "bytes": 1109
+    }
+  },
+  "counts": {
+    "ncr_routes_json": {
+      "posts": 3480,
+      "with_answers": 2186,
+      "without_answers": 1294,
+      "answer_texts": 3988
+    },
+    "routes_json": {
+      "posts": 16387,
+      "with_answers": 8556,
+      "without_answers": 7831,
+      "answer_texts": 15350
+    },
+    "ncr_routes_csv_rows": 3480,
+    "routes_csv_rows": 8556,
+    "ncr_post_ids_present_in_routes_json": 3480
+  },
+  "expected": {
+    "ncr": {
+      "posts": 3480,
+      "with_answers": 2186,
+      "without_answers": 1294,
+      "answer_texts": 3988
+    },
+    "all": {
+      "posts": 16387,
+      "with_answers": 8556,
+      "without_answers": 7831,
+      "answer_texts": 15350
+    }
+  },
+  "readme_discrepancies": [
+    {
+      "item": "NCR answers total",
+      "readme": 3989,
+      "stored_answers_arrays": 3988,
+      "sum_of_answer_count_field": 3989,
+      "explanation": "README total equals the sum of the answer_count field; one or more posts have answer_count greater than stored answers[] length (answers capped at 12)."
+    },
+    {
+      "item": "All-posts answers total",
+      "readme": 15395,
+      "stored_answers_arrays": 15350,
+      "sum_of_answer_count_field": 15395
+    }
+  ],
+  "field_inventory": {
+    "posts": {
+      "answer_count": {
+        "present": 3480,
+        "missing": 0,
+        "null": 0,
+        "empty": 0,
+        "types": {
+          "number": 3480
+        }
+      },
+      "answers": {
+        "present": 2186,
+        "missing": 0,
+        "null": 0,
+        "empty": 1294,
+        "types": {
+          "array": 3480
+        }
+      },
+      "created_utc": {
+        "present": 3480,
+        "missing": 0,
+        "null": 0,
+        "empty": 0,
+        "types": {
+          "number": 3480
+        }
+      },
+      "destination": {
+        "present": 3480,
+        "missing": 0,
+        "null": 0,
+        "empty": 0,
+        "types": {
+          "string": 3480
+        }
+      },
+      "id": {
+        "present": 3480,
+        "missing": 0,
+        "null": 0,
+        "empty": 0,
+        "types": {
+          "string": 3480
+        }
+      },
+      "num_comments": {
+        "present": 3480,
+        "missing": 0,
+        "null": 0,
+        "empty": 0,
+        "types": {
+          "number": 3480
+        }
+      },
+      "origin": {
+        "present": 3480,
+        "missing": 0,
+        "null": 0,
+        "empty": 0,
+        "types": {
+          "string": 3480
+        }
+      },
+      "permalink": {
+        "present": 3480,
+        "missing": 0,
+        "null": 0,
+        "empty": 0,
+        "types": {
+          "string": 3480
+        }
+      },
+      "question": {
+        "present": 3480,
+        "missing": 0,
+        "null": 0,
+        "empty": 0,
+        "types": {
+          "string": 3480
+        }
+      },
+      "score": {
+        "present": 3480,
+        "missing": 0,
+        "null": 0,
+        "empty": 0,
+        "types": {
+          "number": 3480
+        }
+      },
+      "title": {
+        "present": 3480,
+        "missing": 0,
+        "null": 0,
+        "empty": 0,
+        "types": {
+          "string": 3480
+        }
+      }
+    },
+    "answers": {
+      "score": {
+        "present": 3988,
+        "missing": 0,
+        "null": 0,
+        "empty": 0,
+        "types": {
+          "number": 3988
+        }
+      },
+      "text": {
+        "present": 3988,
+        "missing": 0,
+        "null": 0,
+        "empty": 0,
+        "types": {
+          "string": 3988
+        }
+      }
+    },
+    "routes_json_post_keys": [
+      "answer_count",
+      "answers",
+      "created_utc",
+      "id",
+      "num_comments",
+      "permalink",
+      "question",
+      "score",
+      "title"
+    ]
+  },
+  "absent_metadata": {
+    "on_answers": {
+      "comment_ids": true,
+      "comment_dates": true,
+      "reply_parent": true,
+      "comment_author": true
+    },
+    "on_posts": {
+      "coordinates": true,
+      "structured_stops": true,
+      "fares": true,
+      "post_author": true
+    },
+    "note": "true = no such field exists. Answers carry only score and text; no comment IDs, comment dates, authors or reply-parent links."
+  },
+  "missing_text": {
+    "question": {
+      "null": 0,
+      "empty": 0,
+      "deleted": 2,
+      "removed": 615
+    },
+    "question_missing_total": 617,
+    "question_missing_but_has_answers": 121,
+    "title_missing": 0,
+    "answer_text_missing": 0,
+    "endpoint_missing": {
+      "origin": 0,
+      "destination": 0
+    }
+  },
+  "truncation": {
+    "answers": {
+      "length": {
+        "count": 3988,
+        "min": 1,
+        "p50": 124,
+        "p90": 333,
+        "p99": 738,
+        "max": 2098,
+        "at_max": 1,
+        "top5": [
+          2098,
+          1627,
+          1534,
+          1394,
+          1294
+        ],
+        "histogram": {
+          "0-14": 131,
+          "15-49": 544,
+          "50-99": 925,
+          "100-199": 1320,
+          "200-499": 951,
+          "500-999": 104,
+          "1000-1999": 12,
+          "2000-inf": 1
+        }
+      },
+      "flags": {
+        "ellipsis": 2,
+        "no_terminal_punct": 1643,
+        "dangling_connector": 14
+      }
+    },
+    "questions_present": {
+      "length": {
+        "count": 2863,
+        "min": 1,
+        "p50": 115,
+        "p90": 261,
+        "p99": 602,
+        "max": 1251,
+        "at_max": 1,
+        "top5": [
+          1251,
+          1044,
+          1030,
+          1010,
+          977
+        ],
+        "histogram": {
+          "0-14": 32,
+          "15-49": 229,
+          "50-99": 906,
+          "100-199": 1148,
+          "200-499": 505,
+          "500-999": 39,
+          "1000-1999": 4,
+          "2000-inf": 0
+        }
+      },
+      "flags": {
+        "ellipsis": 3,
+        "no_terminal_punct": 770,
+        "dangling_connector": 3
+      }
+    },
+    "note": "Heuristic. No hard length cap observed if at_max is 1 and max is an outlier. no_terminal_punct is a weak signal (informal writing often omits punctuation).",
+    "csv_vs_json": {
+      "csv_rows": 3480,
+      "csv_header": [
+        "id",
+        "origin",
+        "destination",
+        "title",
+        "answers",
+        "top_answer",
+        "permalink"
+      ],
+      "ids_not_in_json": 0,
+      "json_ids_not_in_csv": 0,
+      "csv_rows_with_empty_top_answer": 1294,
+      "csv_top_answer_nonempty_but_json_unanswered": 0,
+      "top_equals_json_first_answer": 2165,
+      "top_equals_json_highest_score_answer": 2165,
+      "top_equals_some_json_answer": 2165,
+      "top_is_prefix_of_json_answer": 21,
+      "top_matches_no_json_answer": 0,
+      "csv_answers_col_equals_json_answer_count": 3480,
+      "csv_answers_col_equals_json_answers_length": 3479,
+      "csv_top_answer_lengths": {
+        "count": 2186,
+        "min": 1,
+        "p50": 142,
+        "p90": 370,
+        "p99": 787,
+        "max": 800,
+        "at_max": 16,
+        "top5": [
+          800,
+          800,
+          800,
+          800,
+          800
+        ],
+        "histogram": {
+          "0-14": 64,
+          "15-49": 196,
+          "50-99": 444,
+          "100-199": 773,
+          "200-499": 623,
+          "500-999": 86,
+          "1000-1999": 0,
+          "2000-inf": 0
+        }
+      }
+    }
+  },
+  "outside_ncr_labels": {
+    "origin": 0,
+    "destination": 8,
+    "title": 8,
+    "any": 8,
+    "origin_or_destination": 8,
+    "both_endpoints": 0,
+    "flagged_with_answers": 6,
+    "keyword_hits": {
+      "la union": 3,
+      "cainta": 1,
+      "san pablo": 1,
+      "san mateo": 1,
+      "tanza": 1,
+      "kawit": 1
+    },
+    "keyword_list_size": 117,
+    "note": "Keyword heuristic over origin/destination/title. Inventory only; not an NCR membership decision. Keyword list is OUTSIDE_NCR_KEYWORDS in audit.mjs; operator names in OUTSIDE_NCR_EXCLUSIONS (e.g. Baliwag Transit terminals) are stripped first. NCR posts naming a non-NCR endpoint without a listed keyword are not caught."
+  },
+  "created_utc": {
+    "min": "2026-04-09T00:28:19.000Z",
+    "max": "2026-10-09T08:07:56.000Z",
+    "non_numeric": 0
+  },
+  "comment_counts": {
+    "answer_count_ne_answers_length": 1,
+    "answer_count_gt_answers_length": 1,
+    "answer_count_lt_answers_length": 0,
+    "num_comments_lt_answers_length": 68,
+    "num_comments_lt_answer_count": 68,
+    "num_comments_zero_with_answers": 0,
+    "sum_answer_count": 3989,
+    "sum_num_comments": 8215,
+    "sum_answers_length": 3988,
+    "answers_length_at_cap_12": 2,
+    "answers_length_distribution": {
+      "0": 1294,
+      "1": 1346,
+      "2": 372,
+      "3": 251,
+      "4": 97,
+      "5": 51,
+      "6": 33,
+      "7": 14,
+      "8": 8,
+      "9": 4,
+      "10": 6,
+      "11": 2,
+      "12": 2
+    }
+  },
+  "duplicates": {
+    "duplicate_post_ids": 0,
+    "duplicate_permalinks": 0
+  },
+  "short_or_ack_answers": {
+    "threshold_chars": 15,
+    "short": 131,
+    "ack_pattern": 8,
+    "short_or_ack": 131,
+    "posts_whose_answers_are_all_short_or_ack": 26
+  },
+  "assertions": {
+    "passed": true,
+    "failures": []
+  }
+}
