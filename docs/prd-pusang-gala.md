@@ -3,7 +3,7 @@ spine_type: PRD
 spine_version: 0.3.0
 project: Pusang Gala
 slug: pusang-gala
-doc_version: 0.4
+doc_version: 0.5
 status: Draft
 owner: Salvador Vincent Javier
 created: 2026-10-09
@@ -15,185 +15,172 @@ reconciled: 2026-10-09
 
 **IDEA:** [idea-pusang-gala.md](idea-pusang-gala.md)
 
----
+**Design:** [sdd-pusang-gala.md](sdd-pusang-gala.md)
+
+**Work allocation:** [TODO.md](TODO.md)
 
 ## 1. Scope statement
 
-**Release 1.0** is an offline Android app. The user asks in Taglish and gets deterministic step cards with signboards, landmarks, walk links and fare ranges, plus a cat-persona text voice. It answers only on verified corridors, starting with Cubao ↔ Antipolo/Masinag, and says "no data yet" everywhere else in Metro Manila and Rizal. It needs no network and no account.
+Release 1.0 is the working, judged hackathon Android app confirmed in G01–G27. It implements **offline retrieval + rule-based routing → required grounded local-AI conversation**, deterministic cards, schematic, offline maps, foreground GPS, saved routes and active-trip recovery. Both endpoints are in NCR and must be supported by usable corpus records.
 
-**Release 1.1** adds the offline Metro Manila + Rizal map, foreground GPS, optional Google sign-in, sync of the user's own routes, and community confirmations and submissions. Core use stays offline and account-free.
+The source is the supplied Reddit dataset; records are community-reported, not labelled verified. Accounts, sync, submissions, confirmations, voice output and maintenance planning are deferred. The previous map/GPS-to-1.1 split is superseded. UI design follows functional integration; the current Figma is WIP.
 
 ## 2. Users
 
 | User | Goal | Priority |
 |------|------|----------|
-| First-time rider on a verified corridor | Get from A to B correctly on the first try | Primary |
-| Commuter without data | Get directions with radios off | Primary |
-| Returning commuter (1.1) | Keep saved routes and history across phones; help others by confirming routes | Secondary |
-| Pack curator (team member) | Turn field checks, community knowledge and submissions into a verified pack | Secondary (internal) |
+| First-time NCR commuter | Find and understand a supported journey | Primary |
+| Commuter without data | Use all required functions offline | Primary |
+| Returning commuter | Save routes and recover an active trip | Primary |
+| Corpus reviewer | Resolve ambiguous source extraction before publication | Internal |
 
 ## 3. Features
 
-The owner set these priorities on 2026-10-09: map and GPS move to 1.1, and accounts arrive with 1.1. `Must-Have` means required for **1.0**. Features scheduled for 1.1 are `Should-Have` and marked "(1.1)".
+`Must-Have` means required in the judged app. Deferred entries preserve existing feature IDs for traceability; they are not scheduled for 1.1.
 
 | ID | Feature | Priority | Description |
 |----|---------|----------|-------------|
-| PRD-F1 | Taglish question understanding | Must-Have | Typed Taglish or English questions. A rule parser runs first; if slots are still missing, an on-device model extracts origin, destination, preference and time text. On phones that can't run the model (32-bit Android, under about 3 GB RAM, or too slow), the app runs rules-only with pickers and loses no core function. |
-| PRD-F2 | Place resolution with clarification | Must-Have | Resolves extracted text against the pack's places and aliases, with typo tolerance. When a match is ambiguous, it **always** asks the user to choose (INV-6). Explicit origin and destination pickers are always available. |
-| PRD-F3 | Verified offline routing | Must-Have | Finds a route over the pack's verified ride legs and walk links. Preferences: cheapest, fewest transfers, or estimated fastest. |
-| PRD-F4 | Step cards with provenance | Must-Have | Each step shows mode, signboard, where to board, the alighting landmark, walk text, fare range, last-verified date and sources. Stale data is labelled (INV-5). |
-| PRD-F5 | Cat persona (text) | Must-Have | A friendly, human-sounding Taglish cat voice ("pusa") wraps each answer. The persona never changes or adds route facts. |
-| PRD-F6 | Offline in-app map | Should-Have | (1.1) A Metro Manila + Rizal map (about 55 MB, z≤15) with stops, verified route geometry and attribution, rendered from local tiles. |
-| PRD-F7 | Foreground GPS position | Should-Have | (1.1) Shows the user's position during an active trip, with accuracy and fix age. Stale fixes are labelled last known (INV-5). |
-| PRD-F8 | Offline setup and readiness | Must-Have | All assets arrive with the install (APK, or Google Play for the model pack). On first launch the app verifies them and shows readiness per asset. The core app downloads nothing. |
-| PRD-F9 | Honest failure states | Must-Have | Clear messages for no coverage ("wala pa kaming data dito"), an ambiguous place, stale data, AI unavailable, map unavailable and GPS unavailable. Manual input always works. |
-| PRD-F10 | Corridor pack build tooling | Must-Have | An off-device pipeline that turns curated facts into a validated, versioned pack. Sources: Reddit-derived facts, field surveys, LTFRB fares, OSM and, from 1.1, approved community submissions. |
-| PRD-F11 | Community tips ("public opinion") | Should-Have | Paraphrased, team-authored tips and warnings attached to legs and stops, with a "N community mentions" signal and source links. |
-| PRD-F12 | Schematic route view | Must-Have | A stop-sequence diagram for every route. In 1.0 it is the only route visual. In 1.1 it is the fallback when the map is unavailable. |
-| PRD-F13 | Offline voice output | Could-Have | The persona text is spoken on-device. Owner: this comes after text and everything else are done. |
-| PRD-F14 | Google Maps coordinate handoff | Could-Have | Opens a stored boarding or alighting coordinate in the Google Maps app; the user prepares Google's offline area themselves. |
-| PRD-F15 | Saved routes and history (local) | Must-Have | Saves origin→destination pairs and chosen routes, and keeps a history of routes looked up or taken (route IDs and dates only, never GPS traces). Stored on-device; no account needed. |
-| PRD-F16 | Optional account and sync | Should-Have | (1.1) Google sign-in via Firebase Auth. After sign-in, the user **opts in** to sync PRD-F15 data to the cloud and restore it on a new phone. Includes account deletion in the app and on the web. Never required. |
-| PRD-F17 | Route confirmations | Should-Have | (1.1) After a trip: "Gumana ba 'tong ruta?" yes/no. Stored locally; uploaded only when signed in and opted in. Aggregated counts ship in the next pack as "N commuters confirmed". |
-| PRD-F18 | Corrections and new-route submissions | Should-Have | (1.1) A signed-in user can submit a correction (fare, stop, signboard) or a new route. Submissions go to a review queue and are **never shown to other users until approved** and published in a pack. Approval method: Q14. |
+| PRD-F1 | Taglish/English intent understanding | Must-Have | Parse endpoints, preferences and follow-up intent locally, with rules and the local model. Manual place selection remains available. |
+| PRD-F2 | Supported-place resolution | Must-Have | Resolve corpus places/aliases with typo tolerance and clarification. Both endpoints must belong to NCR. Arbitrary addresses require selection of a supported landmark; no invented final walk. |
+| PRD-F3 | Source-backed offline routing | Must-Have | Join supported ride legs and explicit transfer/walk links, including across threads. Exclude suspended/retired and unresolved connections. Support fare, transfer-count and reported-time comparisons without claiming guaranteed optimality. |
+| PRD-F4 | Deterministic cards with provenance | Must-Have | Show mode, reported signboard where available, boarding/alighting landmarks, supported walking instructions, fare information or unknown state, source dates/links, conflicts and age warnings. |
+| PRD-F5 | Grounded local-AI explanation and cat voice | Must-Have | Required model explains canonical cards and rule-approved comparisons in short Taglish/English responses. Cards appear first; validated explanation chunks stream afterwards. It cannot invent facts. |
+| PRD-F6 | Offline in-app map | Must-Have | Local NCR basemap, mapped journey points and attribution. Connections are clearly schematic unless source-backed path geometry exists. Missing point coordinates are explicitly identified. |
+| PRD-F7 | Foreground GPS and origin suggestions | Must-Have | Position, accuracy and fix age; suggest supported nearby origins for confirmation. Steps advance manually. Stop subscriptions on background/end-trip. |
+| PRD-F8 | Offline assets and readiness | Must-Have | Judged APK includes model, pack and map dependencies. Locate/copy as needed, validate checksums/schema, show ready/missing/failed states; no app download path. |
+| PRD-F9 | Honest recovery/failure states | Must-Have | Distinct handling of outside-NCR, unsupported/ambiguous place, no connected itinerary, conflicts, stale reports, missing information/assets, inference failure and unavailable GPS. |
+| PRD-F10 | Corpus extraction and pack tooling | Must-Have | Process all 2,186 answered NCR posts; extract facts/paraphrases, perform a second AI evidence pass, review ambiguous/incomplete connections, canonicalize places, validate and build a versioned pack with inclusion/rejection counts. |
+| PRD-F11 | Source-backed notes and warnings | Must-Have | Paraphrased journey-related notes for retrieval and cards, with evidence links. Comment counts/upvotes are not correctness scores or commuter-confirmation counts. |
+| PRD-F12 | Schematic view | Must-Have | Supported stop/transfer sequence, labelled schematic; remains usable if the map is unavailable. |
+| PRD-F13 | Offline voice output | Could-Have | Deferred; engine/voice selected only in a later scope. |
+| PRD-F14 | External Google Maps handoff | Could-Have | Deferred; not a dependency of this release. |
+| PRD-F15 | Saved routes and local history | Must-Have | Persist stable place/route IDs and timestamps; revalidate against pack changes. Allow deletion. No raw queries or GPS traces. |
+| PRD-F16 | Account and cloud sync | Could-Have | Deferred; no Firebase/account modules in the judged app. |
+| PRD-F17 | User route confirmations | Could-Have | Deferred; no public confidence badge derived from comment counts. |
+| PRD-F18 | User corrections/submissions | Could-Have | Deferred; separate from internal corpus review. |
+| PRD-F19 | Journey-focused conversation | Must-Have | Current-trip follow-ups: alternatives, reverse journey, endpoint/preference changes, boarding, fares and transfers. New-trip action clears context. Briefly redirect unrelated requests. |
+| PRD-F20 | Reported operating-hours answers | Must-Have | Report source-backed hours with dates/uncertainty; say unknown when absent. No future departure scheduler or arrival prediction. |
+| PRD-F21 | Active-trip restoration | Must-Have | Restore selected route and manual step after restart using stable IDs and pack compatibility checks. Persist no raw conversation or GPS trace. |
 
 Priority vocabulary: `Must-Have`, `Should-Have`, `Could-Have`, `Dropped`.
 
 ### 3.1 Acceptance criteria
 
-**PRD-F1 — Taglish question understanding**
-- Given the labelled query set (at least 50 queries, held-out split included), when the queries are run offline, then exact required-slot accuracy on unambiguous queries is at least 90% (PUSANG-GALA-M1).
-- Given a query that the rule parser cannot handle, when the model runs, then it returns schema-valid JSON or times out into the manual pickers. Model output never contains fares, legs or place IDs.
-- Hybrid accuracy (rules plus model) beats rules-only accuracy on the held-out set (PUSANG-GALA-M2).
+**PRD-F1 — Intent understanding**
+- Evaluate at least 50 labelled Taglish/English queries with held-out wording, including follow-ups. Exact required-slot accuracy for unambiguous queries is at least 90% (M1).
+- Model output references input spans or current-trip structured slots; it cannot supply invented place IDs, fares or route legs. Clarify missing/swapped/uncertain endpoints.
+- Compare rules-only and hybrid results (M2); rules-only measurements are a baseline, not a substitute for required AI conversation.
 
-**PRD-F2 — Place resolution with clarification**
-- Given every query in the set designated ambiguous or unsupported, when it is resolved, then the app asks a clarifying question or reports no coverage. A clarifying question offers 2–4 choices, each with a landmark or area. The app never silently picks a place.
-- Given a one-character typo in a known alias of 5 or more characters, when it is resolved, then the intended place is among the top 3 candidates.
+**PRD-F2 — Place resolution**
+- Every designated ambiguous input asks the user to choose; 2–4 candidates show an area/landmark. Unsupported/outside-NCR endpoints fail honestly.
+- A one-character typo in a known alias of at least five characters includes the intended place among the top three candidates.
+- NCR membership uses canonical geography evidence, not merely the dataset label or a rectangular map extent.
+- Unsupported arbitrary addresses do not silently resolve to an assumed walk; the user selects a supported landmark.
 
-**PRD-F3 — Verified offline routing**
-- Given at least 30 expected-route fixtures, when they are routed, then each result matches the expected route or an equally valid one that a reviewer approves.
-- Given endpoints that the pack does not connect, or that lie outside verified corridors, when they are routed, then the result is "no route in our data yet". No partial or guessed route is shown.
-- Once endpoints are resolved, routing plus card rendering has p95 under 500 ms on the reference phone (PUSANG-GALA-M4).
+**PRD-F3 — Routing**
+- At least 30 expected-route fixtures match source-supported results or an equally supported itinerary approved by the reviewer. Include cross-thread joins, disconnected stops, reverse-direction requests, suspended/retired services and absent transfer links.
+- Nearby coordinates, similar names and shared source keywords cannot create a connection. Every boarding and transfer traces to an eligible record; incomplete itineraries are withheld.
+- Missing fare/time components stay unknown. Show qualified comparisons such as “lowest reported fare among options with fare information”; other options remain visible.
+- Routing plus card rendering after endpoint resolution has p95 under 500 ms on the reference phone (M4).
+- Do not repeatedly charge a boarding fare for a single continuous ride; only source-supported fare scope can be compared or totaled.
 
-**PRD-F4 — Step cards with provenance**
-- Every rendered card traces to a pack record ID. Every fare shows a range and the date of its fare rule. Every leg shows a last-verified date.
-- A leg or fare older than the staleness threshold shows a visible "maaaring luma na" label. The threshold defaults to 180 days and is set in the pack manifest.
+**PRD-F4 — Cards**
+- Every factual card field traces to a pack record and source. Date labels describe source-post dates; no field-verified/current badge appears.
+- Conflicting reports retain their separate values and dates. A missing fare is visibly unknown, never zero.
+- Older reports remain usable with an age warning. The initial manifest warning threshold is 180 days, carried forward as a configurable engineering default rather than a field-validity guarantee.
+- Suspended/retired services never appear in a routable itinerary.
 
-**PRD-F5 — Cat persona (text)**
-- Given any route answer, when the persona text is produced, then all route facts appear only in deterministic card text. Persona text that contains a number, peso amount, place name, signboard or mode word not present in the cards is rejected and replaced by a template line (PUSANG-GALA-M3).
-- When the model is unavailable, persona lines come from a curated template bank and the answer is still complete.
+**PRD-F5 — Required AI explanation**
+- The delivered reference-phone app produces grounded local-AI explanations offline. A template-only/rules-only reference demo fails this requirement.
+- Cards render before generation completes. Only validated explanation units reach the screen; raw unchecked tokens are not displayed.
+- Generated claims cannot add or reverse boarding, alighting or transfer instructions, fabricate facts, hide uncertainty or contradict cards. A vocabulary allowlist alone is insufficient.
+- Target complete warm explanation within 10 seconds (M5); record cold-load, time-to-first-safe-chunk, intent and generation timing separately.
+- Cancel/retry without losing cards. A temporary inference failure shows a recovery action and leaves cards usable; unsupported-device fallback is clearly explained.
 
-**PRD-F6 — Offline in-app map (1.1)**
-- Given the assets are ready, when the app is force-stopped, Wi-Fi and mobile data are turned off and the app is relaunched, then the map renders labels, icons and attribution anywhere within the Metro Manila + Rizal bounds, up to z15.
+**PRD-F6 — Map**
+- After force-stop, radio disable and cold relaunch, the NCR basemap renders from local tiles with labels, icons and attribution.
+- Mapped boarding/transfer/destination points use source-backed coordinates. Points lacking coordinates remain in cards/schematic and are marked unmapped.
+- Schematic connectors are dashed and labelled; the UI never implies that they follow vehicle roads. Exact paths require source-backed geometry.
+- Missing/corrupt map assets show a recovery state and retain cards/schematic; the reference release still needs a working map.
 
-**PRD-F7 — Foreground GPS position (1.1)**
-- Given location services on and network off, when a trip is active outdoors, then the marker updates and shows accuracy and fix age. A fix older than the staleness threshold is labelled last known.
-- When location permission is denied, manual origin selection still works.
-- Location subscriptions stop when the trip ends or the app is backgrounded, and resume on return.
+**PRD-F7 — GPS**
+- Outdoors, network-off foreground fixes update the marker with accuracy and fix age. Old fixes are labelled last known.
+- Nearby-origin suggestions use mapped supported places and require confirmation; low-quality fixes do not automatically select an origin.
+- Denied permission, disabled location and no fix preserve manual input. End-trip/background pauses subscriptions; return resumes them when appropriate.
+- Advancing a step is manual; no background tracking, recorded GPS trace or automatic boarding/alighting detection.
 
-**PRD-F8 — Offline setup and readiness**
-- Each asset (model, route pack, map) shows its size, checksum result and state: ready, failed or missing.
-- A missing or corrupt asset is never marked ready. The app degrades to the next device tier (SDD §1.0) instead of crashing.
+**PRD-F8 — Assets**
+- Each model/pack/map asset shows size, checksum/schema validation and ready/missing/failed state.
+- Asset errors do not crash the app or trigger network fallback. All judged-app assets are present after installation.
+- The packaged app excludes the raw repository dataset and unreviewed extraction intermediates.
 
-**PRD-F9 — Honest failure states**
-- Each failure state in the feature description has a distinct message and a recovery action. None of them crashes the app.
+**PRD-F9 — Failure states**
+- Every reason has a distinct message and recovery action. Test outside-NCR, ambiguity, unsupported place, disconnected itinerary, stale/conflicting reports, unknown fare/hours, missing assets, inference failure and location errors.
 
-**PRD-F10 — Corridor pack build tooling**
-- The build fails on any of: a leg with an unknown stop, a missing source, coordinates outside the pack bounds, an unverified status, Reddit text, a Reddit username, or an unapproved community submission.
-- The build writes a manifest with schema version, coverage (bounds plus the list of verified corridors), creation and verification dates, staleness threshold and a checksum.
+**PRD-F10 — Corpus/pack**
+- Audit JSON rather than trusting CSV top answers: 3,480 NCR posts, 2,186 with stored comments, 1,294 without, 3,988 stored comment texts in the supplied snapshot. Treat comments as candidate evidence, not automatically correct answers.
+- Process all 2,186 answered posts. Classify acknowledgements, questions and unrelated content; extract facts and paraphrases; retain evidence references and second-pass review decisions.
+- The reviewer resolves ambiguous connections/incomplete instructions. Unresolved items stay out of routing; this does not label the result field-verified.
+- Reject missing record references, unsupported transfer/first-last walking links, unknown endpoint geography, suspended/retired routing entries, missing provenance, raw wording/usernames and incompatible schemas.
+- Report processed/included/filtered/review-pending/rejected posts and produced records, usable places/connections and supported coverage. Do not equate post count with itinerary count.
+- Manifest records snapshot checksum, schema/version, NCR boundary reference, build date, source-date range, warning threshold and output checksum.
 
-**PRD-F11 — Community tips**
-- Every tip is a team-authored paraphrase and links to at least one source record. Tips attach only to legs and stops that already exist in the pack.
+**PRD-F11 — Notes**
+- Every note is paraphrased, relevant to a supported record, source-linked and included in the retrieval evidence bundle. No acknowledgement or raw comment is shipped.
+- Upvotes/comment counts cannot imply correctness, independence, present-day operation or “N commuters confirmed”.
 
-**PRD-F12 — Schematic route view**
-- Every route shows a stop-sequence diagram. In 1.1, with map assets removed, the trip still shows the diagram, labelled "schematic".
+**PRD-F12 — Schematic**
+- Every complete itinerary shows its ordered board/transfer/alight sequence, labelled not to scale. It works when map assets are unavailable.
 
-**PRD-F13 — Offline voice output**
-- `TBD(owner)`: define acceptance after F1–F12 ship. The voice engine needs a licence check first (LOG Q7).
+**PRD-F15 — Saved/history**
+- Restart preserves saved routes. Pack replacement revalidates record existence, eligibility and connectivity; incompatible routes require replanning rather than rendering obsolete facts.
+- Store stable IDs, structured preferences and timestamps only; no raw query/conversation or GPS coordinates. Delete one item or all history.
 
-**PRD-F14 — Google Maps coordinate handoff**
-- A failed launch keeps the trip. The UI never claims that Google Maps coverage has been verified.
+**PRD-F19 — Conversation**
+- Test alternatives, reverse journey, destination/preference changes, boarding, fares, transfers and unrelated requests with held-out phrasing.
+- Context holds only current-trip structured state plus a bounded in-memory exchange window. New-trip clears it. Reverse journeys are rerouted using directed records, not by reversing old instructions.
+- Follow-ups retrieve fresh context for the changed journey and preserve clarification and uncertainty.
 
-**PRD-F15 — Saved routes and history (local)**
-- A saved route survives an app restart and a pack update. If its records no longer exist in a new pack, it shows "nagbago ang ruta, i-check ulit" and is never rendered from stale data.
-- History stores route record IDs and timestamps only. A test asserts that no coordinates are stored.
-- The user can delete any single item, or all history, on-device.
+**PRD-F20 — Hours**
+- Known reported hours include source dates and uncertainty. Missing hours say unknown. No source-post date or user request implies that a service is operating now.
+- Hour questions do not create a future timetable, guaranteed availability or arrival prediction.
 
-**PRD-F16 — Optional account and sync (1.1)**
-- Every 1.0 feature works for a user who never signs in, including on phones with no Google Play services.
-- Nothing is uploaded until the user signs in **and** turns sync on. Turning sync off stops uploads immediately.
-- Signing in on a second phone restores saved routes and history.
-- Account deletion is available in the app and on a public web page, and removes the user's cloud data (Google Play account-deletion policy).
-- On a phone without Google Play services, sign-in is hidden and the app works normally.
+**PRD-F21 — Restoration**
+- Force-stop/relaunch restores valid selected record IDs, endpoints, preferences and current manual step after checking pack/schema compatibility.
+- Missing, changed or suspended records stop restoration and offer replanning. Raw chat is cleared; GPS resumes only under foreground lifecycle rules.
 
-**PRD-F17 — Route confirmations (1.1)**
-- A confirmation recorded offline is uploaded later only if the user is signed in and opted in.
-- At most one confirmation per user per route per day counts toward the aggregate.
-- "N commuters confirmed" counts come only from the pack, never from a live query.
-
-**PRD-F18 — Corrections and new-route submissions (1.1)**
-- No other user can see a submission in the app until it has been approved and shipped in a pack.
-- The only personal data a submission carries is the account UID. The form warns the user not to paste content from Reddit or other sites.
-- `TBD(owner)`: the approval workflow (Q14).
+Deferred PRD-F13, F14 and F16–F18 have no release acceptance gate and must not be implemented as part of this scope.
 
 ## 4. Explicit exclusions
 
-| Excluded | Why | Revisit when |
-|----------|-----|--------------|
-| Areas outside Metro Manila and Rizal | Focus | Metro Manila corridors are verified |
-| Live traffic, vehicle tracking, live ETAs | Requires network and data the product does not have | Never offline; possibly an optional online mode |
-| Background tracking, GPS trace recording, arrival alerts | Permission, lifecycle and accuracy risk | Foreground GPS is stable on test phones |
-| Live location sharing | Requires network; conflicts with INV-3 | Owner CR only |
-| Turn-by-turn walking to arbitrary addresses | Needs an on-device street router | Stored walk links prove insufficient |
-| Free-form AI travel advice | Conflicts with INV-1 | Never |
-| Shipping Reddit content, or auto-ingesting it | INV-4; Reddit terms | Written agreement with Reddit |
-| Google Maps data as a source | Google Maps Platform terms §3.2.3 | Never |
-| Mandatory sign-in; a server in the core path | Conflicts with INV-2 | Never |
-| Showing unreviewed submissions to other users | Conflicts with INV-1 | Never |
-| Speech input | Offline Tagalog STT is heavy (Vosk tl-ph is 329 MB) and accuracy is unproven | Voice output ships |
-| iOS | Android-first | Android pilot succeeds |
+The exclusions in IDEA §4.1 apply. The app has no accounts, uploads, telemetry/ads, cloud-AI fallback, live data, scheduled departures, arrival predictions, arbitrary-address walking router, automatic trip detection or iOS target. Initial corpus review is required; ongoing maintenance planning is deferred. Functional screens precede final visual design.
 
 ### 4.1 Must-never rules
 
-| INV-# | The system shall never | Constrains |
-|-------|------------------------|------------|
-| INV-1 | Display a ride leg, walk link, stop, signboard or fare that is not a record in the installed verified pack, or show a guessed route when none exists | PRD-F1, PRD-F2, PRD-F3, PRD-F4, PRD-F5, PRD-F11, PRD-F15, PRD-F18 |
-| INV-2 | Make or require a network request anywhere in the query, routing, card, persona, map-render or GPS path, or fall back to a cloud service. Network is allowed only in the opt-in account module (PRD-F16 to PRD-F18) | PRD-F1, PRD-F3, PRD-F5, PRD-F6, PRD-F7, PRD-F8, PRD-F13, PRD-F16 |
-| INV-3 | Transmit location, query text or trip details off the device without sign-in **and** opt-in. Raw query text and GPS coordinates are never transmitted, even with opt-in | PRD-F1, PRD-F7, PRD-F15, PRD-F16, PRD-F17, PRD-F18 |
-| INV-4 | Include Reddit comment text or Reddit usernames in the app, the pack, a model training set or the git repo | PRD-F5, PRD-F10, PRD-F11, PRD-F18 |
-| INV-5 | Present a stale fare, an unverified leg or an old GPS fix as current | PRD-F4, PRD-F7, PRD-F15 |
-| INV-6 | Silently choose among ambiguous place matches | PRD-F1, PRD-F2 |
-| INV-7 | Train or fine-tune a model on real route facts | PRD-F1, PRD-F5 |
+IDEA §4.2 is the canonical INV-1–INV-7 wording. SDD §5.1 assigns enforcement; INDEX §3.1 assigns planned negative checks. No shipped-source eligibility flag may be described as field verification.
 
-## 5. Metrics
+## 5. Metrics and release evidence
 
-| ID | Metric | Target | How measured |
-|----|--------|--------|--------------|
-| PUSANG-GALA-M1 | Exact required-slot accuracy, unambiguous queries | ≥ 90% | Labelled query set, offline on the reference phone |
-| PUSANG-GALA-M2 | Hybrid minus rules-only accuracy on held-out queries | > 0, reported with the false-accept rate | Same set, both modes |
-| PUSANG-GALA-M3 | Persona outputs that alter or add a fact and reach the screen | 0 | Persona guard tests plus a manual review of 100 outputs |
-| PUSANG-GALA-M4 | Routing plus cards p95 after resolution | < 500 ms | On-device timing over the route fixtures |
-| PUSANG-GALA-M5 | Warm model extraction latency | < 5 s on the Helio reference phone, with a bounded timeout fallback | On-device timing; cold load measured separately |
-| PUSANG-GALA-M6 | Peak app memory (PSS) with map, GPS and inference together | ≤ 1.0 GB on the 4 GB reference phone (provisional; spike S4 confirms) | `adb shell dumpsys meminfo` across 20 queries |
-| PUSANG-GALA-M7 | Displayed legs that fail field verification | 0 known | Team rides or walks the corridor; dates recorded |
-| PUSANG-GALA-M8 | Testers who would use it instead of posting on Reddit | ≥ 7 of 10 | Pilot survey |
-| PUSANG-GALA-M9 | Install size on the device | ≤ 650 MB including the model and the Metro Manila + Rizal map | Android Settings → App info after first launch |
-| PUSANG-GALA-M10 | Phones the core experience runs on | Rules-only core on Android 7+ with 2 GB RAM, including 32-bit; AI tier on arm64 with 3 GB+ RAM | Test matrix: reference Helio phone plus at least one 2–3 GB phone |
-| PUSANG-GALA-M11 | Verified corridors in the pack | 1 at 1.0; growth tracked per release | Pack manifest |
+| ID | Metric | Target/evidence |
+|----|--------|-----------------|
+| PUSANG-GALA-M1 | Required-slot accuracy | ≥90% on ≥50 labelled queries with held-out wording |
+| PUSANG-GALA-M2 | Hybrid versus rules baseline | Report accuracy difference, false accepts and follow-up results; investigate no improvement without dropping required conversation |
+| PUSANG-GALA-M3 | Unsupported/contradictory AI factual claims displayed | 0 in guard adversarial tests and review of at least 100 generated responses |
+| PUSANG-GALA-M4 | Routing + cards after resolution | p95 <500 ms on reference phone |
+| PUSANG-GALA-M5 | Complete warm AI explanation | Initial target ≤10 seconds; separately record cold load, intent, first safe chunk and full response |
+| PUSANG-GALA-M6 | Concurrent map/GPS/model memory | Provisional peak PSS ≤1 GB on 4 GB reference phone; measure and reconcile the budget before claiming device support |
+| PUSANG-GALA-M7 | Unsupported connections/ineligible services displayed | 0 in source-based route fixtures; no field-verification claim |
+| PUSANG-GALA-M8 | Judged-app functional completion | All required flows work on unseen supported queries offline; no canned-only demonstration |
+| PUSANG-GALA-M9 | Installed footprint | Measure APK, copied assets and data; previous ≤650 MB target is provisional and must account for duplication |
+| PUSANG-GALA-M10 | Device compatibility | Working AI on named reference phone; clearly explained fallback on a separately tested unsupported/low-memory phone |
+| PUSANG-GALA-M11 | Corpus yield and coverage | Process all 2,186 answered NCR posts; publish inclusion/rejection/review counts and usable coverage, with no fixed route-count target |
 
-## 6. Candidates (not decided)
+Release evidence also includes offline cold restart, permission-denied/no-fix cases, stream cancellation, corrupt assets, changed-pack restoration and a 20-query map/GPS/AI lifecycle run. No gate is currently claimed passed.
 
-Nothing in this section may be implemented.
+## 6. Candidates and deferred research
 
-| Candidate | Raised by | Notes |
-|-----------|-----------|-------|
-| Coverage outside Metro Manila (e.g. Cebu, which Sakay.ph doesn't cover) | Reference competitor analysis | After Metro Manila corridors |
-| Semantic note retrieval (sqlite-vec plus a small embedding model) | Reference architecture | Only if alias matching proves insufficient |
-| Cat sound effects (recorded "meow" audio) | Agent | Owned audio assets; cheap persona boost |
-| Over-the-air pack updates for signed-in users | Agent | A new network path; needs review against INV-2 |
-| Admin web page for reviewing submissions | Agent | Depends on Q14 |
+Semantic/vector retrieval is an engineering candidate if local lexical retrieval fails measured queries; RAG is required regardless of indexing method. An extra embedding model must fit the measured device budget. Play distribution, OTA updates, Firebase and voice selection are later work, not first-release dependencies.
 
-## 7. Open questions
+## 7. Execution prerequisites
 
-- `TBD(owner)` Q7: Which engine and voice for voice output? Meta MMS-TTS Tagalog is CC-BY-NC, and the Android system fil-PH voice is device-dependent.
-- `TBD(owner)` Q14: How are community submissions approved: team review, or a confirmation threshold plus spot checks?
+LOG §2 and TODO §3 track named member assignments, corpus reviewer, exact test phone, dependency/model pins and the local-map feasibility spike. Scope confirmation does not constitute a device benchmark.

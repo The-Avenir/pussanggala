@@ -3,7 +3,7 @@ spine_type: SDD
 spine_version: 0.3.0
 project: Pusang Gala
 slug: pusang-gala
-doc_version: 0.4
+doc_version: 0.5
 status: Draft
 owner: Salvador Vincent Javier
 created: 2026-10-09
@@ -15,513 +15,318 @@ reconciled: 2026-10-09
 
 **PRD:** [prd-pusang-gala.md](prd-pusang-gala.md)
 
-This is a design-first document. No code exists yet. It is `Draft`: nothing may be built from it until the owner locks it, except the de-risking spikes in §9, which the owner may authorize separately.
+**Implementation ownership:** [TODO.md](TODO.md)
 
----
+The owner confirmed the product scope in G01–G27. This design is reconciled with that scope and remains Draft because no scaffold, device benchmark or runtime integration has been implemented. The tables below are the shared proposed contracts; members settle and version them in task T00 before dependent implementation. Do not add deferred functionality.
 
 ## 1. Architecture
 
-Pusang Gala is an Android app built with React Native and an Expo development build.
+The judged Android APK uses React Native + an Expo development build, local SQLite facts, MapLibre, foreground location and a strictly sub-1B model through a tested native runtime. The required answer pipeline is **offline retrieval + deterministic rules → cards → streamed grounded local-AI explanation**.
 
-- The **core** (asking, resolving, routing, cards, persona, map, GPS, saved routes) runs fully on-device. It never touches the network.
-- From 1.1, an **optional account module** uses Firebase (Auth plus Firestore) for sign-in, sync and community submissions. It is the only code allowed to use the network, and only after sign-in plus opt-in. The core does not import it.
-
-Corridor packs are built off-device by a TypeScript CLI. The CLI shares its normalization and validation code with the app, so the app and the builder can never disagree about how text is normalized.
-
-Design principle: the database owns the facts, rules decide the route, and the model only interprets the question and adds persona flavour. Persona text never carries a fact (INV-1), and the model is never trained on facts (INV-7).
+### 1.1 Data and runtime paths
 
 ```text
- BUILD TIME (team laptop, online)                    RUN TIME (phone, airplane mode)
- ───────────────────────────────                     ──────────────────────────────────────────
- Reddit scrape (outside repo, raw) ─┐                 Question ─► normalize ─► rule parser
- Field surveys / team notes ────────┤ human           │                          │ slots missing
- LTFRB fare matrix ─────────────────┤ curation        │                          ▼
- OSM (Geofabrik PH extract) ────────┤ ──► data/seed/  │                    SLM slot extractor (llama.rn, GBNF)
- Approved submissions (1.1) ────────┘      *.csv      │                          │ schema + span check
-            (facts only, no Reddit text)              ▼                          ▼
-                tools/pack-builder (TS) ──► pack.sqlite ─► place resolver (alias / FTS5 trigram / typo)
-                 validate · normalize ·    + manifest        │ ambiguous ─► ALWAYS ask (INV-6)
-                 INV-4 scan · checksum                       ▼
- Protomaps planet ─► pmtiles extract ──► mm.pmtiles         router (multi-criteria label search)
- (MM+Rizal bbox, z≤15) + style/glyphs/sprites               ▼
- GGUF model (pinned rev + sha256) ────────────► model.gguf  validators (continuity, fare, hours, provenance, staleness)
-                                                             ▼
-                                                deterministic step cards ◄── persona composer + guard
-                                                             │
-                                  ┌──────────────────────────┼───────────────────────────┐
-                                  ▼                          ▼                           ▼
-                        schematic view (1.0)     MapLibre map + GPS (1.1)     user.sqlite: saved / history /
-                                                                              confirmations / submissions
-                                                                                         │ only if signed in + opted in
-                                                                                         ▼
-                                                                    account module (1.1) ──► Firebase Auth + Firestore
-                                                                                         ──► review queue ──► curator ──► data/seed
+OFF-DEVICE BUILD
+Supplied ncr_routes.json + snapshot hash
+    -> audit/classify all 2,186 posts with stored comments
+    -> automated structured extraction + paraphrased notes
+    -> second AI pass: evidence and inconsistencies
+    -> ambiguous connections/incomplete instructions -> team review
+    -> normalize places + NCR membership + coordinate evidence
+    -> validate supported legs, walks, fare scope, status and provenance
+    -> pack.sqlite + manifest + yield/rejection/review report
+
+Licensed basemap -> NCR extract + local style/glyphs/sprites + attribution
+Selected sub-1B model -> pinned model + licence + checksum
+
+ON-DEVICE, NO NETWORK
+Query + current-trip structured state
+    -> normalize / local intent understanding
+    -> place resolution -> clarification or outside-NCR/no-data
+    -> retrieve eligible structured facts + relevant paraphrased notes
+    -> rule-based route search and validation
+    -> deterministic cards + comparison reasons + source/warning context
+    -> bounded evidence bundle
+    -> local AI -> validated explanation units -> streamed response
+
+Cards/route -> schematic + local map + foreground GPS
+Selected record IDs/manual step -> user.sqlite -> checked restoration
 ```
 
-Deployment target: Android 7+ (the Expo SDK 57 minimum). The goal is to reach as many phones as possible. The reference phone has 4 GB RAM, 64 GB storage and a budget MediaTek Helio-class chip (owner, 2026-10-09).
+Raw repository comments never enter the runtime pack or runtime prompts. There is no account module, Firebase dependency, API server, telemetry or cloud fallback in this release.
 
-### 1.0 Device tiers
+### 1.2 Corpus audit and extraction
 
-The app decides its tier at first launch, using `expo-device` (total RAM, supported ABIs) plus a 1-query benchmark. The user can override the tier in settings.
+For the supplied snapshot at commit `3732824`:
 
-| Tier | Detected when | Gets |
-|------|---------------|------|
-| Full | arm64-v8a, ≥ 3.5 GB RAM, benchmark extraction ≤ 5 s | Rules, SLM extraction, SLM persona line, all other features |
-| Lite | arm64-v8a, about 2.5–3.5 GB RAM, or a benchmark of 5–10 s | Rules, plus the SLM only as a fallback after the rules fail; template persona only; all other features |
-| Core | 32-bit Android, < 2.5 GB RAM, or the model fails to load | Rules only, pickers, template persona, all other features. **No core feature lost** |
+| Input | Posts | With stored comments | Without stored comments | Stored comment texts |
+|-------|-------|----------------------|-------------------------|----------------------|
+| routes.json | 16,387 | 8,556 | 7,831 | 15,350 |
+| ncr_routes.json | 3,480 | 2,186 | 1,294 | 3,988 |
 
-Device facts that shape these tiers:
-- llama.rn supports only arm64-v8a and x86_64.
-- Budget Helio chips such as G85 and G99 are Cortex-A75/A76 + A55 parts. They have the ARMv8.2 dot-product instructions that llama.cpp's Q4_0 fast path uses, but no NPU or GPU path that llama.rn supports. Inference is therefore CPU-only, with 4 threads on the big cores.
-- Q4_0 is preferred over Q4_K_M. llama.cpp repacks Q4_0 for arm64, so it runs faster.
-- Firebase features (1.1) need Google Play services. Without them, the account module stays hidden.
+The NCR JSON has post IDs, title/question, post timestamp, score, comment-count metadata, permalink, free-text origin/destination and comments containing only score/text. There are no structured stops, ride legs, fares, coordinates, paths, comment IDs, comment dates or reply-parent relationships.
 
-### 1.1 Asset delivery
+Use JSON as extraction input. NCR CSV includes unanswered posts, and some top answers are acknowledgements, incomplete or truncated. Do not use highest score as a correctness rule. The README's answer totals differ slightly from actual stored-array totals; the extraction report recomputes counts.
 
-| Asset | Measured or known size | Hackathon / sideload build | Play Store build |
-|-------|-----------------------|----------------------------|------------------|
-| App code + JS bundle | tens of MB (to be measured) | In the APK | Base module (Play limit 500 MB) |
-| Route pack `pack.sqlite` | < 5 MB expected at 40–80 legs; grows with corridors | In the APK (`expo-asset` embed) | Base module |
-| Map `mm.pmtiles` + style, glyphs, sprites (1.1) | **55 MB** at z≤15 for Metro Manila + Rizal, bbox `120.90,14.35,121.35,14.80`. Measured with `pmtiles extract --dry-run` on Protomaps build 20261009 | In the APK | Base module |
-| Model GGUF | 219–446 MB at Q4_0, depending on the S5 winner (measured on Hugging Face) | In the APK | **Fast-follow asset pack**, hosted free by Google Play (1.5 GB per-pack limit) |
+An input labelled NCR may still identify an outside-NCR endpoint. Canonicalize places and establish NCR membership through geography evidence. A map rectangle is an asset extent, not an administrative-boundary test.
 
-All core assets ship with the app, and **no team-run download server exists**.
+Build stages:
 
-- On first launch, the app copies embedded files to `filesDir` and verifies their SHA-256. llama.cpp and the `pmtiles://file://` source both need real file paths.
-- Play fast-follow packs land as plain files at an absolute path: Play Core `AssetPackManager.getPackLocation().assetsPath()`. llama.rn loads the model from that path directly. Until the pack arrives, the app runs in the Core tier.
-- The `expo-play-asset-delivery` plugin only returns files as base64, which is unusable for a model this size. The Play build therefore needs a small custom Expo module that wraps `AssetPackManager` (spike S6).
-- Pack and map updates ship as app updates.
+1. Hash the input and audit actual arrays. Assign stable evidence locators using post ID, comment index and snapshot hash; indexes are snapshot-specific, not Reddit comment IDs.
+2. Classify text into useful route evidence, follow-up question, acknowledgement or unrelated content. Missing/deleted question text can still coexist with useful comments, but cannot be reconstructed by guessing.
+3. Extract candidate places, directed ride segments, explicit walk/transfer instructions, fare reports, hours, service-status reports and paraphrased notes. Keep extraction uncertainty.
+4. Run a second AI pass against the original evidence. It flags unsupported claims, inconsistent endpoints, incomplete connections and conflicting reports; it is not field verification.
+5. Queue ambiguous connections/incomplete instructions for the designated team member. Preserve conflicting fare/hour reports with source references. Unresolved route-critical facts are quarantined.
+6. Map places using permitted geographic evidence. Keep coordinate uncertainty separate from route-text eligibility. Unknown coordinates do not become guessed points.
+7. Validate, build the pack and emit processed/included/filtered/review-pending/rejected post counts plus record and coverage counts. A post may produce zero or several facts; it is not an itinerary count.
 
-### 1.2 Account module (1.1)
+Off-device extraction intermediates have an explicit proposed JSON contract: `candidate_id`, `snapshot_sha256`, `post_id`, `comment_index`, `record_kind`, `candidate_payload`, `evidence_check`, `review_reason`, `review_state`, `reviewer_id`, `reviewed_at`. States are `extracted|second_passed|needs_review|accepted|rejected`. `second_passed` means eligible only if deterministic checks pass and no required human review remains. The pack omits raw wording and intermediate reviewer details.
 
-| Aspect | Design |
-|--------|--------|
-| Sign-in | Google sign-in through `@react-native-google-signin/google-signin`, then Firebase Auth via `@react-native-firebase/auth`. No password accounts. |
-| Storage | Cloud Firestore through `@react-native-firebase/firestore`, with collections `users/{uid}/saved`, `users/{uid}/history`, `confirmations` and `submissions`. Firestore offline persistence queues writes made offline. |
-| Opt-in | Sync is off until the user turns it on (USER_SETTING `sync_enabled`). Signing in alone uploads nothing. |
-| What is uploaded | Saved and history items (route record IDs, place IDs, pack ID, timestamps), confirmations (route ID, yes/no, date) and submissions (structured fields plus the user's own note). Raw query text and GPS coordinates are never uploaded (INV-3). |
-| Security rules | Users read and write only `users/{uid}/**`. `confirmations` and `submissions` are create-only for the author, and only the team can read them. Nothing is publicly readable. |
-| Deletion | An in-app "Delete account" action deletes `users/{uid}/**` and the user's submissions and confirmations, then the Auth user. A static web page (Firebase Hosting) explains how to request deletion through the in-app action or by email (Google Play policy). |
-| Moderation | Submissions land in `submissions` with `status=pending`. A curator reviews them; accepted facts are re-entered into `data/seed/` with a SOURCE row of kind `consented_contribution`, then ship in the next pack. The approval method is `TBD(owner)` Q14. |
-| Aggregates | "N commuters confirmed" is computed at pack build time from `confirmations` and stored on the leg. The app never queries counts live. |
-| Cost | The Firebase Spark free tier covers Auth, plus Firestore at 50k reads, 20k writes and 1 GiB storage per day. It is enough for the pilot. Check Firebase pricing before scaling. |
-| Privacy | A Data Privacy Act privacy notice is shown before sync is enabled. The Play Data Safety form declares the account data. |
+### 1.3 Retrieval and rule-based routing
 
-## 2. Components
+SQLite exact aliases, FTS and typo ranking provide the initial local retrieval strategy. RAG does not require embeddings: retrieved structured facts and relevant paraphrases supply the context used to generate the answer. Add semantic indexing only if measured retrieval failures justify it and it fits the device budget.
 
-All paths are proposed (design-first). None of them exists yet.
+- Exact aliases are tried first. Known ambiguous aliases or low candidate margins always return clarification. Current-trip references resolve from structured state, not invented names.
+- Both resolved endpoints require accepted NCR membership and source-backed place-to-stop access. Geographic proximity cannot create a first/last walk or transfer.
+- Each LEG is a source-supported directed boarding-to-alighting ride segment. WALK_LINK and PLACE_STOP carry explicit supported walking instructions. Transfer joins require supported relationships; cross-thread joins are allowed.
+- Multi-criteria label search tracks fare known/unknown, ride count, walk distance known/unknown, reported time known/unknown, current service and visited state. Never represent unknown cost or time as zero for ranking.
+- A ride segment represents one boarding. Same-service fragments are not silently stitched or charged as separate boardings; use a source-supported through-segment or an explicit reboarding connection. Fare reports apply only to their recorded segment.
+- Output may include alternative complete itineraries. Compare only applicable known values and state the comparison set. Unknown-value alternatives remain visible, with no guaranteed cheapest/fastest claim.
+- Source-conflicted values stay as separate dated reports. Do not average contradictions into a fabricated fact. Derived totals/ranges require complete applicable inputs; otherwise total is unknown.
+- Filter suspended/retired services and unresolved records. If continuity fails, return no complete itinerary.
+- Report operating hours only when source-backed. Unknown hours stay unknown; there is no timetable scheduler, guaranteed current availability or arrival prediction.
 
-| Component | Responsibility | Serves | Location |
-|-----------|---------------|--------|----------|
-| Normalizer | Lowercase, strip diacritics and punctuation, and expand Taglish shorthands (e.g. "pano"→"paano") using a shared rules file | PRD-F1, PRD-F2, PRD-F10 | `packages/core/src/normalize/` |
-| Rule parser | Pattern rules for "galing X papunta Y", "from X to Y", "pa-Y", plus preference words (mura/mabilis/konting lipat) | PRD-F1 | `packages/core/src/parse/` |
-| SLM slot extractor | Runs llama.rn with a JSON schema converted to GBNF, the model's non-thinking chat template, an output cap of about 96 tokens and 4 threads, with a timeout and native cancel. Returns `origin_text`, `destination_text`, `preference` and `time_text` (nullable). It is model-agnostic: the model file and chat template come from a manifest | PRD-F1 | `apps/mobile/src/ai/extract.ts` |
-| Device tier detector | Classifies the phone as Full, Lite or Core (§1.0) and sets which AI features run | PRD-F1, PRD-F5, PRD-F8 | `apps/mobile/src/ai/tier.ts` |
-| Span validator | Rejects model output whose spans don't appear in the normalized query, and rejects swapped or invented endpoints | PRD-F1, INV-1 | `packages/core/src/parse/validateSlots.ts` |
-| Place resolver | Tries an exact alias match, then FTS5 trigram candidates, then Damerau-Levenshtein ranking. Aliases shorter than 3 characters go through an exact table. Any alias listed in PLACE_AMBIGUITY, or a low margin between candidates, always returns `needs_clarification` | PRD-F2, INV-6 | `packages/core/src/resolve/` |
-| Clarification UI | Shows 2–4 candidates, each with its area or landmark, in the cat voice ("Aling SM? Masinag o Cubao?") | PRD-F2, PRD-F5, INV-6 | `apps/mobile/src/ui/Clarify.tsx` |
-| Router | Multi-criteria label-setting search over directed legs and walk links. Labels carry cost, ride count, walk metres, time and current route ID, and only non-dominated labels are kept. Cycles are prevented explicitly. The fare is charged once per boarding | PRD-F3 | `packages/core/src/route/` |
-| Route validators | Check continuity, operating hours at the estimated boarding time, fare-rule application, record existence and provenance. Any failure drops the route | PRD-F3, PRD-F4, INV-1 | `packages/core/src/validate/` |
-| Staleness labeller | Compares `last_verified` and `FARE_RULE.effective` against `PACK_MANIFEST.stale_after_days`, and GPS fix age against a threshold. Marks a card or marker stale | PRD-F4, PRD-F7, INV-5 | `packages/core/src/validate/staleness.ts` |
-| Card composer | Builds deterministic step cards only from pack records. Each card carries its record IDs and its stale flags | PRD-F4, PRD-F9 | `packages/core/src/compose/` |
-| Persona composer | The cat voice. Picks intro, outro and tip-lead lines from a curated template bank. Optionally, the SLM writes one short line from a placeholder-only schema (`{dest}`, `{mode}`), and the composer fills the placeholders from the cards | PRD-F5 | `packages/core/src/persona/` |
-| Persona guard | Rejects any SLM persona line containing a digit, ₱, or any pack vocabulary token (place, alias, stop, signboard, mode), and replaces it with a template line | PRD-F5, INV-1 | `packages/core/src/persona/guard.ts` |
-| Pack store | Opens the read-only `pack.sqlite` through expo-sqlite and checks the manifest checksum and schema version | PRD-F2, PRD-F3, PRD-F8 | `apps/mobile/src/data/pack.ts` |
-| User store | A separate `user.sqlite` holding settings, active trip, saved routes, history, confirmations, the submission outbox and installed-asset state | PRD-F7, PRD-F8, PRD-F15, PRD-F17, PRD-F18 | `apps/mobile/src/data/user.ts` |
-| Saved and history manager | Saves and lists routes and history, and re-validates saved routes against the current pack on load | PRD-F15, INV-1, INV-5 | `apps/mobile/src/data/saved.ts` |
-| Asset installer | On first run, copies embedded assets to `filesDir` or locates the Play fast-follow pack, verifies SHA-256, and reports readiness. It makes no network calls of its own | PRD-F8, INV-2 | `apps/mobile/src/setup/` |
-| Schematic view | Draws the stop-sequence diagram with RN views or SVG | PRD-F12 | `apps/mobile/src/map/Schematic.tsx` |
-| Map view (1.1) | MapLibre RN v11 with a local style JSON, a `pmtiles://file://…` source, local glyphs and sprites, and layers for stops and route geometry. Shows the attribution control | PRD-F6 | `apps/mobile/src/map/` |
-| Location service (1.1) | A single expo-location foreground `watchPositionAsync` subscription. Tracks accuracy and fix age, and pauses when the app is backgrounded | PRD-F7, INV-5 | `apps/mobile/src/location/` |
-| Network guard | Wraps fetch, XHR and WebSocket. Outside `apps/mobile/src/account/`, any call throws in dev and is blocked and logged locally in release. Lint plus CI forbid the core from importing Firebase | INV-2, INV-3 | `apps/mobile/src/net/guard.ts` |
-| Account module (1.1) | Sign-in, the sync opt-in, Firestore sync of the PRD-F15 data, the confirmation and submission outbox, and account deletion (§1.2) | PRD-F16, PRD-F17, PRD-F18 | `apps/mobile/src/account/` |
-| Firestore rules and deletion page (1.1) | Security rules, plus the static account-deletion web page | PRD-F16 | `firebase/firestore.rules`, `firebase/hosting/` |
-| Pack builder | CLI that turns `data/seed/*.csv` into `pack.sqlite` plus a manifest. Validates schema and geography; rejects Reddit text, usernames and unapproved submissions; folds in confirmation aggregates; writes the FTS index and checksum | PRD-F10, PRD-F17, INV-1, INV-4 | `tools/pack-builder/` |
-| Map pack script | Runs `pmtiles extract` on the Metro Manila + Rizal bbox and bundles the style, glyphs and sprites | PRD-F6, PRD-F10 | `tools/map-pack/` |
-| Eval harness | Labelled query set, route fixtures and a persona-guard corpus. Runs rules-only and hybrid modes, on Node (llama.cpp) and on device | PRD-F1, PRD-F3, PRD-F5 | `tools/eval/` |
-| Fine-tune data generator | Builds synthetic Taglish queries from **placeholder place names** (no real stops, signboards or fares), slot labels and persona lines. CI checks the output contains no real pack vocabulary | PRD-F1, PRD-F5, INV-4, INV-7 | `tools/finetune/` |
-| Tip store | Paraphrased tips linked to legs and stops, with a mention count | PRD-F11 | pack `note` tables; `packages/core/src/compose/tips.ts` |
+### 1.4 Conversation and grounded streaming
+
+The current-trip session holds canonical endpoint IDs, preference, selected itinerary IDs, manual step, pending clarification and a bounded in-memory exchange window. Follow-ups can change destination/preference, request alternatives/reverse journeys, or ask about boarding, fares, transfers and reported hours. New-trip clears context. Reverse requests rerun directed routing.
+
+The evidence bundle contains the canonical cards, eligible record IDs, relevant paraphrased notes, explicit unknown/conflict/age flags, source references, rule-produced comparison/hour statements and the current-trip state. Bound its size; retrieve relevant records rather than feeding the whole NCR corpus.
+
+**Required streaming contract:** the model emits constrained explanation units with a reply kind, optional canonical card reference and supported explanation content. The exact JSON/GBNF schema and output cap are settled in T00/T30. Canonical factual inserts and route sequence come from the card composer; free-text generation cannot author boarding, alighting or transfer instructions. Rule-produced reason/hour statements supply factual explanations.
+
+Buffer a complete unit, validate its card references, factual inserts and meaning against the evidence, then emit it. Never display unchecked native tokens and try to correct them afterwards. A vocabulary allowlist is insufficient: a model can reverse instructions using allowed names. Adversarial and semantic review must cover that case.
+
+Cards appear immediately after rules finish. Accepted explanation units stream afterwards, with cancellation, retry and a visible inference-failure state that preserves cards. Initial full warm-explanation target is 10 seconds; measure intent, first safe unit, full response and cold load separately. A template fallback handles transient failures and unsupported phones; it cannot replace working reference-phone AI for release.
+
+### 1.5 Model and device policy
+
+The reference-device profile is 4 GB RAM / 64 GB storage, MediaTek Helio-class; exact model/ABI/Android version must be recorded. Do not advertise a minimum Android version or 32-bit compatibility until the selected Expo/native build is tested.
+
+Model candidates carried forward for measurement include Qwen3-0.6B, Qwen2.5-0.5B-Instruct, LFM2-350M/700M and Gemma 3 270M. Confirm actual parameter counts, supported GGUF/runtime format, current licence and distribution permission before pinning. No candidate is the release winner yet.
+
+Use CPU inference as the initial budget-phone baseline. Benchmark quantization, thread count and context size on the actual phone; historical Q4_0/1,024-context assumptions do not establish performance for conversational RAG. Keep one model context and one generation at a time, cancel stale requests, and release native context on memory pressure/idle/background as measured.
+
+| Capability | Behaviour |
+|------------|-----------|
+| Reference phone | Required intent/conversation AI plus all other required features; passing the release gates is mandatory |
+| Supported but constrained phone | Reduce generation/context budgets if measured usable; retain maps/cards/manual input |
+| Unsupported ABI/RAM/model failure | Explain AI unavailability; retain other usable features without cloud fallback |
+| Temporary inference error | Preserve cards/trip, show retry/cancel, record local diagnostic only |
+
+Provisional peak PSS budget is 1 GB on the 4 GB phone. Validate map/GPS/model together rather than proving each in isolation.
+
+### 1.6 Map, GPS and assets
+
+Use MapLibre with a local NCR basemap, style, glyphs and sprites. Test `pmtiles://file://` support in the selected native version; if unsupported, evaluate a tested local MBTiles/offline-region path. No network tile/style/font fallback is permitted. Basemap extraction extent may include a small border for tiles; endpoint eligibility remains strictly NCR.
+
+Map points require coordinate evidence and an accepted mapping state. Unmapped points remain in cards/schematic and are identified as unmapped. Schematic connections are dashed and labelled not to scale; actual vehicle paths require source-backed geometry. An OSM road path is not automatically a transit service path.
+
+Use one foreground Expo Location subscription during an active trip. GPS fixes live in memory and expose accuracy/fix age. Supported mapped origins may be suggested when the fix is suitable, but require confirmation. Denied permission/no fix preserves manual input. Background/end-trip pauses tracking. Manual steps, no recorded trace or automatic detection.
+
+The judged APK embeds the model, pack, map and all rendering dependencies. Locate/copy to native-readable paths as required and check SHA-256/schema before use. Record footprint including APK and duplicated copies; previous regional map-size estimates do not describe the new NCR package. Pack/map updates may use app replacement; OTA and Play asset delivery are later distribution work.
+
+## 2. Components and ownership
+
+Paths are proposed; none exists yet.
+
+| Component | Responsibility | PRD | Lead |
+|-----------|---------------|-----|------|
+| Corpus audit/extractor/review | Classify, extract, second-pass evidence, resolve queue | F10, F11 | Member 1 |
+| Pack builder | Validate records/provenance, build SQLite/manifest/yield report | F10 | Member 1 |
+| Normalizer/intent contracts/place resolver | Shared text and alias logic; clarify NCR places | F1, F2, F19 | Member 2 |
+| Graph/router/validators | Supported connections, exclusions, fare scope and qualified ranking | F3, F20 | Member 2 |
+| Card composer/RAG evidence builder | Deterministic facts, warnings, relevant bounded retrieval context | F4, F11, F12 | Member 2 |
+| Native model adapter/device capability | Pin/model benchmark, load/cancel, constrained output | F1, F5, F8 | Member 3 |
+| Conversation manager/stream guard | Trip follow-ups, bounded memory, safe streaming | F5, F19, F20 | Member 3 |
+| Expo app/asset and pack loader | Native build, local paths, schema/hash/readiness | F8, F9 | Member 4 |
+| Map/location/schematic | Offline basemap, supported points, GPS lifecycle, manual steps | F6, F7, F12 | Member 4 |
+| User store/restore | Saved/history/active IDs and compatibility checks | F15, F21 | Member 4 |
+| Integration/app screens/release | Functional integration before visual design, device evidence | All required | Member 4, all members validate |
+| Core evaluation fixtures | Route, ambiguity and evidence assertions | F1–F4, F10, F20 | Member 2 |
+| Conversation evaluation | Held-out follow-ups, grounding and stream failures | F5, F19 | Member 3 |
 
 ## 3. Data model
 
-**Schema file:** none yet (design-first)
+There is no implemented schema. Agree this proposed schema in T00, then create versioned migrations and shared TypeScript contracts. No legacy `verified` or `last_verified` state is used as a publication requirement.
 
-The ERD below is the schema contract (hard rule 16): code may only use the entities, fields and relationships it defines.
-
-There are two on-device databases:
-- `pack.sqlite` is read-only and is replaced wholesale when a pack updates.
-- `user.sqlite` is writable and survives pack replacement. Entities from `USER_SETTING` onward live here.
-
-The Firestore collections in §1.2 mirror the `SAVED_ROUTE`, `TRIP_HISTORY`, `ROUTE_CONFIRMATION` and `SUBMISSION` fields, with the addition of `uid`.
-
-### 3.1 Entity-relationship diagram
+### 3.1 Pack relationships
 
 ```mermaid
 erDiagram
-    PLACE ||--o{ PLACE_ALIAS : "known as"
-    PLACE ||--o{ PLACE_STOP : "reached via"
-    STOP ||--o{ PLACE_STOP : "serves"
-    PLACE ||--o{ PLACE_AMBIGUITY : "candidate for"
-    ROUTE ||--o{ LEG : "has"
-    STOP ||--o{ LEG : "boarded at"
-    STOP ||--o{ LEG : "alighted at"
-    FARE_RULE ||--o{ ROUTE : "prices"
-    STOP ||--o{ WALK_LINK : "walk from"
-    STOP ||--o{ WALK_LINK : "walk to"
-    LEG ||--o| SHAPE : "drawn as"
-    WALK_LINK ||--o| SHAPE : "drawn as"
-    NOTE ||--o{ NOTE_LINK : "about"
-    LEG ||--o{ NOTE_LINK : "tipped"
-    STOP ||--o{ NOTE_LINK : "tipped"
-    SOURCE ||--o{ RECORD_SOURCE : "evidences"
-    PACK_MANIFEST ||--o{ CORRIDOR : "covers"
-    PLACE {
-        text place_id PK
-        text name
-        real lat
-        real lng
-        text kind "landmark|mall|school|terminal|area"
-        text area "city or barangay, shown in clarification"
-    }
-    PLACE_ALIAS {
-        integer alias_id PK
-        text place_id FK
-        text alias_norm UK "normalized via shared rules"
-        text alias_display
-    }
-    PLACE_AMBIGUITY {
-        integer ambiguity_id PK
-        text alias_norm "ambiguous text, e.g. sm"
-        text place_id FK
-    }
-    STOP {
-        text stop_id PK
-        text name
-        real lat
-        real lng
-        text landmark_hint
-    }
-    PLACE_STOP {
-        text place_id FK
-        text stop_id FK
-        integer walk_m
-        integer walk_min
-        text walk_text
-    }
-    ROUTE {
-        text route_id PK
-        text mode "jeepney|modern_jeepney|uv_express|bus|tricycle|rail|walk"
-        text signboard
-        text fare_rule_id FK
-        text operating_hours "nullable; HH:MM-HH:MM local"
-        integer headway_min "nullable; typical wait estimate"
-    }
-    LEG {
-        text leg_id PK
-        text route_id FK
-        text board_stop_id FK
-        text alight_stop_id FK
-        integer ride_min
-        real dist_km
-        real fare_min "nullable; override when rule does not apply"
-        real fare_max "nullable"
-        text status "verified|unverified|retired"
-        text last_verified "ISO date"
-        integer confirmations "aggregate at build time; default 0"
-    }
-    WALK_LINK {
-        text walk_id PK
-        text from_stop_id FK
-        text to_stop_id FK
-        integer walk_m
-        integer walk_min
-        text walk_text
-        text status "verified|unverified|retired"
-        text last_verified "ISO date"
-    }
-    SHAPE {
-        text shape_id PK
-        text leg_id FK "nullable; exactly one of leg_id/walk_id"
-        text walk_id FK "nullable"
-        text geojson "LineString"
-        integer schematic "0 verified geometry, 1 straight-line"
-    }
-    FARE_RULE {
-        text fare_rule_id PK
-        text mode
-        real base_fare
-        real base_km
-        real per_km
-        text effective "ISO date"
-        text source_note
-    }
-    NOTE {
-        text note_id PK
-        text body "team-authored paraphrase only"
-        integer mentions
-        text reported_at "ISO date"
-    }
-    NOTE_LINK {
-        integer note_link_id PK
-        text note_id FK
-        text leg_id FK "nullable; exactly one of leg_id/stop_id"
-        text stop_id FK "nullable"
-    }
-    SOURCE {
-        text source_id PK
-        text kind "field_survey|reddit_thread|ltfrb|osm|team|consented_contribution"
-        text url "nullable; link only, never content"
-        text observed_at "ISO date"
-        text license "nullable"
-    }
-    RECORD_SOURCE {
-        integer record_source_id PK
-        text record_kind "leg|walk_link|stop|place|fare_rule|note"
-        text record_id
-        text source_id FK
-    }
-    PACK_MANIFEST {
-        text pack_id PK
-        integer schema_version
-        text bbox "minLng,minLat,maxLng,maxLat"
-        integer stale_after_days "default 180"
-        text created
-        text verified
-        text sha256
-    }
-    CORRIDOR {
-        text corridor_id PK
-        text pack_id FK
-        text name
-        text bbox "verified-coverage bounds"
-        text verified "ISO date"
-    }
-    USER_SETTING {
-        text key PK
-        text value
-    }
-    ACTIVE_TRIP {
-        integer trip_id PK
-        text pack_id
-        text origin_place_id
-        text destination_place_id
-        text route_json "selected route record IDs"
-        integer current_step
-        text started_at
-    }
-    SAVED_ROUTE {
-        text saved_id PK "uuid"
-        text pack_id
-        text origin_place_id
-        text destination_place_id
-        text route_json "record IDs; re-validated on load"
-        text label "nullable"
-        text created_at
-        text synced_at "nullable"
-    }
-    TRIP_HISTORY {
-        text history_id PK "uuid"
-        text pack_id
-        text origin_place_id
-        text destination_place_id
-        text route_json "record IDs only; never coordinates"
-        text kind "looked_up|taken"
-        text at
-        text synced_at "nullable"
-    }
-    ROUTE_CONFIRMATION {
-        text confirmation_id PK "uuid"
-        text pack_id
-        text leg_id "pack record ID"
-        integer worked "1 yes, 0 no"
-        text at
-        text synced_at "nullable"
-    }
-    SUBMISSION {
-        text submission_id PK "uuid"
-        text kind "fare|stop|signboard|new_route|other"
-        text target_record_id "nullable; pack record ID"
-        text payload_json "structured fields"
-        text note "user-written; nullable"
-        text status "draft|queued|sent|accepted|rejected"
-        text created_at
-        text synced_at "nullable"
-    }
-    INSTALLED_ASSET {
-        text asset_id PK
-        text kind "model|pack|map"
-        text file_path
-        text version
-        text sha256
-        integer bytes
-        text state "missing|verifying|ready|failed"
-        text license
-    }
+    REGION ||--o{ PLACE : contains
+    PLACE ||--o{ PLACE_ALIAS : named
+    PLACE ||--o{ PLACE_AMBIGUITY : candidate
+    PLACE ||--o{ STOP : locates
+    PLACE ||--o{ PLACE_STOP : accesses
+    STOP ||--o{ PLACE_STOP : reached
+    ROUTE ||--o{ LEG : serves
+    STOP ||--o{ LEG : boards
+    STOP ||--o{ LEG : alights
+    STOP ||--o{ WALK_LINK : starts
+    STOP ||--o{ WALK_LINK : ends
+    LEG ||--o{ FARE_REPORT : priced
+    ROUTE ||--o{ HOURS_REPORT : hours
+    LEG ||--o| SHAPE : drawn
+    WALK_LINK ||--o| SHAPE : drawn
+    NOTE ||--o{ NOTE_LINK : attached
+    LEG ||--o{ NOTE_LINK : describes
+    STOP ||--o{ NOTE_LINK : describes
+    SOURCE ||--o{ RECORD_SOURCE : supports
 ```
 
-### 3.2 Entity register
+### 3.2 Proposed pack entities
 
-| Entity | Serves | Constrained by | Data class | Retention | Notes |
-|--------|--------|----------------|------------|-----------|-------|
-| PLACE | PRD-F2 | INV-1 | public | Pack lifetime | `area` disambiguates choices |
-| PLACE_ALIAS | PRD-F1, PRD-F2 | — | public | Pack lifetime | FTS5 trigram index over `alias_norm` |
-| PLACE_AMBIGUITY | PRD-F2 | INV-6 | public | Pack lifetime | An alias found here always triggers clarification |
-| STOP | PRD-F3, PRD-F4 | INV-1 | public | Pack lifetime | |
-| PLACE_STOP | PRD-F2, PRD-F3 | INV-1 | public | Pack lifetime | First and last walk from a place |
-| ROUTE | PRD-F3, PRD-F4 | INV-1 | public | Pack lifetime | One row per signboard and direction |
-| LEG | PRD-F3, PRD-F4, PRD-F17 | INV-1, INV-5 | public | Pack lifetime | Directed |
-| WALK_LINK | PRD-F3, PRD-F4 | INV-1, INV-5 | public | Pack lifetime | Directed; verified on foot |
-| SHAPE | PRD-F6, PRD-F12 | INV-1 | public | Pack lifetime | `schematic=1` must render dashed and labelled |
-| FARE_RULE | PRD-F4 | INV-1, INV-5 | public | Pack lifetime | Since 2026-09-28 the jeepney fare is ₱14 for the first 4 km plus ₱2/km. A rollback is possible, so fares are data, not code |
-| NOTE | PRD-F11 | INV-1, INV-4 | public | Pack lifetime | Never Reddit text |
-| NOTE_LINK | PRD-F11 | INV-1 | public | Pack lifetime | |
-| SOURCE | PRD-F4, PRD-F10, PRD-F18 | INV-4 | public | Pack lifetime | No usernames, no quoted content |
-| RECORD_SOURCE | PRD-F4, PRD-F10 | INV-1 | public | Pack lifetime | Every leg, walk link and fare has at least one |
-| PACK_MANIFEST | PRD-F8, PRD-F10 | INV-5 | public | Pack lifetime | Exactly one row |
-| CORRIDOR | PRD-F3, PRD-F9, PRD-F10 | INV-1 | public | Pack lifetime | Drives the "wala pa kaming data dito" message |
-| USER_SETTING | PRD-F8, PRD-F16 | INV-3 | internal | Until uninstall | Includes `sync_enabled` and `tier_override` |
-| ACTIVE_TRIP | PRD-F7 | INV-3 | PII | Cleared when the trip ends | Never leaves the device; at most one row |
-| SAVED_ROUTE | PRD-F15, PRD-F16 | INV-1, INV-3, INV-5 | PII | Until the user deletes it | Synced only when signed in and opted in |
-| TRIP_HISTORY | PRD-F15, PRD-F16 | INV-3 | PII | Until the user deletes it | Record IDs only, never coordinates |
-| ROUTE_CONFIRMATION | PRD-F17 | INV-3 | PII | Local copy deleted 30 days after sync | Uploaded only when signed in and opted in |
-| SUBMISSION | PRD-F18 | INV-1, INV-3, INV-4 | PII | Local copy deleted 30 days after sync | Never shown to other users until it ships in a pack |
-| INSTALLED_ASSET | PRD-F8 | INV-2 | internal | Until uninstall | |
+SQL types below are `text`, `integer` or `real`. IDs are stable text unless specified. “?” means nullable. Every factual record has RECORD_SOURCE evidence, including coordinates and geometry where present.
 
-### 3.3 Constraints and indexes
+| Entity | Columns and meaning |
+|--------|---------------------|
+| REGION | `region_id:text PK`, `name:text`, `boundary_geojson:text`, `boundary_sha256:text`; NCR administrative boundary with source evidence |
+| PLACE | `place_id:text PK`, `region_id:text FK`, `name:text`, `kind:text`, `area:text`, `ncr_status:text` (accepted/ambiguous/outside), `lat:real?`, `lng:real?`, `mapping_status:text` (mapped/unmapped/needs_review) |
+| PLACE_ALIAS | `alias_id:integer PK`, `place_id:text FK`, `alias_norm:text UNIQUE`, `alias_display:text` |
+| PLACE_AMBIGUITY | `ambiguity_id:integer PK`, `alias_norm:text`, `place_id:text FK`; at least two candidates for an ambiguous alias |
+| STOP | `stop_id:text PK`, `place_id:text FK`, `name:text`, `landmark_hint:text`; inherits accepted coordinate evidence from PLACE |
+| PLACE_STOP | `access_id:text PK`, `place_id:text FK`, `stop_id:text FK`, `direction:text` (to_stop/from_stop/both), `walk_m:integer?`, `walk_min:integer?`, `walk_text:text`, `eligibility:text` (ready/excluded) |
+| ROUTE | `route_id:text PK`, `mode:text` (jeepney/modern_jeepney/uv_express/bus/tricycle/rail), `signboard:text?`, `direction_label:text`, `service_status:text` (reported_active/unknown/suspended/retired) |
+| LEG | `leg_id:text PK`, `route_id:text FK`, `board_stop_id:text FK`, `alight_stop_id:text FK`, `ride_min:integer?`, `dist_km:real?`, `eligibility:text` (ready/excluded); one supported boarding-to-alighting segment |
+| WALK_LINK | `walk_id:text PK`, `from_stop_id:text FK`, `to_stop_id:text FK`, `walk_m:integer?`, `walk_min:integer?`, `walk_text:text`, `eligibility:text` (ready/excluded); explicit directed transfer |
+| FARE_REPORT | `fare_id:text PK`, `leg_id:text FK`, `amount_min:real`, `amount_max:real`, `currency:text`, `basis:text` (reported_segment), `effective_at:text?`; separate conflicting reports; no row means unknown |
+| HOURS_REPORT | `hours_id:text PK`, `route_id:text FK`, `hours_text:text`, `starts_local:text?`, `ends_local:text?`, `days_text:text?`; reported hours, not a timetable |
+| SHAPE | `shape_id:text PK`, `leg_id:text FK?`, `walk_id:text FK?`, `geojson:text`, `geometry_kind:text` (source_path/schematic); exactly one owner, source_path requires geometry evidence |
+| NOTE | `note_id:text PK`, `body:text`, `kind:text` (tip/warning/conflict); paraphrased |
+| NOTE_LINK | `link_id:integer PK`, `note_id:text FK`, `leg_id:text FK?`, `stop_id:text FK?`; exactly one owner |
+| SOURCE | `source_id:text PK`, `kind:text` (reddit_thread/geography/team_review/licensed_data), `url:text?`, `post_id:text?`, `posted_at:text?`, `observed_at:text?`, `license:text?`; observed_at only when the evidence explicitly supplies it |
+| RECORD_SOURCE | `link_id:integer PK`, `record_kind:text`, `record_id:text`, `source_id:text FK`, `snapshot_sha256:text?`, `comment_index:integer?`; locate source evidence without shipping raw text |
+| PACK_MANIFEST | `pack_id:text PK`, `schema_version:integer`, `region_id:text FK`, `bbox:text`, `created_at:text`, `source_date_min:text?`, `source_date_max:text?`, `stale_after_days:integer`, `input_sha256:text`, `input_posts:integer`, `answered_posts:integer`, `included_posts:integer`, `filtered_posts:integer`, `pending_posts:integer`, `rejected_posts:integer`; one row, initial warning threshold 180 days |
 
-| Constraint | On | Why | Enforces |
-|------------|----|-----|----------|
-| `board_stop_id <> alight_stop_id` | LEG | A zero-length ride is invalid | INV-1 |
-| Only `status='verified'` rows are loaded into the router graph | LEG, WALK_LINK | Unverified data never reaches the user | INV-1, INV-5 |
-| Each LEG, WALK_LINK and FARE_RULE has at least one RECORD_SOURCE, checked by the pack builder | RECORD_SOURCE | Provenance on every card | INV-1 |
-| Exactly one of `leg_id`/`walk_id` is set | SHAPE | Unambiguous geometry | PRD-F6 |
-| Exactly one of `leg_id`/`stop_id` is set | NOTE_LINK | Tips attach only to existing records | INV-1 |
-| `kind='reddit_thread'` requires a `url` that is a permalink with no `/user/` segment; there is no text column | SOURCE | Link only, never content | INV-4 |
-| The builder rejects any NOTE.body whose n-gram overlap with the raw scrape meets the threshold (run off-repo) | NOTE | Paraphrase, not a copy | INV-4 |
-| `UNIQUE(alias_norm)` on PLACE_ALIAS. An ambiguous alias has no PLACE_ALIAS row; it has 2+ PLACE_AMBIGUITY rows instead | PLACE_ALIAS, PLACE_AMBIGUITY | Deterministic resolution; ambiguity always asks | INV-6 |
-| All coordinates fall inside `PACK_MANIFEST.bbox` | STOP, PLACE | Prevents geocoding slips | INV-1 |
-| Routing is answered only when both endpoints fall inside a CORRIDOR bbox | CORRIDOR | Honest no-coverage message | INV-1 |
-| `PRAGMA user_version = schema_version`; the app refuses a mismatched pack | PACK_MANIFEST | Pack and app compatibility | PRD-F8 |
-| No column in user.sqlite or Firestore stores raw query text or coordinates (checked by a schema test) | SAVED_ROUTE, TRIP_HISTORY, ROUTE_CONFIRMATION, SUBMISSION | Privacy | INV-3 |
+The manifest's post-disposition counts are mutually exclusive final per-post outcomes and sum to `answered_posts`; store detailed per-record outcomes in the off-device report. Declare disposition precedence in the builder for posts producing both included and rejected candidates. Count actual usable records separately in the report.
 
-### 3.4 Migration policy
+A companion manifest records the output `pack_sha256` and asset sizes. Hash the finished SQLite file externally; do not store a self-referential file checksum inside that same file.
 
-`pack.sqlite` is never migrated in place. A new schema version means a new pack and an app update, and the app refuses a pack with an unknown `schema_version`.
+### 3.3 User entities and session state
 
-`user.sqlite` uses forward-only numbered migrations in `apps/mobile/src/data/migrations/`, applied at startup inside a transaction.
+| Entity | Proposed columns | Retention |
+|--------|------------------|-----------|
+| USER_SETTING | `key:text PK`, `value:text` | Until changed/uninstall |
+| ACTIVE_TRIP | `trip_id:integer PK`, `pack_id:text`, `schema_version:integer`, `origin_place_id:text`, `destination_place_id:text`, `preference:text`, `route_json:text` (record IDs only), `current_step:integer`, `started_at:text` | One row until end-trip; survives process death |
+| SAVED_ROUTE | `saved_id:text PK`, `pack_id:text`, `origin_place_id:text`, `destination_place_id:text`, `preference:text`, `route_json:text` (IDs), `label:text?`, `created_at:text` | Until user deletion |
+| TRIP_HISTORY | `history_id:text PK`, `pack_id:text`, `origin_place_id:text`, `destination_place_id:text`, `preference:text`, `route_json:text` (IDs), `kind:text` (looked_up/taken), `at:text` | Until user deletion |
+| INSTALLED_ASSET | `asset_id:text PK`, `kind:text` (model/pack/map), `file_path:text`, `version:text`, `sha256:text`, `bytes:integer`, `state:text` (missing/verifying/ready/failed), `license:text` | Until replacement/uninstall |
 
-Firestore documents carry a `v` field, and readers ignore unknown fields.
+No raw query/chat, GPS coordinates, GPS trace, Firebase UID or cloud-sync columns exist in user.sqlite. Labels are user-authored names, not copied query transcripts. Model conversation text and fixes remain in memory; restoration reconstructs context from canonical route IDs and the manual step, not a saved chat transcript.
 
-## 4. API surface
+### 3.4 Validation and replacement
 
-The core has no network API. From 1.1, the only network use is the account module talking to Firebase, which happens only after sign-in plus opt-in. The internal module boundaries are:
+- Source date is not verification date. Conflicting fare/hour reports remain distinct; staleness derives from their source evidence dates with clearly named labels.
+- Ready records require supported endpoints and instructions, accepted NCR membership, source links and resolved route-critical review. Excluded/unresolved records cannot load into the graph.
+- No outside-NCR endpoint is routed. Coordinate evidence is nullable; missing coordinates do not block a supported text route but cannot become a map marker/GPS suggestion.
+- Walk/access/geometry records require their own evidence. Do not create access by nearest-stop distance.
+- Unique alias_norm belongs to PLACE_ALIAS only for unambiguous aliases; ambiguous aliases use PLACE_AMBIGUITY.
+- Foreign keys, paired nullable coordinates, amount_min ≤ amount_max, nonnegative known durations and exactly-one-owner links are checked in the builder and loader.
+- Persist pack IDs and stable record IDs. After replacement, revalidate existence, status, connection order and manual-step bounds; unknown schema or changed records trigger replanning.
+- Pack schema changes replace the read-only DB; user DB migrations are forward-only numbered transactions. These schemas are not implemented yet.
 
-| Method | Path | Auth | Serves | Notes |
-|--------|------|------|--------|-------|
-| call | `core.parse(query) → Slots` | none (in-process) | PRD-F1 | Pure function; rules only |
-| call | `ai.extract(query, timeoutMs) → Slots \| null` | none (in-process) | PRD-F1 | Native llama.rn; cancellable |
-| call | `core.resolve(text, pack) → Resolved \| NeedsClarification \| NoMatch` | none (in-process) | PRD-F2 | Ambiguous input always returns NeedsClarification |
-| call | `core.route(origin, dest, pref, pack) → Route \| NoRoute` | none (in-process) | PRD-F3 | Never returns a partial route |
-| call | `core.compose(route) → Card[]` | none (in-process) | PRD-F4 | Includes stale flags |
-| call | `core.persona(cards, slmLine?) → PersonaText` | none (in-process) | PRD-F5 | The guard runs inside |
-| call | `setup.locateAssets() → AssetState[]` | none (in-process) | PRD-F8 | Embedded copy or Play pack path; SHA-256 checked |
-| call | `account.signIn() / signOut() / setSync(on) / deleteAccount()` | Google + Firebase Auth | PRD-F16 | 1.1; hidden without Play services |
-| HTTPS (SDK) | Firestore `users/{uid}/saved`, `users/{uid}/history` | Firebase Auth; owner only | PRD-F16 | Sync is opt-in |
-| HTTPS (SDK) | Firestore `confirmations`, `submissions` | Firebase Auth; create-only, readable by the team only | PRD-F17, PRD-F18 | Firestore is never queried for public display |
+## 4. Internal API surface
+
+All calls are in-process. No runtime network API exists.
+
+| Contract | Result/purpose |
+|----------|----------------|
+| `core.parse(query, tripState)` | Structured intent/endpoints/preferences or clarification; rule baseline |
+| `ai.extractIntent(query, tripState)` | Constrained intent fallback, cancellable; no route facts |
+| `core.resolve(text, pack)` | Resolved / NeedsClarification / Unsupported / OutsideNcr |
+| `core.retrieve(intent, pack)` | Eligible route facts, relevant notes and evidence IDs |
+| `core.route(origin, destination, preference, facts)` | Complete alternatives with qualified comparisons, or NoRoute |
+| `core.compose(itinerary, pack)` | Canonical cards, source-date/conflict/unknown flags |
+| `core.buildContext(cards, notes, tripState)` | Bounded RAG evidence bundle with allowed references |
+| `ai.explain(context, onSafeUnit)` | Guarded streaming explanation; cancel/retry without changing cards |
+| `trip.advanceStep() / reset()` | Manual journey progression and session reset |
+| `trip.restore(pack)` | Valid reconstructed trip or NeedsReplan |
+| `setup.locateAssets()` | Schema/hash/readiness states; local files only |
+| `location.start() / stop()` | In-memory foreground fix stream and lifecycle cleanup |
+
+Member 2 owns core/result contracts; Member 3 owns intent/explanation-unit contracts; Member 1 owns evidence/pack contracts; Member 4 owns native and persistence adapters. T00 and PR review resolve their shared interfaces before merging dependent changes.
 
 ## 5. Cross-cutting concerns
 
-| Concern | Approach | Serves |
-|---------|----------|--------|
-| Authentication | None in the core. In 1.1, optional Google sign-in through Firebase Auth (§1.2) | PRD-F16, INV-3 |
-| Authorization | Android runtime permission for foreground location only, requested when a trip starts (1.1). Firestore security rules (§1.2) | PRD-F7, PRD-F16, INV-3 |
-| Validation | Zod (or equivalent) schemas at the model output, pack load, seed CSV, and submission payload | PRD-F1, PRD-F10, PRD-F18, INV-1 |
-| Error handling | Typed result unions (`ok`/`err` with a reason code) in `packages/core`. Every reason code maps to a PRD-F9 message, and no thrown error crosses a module boundary | PRD-F9 |
-| Secrets | No runtime secrets in the core. `google-services.json` holds public client config but is still kept out of git and injected at build time (EAS secret or local file). Build tokens (EAS, Hugging Face) live in the developer's environment | — |
-| Rate limiting | Firestore security rules cap document size, and the client caps submissions at 20 per user per day. Reddit collection for curation follows Reddit's terms and happens outside this repo | PRD-F18, INV-4 |
-| Licensing and attribution | An in-app About screen lists OSM/ODbL, Protomaps, the model licence and the fonts. Every INSTALLED_ASSET and SOURCE row has a licence field | PRD-F6, PRD-F8 |
-| Memory | Sized for a 4 GB phone: one model context and one request at a time, `n_ctx` 1,024, and a q8_0 KV cache if the spike shows no accuracy loss. Weights are mmapped, not loaded through JS. The context is released on `onTrimMemory` or after 60 s idle. Firebase loads lazily, only when the account module is opened | PRD-F1, PUSANG-GALA-M6 |
-| Privacy | A DPA privacy notice is shown before sync, Play Data Safety is declared, and account deletion is available in-app and on the web | PRD-F16, INV-3 |
-
-The core has no network-exposed surface. The account module calls only Firebase over TLS, and nothing listens on a port.
+| Concern | Approach |
+|---------|----------|
+| Network | Runtime core has no fetch/XHR/WebSocket/cloud SDK path. Audit native map/style sources as well as JS imports. External source links require an explicit user action and are not needed to use the app. |
+| Privacy | No uploads/telemetry; no raw chat or GPS persistence; foreground permission requested when useful. |
+| Validation | Typed result unions and boundary schemas for extracted facts, pack loads, model units and saved-state restoration. |
+| Grounding | Facts/cards/context originate in pack IDs; generation cannot create route steps. Validate complete units before streaming, with semantic/adversarial checks. |
+| Source content | Explicit asset allowlist excludes `howtogetthereph_dataset/`, `data/raw/` and review intermediates from the APK. Scan shipped assets and training inputs, not the intentionally supplied raw input directory. |
+| Licensing | Record redistribution basis/attribution for data, basemap, model and fonts before bundling. Extraction/paraphrasing does not itself establish permission. |
+| Memory/storage | One inference at a time; bounded context; native file loading, no model base64 in JS; measure concurrent peak and installed asset duplication. |
+| Diagnostics | Local counters/timings without transcripts or coordinates. No analytics/crash-reporting service. |
+| Workflow | Always create a task branch and PR. Require another member's review; shared-contract changes have dependent-owner review. See TODO §2. |
 
 ### 5.1 Invariant enforcement
 
-| INV-# | Enforced by | Location | How |
-|-------|-------------|----------|-----|
-| INV-1 | Router, route validators, card composer, persona guard, pack builder, saved-route re-validation | `packages/core/src/{route,validate,compose,persona}/`, `tools/pack-builder/`, `apps/mobile/src/data/saved.ts` | The router only sees verified pack records, and validators re-check continuity and existence. Cards come from record IDs. Persona text cannot carry facts. The builder rejects sourceless records and unapproved submissions. Saved routes are re-validated against the current pack. Submissions are never rendered to other users. |
-| INV-2 | Network guard, import boundary | `apps/mobile/src/net/guard.ts`, an ESLint `no-restricted-imports` rule, CI | Fetch, XHR and WebSocket are blocked outside `src/account/`. The core cannot import Firebase. No cloud fallback path exists. |
-| INV-3 | Account opt-in gate, schema test, dependency allowlist | `apps/mobile/src/account/`, `apps/mobile/src/data/`, `apps/mobile/package.json` | Nothing uploads unless the user is signed in and `sync_enabled=1`. No stored or synced field holds query text or coordinates. Analytics, ads and crash SDKs are banned, and Firebase Analytics is not installed. |
-| INV-4 | Pack builder content scan, `.gitignore`, CI scan, SOURCE schema, fine-tune generator check | `tools/pack-builder/`, `tools/finetune/`, `.gitignore`, `.github/workflows/` | The raw scrape stays in a gitignored `data/raw/` or outside the repo. The builder rejects `u/` and `/user/` patterns and n-gram overlap with the raw scrape. SOURCE has no text column. CI fails on Reddit-username patterns in tracked files. |
-| INV-5 | Staleness labeller, router status filter | `packages/core/src/validate/staleness.ts` | Every card and GPS marker is checked against the thresholds, and stale ones get a visible label. Unverified rows never load into the router. |
-| INV-6 | Place resolver, PLACE_AMBIGUITY | `packages/core/src/resolve/` | An ambiguous alias or a low candidate margin always returns NeedsClarification. No code path auto-picks a place. |
-| INV-7 | Fine-tune data generator check | `tools/finetune/` | Training data uses placeholder place names. CI fails if any token from the pack vocabulary (stops, signboards, fares) appears in the training set. |
+| INV | Enforcement | Planned negative checks |
+|-----|-------------|------------------------|
+| INV-1 | Extractor evidence checks, pack builder, route continuity, canonical cards, RAG/stream guard | Fabricated leg/transfer, reversed boarding, unsupported factual insert, disconnected endpoints |
+| INV-2 | Import boundary, network guard, native local asset configuration | Block runtime network, force-stop/cold-launch airplane-mode app with all required flows |
+| INV-3 | User schema, in-memory conversation/fix state, dependency allowlist | Raw chat/coordinate fields in user DB, location subscription after background/end-trip, upload/telemetry dependency |
+| INV-4 | Builder/training scanner and APK asset allowlist | Raw comment/user mention leaked into a note/training sample or packaged dataset |
+| INV-5 | Report labels, unknown/conflict-aware ranking, status filters, fix age | Missing fare coerced to zero, source date called verified, suspended service, stale fix without label |
+| INV-6 | Alias ambiguity/result contracts and origin confirmation | Ambiguous alias auto-pick, automatic GPS origin selection |
+| INV-7 | Placeholder-only optional training generation | Real pack stop/signboard/fare in fine-tuning examples |
+
+Checks are planned, not implemented or passed.
 
 ## 6. Feature-to-design map
 
-| PRD-F# | Designed | Components | RFC |
-|--------|----------|------------|-----|
-| PRD-F1 | yes | Normalizer, Rule parser, SLM slot extractor, Span validator, Device tier detector, Eval harness | N/A |
-| PRD-F2 | yes | Place resolver, Clarification UI, Pack store | N/A |
-| PRD-F3 | yes | Router, Route validators | N/A (an RFC is recommended once there are 5+ corridors) |
-| PRD-F4 | yes | Card composer, Route validators, Staleness labeller | N/A |
-| PRD-F5 | yes | Persona composer, Persona guard | N/A |
-| PRD-F8 | yes | Asset installer, Pack store, User store | N/A |
-| PRD-F9 | yes | Card composer, error reason codes, CORRIDOR | N/A |
-| PRD-F10 | yes | Pack builder, Map pack script | N/A |
-| PRD-F12 | yes | Schematic view | N/A |
-| PRD-F15 | yes | User store, Saved and history manager | N/A |
-| PRD-F6 | yes (1.1) | Map view, Map pack script | N/A |
-| PRD-F7 | yes (1.1) | Location service, Staleness labeller | N/A |
-| PRD-F16 | yes (1.1) | Account module, Firestore rules and deletion page | N/A |
-| PRD-F17 | yes (1.1) | User store, Account module, Pack builder | N/A |
-| PRD-F18 | yes (1.1) | User store, Account module; moderation is TBD (Q14) | N/A |
+| PRD-F# | Components |
+|--------|------------|
+| F1 | Normalizer, intent rules/native adapter, evaluation |
+| F2 | Resolver, canonical geography, clarification |
+| F3 | Graph/router, continuity/status/fare validators |
+| F4 | Card composer, record sources, warning labels |
+| F5 | Required model, RAG evidence bundle, explanation-unit guard |
+| F6 | Map pack, local renderer, coordinate/shape evidence |
+| F7 | Foreground location, origin confirmation, fix-age labels |
+| F8 | Asset installer/pack loader and readiness |
+| F9 | Typed failure reasons and recovery UI |
+| F10 | Corpus pipeline, review queue, pack builder/yield report |
+| F11 | Paraphrased note store/retriever |
+| F12 | Ordered schematic renderer |
+| F15 | User store/saved/history revalidation |
+| F19 | Current-trip conversation manager and follow-up retrieval |
+| F20 | Hours reports and grounded unknown/time responses |
+| F21 | Active-trip store and compatibility-aware restore |
 
-## 7. Rejected alternatives
+Deferred F13/F14/F16–F18 have no current implementation components.
 
-| Considered | Rejected because |
-|-----------|------------------|
-| Flutter + flutter_gemma/LiteRT-LM (the reference architecture) | No advantage once agents write the code. llama.rn gives GBNF-constrained JSON and GGUF access to every sub-1B candidate. A TypeScript monorepo also shares normalize, parse and route code between the app and the pack builder. |
-| Kotlin native | Viable, but its code couldn't be shared with the Node build tooling. |
-| Qwen2.5 1.5B / Llama 3.2 1B / Gemma 3n / Gemma 4 E2B | Over the 1B limit by real parameter count (1.23B to 5.4B). |
-| Picking a model before measuring | No sub-1B model has published Filipino scores (FilBench), so the choice comes from our own bake-off (S5). |
-| Qwen3.5-0.8B | Under 1B (about 0.9B total), but it is a vision-language model whose vision tower is dead weight here, and its memory use is too high for a 4 GB Helio phone. |
-| LFM2 / Gemma 3 270M excluded on licence grounds | **Reversed 2026-10-09** after the owner relaxed the licence rule. Both are now S5 candidates. |
-| MLC LLM via `@react-native-ai/mlc` | Its prebuilt models start at 1.5B; a sub-1B model would need an MLC recompile. |
-| react-native-executorch | Rewritten at 0.10 (2026-09) and still changing; it needs `.pte` exports. It is a candidate for a later voice-output path (Kokoro). |
-| RAPTOR via `minotor` (MIT, v11.5.0) | It needs timetabled GTFS, and jeepneys run on frequency. Revisit for rail timetables or 5+ corridors. |
-| On-device GraphHopper or Valhalla | GraphHopper dropped Android, and Valhalla-mobile needs a native bridge plus road tiles. Walk links are curated instead. |
-| Google Maps tiles or data in the pack | Prohibited by Google Maps Platform terms §3.2.3. |
-| Mapbox (`@rnmapbox/maps`) | Needs an access token and MAU billing, and has offline pack limits. |
-| MapTiler offline data | Production offline use needs an on-prem licence, about $2.5k/yr. |
-| tile.openstreetmap.org bulk download | Banned by the OSMF tile policy. |
-| Sakay/DOTC 2015 GTFS as a data source | A restrictive, revocable DOTC licence, and about 10 years stale. It may be used as a cross-check only (LOG Q6). |
-| Vector RAG (sqlite-vec + embeddings) in 1.0 | A second resident model doesn't fit a 4 GB phone. The product already does retrieval from SQLite, with the model only framing the result. Kept as a PRD candidate. |
-| No model at all | Rules-only already exists, as the Core tier. The model adds unseen-phrasing coverage and the persona line. |
-| Our own asset download server | It costs hosting, adds a network path to the core, and fails for users with no data. Play fast-follow does the job for free. |
-| Model in an install-time asset pack | Install-time packs are read through AssetManager rather than a file path, so the model would have to be copied, doubling storage. |
-| SLM rewriting the step cards | A model can swap boarding and alighting points while using only allowed words. |
-| Supabase / Appwrite / a custom backend for accounts | The owner asked for Firebase + Google. Its free tier covers the pilot, and the RN Firebase SDKs (Apache-2.0) are mature. |
-| Firebase JS SDK instead of `@react-native-firebase` | The JS SDK's Firestore offline persistence doesn't work in React Native. The native SDK handles offline writes. |
-| Mandatory sign-in | Signing in needs network and Play services, which would break INV-2 and exclude phones. |
-| Showing community submissions live | Unverified routes would reach users, breaking INV-1. |
-| Firebase Analytics or Crashlytics | They send device and usage data, conflicting with INV-3. |
+## 7. Superseded alternatives and boundaries
 
-## 8. Open questions
+The original Flutter/1.5B/vector/Google-handoff architecture is historical evidence. A model at or above 1B is ineligible regardless of quantization. Google Maps data is not a source. Raw-comment runtime RAG, model-written route steps, template-only reference-phone AI, automatic proximity transfers and a field-verified badge contradict the confirmed scope.
 
-- `TBD(owner)` Q14: How are submissions moderated: team review, or a confirmation threshold plus spot checks? Until this is decided, PRD-F18 can queue submissions but can't promote any.
+Embedding/vector retrieval and fine-tuning remain measured engineering options, not release dependencies. A baseline local retrieval strategy and zero-shot model should be evaluated before adding them. No account/backend/Play-delivery spike belongs in the current critical path.
 
-## 9. De-risking spikes (owner may authorize before Lock)
+## 8. Execution prerequisites
 
-Each spike answers one feasibility question on the real reference phone. Results go to `LOG`.
+Assign actual member names and a corpus reviewer; record the exact reference phone; settle T00 shared schema/result contracts; measure native compatibility, local-map format and grounded generation. Technical unknowns are tracked in LOG and TODO, with owners and dependencies. They do not reopen the agreed product boundary.
 
-| Spike | Question | Pass |
-|-------|----------|------|
-| S1 | Does llama.rn 0.12.9 build on Expo SDK 57 / RN 0.86.3 and run a Q4_0 sub-1B GGUF with GBNF JSON offline, at `n_ctx` 1024, on the **4 GB Helio** reference phone? | Valid slots; warm < 5 s; no crash or OOM kill in 20 runs. Record tokens/s |
-| S2 | Does MapLibre RN 11.5.0 render `pmtiles://file://` from app storage offline? (Needed for 1.1; run it early anyway.) | A cold launch in airplane mode shows labels and attribution. Fallback: MBTiles, or OfflineManager `mergeOfflineRegions` |
-| S3 | Do expo-location foreground fixes work in airplane mode with the map mounted? | The marker updates outdoors; stale labelling works |
-| S4 | What is peak memory with S1, S2 and S3 running together on the 4 GB phone? Does the Core tier run on a 2–3 GB phone? | Within the PUSANG-GALA-M6 budget; no low-memory kill after 1 min in the background with the model released; the Core tier is usable on the low-RAM phone |
-| S5 | Taglish bake-off on the Helio reference phone, all at Q4_0, zero-shot and after a LoRA fine-tune. Candidates: rules only, Qwen3-0.6B (382 MB), LFM2-700M (446 MB), LFM2-350M (219 MB), Gemma 3 270M (242 MB), Qwen2.5-0.5B (429 MB) | Score = held-out slot accuracy (PUSANG-GALA-M1), false accepts, and warm latency on Helio. The best model that passes M1 and M5 wins; ties go to the smaller file |
-| S6 | Play build: does a custom Expo module wrapping `AssetPackManager` deliver the fast-follow pack, and can llama.rn load it from `assetsPath()`? | Works with `bundletool --local-testing`, then on a Play internal test track |
-| S7 | LoRA fine-tune (Unsloth) of the top two S5 candidates on about 1–2k synthetic Taglish queries using placeholder place names (INV-7), plus persona lines. No Reddit text (INV-4) | The fine-tuned model beats its zero-shot score on held-out data; the GGUF is re-exported at Q4_0 |
-| S8 | (1.1) Do `@react-native-firebase` 26.4.0 and Google Sign-In 16.1.5 build with Expo SDK 57 / RN 0.86.3 (New Architecture)? Does the app still start and work offline when Play services are missing or the device is offline? | Sign-in, sync and deletion work. With no network, cold start is no slower than without Firebase (lazy load). No crash without Play services |
+## 9. Feasibility and release gates
+
+| Gate | Question | Pass/evidence | Lead |
+|------|----------|---------------|------|
+| S1 | Can the selected Expo/RN/runtime build load and run a sub-1B model offline on the actual phone? | Named versions/model hash; constrained output; 20 runs without crash/OOM; reference AI works | Member 3 + Member 4 |
+| S2 | Can the selected MapLibre build render local NCR tiles/style/glyphs/sprites? | Cold airplane-mode launch with labels/attribution; tested fallback if local PMTiles unsupported | Member 4 |
+| S3 | Does foreground GPS work offline with the map mounted? | Outdoor fixes, age/accuracy, denied/no-fix handling, lifecycle cleanup and confirmation | Member 4 |
+| S4 | Do map/GPS/streamed inference fit concurrently? | Peak PSS/installed footprint; 20-query lifecycle run; background/restart recovery; unsupported-device fallback | Member 4 + Member 3 |
+| S5 | Which eligible model best handles intent and grounded follow-ups? | Held-out accuracy, unsupported claims, first-safe/full warm latency ≤10-second initial target, cold load and memory; choose only a model passing required conversation | Member 3 + Member 2 |
+| S6 | Does the complete corpus pipeline produce an auditable eligible pack? | All 2,186 inputs attempted; disposition counts; provenance; unresolved joins quarantined; no raw wording in runtime assets | Member 1 + Member 2 |
+| S7 | Does integration work beyond demonstration examples? | Unseen supported queries, follow-ups, qualified alternatives, source warnings, save/restore, cold offline map/GPS/AI; all PRD Must-Haves | All four members |
+
+Optional fine-tuning is considered only after S5 identifies a measured deficiency; use placeholder-only data, no raw Reddit or real route facts. The app cannot be released as rules-only on the judging reference phone.

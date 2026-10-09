@@ -12,6 +12,7 @@ GEMINI.md
 .github/copilot-instructions.md
 
 
-# Raw scraped data (Reddit etc.) - never commit (INV-4)
+# Newly collected raw data stays outside git; supplied howtogetthereph_dataset is build input.
+# INV-4 excludes all raw source wording from shipped app, runtime pack and training assets.
 data/raw/
 *.reddit.json
