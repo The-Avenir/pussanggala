@@ -1,4 +1,8 @@
 /**
+ * @deprecated Synthetic T45 harness only. Production persistence is
+ * createSqliteTripStore in ./sqliteTripStore; this Map does not survive restart.
+ * Keep the old screen seam until its T45 owner replaces the synthetic harness.
+ *
  * T44 — saved / history / active-trip persistence stub (ugly-first).
  *
  * Owner: Member-4 · Design: apps/mobile/spike-t43-t44-gps-persist.md §4.
