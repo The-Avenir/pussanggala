@@ -8,7 +8,21 @@
     "android": {
       "package": "com.pusanggala.app"
     },
-    "plugins": [],
+    "plugins": [
+      "expo-build-properties",
+      "expo-sqlite",
+      "expo-asset",
+      "@maplibre/maplibre-react-native",
+      [
+        "llama.rn",
+        {
+          "enableEntitlements": true,
+          "entitlementsProfile": "production",
+          "forceCxx20": true,
+          "enableOpenCLAndHexagon": true
+        }
+      ]
+    ],
     "extra": {
       "offlineOnly": true,
       "harnessNote": "T40 ugly-first placeholder. No OTA, no network, no analytics. MapLibre + llama.rn land in T42/S1-S2."
