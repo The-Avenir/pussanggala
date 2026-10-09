@@ -11,3 +11,7 @@ GEMINI.md
 .kiro/steering/spine.md
 .github/copilot-instructions.md
 
+
+# Raw scraped data (Reddit etc.) - never commit (INV-4)
+data/raw/
+*.reddit.json
