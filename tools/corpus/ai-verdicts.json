@@ -2,7 +2,7 @@
   "task": "T12 part B",
   "seed": 20261009,
   "sample_size": 313,
-  "judged_at": "2026-10-09T20:12:35.847Z",
+  "judged_at": "2026-10-09T20:35:07.990Z",
   "judge": "heuristic-part-B",
   "policy": "HEURISTIC-PART-B (deterministic), not an independent AI judgment of source text. Candidates absent from exceptions keep part-A state. Exceptions move second_passed → needs_review only; never sets accepted or rejected. Designated human reviewer still owns every queued item (CONTRACT.md).",
   "reason_codes": {

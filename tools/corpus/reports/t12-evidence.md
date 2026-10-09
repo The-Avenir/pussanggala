@@ -41,11 +41,11 @@ Conflict pairs: 14.
 - Second pass is a text-evidence check, not field verification; no field-verified badge.
 - Place/board/alight/from/to grounding accepts ≥0.8 token overlap with the cited text or the post title/question; signboards must match the cited text.
 
-## Part B — independent AI evidence audit
+## Part B — heuristic rule screen
 
-Independent audit of 313 sampled candidates (seed 20261009): 292 supported, 21 flagged to needs_review. Counts only; no source text.
+Deterministic rule screen of 313 sampled candidates (seed 20261009, judge `heuristic-part-B`): 292 unflagged, 21 flagged to needs_review. Counts only; no source text.
 
-| record_kind | sampled | supported | flagged | defect_rate |
+| record_kind | sampled | unflagged | flagged | flag_rate |
 | --- | ---: | ---: | ---: | ---: |
 | ride | 200 | 200 | 0 | 0% |
 | walk | 60 | 60 | 0 | 0% |
@@ -61,6 +61,18 @@ Flagged by reason_code:
 
 Effective review-state totals after overrides: second_passed 5562, needs_review 151.
 
-- This pass only quarantines: it never set accepted or rejected, so the designated human reviewer still owns every queued item.
-- The deterministic part-A pass held up well for ride and walk records but was systematically weak on fare and hours value semantics, where almost all defects concentrate.
-- The dominant failure modes are open-ended or approximate amounts recorded as exact, fares carrying no ride scope, and clock values hardened out of hedged or asker-supplied statements.
+Part-A review-state totals (before overrides): second_passed 5583, needs_review 130.
+
+Part-A queue (before overrides): 85 posts / 130 items. The part-A counts above remain separate from the effective queue artifacts.
+
+Effective human review queue: 106 posts / 151 items (70 posts with route-critical items), including 21 override items. Rebuilt data/raw/t12/review-queue.{jsonl,md} includes all effective items and their override reason codes.
+
+Queued overrides by reason_code:
+
+| reason_code | items |
+| --- | ---: |
+| fare_unscoped | 21 |
+
+- Part B is a deterministic heuristic rule screen, not an independent source-reading audit.
+- Unflagged means no rule fired; the source was not judged supported. Flag rates measure rule hits, not source-confirmed defect rates or value-semantics conclusions.
+- Rules can miss defects; every override remains quarantined for the designated human reviewer. This pass never sets accepted or rejected.
