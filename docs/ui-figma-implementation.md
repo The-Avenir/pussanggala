@@ -1,5 +1,7 @@
 # Figma screen implementation
 
+**Historical baseline:** the current app entry point now follows the [10 October UX redesign](ux-redesign.md). See the [visual review](ux-review.html) for current screens and before/after comparisons. The screen mapping and validation below describe the original nine-screen implementation.
+
 The nine requested Figma designs now render in the Expo app using the Sunset Playful palette, Nunito/DM Sans typography, and exact locally bundled SVG exports. The navigation follows [app-walkthrough.md](app-walkthrough.md). The phone bezel and sample Android status bar in Figma are presentation chrome; the app uses the device status bar and safe areas.
 
 This is a UI implementation over the existing synthetic harness. The installed eligible route pack, native AI, NCR basemap, foreground GPS, and SQLite persistence are not connected yet. The screens disclose those states; this work does not complete T45, T46 acceptance, or a phone/release gate.

@@ -1,73 +1,62 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { AnswerCat, Check, OrangeBus, BluePin, Send, Target } from '../ui/assets';
-import { Action, Card, FactRow, StatusChip } from '../ui/components';
-import { colors, typography } from '../ui/theme';
-import type { Preference, PreviewRoute } from './previewJourney';
-import { TripSummary } from './RouteScreens';
-import { PreferenceChips } from './Preferences';
+import { Button, Icon, palette, type, ui } from '../ui/travel';
+import type { PreviewRoute } from './previewJourney';
 
-export function AskScreen({ route, question, message, preference, onExample, onOptions, onSteps, onLocation, onSave }: {
-  route: PreviewRoute | null; question: string; message: string | null; preference: Preference;
-  onExample: () => void; onOptions: (preference: Preference) => void;
-  onSteps: () => void; onLocation: () => void; onSave: () => void;
+export interface ConversationTurn { id: number; query: string; answer: string; route?: PreviewRoute; }
+export function AskScreen({ turns, route, origin, destination, activeStep, onEdit, onOptions, onSteps, onMap, onPrompt, onExample }: {
+  turns: readonly ConversationTurn[]; route: PreviewRoute | null; origin: string; destination: string; activeStep: number | null;
+  onEdit: () => void; onOptions: () => void; onSteps: (route: PreviewRoute) => void; onMap: (route: PreviewRoute) => void; onPrompt: (query: string) => void; onExample: () => void;
 }): React.JSX.Element {
-  return <View style={styles.screen}>
-    <StatusChip label="Offline UI preview · NCR" Icon={Check} tone="green" />
-    <Text style={typography.title}>Saan tayo pupunta?</Text>
-    <Text style={[typography.body, styles.muted]}>Ask in Taglish. Your commute stays local.</Text>
-    {question ? <Card tone="blueSoft"><Text style={typography.body}>{question}</Text></Card> : null}
-    {message ? <Card><Text accessibilityRole="alert" style={typography.body}>{message}</Text>
-      <Action secondary label="Explore the example journey" onPress={onExample} /></Card> : null}
-    {route ? <>
-      <Pressable accessibilityRole="button" accessibilityLabel="See route steps" onPress={onSteps}>
-        <Card>
-          <FactRow Icon={BluePin} title="Start at LRT-1 Monumento" subtitle="Caloocan · reported boarding point" />
-          <FactRow Icon={OrangeBus} title={route.title} subtitle={`${route.steps.filter(step => step.mode === 'ride').length} rides · ${route.transfers} transfers`} />
-          <FactRow Icon={BluePin} title="Get off at One Ayala" subtitle="Makati · check the landmark before alighting" />
-          <TripSummary route={route} />
-          <Text style={typography.caption}>Walkthrough example · route pack not installed</Text>
-        </Card>
-      </Pressable>
-      <View style={styles.answer}><AnswerCat /><View style={styles.answerText}>
-        <Text style={typography.body}>Tara! Explore this example from Monumento to One Ayala.</Text>
-        <Text style={typography.caption}>Basic summary · example cards above</Text>
-      </View></View>
-      <PreferenceChips preference={preference} onSelect={onOptions} />
-      <View style={styles.chips}><Action secondary label="See steps →" onPress={onSteps} style={styles.flex} />
-        <Action secondary label="☆ Save" onPress={onSave} style={styles.flex} /></View>
-    </> : <Card tone="orangeSoft">
-      <Text style={typography.heading}>Your next lakbay starts here.</Text>
-      <Text style={typography.body}>Ask in Taglish or English. Try: Paano pumunta sa One Ayala galing Monumento?</Text>
-      <Text style={typography.caption}>Route data is not installed in this preview. You can explore the example journey.</Text>
-      <Action label="Explore Monumento → One Ayala" onPress={onExample} />
-    </Card>}
-    <Pressable accessibilityRole="button" onPress={onLocation} style={styles.location}>
-      <Target /><Text style={typography.caption}>Use my location</Text>
-    </Pressable>
+  return <View style={ui.screen}>
+    {(origin || destination) ? <Pressable accessibilityRole="button" accessibilityLabel="Edit journey context" onPress={onEdit} style={styles.context}>
+      <Icon name="pin" size={18}/><Text style={[type.secondary, ui.flex]}>{origin || 'Choose origin'} → {destination || 'Choose destination'}
+        {activeStep !== null ? ' · Step ' + (activeStep + 1) : ''}</Text><Text style={[type.label, styles.accent]}>Edit</Text>
+    </Pressable> : null}
+    {turns.length === 0 ? <View style={{ gap: 16 }}>
+      <Text accessibilityRole="header" style={type.title}>Let’s figure out{ '\n' }your commute.</Text>
+      <Text style={type.body}>Ask how to get somewhere, compare your options, or understand a transfer.</Text>
+      <Text style={type.secondary}>The local assistant isn’t connected in this preview. Example questions show the conversation layout.</Text>
+      <Button variant="secondary" label="Try the example question" onPress={onExample}/>
+    </View> : turns.map(turn => <View key={turn.id} style={{ gap: 18 }}>
+      <View style={styles.user}><Text style={type.body}>{turn.query}</Text></View>
+      {turn.route ? <View style={styles.route}>
+        <Text style={[type.caption, styles.overline]}>ROUTE INFORMATION · EXAMPLE</Text>
+        <Text style={type.heading}>{turn.route.title}</Text>
+        <Text style={type.body}>{turn.route.time} · {turn.route.fare}</Text>
+        <Text style={type.secondary}>{turn.route.transfers === 0 ? 'No transfers' : turn.route.transfers + ' transfer'} · illustrative reported values</Text>
+        <View style={ui.row}><Button variant="text" label="Directions" icon="arrow" onPress={() => onSteps(turn.route!)}/>
+          <Button variant="text" label="Map" onPress={() => onMap(turn.route!)}/></View>
+      </View> : null}
+      <View style={{ gap: 6 }}><Text style={[type.caption, styles.overline]}>BASIC SUMMARY · AI UNAVAILABLE</Text>
+        <Text style={type.body}>{turn.answer}</Text></View>
+    </View>)}
+    {route && turns.length > 0 ? <View style={styles.followups}>
+      <Button variant="secondary" label="Other options" onPress={onOptions}/>
+      <Button variant="secondary" label="Where do I get off?" onPress={() => onPrompt('Saan ako bababa?')}/>
+      <Button variant="text" label="Reported operating hours" onPress={() => onPrompt('Anong oras last trip?')}/>
+    </View> : null}
   </View>;
 }
-
 export function AskComposer({ onSubmit }: { onSubmit: (query: string) => void }): React.JSX.Element {
   const [query, setQuery] = useState('');
-  function submit(): void {
-    if (!query.trim()) return;
-    onSubmit(query.trim()); setQuery('');
-  }
+  function submit(): void { if (query.trim()) { onSubmit(query.trim()); setQuery(''); } }
   return <View style={styles.composer}>
-      <TextInput accessibilityLabel="Ask Pusang Gala" placeholder="Ask Pusang Gala anything…"
-        placeholderTextColor={colors.muted} value={query} onChangeText={setQuery} onSubmitEditing={submit}
-        returnKeyType="send" style={[typography.body, styles.input]} />
-      <Pressable accessibilityRole="button" accessibilityLabel="Send question" accessibilityState={{ disabled: !query.trim() }}
-        disabled={!query.trim()} onPress={submit} style={styles.send}><Send /></Pressable>
+    <TextInput accessibilityLabel="Ask Pusang Gala" placeholder="Ask about your commute…" placeholderTextColor={palette.secondary}
+      value={query} onChangeText={setQuery} onSubmitEditing={submit} returnKeyType="send"
+      style={[type.body, styles.input]}/>
+    <Pressable accessibilityRole="button" accessibilityLabel="Send question" disabled={!query.trim()}
+      accessibilityState={{ disabled: !query.trim() }} onPress={submit} style={[styles.send, !query.trim() && ui.disabled]}>
+      <Icon name="send" color={palette.white} size={20}/></Pressable>
   </View>;
 }
 const styles = StyleSheet.create({
-  screen: { gap: 16, flexGrow: 1 }, muted: { color: colors.muted },
-  chips: { flexDirection: 'row', gap: 8 },
-  answer: { flexDirection: 'row', gap: 12, alignItems: 'flex-start' }, answerText: { flex: 1, gap: 6 },
-  flex: { flex: 1 }, location: { flexDirection: 'row', gap: 8, alignItems: 'center', minHeight: 44 },
-  composer: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  input: { flex: 1, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.border, borderRadius: 24, minHeight: 48, paddingHorizontal: 14 },
-  send: { width: 44, minHeight: 48, alignItems: 'center', justifyContent: 'center' },
+  context: { paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: palette.line, flexDirection: 'row', alignItems: 'center', gap: 8 },
+  user: { alignSelf: 'flex-end', maxWidth: '90%', backgroundColor: palette.background, borderRadius: 14, padding: 14 },
+  route: { gap: 8, borderLeftWidth: 3, borderLeftColor: palette.accent, paddingLeft: 16 },
+  overline: { fontWeight: '600', color: palette.secondary }, accent: { color: palette.accent },
+  followups: { gap: 10, alignItems: 'flex-start', paddingTop: 8 },
+  composer: { flexDirection: 'row', gap: 8, alignItems: 'center' },
+  input: { flex: 1, minWidth: 0, minHeight: 50, paddingVertical: 12, paddingHorizontal: 14, backgroundColor: palette.background, borderRadius: 12, borderWidth: 1, borderColor: palette.line },
+  send: { width: 50, flexShrink: 0, minHeight: 50, borderRadius: 12, backgroundColor: palette.accent, justifyContent: 'center', alignItems: 'center' },
 });

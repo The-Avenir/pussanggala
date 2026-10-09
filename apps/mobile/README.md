@@ -7,7 +7,7 @@
 (offline basemap), T43 (foreground GPS), T44 (persistence), T45 (integration),
 T46 (UI), T47 (judged APK).
 
-The current entry point is the T46 Figma UI preview. See [screen mapping, screenshots, validation, and remaining integration](../../docs/ui-figma-implementation.md). Run `npm run web` from this directory to explore it. The route data, AI, map, GPS and persistence adapters remain pending; the preview labels example journeys and missing assets explicitly.
+The current entry point is the T46 travel utility redesign with Plan, Map and Trips tabs. See the [audit, navigation, interactions and validation](../../docs/ux-redesign.md), [visual review](../../docs/ux-review.html), and [wireframes](../../docs/ux-wireframes.html). Run `npm run web` here to explore it. Route data, native AI, basemap, GPS and persistent storage remain unconnected; real queries fail honestly and examples require an explicit action. The earlier [Figma implementation](../../docs/ui-figma-implementation.md) is preserved as a comparison baseline.
 
 Guardrails
 (BUILD §5): the supplied `howtogetthereph_dataset/` raw input must never appear

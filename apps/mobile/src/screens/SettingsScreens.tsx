@@ -1,9 +1,6 @@
 import { useState } from 'react';
-import { StyleSheet, Text, TextInput, View } from 'react-native';
-import * as Assets from '../ui/assets';
-import { Action, Card, FeatureRow, SettingsRow, StatusChip } from '../ui/components';
-import { colors, typography } from '../ui/theme';
-import { ScaledArtwork } from '../ui/ScaledArtwork';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, CatMark, Icon, ListRow, Notice, Section, palette, type, ui } from '../ui/travel';
 import { summarizeReadiness } from '../assets/readiness';
 import type { SavedRouteRow, TripHistoryRow } from '../store/tripStore';
 import { PreferenceChips } from './Preferences';
@@ -14,119 +11,103 @@ export function SettingsScreen({ preference, onPreference, onOpen, onLocation }:
   preference: Preference; onPreference: (value: Preference) => void;
   onOpen: (page: SettingsPage) => void; onLocation: () => void;
 }): React.JSX.Element {
-  return <View style={styles.screen}>
-    <View style={styles.brand}><Assets.BrandCat /><View style={styles.brandText}>
-      <Text style={typography.title}>Pusang Gala</Text><Text style={typography.caption}>Your offline commute buddy</Text>
-    </View></View>
-    <SettingsRow Icon={Assets.MapIcon} title="Offline data" subtitle="NCR · bundled files and readiness" onPress={() => onOpen('offline')} />
-    <SettingsRow Icon={Assets.Storage} title="Storage & privacy" subtitle="Saved routes stay on your phone" onPress={() => onOpen('privacy')} />
-    <SettingsRow Icon={Assets.Target} title="Location" subtitle="Foreground only · while the app is open" onPress={onLocation} />
-    <SettingsRow Icon={Assets.Spark} title="AI assistant" subtitle="Not installed in this preview" onPress={() => onOpen('offline')} />
-    <SettingsRow Icon={Assets.Info} title="About Pusang Gala" subtitle="Version 0.1 · offline UI preview" onPress={() => onOpen('about')} />
-    <Text style={typography.label}>Default trip preference</Text>
-    <PreferenceChips preference={preference} onSelect={onPreference} />
-    <Text style={typography.caption}>Your location stays on your phone.</Text>
+  const [showPreference, setShowPreference] = useState(false);
+  return <View style={ui.screen}>
+    <Text accessibilityRole="header" style={type.title}>Settings</Text>
+    <Section title="JOURNEY"><ListRow title="Default route sort" value={preference === 'cheapest' ? 'Fare' : preference === 'fastest' ? 'Time' : 'Transfers'}
+      onPress={() => setShowPreference(value => !value)}/>
+      {showPreference ? <PreferenceChips preference={preference} onSelect={onPreference}/> : null}
+      <ListRow title="Location" value="Unavailable" icon="location" onPress={onLocation}/>
+      <Text style={[type.secondary, { paddingTop: 8 }]}>Position is used only while the app is open. Steps advance when you mark them.</Text>
+    </Section>
+    <Section title="ON THIS PHONE"><ListRow title="Offline resources" icon="map" value="3 missing" onPress={() => onOpen('offline')}/>
+      <ListRow title="Storage & privacy" icon="save" onPress={() => onOpen('privacy')}/></Section>
+    <Section title="ABOUT"><ListRow title="Reading route reports" icon="info" onPress={() => onOpen('about')}/>
+      <ListRow title="Licences & attribution" onPress={() => onOpen('about')}/></Section>
+    <Text style={type.secondary}>Text follows your device’s accessibility settings.</Text>
   </View>;
 }
-
-export function OfflineDataScreen({ checkedAt }: { checkedAt: string | null }): React.JSX.Element {
+export function OfflineDataScreen({ checkedAt, onCheck }: { checkedAt: string | null; onCheck: () => void }): React.JSX.Element {
   const readiness = summarizeReadiness([]);
-  return <View style={styles.screen}>
-    <Text style={typography.title}>Ready before you roam.</Text>
-    <Text style={[typography.body, styles.muted]}>Offline files ship with the app. No corridor downloads needed.</Text>
-    <ScaledArtwork width={350} height={180}><Assets.BusIllustration /></ScaledArtwork>
-    <Card><Text style={typography.heading}>Metro Manila · NCR</Text>
-      <Text style={typography.caption}>Maps, stops, routes, and local landmarks</Text>
-      <View style={styles.row}><Assets.PinkStorage /><Text style={typography.caption}>Installed size not measured</Text></View></Card>
-    <StatusChip Icon={Assets.Info} label="Required files are not installed in this preview" />
-    {[
-      { name: 'Route pack', detail: 'Version, build date and source dates unavailable' },
-      { name: 'AI model', detail: 'Device support not checked' },
-      { name: 'Offline map', detail: 'NCR basemap not installed · schematic available' },
-    ].map(item => <Card key={item.name}><View style={styles.between}>
-      <Text style={typography.label}>{item.name}</Text><Text style={[typography.caption, styles.orange]}>Missing</Text></View>
-      <Text style={typography.caption}>{item.detail}</Text></Card>)}
-    <FeatureRow Icon={Assets.MapIcon} title="Works without mobile data" subtitle="The stop diagram remains available if map resources fail." />
-    {checkedAt ? <Text accessibilityRole="alert" style={typography.caption}>Checked {checkedAt} · {readiness.state}. Native file validation is not connected in this preview.</Text> : null}
+  return <View style={ui.screen}>
+    <View style={{ gap: 8 }}><Text accessibilityRole="header" style={type.title}>What works{ '\n' }offline</Text>
+      <Text style={type.body}>Resources ship with the Android app. This preview doesn’t include them.</Text></View>
+    <View>{[
+      { name: 'Route data', detail: 'New route searches unavailable. Version and source dates unknown.', icon: 'bus' as const },
+      { name: 'Local assistant', detail: 'AI explanations unavailable. Existing route cards stay readable.', icon: 'chat' as const },
+      { name: 'NCR basemap', detail: 'Street map unavailable. Existing routes can use a stop diagram.', icon: 'map' as const },
+    ].map(item => <View key={item.name} style={styles.resource}>
+      <Icon name={item.icon} color={palette.secondary}/>
+      <View style={ui.flex}><View style={ui.between}><Text style={[type.label, ui.flex]}>{item.name}</Text>
+        <Text style={[type.secondary, { color: palette.warning }]}>Missing</Text></View>
+        <Text style={type.secondary}>{item.detail}</Text></View>
+    </View>)}</View>
+    <ListRow title="Installed size" value="Not measured"/>
+    <Notice>Example journeys are available to explore the design. They aren’t installed route data.</Notice>
+    <Button label="Recheck local files" variant="secondary" onPress={onCheck}/>
+    {checkedAt ? <Text accessibilityRole="alert" style={type.secondary}>Checked {checkedAt}. Status: {readiness.state}. File validation isn’t connected; no resource was downloaded.</Text> : null}
   </View>;
 }
-
 export function PrivacyScreen({ onDelete }: { onDelete: () => void }): React.JSX.Element {
-  return <View style={styles.screen}><Text style={typography.title}>Your lakbay stays local.</Text>
-    <Card><Text style={typography.heading}>What stays on this phone</Text>
-      <Text style={typography.body}>Saved route IDs, trip history IDs, your preference, and manual trip progress.</Text>
-      <Text style={typography.caption}>This preview keeps them in memory for this session. Persistent storage is not connected yet.</Text></Card>
-    <Card tone="blueSoft"><Text style={typography.heading}>What we don’t store</Text>
-      <Text style={typography.body}>Chat text and GPS coordinates. No cloud sync, uploads, or analytics.</Text></Card>
-    <Action secondary label="Delete all my data" onPress={onDelete} />
+  return <View style={ui.screen}><Text accessibilityRole="header" style={type.title}>Your data,{ '\n' }on your phone.</Text>
+    <Section title="KEPT LOCALLY"><Text style={type.body}>Saved route IDs, labels, preferences, history and your manual trip step.</Text>
+      <Text style={type.secondary}>This preview keeps these in memory for this session. Persistent storage isn’t connected.</Text></Section>
+    <Section title="NOT SAVED"><Text style={type.body}>Raw conversation text and GPS coordinates. No uploads, analytics or cloud sync.</Text>
+      <Text style={type.secondary}>Your conversation exists only in memory and clears when you start a new conversation or close the app.</Text></Section>
+    <ListRow title="Delete all my data" detail="Saved routes, history, preferences and active trip" destructive onPress={onDelete}/>
   </View>;
 }
-
 export function AboutScreen(): React.JSX.Element {
-  return <View style={styles.screen}><View style={styles.brand}><Assets.BrandCat /><View style={styles.brandText}>
-    <Text style={typography.title}>Pusang Gala</Text><Text style={typography.caption}>Version 0.1 · offline UI preview</Text></View></View>
-    <Card><Text style={typography.heading}>Community reports, explained simply.</Text>
-      <Text style={typography.body}>Route information comes from community reports and may be outdated. Missing fares, times, and hours stay unknown.</Text></Card>
-    <Card><Text style={typography.label}>Data and map attribution</Text>
-      <Text style={typography.caption}>Route source: paraphrased community reports from r/HowToGetTherePH. This preview uses the app walkthrough example; an eligible route pack is not installed.</Text>
-      <Text style={typography.caption}>Map artwork and mascot: supplied Pusang Gala Figma design. Artwork is illustrative, not an OpenStreetMap basemap.</Text>
-      <Text style={typography.caption}>Nunito and DM Sans: Google Fonts, SIL Open Font License. Actual map and model licences ship with their installed files.</Text></Card>
-    <Text style={typography.caption}>Your trips and location never leave this phone.</Text>
+  return <View style={ui.screen}><View style={ui.row}><CatMark/><Text accessibilityRole="header" style={type.title}>Pusang Gala</Text></View>
+    <Text style={type.secondary}>Travel utility · UI design preview</Text>
+    <Section title="READING ROUTE INFORMATION"><Text style={type.body}>Community reports are dated accounts, not field-verified or live information. Confirm your signboard and alighting point before boarding.</Text>
+      <Text style={type.body}>Unknown fares and hours stay unknown. Conflicting reports remain separate. Dashed links and stop diagrams show order, not the road path.</Text></Section>
+    <Section title="DATA & ATTRIBUTION"><Text style={type.secondary}>Production route facts: paraphrased community evidence from r/HowToGetTherePH, with source references. This preview uses synthetic walkthrough records, without source dates or links.</Text>
+      <Text style={type.secondary}>Gaile mascot: supplied Pusang Gala assets. Interface icons and stop diagram: app vectors. Typography: device system font. Actual map and model licences must accompany their bundled assets.</Text></Section>
   </View>;
 }
-
-export function ProfileScreen({ savedCount, takenCount, onSaved, onSettings, onHelp }: {
-  savedCount: number; takenCount: number; onSaved: () => void; onSettings: () => void; onHelp: () => void;
-}): React.JSX.Element {
-  return <View style={styles.screen}><View style={styles.profile}><Assets.BrandCat />
-    <Text style={typography.title}>Commuter</Text><Text style={typography.caption}>Your offline commute buddy is ready to explore.</Text></View>
-    <Card><Text style={typography.heading}>Your trips, on this phone</Text><View style={styles.row}>
-      <View style={styles.flex}><Text style={typography.title}>{savedCount}</Text><Text style={typography.caption}>saved routes</Text></View>
-      <View style={styles.flex}><Text style={typography.title}>{takenCount}</Text><Text style={typography.caption}>trips taken</Text></View>
-    </View></Card>
-    <SettingsRow Icon={Assets.MapIcon} title="Saved routes & history" subtitle="Find your previous journeys" onPress={onSaved} />
-    <SettingsRow Icon={Assets.Gear} title="Settings" subtitle="Preferences, offline data, and privacy" onPress={onSettings} />
-    <SettingsRow Icon={Assets.Info} title="Help & tips" subtitle="How to read community-reported cards" onPress={onHelp} />
-    <Text style={typography.caption}>Your trips and location never leave this phone.</Text>
-  </View>;
-}
-
-export function SavedScreen({ saved, history, onOpen, onDelete, onRename, onClearHistory, onDeleteHistory, onAsk }: {
-  saved: readonly SavedRouteRow[]; history: readonly TripHistoryRow[];
-  onOpen: (row: SavedRouteRow) => void; onDelete: (id: string) => void;
-  onRename: (id: string, label: string) => void; onClearHistory: () => void;
-  onDeleteHistory: (id: string) => void; onAsk: () => void;
+export function SavedScreen({ saved, history, segment, onSegment, onOpen, onOpenHistory, onDelete, onRename, onClearHistory, onDeleteHistory, onPlan }: {
+  saved: readonly SavedRouteRow[]; history: readonly TripHistoryRow[]; segment: 'saved' | 'history'; onSegment: (value: 'saved' | 'history') => void;
+  onOpen: (row: SavedRouteRow) => void; onOpenHistory: (row: TripHistoryRow) => void; onDelete: (id: string) => void;
+  onRename: (id: string, label: string) => void; onClearHistory: () => void; onDeleteHistory: (id: string) => void; onPlan: () => void;
 }): React.JSX.Element {
   const [editing, setEditing] = useState<string | null>(null);
   const [label, setLabel] = useState('');
-  return <View style={styles.screen}><Text style={typography.title}>Your familiar daanan.</Text>
-    <Text style={typography.caption}>Example journeys · saved for this session</Text>
-    <Text style={typography.heading}>Saved routes</Text>
-    {saved.length === 0 ? <Card><Text style={typography.body}>Save a route with ☆ to find it here.</Text>
-      <Action secondary label="Ask about a trip →" onPress={onAsk} /></Card> : saved.map(row => <Card key={row.saved_id}>
-      {editing === row.saved_id ? <><TextInput accessibilityLabel="Saved route name" value={label} onChangeText={setLabel}
-        style={[typography.body, styles.input]} maxLength={80} />
-        <Action secondary label="Save name" disabled={!label.trim()} onPress={() => { onRename(row.saved_id, label.trim()); setEditing(null); }} /></>
-        : <><Text style={typography.heading}>{row.label}</Text><Text style={typography.caption}>Monumento → One Ayala · {row.preference.replaceAll('-', ' ')}</Text>
-          <Action secondary label="View steps →" onPress={() => onOpen(row)} /></>}
-      <Text style={typography.caption}>Saved {new Date(row.created_at).toLocaleDateString()}</Text>
-      <View style={styles.row}><Action secondary label="Rename" onPress={() => { setEditing(row.saved_id); setLabel(row.label); }} style={styles.flex} />
-        <Action secondary label="Delete" onPress={() => onDelete(row.saved_id)} style={styles.flex} /></View>
-    </Card>)}
-    <Text style={typography.heading}>History</Text>
-    {history.length === 0 ? <Text style={typography.caption}>Your looked-up and taken journeys will appear here.</Text> : history.slice().reverse().map(row =>
-      <Card key={row.history_id}><Text style={typography.label}>Monumento → One Ayala</Text>
-        <Text style={typography.caption}>{row.kind === 'taken' ? 'Taken' : 'Looked up'} · {new Date(row.at).toLocaleDateString()}</Text>
-        <Action secondary label="Delete entry" onPress={() => onDeleteHistory(row.history_id)} /></Card>)}
-    {history.length > 0 ? <Action secondary label="Clear all history" onPress={onClearHistory} /> : null}
+  const [manage, setManage] = useState<string | null>(null);
+  return <View style={ui.screen}>
+    <View style={{ gap: 8 }}><Text accessibilityRole="header" style={type.title}>Your trips</Text>
+      <Text style={type.secondary}>Familiar journeys, easier to find again.</Text></View>
+    <View style={styles.segments}>{(['saved', 'history'] as const).map(value => <Pressable key={value} accessibilityRole="button"
+      accessibilityLabel={value === 'saved' ? 'Saved routes' : 'Trip history'} accessibilityState={{ selected: segment === value }}
+      onPress={() => onSegment(value)} style={[styles.segment, segment === value && styles.selected]}>
+      <Text style={[type.label, segment === value && { color: palette.accent }]}>{value === 'saved' ? 'Saved' : 'History'}</Text></Pressable>)}</View>
+    {segment === 'saved' ? saved.length === 0 ? <View style={{ gap: 12, paddingVertical: 16 }}><Icon name="save" size={30} color={palette.secondary}/>
+      <Text style={type.heading}>A route worth keeping?</Text><Text style={type.body}>Save it from Directions. Your saved journeys will appear here.</Text>
+      <Button variant="text" label="Plan a journey" icon="arrow" onPress={onPlan}/></View>
+      : <View>{saved.map(row => <View key={row.saved_id} style={styles.savedRow}>
+        {editing === row.saved_id ? <View style={{ gap: 8 }}><TextInput accessibilityLabel="Saved route name" value={label} onChangeText={setLabel}
+          style={[type.body, ui.input]} maxLength={80} autoFocus/>
+          <View style={ui.row}><Button label="Save name" disabled={!label.trim()} onPress={() => { onRename(row.saved_id, label.trim()); setEditing(null); }}/>
+            <Button label="Cancel rename" variant="text" onPress={() => setEditing(null)}/></View></View>
+          : <ListRow title={row.label} detail="Monumento → One Ayala" icon="save" onPress={() => onOpen(row)}/>}
+        <View style={ui.between}><Text style={type.caption}>Saved {new Date(row.created_at).toLocaleDateString()}</Text>
+          <Button variant="text" label="Manage route" onPress={() => setManage(manage === row.saved_id ? null : row.saved_id)}/></View>
+        {manage === row.saved_id ? <View style={ui.row}><Button variant="text" label="Rename" onPress={() => { setEditing(row.saved_id); setLabel(row.label); }}/>
+          <Button variant="text" label="Delete route" onPress={() => onDelete(row.saved_id)}/></View> : null}
+      </View>)}</View>
+      : <View>{history.length === 0 ? <Text style={type.body}>Journeys you look up or take will appear here.</Text>
+        : history.slice().reverse().map(row => <View key={row.history_id} style={styles.savedRow}>
+          <ListRow title="Monumento → One Ayala" detail={(row.kind === 'taken' ? 'Taken' : 'Looked up') + ' · ' + new Date(row.at).toLocaleDateString()}
+            onPress={() => onOpenHistory(row)}/>
+          <Button variant="text" label="Delete entry" onPress={() => onDeleteHistory(row.history_id)}/></View>)}
+        {history.length > 0 ? <Button variant="text" label="Clear history" onPress={onClearHistory}/> : null}</View>}
+    <Text style={type.caption}>Example journeys stay in memory for this session.</Text>
   </View>;
 }
-
 const styles = StyleSheet.create({
-  screen: { gap: 16 }, row: { flexDirection: 'row', alignItems: 'center', gap: 12 }, flex: { flex: 1 },
-  between: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  brand: { flexDirection: 'row', alignItems: 'center', gap: 16, minHeight: 96 }, brandText: { flex: 1, gap: 4 },
-  muted: { color: colors.muted }, orange: { color: colors.orange },
-  profile: { alignItems: 'center', gap: 8, paddingVertical: 12 },
-  input: { minHeight: 48, borderRadius: 12, borderWidth: 1, borderColor: colors.border, paddingHorizontal: 12 },
+  resource: { flexDirection: 'row', gap: 14, paddingVertical: 20, borderBottomWidth: 1, borderColor: palette.line },
+  segments: { flexDirection: 'row', padding: 3, gap: 3, borderRadius: 10, backgroundColor: palette.background },
+  segment: { flex: 1, minHeight: 46, alignItems: 'center', justifyContent: 'center', padding: 10, borderRadius: 8 },
+  selected: { backgroundColor: palette.paper, borderWidth: 1, borderColor: palette.line },
+  savedRow: { paddingBottom: 12, borderBottomWidth: 1, borderColor: palette.line },
 });
