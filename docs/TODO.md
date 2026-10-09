@@ -22,10 +22,12 @@ Use Member 1–4 until actual names are assigned in T00. Each task has one accou
 
 | Member | Owns | Primary paths | Cross-review responsibility |
 |--------|------|---------------|-----------------------------|
-| Member 1 — Corpus and evidence | Dataset audit, extraction, second AI evidence pass, ambiguity queue, source review coordination, pack builder and coverage report | `tools/corpus/`, `tools/pack-builder/`, `data/seed/` | Review Member 2's evidence/route assumptions; designate a human reviewer for unresolved records |
-| Member 2 — Routing and retrieval | Shared core contracts, places/aliases, graph, rule validation, comparisons, cards and bounded RAG evidence | `packages/core/`, route/place/evidence fixtures | Review Member 1's pack schema and Member 3's grounding contract |
-| Member 3 — Local AI and conversation | Native model runtime, model evaluation, intent/follow-ups, conversation state and validated streaming | `apps/mobile/src/ai/`, `apps/mobile/src/conversation/`, conversation eval fixtures | Review Member 4's inference integration and memory behaviour |
-| Member 4 — Mobile, maps, GPS and release | Expo scaffold/native build, asset/DB adapters, offline maps, GPS, saved/active trips, functional app integration and APK | `apps/mobile/` outside AI/conversation ownership, `tools/map-pack/` | Review Member 3's native integration; coordinate full-app gates |
+| Member 1 — Justin — Corpus and evidence | Dataset audit, extraction, second AI evidence pass, ambiguity queue, source review coordination, pack builder and coverage report | `tools/corpus/`, `tools/pack-builder/`, `data/seed/` | Review Member 2's evidence/route assumptions; designate a human reviewer for unresolved records |
+| Member 2 — Franz — Routing and retrieval | Shared core contracts, places/aliases, graph, rule validation, comparisons, cards and bounded RAG evidence | `packages/core/`, route/place/evidence fixtures | Review Member 1's pack schema and Member 3's grounding contract |
+| Member 3 — CJ — Local AI and conversation | Native model runtime, model evaluation, intent/follow-ups, conversation state and validated streaming | `apps/mobile/src/ai/`, `apps/mobile/src/conversation/`, conversation eval fixtures | Review Member 4's inference integration and memory behaviour |
+| Member 4 — Vincent — Mobile, maps, GPS and release | Expo scaffold/native build, asset/DB adapters, offline maps, GPS, saved/active trips, functional app integration and APK | `apps/mobile/` outside AI/conversation ownership, `tools/map-pack/` | Review Member 3's native integration; coordinate full-app gates |
+
+Shared contracts v1: [contracts-pusang-gala.md](contracts-pusang-gala.md).
 
 Member 2 leads the shared schema/API contract PR. Member 4 owns the app manifest/lockfile; other members propose dependency changes through that PR or a focused coordinated PR. All four review integration evidence and participate in final acceptance.
 
