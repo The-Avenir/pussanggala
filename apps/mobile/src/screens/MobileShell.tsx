@@ -14,12 +14,17 @@ import { AboutScreen, OfflineDataScreen, PrivacyScreen, SavedScreen, SettingsScr
 import { EXAMPLE_ROUTE, PREVIEW_ROUTES } from './previewJourney';
 import type { Preference, PreviewRoute } from './previewJourney';
 import { useLocalAssistant } from '../inference/useLocalAssistant';
-import { previewAnswerContext, renderSafeExplanation } from '../inference/explanationContext';
-import { AiRuntimeError } from '@pusang-gala/ai';
+import { previewAnswerContext } from '../inference/explanationContext';
+import type { GroundingContext } from '@pusang-gala/ai';
+import { assistantReply } from '../inference/assistantReply';
+import { routeGroundingContext } from '../routing/facts';
+import { conversationContext } from '../inference/conversationContext';
+import { isTaglish } from '../routing/routePresentation';
 import { useRoutePack } from '../routing/useRoutePack';
 import { routeReply } from '../routing/routeReply';
 import { conversationalReply } from '../routing/conversationalReply';
 import { parse } from '@pusang-gala/core';
+import type { PlaceCandidate } from '@pusang-gala/core';
 import { ResponseStream } from '../inference/responseStream';
 
 type Screen = 'plan' | 'welcome' | 'ask' | 'options' | 'steps' | 'map' | 'active' | 'complete'
@@ -153,30 +158,26 @@ export function MobileShell(): React.JSX.Element {
     history('looked_up', EXAMPLE_ROUTE); navigate('options');
   }
   function appendTurn(query: string, answer: string, itinerary?: PreviewRoute,
-    facts?: Omit<ConversationTurn, 'id' | 'query' | 'answer'>): void {
+    facts?: Omit<ConversationTurn, 'id' | 'query' | 'answer'>, grounding?: GroundingContext | null, opening?: string): void {
     const id = ++turnSequence.current;
     const version = conversationVersion.current;
     setTurns(current => [...current.slice(-11), { id, query, answer: '', streaming: true, ...facts, ...(itinerary ? { route: itinerary } : {}) }]);
-    replyStream.start(id); replyStream.append(id, answer);
-    if (!itinerary || assistant.model.phase !== 'installed' || assistant.phase !== 'idle') {
-      replyStream.finish(id); return;
-    }
-    const context = previewAnswerContext(answer);
-    let emitted = 0;
-    void assistant.explainContext(context, unit => {
-      if (conversationVersion.current !== version) return;
-      const text = renderSafeExplanation(unit, context);
-      if (!text) return;
-      emitted += 1;
-      replyStream.append(id, '\n\n' + text);
-      setTurns(current => current.map(turn => turn.id === id ? { ...turn, localAi: true } : turn));
-    }).then(() => replyStream.finish(id)).catch(error => {
-      if (conversationVersion.current !== version) return;
-      const stopped = error instanceof AiRuntimeError && error.kind === 'cancelled';
+    replyStream.start(id);
+    const context = grounding ?? (itinerary ? previewAnswerContext(answer) : null);
+    const isCurrent = () => replyMounted.current && conversationVersion.current === version && turnSequence.current === id;
+    void assistantReply({ context, fallback: answer, isCurrent, ...(opening ? { opening } : {}),
+      ...(assistant.model.phase === 'installed' && assistant.phase === 'idle' ? { generate: assistant.explainContext } : {}),
+      onText: text => { if (isCurrent()) replyStream.append(id, text); },
+    }).then(result => {
+      if (!isCurrent()) return;
       replyStream.finish(id);
-      setTurns(current => current.map(turn => turn.id === id ? { ...turn, localAi: emitted > 0,
-        aiNotice: stopped ? 'Reply stopped. The route reports remain available.' : 'The local explanation could not finish. The route reports remain available.' } : turn));
+      setTurns(current => current.map(turn => turn.id === id ? { ...turn, ...result } : turn));
     });
+  }
+  function recentMessages() {
+    return turns.slice(-3).flatMap(turn => [
+      { role: 'user' as const, text: turn.query }, { role: 'assistant' as const, text: turn.answer },
+    ]);
   }
   function askExample(): void {
     conversationVersion.current += 1; stopResponse(); routePack.conversation.current?.newTrip(); setTurns([]);
@@ -184,30 +185,54 @@ export function MobileShell(): React.JSX.Element {
     appendTurn(exampleQuestion, 'Tara. This example uses Carousel, a walking transfer, then MRT-3. Open Directions for each boarding and alighting point.', EXAMPLE_ROUTE);
     history('looked_up', EXAMPLE_ROUTE);
   }
-  async function submitRouteQuestion(query: string): Promise<void> {
+  async function submitRouteQuestion(query: string, pickedPlaceId?: string): Promise<void> {
     const manager = routePack.conversation.current;
     if (!manager || planning.current) return;
     planning.current = true; setIsPlanning(true);
     const version = conversationVersion.current;
     try {
-      const result = await manager.handleUserMessage(query);
+      const result = pickedPlaceId
+        ? await manager.handleClarificationPick(manager.getState().trip.pendingClarification?.candidates.findIndex(candidate => candidate.placeId === pickedPlaceId) ?? -1)
+        : await manager.handleUserMessage(query);
       if (conversationVersion.current !== version || manager !== routePack.conversation.current) return;
       const endpoints = manager.getState().endpoints;
       if (endpoints) { setOrigin(endpoints.origin.name); setDestination(endpoints.destination.name); }
+      const trip = manager.getState().trip;
+      const originName = trip.originPlaceId ? routePack.pack?.places.get(trip.originPlaceId)?.name : undefined;
+      const destinationName = trip.destinationPlaceId ? routePack.pack?.places.get(trip.destinationPlaceId)?.name : undefined;
+      if (!endpoints) { setOrigin(originName ?? ''); setDestination(destinationName ?? ''); }
       const cards = result.type === 'plan' ? result.evidence.cards : result.type === 'followUp' ? result.cards : [];
       const hours = result.type === 'plan' ? result.evidence.hourStatements : result.type === 'followUp' ? result.hourStatements : [];
-      appendTurn(query, routeReply(result, query), undefined, { packId: manager.getState().trip.packId, cards, hours,
-        ...(result.type === 'clarification' ? { candidates: result.clarification.candidates } : {}) });
+      let context = cards.length ? routeGroundingContext(cards, hours, result.type === 'followUp' ? result.topic : undefined, query,
+        { recentMessages: recentMessages(), ...(originName ? { originLabel: originName } : {}), ...(destinationName ? { destinationLabel: destinationName } : {}) }) : null;
+      let opening: string | undefined;
+      if (result.type === 'needsTrip' && (!trip.originPlaceId || !trip.destinationPlaceId)) {
+        context = conversationContext(trip.destinationPlaceId ? 'ask_origin' : 'ask_destination', query, recentMessages(),
+          { ...(originName ? { originLabel: originName } : {}), ...(destinationName ? { destinationLabel: destinationName } : {}) });
+        if (destinationName) opening = `${destinationName}—got it!`;
+        else if (originName) opening = isTaglish(query) ? `Sa ${originName} ka manggagaling.` : `Starting from ${originName}—got it.`;
+      }
+      appendTurn(query, routeReply(result, query, trip, routePack.pack), undefined, { packId: trip.packId, cards, hours, showDirections: result.type === 'plan',
+        ...(result.type === 'clarification' ? { candidates: result.clarification.candidates } : {}) },
+        context, opening);
     } catch {
       if (conversationVersion.current === version) appendTurn(query, 'The route search failed. Check Offline resources and try again.');
     } finally { planning.current = false; setIsPlanning(false); }
   }
+  function pickRoutePlace(candidate: PlaceCandidate): void {
+    const pending = routePack.conversation.current?.getState().trip.pendingClarification;
+    if (pending?.candidates.some(choice => choice.placeId === candidate.placeId)) void submitRouteQuestion(candidate.name, candidate.placeId);
+  }
   function submit(query: string, fromHome = false): void {
     const manager = routePack.conversation.current;
-    const friendly = parse(query, manager?.getState().trip).kind === 'unrelated' ? conversationalReply(query, routePack.pack) : null;
+    const trip = manager?.getState().trip;
+    const friendly = parse(query, trip).kind === 'unrelated' ? conversationalReply(query, routePack.pack, trip) : null;
     if (friendly) {
       const pending = manager?.getState().trip.pendingClarification;
-      appendTurn(query, friendly, undefined, pending ? { candidates: pending.candidates } : undefined);
+      const act = /^(?:hi|hello|hey|hiya|kumusta|kamusta|good (?:morning|afternoon|evening))\b/i.test(query) && !trip?.originPlaceId && !trip?.destinationPlaceId ? 'greeting'
+        : /^(?:thanks|thank you|salamat|ty)\b/i.test(query) ? 'thanks' : null;
+      appendTurn(query, friendly, undefined, pending ? { candidates: pending.candidates } : undefined,
+        act && !pending ? conversationContext(act, query, recentMessages()) : null);
       return;
     }
     if (!exampleMode && routePack.conversation.current) { void submitRouteQuestion(query); return; }
@@ -230,10 +255,10 @@ export function MobileShell(): React.JSX.Element {
         : 'Your current example step is a walk. ' + (step?.instruction ?? 'Open Directions for the boarding and alighting points.')); return;
     }
     if (currentChatRoute && /last trip|oras|hours|schedule/.test(normalized)) {
-      appendTurn(query, 'Operating hours aren’t reported in this example. I can’t confirm a last departure or whether the service is running now.'); return;
+      appendTurn(query, 'I don’t have the operating hours for this example yet, so I can’t confirm the last trip.'); return;
     }
     if (currentChatRoute && /cheapest|mura|cheaper|transfers|sakay|fastest/.test(normalized)) {
-      appendTurn(query, 'Compare the example fare, reported time and transfers in Other options. Time ranges overlap; none is guaranteed fastest.', currentChatRoute); return;
+      appendTurn(query, 'Let’s compare the example fares, travel times, and transfers in Other options.', currentChatRoute); return;
     }
     if (exampleMode && normalized.includes('monumento') && normalized.includes('one ayala')) {
       appendTurn(query, 'These are example route facts, not installed data. Open Directions to see the supported layout and transfer sequence.', selected); return;
@@ -329,10 +354,6 @@ export function MobileShell(): React.JSX.Element {
         setTurns([]); setRoute(null); setOrigin(''); setDestination(''); setExampleMode(false); setTripConversation(false); setSheet(null);
       } });
   }
-  function sources(): void {
-    notice('Example records, no source dates', 'These walkthrough values aren’t extracted pack records and have no eligible source links. Production cards must show dated community reports, separate conflicts and unknowns. They must not claim field verification.');
-  }
-
   function content(): React.JSX.Element {
     switch (screen) {
       case 'welcome': return <WelcomeScreen onContinue={() => {
@@ -346,14 +367,14 @@ export function MobileShell(): React.JSX.Element {
       case 'ask': return <AskScreen turns={turns} route={chatRoute} origin={tripConversation && activeRoute ? 'LRT-1 Monumento' : origin}
         destination={tripConversation && activeRoute ? 'One Ayala' : destination} activeStep={tripConversation && activeRoute ? activeStep : null}
         onEdit={() => { setTripConversation(false); editEndpoint('destination'); }} onOptions={() => { if (chatRoute) setRoute(chatRoute); navigate('options'); }}
-        onSteps={item => openDirections(item)} onMap={item => { setRoute(item); openMap(); }} onPrompt={submit} onExample={askExample}
+        onSteps={item => openDirections(item)} onMap={item => { setRoute(item); openMap(); }} onPrompt={submit} onPickPlace={pickRoutePlace} onExample={askExample}
         assistantPhase={assistant.phase} assistantInstalled={assistant.model.phase === 'installed'} packReady={routePack.phase === 'ready'} isStreaming={isStreaming}
         onCancel={stopResponse} onResources={() => navigate('offline')}/>;
       case 'options': return route ? <RouteOptionsScreen selected={selected} preference={preference}
         onSelect={item => { setRoute(item); setDetailStep(0); }} onPreference={choosePreference}/>
         : <Notice action="Choose an example journey" onAction={chooseExample}>Your planning context was cleared. No route is selected.</Notice>;
       case 'steps': return route ? <RouteStepsScreen route={selected} stepIndex={detailStep} onStep={setDetailStep} onMap={openMap}
-        onSave={() => save()} onAsk={() => openAsk()} onSources={sources}/>
+        onSave={() => save()} onAsk={() => openAsk()}/>
         : <Notice action="Choose an example journey" onAction={chooseExample}>No route is selected. Start a new search or choose the labelled example.</Notice>;
       case 'map': return <RouteMapScreen route={mapRoute} schematic={schematic} onMode={setSchematic} onLocation={location}
         onSteps={() => { if (mapRoute) openDirections(mapRoute); }} onResources={() => navigate('offline')}

@@ -1,7 +1,7 @@
 {
   "task": "T13",
   "snapshot_sha256": "d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3",
-  "alias_mentions_total": 6420,
+  "alias_mentions_total": 6448,
   "distinct_alias_norms": 2418,
   "canonical_places": 91,
   "aliases_resolved": 271,
@@ -11,7 +11,7 @@
   "ambiguous_mentions": 990,
   "unresolved_alias_norms": 2209,
   "unresolved_mentions": 3596,
-  "coverage_pct": 38.29,
+  "coverage_pct": 38.55,
   "places_by_ncr_status": {
     "accepted": 89,
     "outside": 0,

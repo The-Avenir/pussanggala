@@ -24,8 +24,8 @@ export function renderSafeExplanation(unit: SafeExplanationUnit, context: Ground
     .filter(Boolean).join(' ');
 }
 
-/** Route prose is canonical only: a valid citation cannot authorize a new model-authored claim. */
+/** Show validated connective prose together with the unchanged, cited route facts. */
 export function renderGroundedRouteUnit(unit: SafeExplanationUnit, context: GroundingContext): string {
   if (!isSafeExplanationUnit(unit)) throw new Error('Only validated explanations can be displayed.');
-  return (unit.inserts ?? []).map(id => context.statements.find(statement => statement.id === id)?.text ?? '').filter(Boolean).join('\n');
+  return renderSafeExplanation(unit, context);
 }

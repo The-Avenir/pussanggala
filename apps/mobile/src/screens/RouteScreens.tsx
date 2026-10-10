@@ -7,8 +7,8 @@ import type { Preference, PreviewRoute, PreviewStep } from './previewJourney';
 
 export function TripSummary({ route }: { route: PreviewRoute }): React.JSX.Element {
   return <View style={styles.metrics}>
-    <View><Text style={type.heading}>{route.time}</Text><Text style={type.caption}>reported time</Text></View>
-    <View><Text style={type.heading}>{route.fare}</Text><Text style={type.caption}>reported fare</Text></View>
+    <View><Text style={type.heading}>{route.time}</Text><Text style={type.caption}>Travel time</Text></View>
+    <View><Text style={type.heading}>{route.fare}</Text><Text style={type.caption}>Fare</Text></View>
     <View><Text style={type.heading}>{route.transfers === 0 ? 'Direct' : route.transfers + ' transfer'}</Text>
       <Text style={type.caption}>{route.steps.filter(step => step.mode === 'ride').length} rides</Text></View>
   </View>;
@@ -20,7 +20,7 @@ export function RouteOptionsScreen({ selected, preference, onSelect, onPreferenc
   return <View style={ui.screen}>
     <View style={{ gap: 6 }}><Text style={type.caption}>FROM MONUMENTO</Text>
       <Text accessibilityRole="header" style={type.title}>To One Ayala</Text></View>
-    <View style={{ gap: 10 }}><Text style={type.secondary}>Sort by reported values</Text>
+    <View style={{ gap: 10 }}><Text style={type.secondary}>Compare the example estimates</Text>
       <PreferenceChips preference={preference} onSelect={onPreference}/></View>
     <View accessibilityRole="radiogroup" accessibilityLabel="Choose a route">{rankedPreviewRoutes(preference).map(route =>
       <Pressable key={route.id} accessibilityRole="radio" accessibilityLabel={route.title}
@@ -33,8 +33,8 @@ export function RouteOptionsScreen({ selected, preference, onSelect, onPreferenc
         {route.id.endsWith('carousel-mrt') && preference === 'cheapest' ? <Text style={[type.secondary, styles.accent]}>Lowest example fare</Text>
           : route.transfers === 0 ? <Text style={[type.secondary, styles.accent]}>One ride, no change of vehicle</Text> : null}
       </Pressable>)}</View>
-    <Text style={type.secondary}>3 example options. Time ranges overlap; a shorter reported range does not guarantee a faster trip.</Text>
-    <Text style={type.caption}>Values illustrate the interface. Actual route reports require the installed pack and source dates.</Text>
+    <Text style={type.secondary}>3 example options. Compare the fare, travel time, and number of transfers.</Text>
+    <Text style={type.caption}>These estimates are placeholders for the example journey.</Text>
   </View>;
 }
 function Signboard({ step }: { step: PreviewStep }): React.JSX.Element | null {
@@ -42,9 +42,9 @@ function Signboard({ step }: { step: PreviewStep }): React.JSX.Element | null {
   return <View style={styles.signboard}><Text style={[type.caption, styles.signboardCaption]}>LOOK FOR THIS SIGNBOARD</Text>
     <Text style={[type.heading, styles.signboardText]}>{step.signboard}</Text></View>;
 }
-export function RouteStepsScreen({ route, stepIndex, onStep, onMap, onSave, onAsk, onSources }: {
+export function RouteStepsScreen({ route, stepIndex, onStep, onMap, onSave, onAsk }: {
   route: PreviewRoute; stepIndex: number; onStep: (index: number) => void;
-  onMap: () => void; onSave: () => void; onAsk: () => void; onSources: () => void;
+  onMap: () => void; onSave: () => void; onAsk: () => void;
 }): React.JSX.Element {
   return <View style={ui.screen}>
     <View style={{ gap: 8 }}><Text style={type.caption}>MONUMENTO → ONE AYALA</Text>
@@ -72,7 +72,6 @@ export function RouteStepsScreen({ route, stepIndex, onStep, onMap, onSave, onAs
     </View>
     <View style={ui.rule}/>
     <Button variant="text" label="Ask about this route" icon="chat" onPress={onAsk}/>
-    <Button variant="text" label="Sources & limitations" icon="info" onPress={onSources}/>
   </View>;
 }
 export function StopDiagram({ route, currentStep, compact = false, zoom = 1, onStep }: {

@@ -4,14 +4,15 @@ import { Button, Gaile, Icon, palette, type, ui } from '../ui/travel';
 import type { PreviewRoute } from './previewJourney';
 import type { AssistantPhase } from '../inference/useLocalAssistant';
 import type { Card, HourStatement, PlaceCandidate } from '@pusang-gala/core';
-import { RouteEvidence } from './RouteEvidence';
+import { RouteDetails } from './RouteEvidence';
 
-export interface ConversationTurn { id: number; query: string; answer: string; route?: PreviewRoute; localAi?: boolean; aiNotice?: string;
+export interface ConversationTurn { id: number; query: string; answer: string; route?: PreviewRoute; localAi?: boolean; aiNotice?: string; showDirections?: boolean;
   packId?: string; cards?: readonly Card[]; hours?: readonly HourStatement[]; candidates?: readonly PlaceCandidate[]; streaming?: boolean; }
-export function AskScreen({ turns, route, origin, destination, activeStep, onEdit, onOptions, onSteps, onMap, onPrompt, onExample,
+export function AskScreen({ turns, route, origin, destination, activeStep, onEdit, onOptions, onSteps, onMap, onPrompt, onPickPlace, onExample,
   assistantPhase, assistantInstalled, packReady, isStreaming, onCancel, onResources }: {
   turns: readonly ConversationTurn[]; route: PreviewRoute | null; origin: string; destination: string; activeStep: number | null;
   onEdit: () => void; onOptions: () => void; onSteps: (route: PreviewRoute) => void; onMap: (route: PreviewRoute) => void; onPrompt: (query: string) => void; onExample: () => void;
+  onPickPlace: (candidate: PlaceCandidate) => void;
   assistantPhase: AssistantPhase; assistantInstalled: boolean; onCancel: () => void; onResources: () => void;
   packReady: boolean;
   isStreaming: boolean;
@@ -25,9 +26,8 @@ export function AskScreen({ turns, route, origin, destination, activeStep, onEdi
       <View style={styles.greeting}><View style={styles.greetingText}>
         <Text style={[type.caption, styles.accent]}>ASK GAILE</Text>
         <Text accessibilityRole="header" style={type.title}>Let’s figure out{ '\n' }your commute.</Text></View><Gaile pose="think" height={110}/></View>
-      <Text style={type.body}>Ask how to get somewhere, compare your options, or understand a transfer.</Text>
-      <Text style={type.secondary}>{packReady ? 'The NCR route pack is ready. Ask “From Cubao to Ayala?” or enter your landmarks.'
-        : 'Check Offline resources for route pack availability.'} {assistantInstalled ? 'On-device explanations are ready.' : 'Import or download the local assistant for on-device explanations.'}</Text>
+      <Text style={type.body}>Hi, traveler! Where are we heading today? Tell me the place, and I’ll help you figure out how to get there.</Text>
+      {!packReady ? <Text style={type.secondary}>Your offline routes are unavailable. You can check them in Offline resources.</Text> : null}
       {!assistantInstalled ? <Button variant="text" label="Set up local assistant" onPress={onResources}/> : null}
       <Button variant="secondary" label="Try the example question" disabled={isStreaming || assistantPhase !== 'idle'} onPress={onExample}/>
     </View> : turns.map(turn => <View key={turn.id} style={{ gap: 18 }}>
@@ -36,24 +36,26 @@ export function AskScreen({ turns, route, origin, destination, activeStep, onEdi
         <Text style={[type.caption, styles.overline]}>ROUTE INFORMATION · EXAMPLE</Text>
         <Text style={type.heading}>{turn.route.title}</Text>
         <Text style={type.body}>{turn.route.time} · {turn.route.fare}</Text>
-        <Text style={type.secondary}>{turn.route.transfers === 0 ? 'No transfers' : turn.route.transfers + ' transfer'} · illustrative reported values</Text>
+        <Text style={type.secondary}>{turn.route.transfers === 0 ? 'No transfers' : turn.route.transfers + ' transfer'} · example estimates</Text>
         <View style={ui.row}><Button variant="text" label="Directions" icon="arrow" onPress={() => onSteps(turn.route!)}/>
           <Button variant="text" label="Map" onPress={() => onMap(turn.route!)}/></View>
       </View> : null}
       <View style={{ gap: 8 }}><View style={styles.assistant}><View style={styles.assistantAvatar}><Gaile pose="idle" height={34}/></View>
-        <View style={ui.flex}><Text style={type.label}>Gaile</Text><Text style={[type.caption, styles.overline]}>{turn.localAi ? turn.packId ? 'ON-DEVICE AI · ROUTE EVIDENCE' : 'ON-DEVICE AI · EXAMPLE CONTEXT' : turn.packId ? 'OFFLINE ROUTE INFORMATION' : 'BASIC SUMMARY'}</Text></View></View>
+        <View style={ui.flex}><Text style={type.label}>Gaile</Text></View></View>
         <Text testID={`reply-${turn.id}`} style={[type.body, styles.answer]}>{turn.answer || (turn.streaming ? 'Gaile is typing…' : '')}{turn.streaming && turn.answer ? ' ▍' : ''}</Text>
         {turn.aiNotice ? <Text style={type.secondary}>{turn.aiNotice}</Text> : null}</View>
-      {turn.cards?.length ? <RouteEvidence cards={turn.cards} hours={turn.hours ?? []} packId={turn.packId!}/> : null}
+      {turn.cards?.length && turn.showDirections !== false ? <RouteDetails cards={turn.cards} hours={turn.hours ?? []}/> : null}
       {turn.candidates && turn.id === turns.at(-1)?.id ? turn.candidates.map((candidate, index) =>
-        <Button key={candidate.placeId} variant="secondary" disabled={isStreaming || assistantPhase !== 'idle'} label={`${index + 1}. ${candidate.name} · ${candidate.area}`} onPress={() => onPrompt(String(index + 1))}/>) : null}
+        <Button key={candidate.placeId} variant="secondary" disabled={isStreaming || assistantPhase !== 'idle'} label={`${index + 1}. ${candidate.name} · ${candidate.area}`} onPress={() => onPickPlace(candidate)}/>) : null}
     </View>)}
     {assistantPhase !== 'idle' || isStreaming ? <View style={{ gap: 8 }}><Text style={type.secondary}>{assistantPhase === 'loading' ? 'Loading the local assistant…' : 'Writing a reply…'}</Text>
       <Button label="Stop reply" variant="secondary" onPress={onCancel}/></View> : null}
     {(route || turns.at(-1)?.cards?.length) && turns.length > 0 ? <View style={styles.followups}>
       <Button variant="secondary" label="Other options" disabled={isStreaming || assistantPhase !== 'idle'} onPress={route ? onOptions : () => onPrompt('Other routes')}/>
       <Button variant="secondary" label="Where do I get off?" disabled={isStreaming || assistantPhase !== 'idle'} onPress={() => onPrompt('Saan ako bababa?')}/>
-      <Button variant="text" label="Reported operating hours" disabled={isStreaming || assistantPhase !== 'idle'} onPress={() => onPrompt('Anong oras last trip?')}/>
+      <Button variant="text" label="How much is the fare?" disabled={isStreaming || assistantPhase !== 'idle'} onPress={() => onPrompt('How much is the fare?')}/>
+      <Button variant="text" label="How long is the journey?" disabled={isStreaming || assistantPhase !== 'idle'} onPress={() => onPrompt('How long is the journey?')}/>
+      <Button variant="text" label="Operating hours" disabled={isStreaming || assistantPhase !== 'idle'} onPress={() => onPrompt('Anong oras last trip?')}/>
     </View> : null}
   </View>;
 }

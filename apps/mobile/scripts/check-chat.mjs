@@ -34,16 +34,17 @@ try {
     await page.getByRole('button', { name: 'Send question', exact: true }).click();
   }
   await send('Who are you?');
-  await page.waitForFunction(() => document.querySelector('[data-testid="reply-1"]')?.textContent.endsWith('Saan tayo pupunta?'));
+  await page.waitForFunction(() => document.querySelector('[data-testid="reply-1"]')?.textContent.endsWith('Where are we heading today?'));
   assert.match(await page.getByTestId('reply-1').innerText(), /I’m Gaile/);
   const frames = await page.evaluate(() => [...new Set(window.replyFrames)]);
   assert.ok(frames.length > 3, 'Identity reply appears progressively in the actual UI');
   assert.ok(frames.some(text => text.includes('▍')), 'Streaming cursor is visible');
   assert.ok(frames.every(text => !text.includes('"inserts"')), 'Raw model format never appears');
   await send('What do you know?');
-  await page.waitForFunction(() => document.querySelector('[data-testid="reply-2"]')?.textContent.endsWith('I don’t have live traffic or service updates.'));
+  await page.waitForFunction(() => document.querySelector('[data-testid="reply-2"]')?.textContent.endsWith('Where are we heading today?'));
   const fullCapability = await page.getByTestId('reply-2').innerText();
-  assert.match(fullCapability, /reported fares and hours/);
+  assert.match(fullCapability, /fares and travel times/);
+  assert.doesNotMatch(fullCapability, /reports|source IDs|pack has/);
   await send('What can you do?');
   await page.getByRole('button', { name: 'Stop reply', exact: true }).click();
   const stopped = await page.getByTestId('reply-3').innerText();
@@ -54,8 +55,9 @@ try {
   await page.getByRole('button', { name: 'New conversation', exact: true }).click();
   assert.equal(await page.locator('[data-testid^="reply-"]').count(), 0);
   await send('Hello!');
-  await page.waitForFunction(() => document.querySelector('[data-testid="reply-4"]')?.textContent.endsWith('Try “Paano pumunta Recto to Cubao?”'));
-  assert.match(await page.getByTestId('reply-4').innerText(), /Saan ka manggagaling/);
+  await page.waitForFunction(() => document.querySelector('[data-testid="reply-4"]')?.textContent.endsWith('Tell me the place, and I’ll help you figure out how to get there.'));
+  assert.match(await page.getByTestId('reply-4').innerText(), /Hi, traveler!/);
+  assert.doesNotMatch(await page.getByTestId('reply-4').innerText(), /coming from|manggagaling/);
   assert.deepEqual(errors, []);
   console.log('PASS: identity, capabilities, progressive replies, Stop, conversation reset, and no runtime errors.');
 } finally { await browser.close(); await new Promise(resolve => server.close(resolve)); }

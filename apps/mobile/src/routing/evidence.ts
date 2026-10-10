@@ -1,7 +1,8 @@
-import { answerHours, buildContext, compose, newTrip, parse, resolve, route, selectItinerary, validateRestoration } from '@pusang-gala/core';
+import { answerHours, buildContext, compose, newTrip, resolve, route, selectItinerary, validateRestoration } from '@pusang-gala/core';
 import type { Pack, PlaceCandidate, TripState } from '@pusang-gala/core';
 import { TripConversationManager } from '@pusang-gala/conversation';
 import type { PlanOutcome, TripEvidencePort } from '@pusang-gala/conversation';
+import { parseConversationQuery } from './conversationQuery';
 
 export function createEvidencePort(pack: Pack, now: () => Date = () => new Date()): TripEvidencePort {
   function endpoint(id: string): PlaceCandidate {
@@ -47,5 +48,5 @@ export function createEvidencePort(pack: Pack, now: () => Date = () => new Date(
 
 export function createRouteConversation(pack: Pack): TripConversationManager {
   return new TripConversationManager({ trip: newTrip(pack), evidence: createEvidencePort(pack),
-    parser: { async parse(utterance, trip) { return parse(utterance, trip); } } });
+    parser: { async parse(utterance, trip) { return parseConversationQuery(utterance, trip, pack); } } });
 }

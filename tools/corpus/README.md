@@ -22,6 +22,17 @@ The pipeline regenerates heuristic T12 part-B verdicts for the current T11 IDs
 and applies quarantines. This deterministic screen is not independent AI evidence
 review; designated human decisions remain pending.
 
+`curated-routes.json` supplements T11 with seven explicit NCR rail directions
+and seven jeepney directions
+missed by the automatic extractor. Each entry pins the snapshot, post, comment
+index and comment hash; only endpoint aliases and mode are supplied. These enter
+as `extracted` candidates and pass through the same T12 review, quarantine,
+place resolution and pack validation as automatic candidates. They supply no
+fare, schedule, travel time, walking connection or coordinates. See
+[curated-routes-review.md](curated-routes-review.md) for evidence and limitations.
+The latest jeepney additions, bundled pack and conversational AI validation are
+recorded in [the implementation report](../../docs/evidence/jeepney-conversation.md).
+
 ## Individual commands
 
 ```sh

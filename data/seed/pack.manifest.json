@@ -4,14 +4,14 @@
   "created_at": "2026-10-10T00:00:00Z",
   "input_sha256": "d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3",
   "pack_file": "pack.sqlite",
-  "pack_sha256": "3859023cfd63573c1a25f63b567897a7b96a16f98a67b3dce9b6abf34c362e2d",
-  "pack_bytes": 811008,
+  "pack_sha256": "dd79be14ba939f769b0512383891acda5f562c1f2acbc24739f78138ee526d4e",
+  "pack_bytes": 851968,
   "assets": [
     {
       "path": "pack.sqlite",
       "kind": "pack",
-      "sha256": "3859023cfd63573c1a25f63b567897a7b96a16f98a67b3dce9b6abf34c362e2d",
-      "bytes": 811008
+      "sha256": "dd79be14ba939f769b0512383891acda5f562c1f2acbc24739f78138ee526d4e",
+      "bytes": 851968
     }
   ],
   "manifest": {
@@ -26,9 +26,9 @@
     "input_sha256": "d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3",
     "input_posts": 3480,
     "answered_posts": 2186,
-    "included_posts": 405,
-    "filtered_posts": 1193,
-    "pending_posts": 91,
-    "rejected_posts": 497
+    "included_posts": 412,
+    "filtered_posts": 1190,
+    "pending_posts": 90,
+    "rejected_posts": 494
   }
 }

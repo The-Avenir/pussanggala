@@ -186,6 +186,12 @@
     "landmark_hint": "station boarding area"
   },
   {
+    "stop_id": "st_ust-1f1cfc",
+    "place_id": "pl_ust-1f1cfc",
+    "name": "University of Santo Tomas",
+    "landmark_hint": "campus entrance area"
+  },
+  {
     "stop_id": "st_pasig-palengke-2ff6d1",
     "place_id": "pl_pasig-palengke-2ff6d1",
     "name": "Pasig public market transport hub",
@@ -240,6 +246,18 @@
     "landmark_hint": "terminal loading area"
   },
   {
+    "stop_id": "st_telus-mckinley-exchange-617f13",
+    "place_id": "pl_telus-mckinley-exchange-617f13",
+    "name": "Telus McKinley Exchange stop",
+    "landmark_hint": "main boarding point"
+  },
+  {
+    "stop_id": "st_shaw-boulevard-ffd89a",
+    "place_id": "pl_shaw-boulevard-ffd89a",
+    "name": "Shaw Boulevard corridor",
+    "landmark_hint": "main boarding point"
+  },
+  {
     "stop_id": "st_lrt1-vito-cruz-4870eb",
     "place_id": "pl_lrt1-vito-cruz-4870eb",
     "name": "LRT-1 Vito Cruz station",
@@ -255,12 +273,6 @@
     "stop_id": "st_bgc-c6858b",
     "place_id": "pl_bgc-c6858b",
     "name": "Bonifacio Global City",
-    "landmark_hint": "main boarding point"
-  },
-  {
-    "stop_id": "st_shaw-boulevard-ffd89a",
-    "place_id": "pl_shaw-boulevard-ffd89a",
-    "name": "Shaw Boulevard corridor",
     "landmark_hint": "main boarding point"
   },
   {
@@ -316,6 +328,30 @@
     "place_id": "pl_mrt3-kamuning-e7d051",
     "name": "MRT-3 Kamuning station",
     "landmark_hint": "station boarding area"
+  },
+  {
+    "stop_id": "st_up-diliman-edc6de",
+    "place_id": "pl_up-diliman-edc6de",
+    "name": "UP Diliman campus",
+    "landmark_hint": "campus entrance area"
+  },
+  {
+    "stop_id": "st_philcoa-6175e7",
+    "place_id": "pl_philcoa-6175e7",
+    "name": "Philcoa transfer point",
+    "landmark_hint": "main boarding point"
+  },
+  {
+    "stop_id": "st_bcda-taguig-2d37be",
+    "place_id": "pl_bcda-taguig-2d37be",
+    "name": "BCDA transfer point",
+    "landmark_hint": "main boarding point"
+  },
+  {
+    "stop_id": "st_mckinley-965425",
+    "place_id": "pl_mckinley-965425",
+    "name": "McKinley area",
+    "landmark_hint": "main boarding point"
   },
   {
     "stop_id": "st_robinsons-galleria-fed25a",

@@ -9,14 +9,16 @@
 // Posts are assigned to a shard by a hash of the post id, so re-runs are byte-identical.
 //
 // Everything leaves here as review_state "extracted"; evidence.mjs (T12) decides the rest.
-// Place strings are always sliced out of the post's own text — nothing is named that the
-// source does not name. The three fields that reach the pack as prose (walk_text,
+// Automatic place strings are sliced out of the post's own text. Curated directions
+// use canonical station aliases for explicitly named endpoints and enter T12 too.
+// The three fields that reach the pack as prose (walk_text,
 // hours_text, note body) are fixed templates of at most five words, so no six-word run of
 // source wording can survive extraction (INV-4).
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { addCuratedRoutes } from "./curated-routes.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, "../..");
@@ -645,7 +647,8 @@ export function run({ out = path.join(ROOT, "data/raw/t11"), raw = path.join(ROO
   const posts = JSON.parse(buf.toString("utf8"));
 
   if (writeProgress) progress(55, "running", "extracting candidates");
-  const { candidates, outcomes } = extractAll(posts, sha);
+  const curated = JSON.parse(readFileSync(path.join(HERE, "curated-routes.json"), "utf8"));
+  const { candidates, outcomes } = addCuratedRoutes(extractAll(posts, sha), posts, curated, sha);
 
   mkdirSync(out, { recursive: true });
   const files = [];

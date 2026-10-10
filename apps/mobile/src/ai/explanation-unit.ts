@@ -96,7 +96,7 @@ export type UnitValidation =
 export interface ValidatorContext {
   cardIds: ReadonlySet<string>;
   statementsById: ReadonlyMap<string, CanonicalStatement>;
-  budgets: Pick<ContextBudgets, "maxUnitTextChars" | "maxInsertsPerUnit">;
+  budgets: Pick<ContextBudgets, "maxUnitTextChars" | "maxInsertsPerUnit" | "connectiveTextOnly">;
 }
 
 const ALLOWED_KEYS = new Set(["kind", "cardRef", "inserts", "text"]);
@@ -294,12 +294,18 @@ export function validateExplanationUnit(raw: unknown, ctx: ValidatorContext): Un
   // Invention hardening: factual prose with nothing cited to back it. Units
   // that legitimately carry no facts (clarify, redirect, bare summaries) pass
   // because their prose asserts no boarding/fare/time/place claim.
-  if (inserts.length === 0) {
+  if (inserts.length === 0 || ctx.budgets.connectiveTextOnly) {
+    // These phrases ask for input or describe the conversation, not a travel step.
+    // Keep named places and actual walking/boarding instructions in the fact checks.
+    const factualText = text
+      .replace(/\bwalk (?:you|us) through\b/gi, 'explain')
+      .replace(/\b(?:tell me|share|use) (?:a nearby |a |any )(?:station|mall|landmark|area)(?:\s*(?:,|or|and)\s*(?:a |an |nearby |just the )?(?:station|mall|landmark|area))*\b/gi, 'describe your location')
+      .replace(/\b(?:a |any )?(?:station|mall|landmark|area)(?:\s*(?:,|or|and)\s*(?:a |an |nearby |just the )?(?:station|mall|landmark|area))* (?:is|are|would be) (?:fine|okay|ok|enough|helpful)\b/gi, 'a nearby location is fine');
     for (const { label, re } of FACTUAL_ASSERTION_PATTERNS) {
-      if (re.test(text)) {
+      if (re.test(factualText)) {
         reasons.push({
           code: "invented_fact",
-          detail: `text asserts a "${label}" fact but the unit cites no grounding statement`,
+          detail: `text asserts a "${label}" fact outside canonical inserts`,
         });
       }
     }

@@ -2,6 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -20,7 +21,10 @@ test("audit script exits 0 and regenerates reports", () => {
 
 test("NCR count invariants and snapshot hash", () => {
   const rep = JSON.parse(readFileSync(REPORT_JSON, "utf8"));
-  assert.equal(rep.input_files["ncr_routes.json"].sha256, EXPECTED_NCR_SHA256);
+  assert.equal(rep.snapshot.ncr_routes_json_sha256, EXPECTED_NCR_SHA256);
+  const raw = readFileSync(path.join(ROOT, "howtogetthereph_dataset/ncr_routes.json"));
+  assert.equal(rep.input_files["ncr_routes.json"].sha256, createHash("sha256").update(raw).digest("hex"));
+  assert.equal(rep.input_files["ncr_routes.json"].bytes, raw.length);
   assert.deepEqual(rep.counts.ncr_routes_json, EXPECTED.ncr);
   assert.deepEqual(rep.counts.routes_json, EXPECTED.all);
   assert.equal(rep.counts.ncr_routes_json.posts, 3480);

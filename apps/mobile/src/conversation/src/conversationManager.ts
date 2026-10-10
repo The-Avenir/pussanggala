@@ -140,6 +140,8 @@ export class TripConversationManager {
   private trip: TripState;
   private endpoints: TripEndpoints | null = null;
   private history: Exchange[] = [];
+  // Core carries one clarification at a time; preserve the second ambiguous slot.
+  private deferredDestination: { intent: Intent; result: ResolveResult } | null = null;
 
   constructor(options: ConversationManagerOptions) {
     this.parser = options.parser;
@@ -246,6 +248,7 @@ export class TripConversationManager {
       effective = { ...intent, preference: intent.preference ?? this.basePreference };
       this.history = [];
       this.endpoints = null;
+      this.deferredDestination = null;
       this.trip = applyIntent(
         this.trip,
         { kind: "new_trip", preference: effective.preference, source: intent.source },
@@ -264,6 +267,9 @@ export class TripConversationManager {
         destinationFailure.place ?? mentionLabel(effective.destination),
       );
     }
+    this.deferredDestination = resolved.origin?.status === 'needs_clarification' && resolved.destination?.status === 'needs_clarification'
+      ? { intent: { kind: 'change_destination', source: effective.source, ...(effective.destination ? { destination: effective.destination } : {}) },
+        result: resolved.destination } : null;
     return this.continueAfterApply(applyIntent(this.trip, effective, resolved));
   }
 
@@ -286,9 +292,12 @@ export class TripConversationManager {
     const pending = this.trip.pendingClarification;
     if (!pending) return this.needsTrip();
     if (choiceIndex < 0 || choiceIndex >= pending.candidates.length) return this.clarifyAgain();
-    return this.continueAfterApply(
-      applyIntent(this.trip, { kind: "clarify_answer", choiceIndex, source: "rules" }, {}),
-    );
+    let next = applyIntent(this.trip, { kind: "clarify_answer", choiceIndex, source: "rules" }, {});
+    if (this.deferredDestination && !next.pendingClarification) {
+      next = applyIntent(next, this.deferredDestination.intent, { destination: this.deferredDestination.result });
+      this.deferredDestination = null;
+    }
+    return this.continueAfterApply(next);
   }
 
   /** Shared tail: clarify, ask for the missing endpoint, or plan. */
@@ -383,6 +392,7 @@ export class TripConversationManager {
   }
 
   private resetTrip(): void {
+    this.deferredDestination = null;
     this.trip = applyIntent(
       this.trip,
       { kind: "new_trip", preference: this.basePreference, source: "rules" },

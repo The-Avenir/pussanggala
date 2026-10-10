@@ -345,8 +345,11 @@ export function runAudit({ write = true } = {}) {
 
   // Assertions.
   const failures = [];
-  if (hashes["ncr_routes.json"].sha256 !== EXPECTED_NCR_SHA256)
-    failures.push(`ncr_routes.json sha256 ${hashes["ncr_routes.json"].sha256} != expected ${EXPECTED_NCR_SHA256}`);
+  // The snapshot contract hashes text with CRLF normalized to LF. Keep the
+  // exact on-disk hashes/byte counts above for the audit inventory.
+  const ncrSnapshotSha = sha256(Buffer.from(buf["ncr_routes.json"].toString("utf8").replace(/\r\n/g, "\n")));
+  if (ncrSnapshotSha !== EXPECTED_NCR_SHA256)
+    failures.push(`ncr_routes.json LF-normalized sha256 ${ncrSnapshotSha} != expected ${EXPECTED_NCR_SHA256}`);
   for (const scope of ["ncr", "all"])
     for (const [k, v] of Object.entries(EXPECTED[scope]))
       if (counts[scope][k] !== v) failures.push(`${scope}.${k}: recomputed ${counts[scope][k]} != expected ${v}`);
@@ -368,7 +371,7 @@ export function runAudit({ write = true } = {}) {
     task: "T10",
     generator: "tools/corpus/audit.mjs",
     content_policy: "Metadata and counts only. No titles, questions, answers, endpoints text or usernames. Post-ID lists live in data/raw/t10/ (gitignored).",
-    snapshot: { dataset_dir: "howtogetthereph_dataset", source_commit: "3732824", ncr_routes_json_sha256: hashes["ncr_routes.json"].sha256 },
+    snapshot: { dataset_dir: "howtogetthereph_dataset", source_commit: "3732824", ncr_routes_json_sha256: ncrSnapshotSha },
     input_files: hashes,
     counts: { ncr_routes_json: counts.ncr, routes_json: counts.all, ncr_routes_csv_rows: ncrCsv.records.length, routes_csv_rows: allCsv.records.length,
       ncr_post_ids_present_in_routes_json: ncrIdsInAll },

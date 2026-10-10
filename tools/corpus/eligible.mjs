@@ -602,7 +602,7 @@ export function buildEligible({ candidates, places, aliases, ambiguities, posts,
     bbox: NCR_BBOX,
     created_at: CREATED_AT,
     stale_after_days: 180,
-    input_sha256: sha(readFileSync(RAW)),
+    input_sha256: sha(readFileSync(RAW, "utf8").replace(/\r\n/g, "\n")),
     input_posts: posts.length,
     answered_posts: answered.length,
   };

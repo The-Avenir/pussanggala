@@ -2,11 +2,11 @@
   "task": "T12",
   "part": "A (deterministic pass)",
   "snapshot_sha256": "d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3",
-  "candidates": 5713,
+  "candidates": 5727,
   "review_state_by_kind": {
     "second_passed": {
       "place": 4088,
-      "ride": 961,
+      "ride": 975,
       "walk": 205,
       "fare": 29,
       "hours": 24,
@@ -42,7 +42,7 @@
     }
   },
   "review_state_totals": {
-    "second_passed": 5583,
+    "second_passed": 5597,
     "needs_review": 130,
     "rejected": 0,
     "accepted": 0
@@ -96,7 +96,7 @@
     "seed": 20261009,
     "judge": "heuristic-part-B",
     "audit_kind": "rule_screen",
-    "judged_at": "2026-10-09T20:35:07.990Z",
+    "judged_at": "2026-10-09T23:47:42.211Z",
     "sample_size": 313,
     "unflagged": 292,
     "flagged": 21,
@@ -136,11 +136,11 @@
       "fare_unscoped": 21
     },
     "effective_review_state_totals": {
-      "second_passed": 5562,
+      "second_passed": 5576,
       "needs_review": 151
     },
     "part_a_review_state_totals": {
-      "second_passed": 5583,
+      "second_passed": 5597,
       "needs_review": 130
     },
     "part_a_queue": {

@@ -1,5 +1,8 @@
 # T16 — corpus technical acceptance and handoff
 
+Latest pack and validation: [seven curated NCR rail additions](../curated-routes-review.md).
+The artifact identity and counts below describe the preceding 134-leg pack.
+
 **Technical verdict: ACCEPTANCE PASS (24/24 checks); shipped-tree INV-4 PASS (zero findings).** Validated after the raw-URL shipping fix on `fix-seed-inv4`, based on `44fe8657f7e9a1304cf1f58642a4d0524f2b26c3`.
 
 **T16 remains open:** source-backed T26 evaluation and reviewer sign-off are pending. Technical acceptance does not complete those gates.

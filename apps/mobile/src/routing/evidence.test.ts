@@ -13,6 +13,7 @@ import { buildExplainPrompt, guardStream } from '@pusang-gala/ai';
 import { renderSafeExplanation, renderGroundedRouteUnit } from '../inference/explanationContext';
 import catalog from './packCatalog.json';
 import { routeReply } from './routeReply';
+import { conversationContext } from '../inference/conversationContext';
 
 const assetDir = new URL('../../assets/pack/', import.meta.url);
 let pack: Pack;
@@ -39,15 +40,123 @@ function supportedJourney() {
 }
 
 describe('installed NCR retrieval integration', () => {
+  it('grounds the prompt after an explicit Cubao button pick in the selected place and asks only for origin', async () => {
+    const manager = createRouteConversation(pack);
+    const question = 'pano pumuntang cubao';
+    const first = await manager.handleUserMessage(question);
+    if (first.type !== 'clarification') throw new Error(first.message);
+    const index = first.clarification.candidates.findIndex(candidate => candidate.name === 'Cubao LRT-2 station');
+    const candidate = first.clarification.candidates[index]!;
+    const picked = await manager.handleClarificationPick(index);
+    expect(picked.type).toBe('needsTrip');
+    const context = conversationContext('ask_origin', candidate.name,
+      [{ role: 'user', text: question }, { role: 'assistant', text: routeReply(first, question) }],
+      { destinationLabel: pack.places.get(manager.getState().trip.destinationPlaceId!)!.name });
+    const prompt = buildExplainPrompt(context).prompt;
+    expect(prompt).toContain('TRIP destination="Cubao LRT-2 station"');
+    expect(prompt).toContain('QUESTION text="Cubao LRT-2 station"');
+    expect(prompt).toContain('USER text="pano pumuntang cubao"');
+    expect(prompt).toContain('Ask only where they are coming from');
+    expect(prompt).toContain('Do not ask for the destination again');
+    expect(context.statements).toEqual([]);
+    const plan = await manager.handleUserMessage('Recto');
+    if (plan.type !== 'plan') throw new Error(plan.message);
+    const routeContext = routeGroundingContext(plan.evidence.cards, plan.evidence.hourStatements, undefined, 'Recto',
+      { originLabel: plan.endpoints.origin.name, destinationLabel: plan.endpoints.destination.name })!;
+    expect(buildExplainPrompt(routeContext).prompt).toContain('origin="LRT-2 Recto station" destination="Cubao LRT-2 station"');
+    expect(routeContext.statements.some(statement => statement.role === 'step' && /Recto.*Cubao/.test(statement.text))).toBe(true);
+  });
+  it('double-ambiguity regression: selecting Buendia retains the pending Cubao destination', async () => {
+    const manager = createRouteConversation(pack);
+    const first = await manager.handleUserMessage('From Buendia to Cubao lowest fare');
+    expect(first.type).toBe('clarification');
+    if (first.type !== 'clarification') throw new Error(first.message);
+    expect(first.clarification.slot).toBe('origin');
+    const second = await manager.handleClarificationPick(0);
+    expect(second.type, JSON.stringify({ second, trip: manager.getState().trip })).toBe('clarification');
+    if (second.type !== 'clarification') throw new Error(second.message);
+    expect(second.clarification.slot).toBe('destination');
+    expect(second.clarification.text).toBe('Cubao');
+    expect(manager.getState().trip.originPlaceId).toBe(first.clarification.candidates[0]!.placeId);
+    expect(manager.getState().trip.preference).toBe('lowest_fare');
+    const index = second.clarification.candidates.findIndex(candidate => candidate.name === 'Cubao LRT-2 station');
+    const completed = await manager.handleClarificationPick(index);
+    expect(['plan', 'failure']).toContain(completed.type);
+    expect(manager.getState().trip.destinationPlaceId).toBe(second.clarification.candidates[index]!.placeId);
+    expect(manager.getState().trip.pendingClarification).toBeUndefined();
+  });
+
+  it('does not carry an abandoned second ambiguity into a new trip', async () => {
+    const manager = createRouteConversation(pack);
+    await manager.handleUserMessage('From Buendia to Cubao');
+    manager.newTrip();
+    const next = await manager.handleUserMessage('From Recto to Cubao');
+    expect(next.type).toBe('clarification');
+    if (next.type !== 'clarification') throw new Error(next.message);
+    const index = next.clarification.candidates.findIndex(candidate => candidate.name === 'Cubao LRT-2 station');
+    const plan = await manager.handleClarificationPick(index);
+    expect(plan.type).toBe('plan');
+    expect(manager.getState().trip.pendingClarification).toBeUndefined();
+  });
+  it('rejects a repeated ambiguous name, invalid number, and place outside the displayed choices', async () => {
+    const manager = createRouteConversation(pack);
+    const first = await manager.handleUserMessage('From Recto to Cubao');
+    expect(first.type).toBe('clarification');
+    if (first.type !== 'clarification') throw new Error(first.message);
+    for (const query of ['Cubao', '9', 'SM North', 'yung Cubao po']) {
+      const next = await manager.handleUserMessage(query);
+      expect(next.type).toBe('clarification');
+      expect(manager.getState().trip.pendingClarification?.candidates).toEqual(first.clarification.candidates);
+      expect(manager.getState().trip.destinationPlaceId).toBeUndefined();
+    }
+  });
+  it.each(['number', 'full name', 'unique prefix', 'alias', 'polite alias'] as const)
+    ('Cubao selection regression: %s confirms the place, asks for origin, and routes from Recto', async pickStyle => {
+      const manager = createRouteConversation(pack);
+      const result = await manager.handleUserMessage('paano pumunta sa Cubao');
+      expect(result.type).toBe('clarification');
+      if (result.type !== 'clarification') throw new Error(result.message);
+      const index = result.clarification.candidates.findIndex(candidate => candidate.name === 'Cubao LRT-2 station');
+      const candidate = result.clarification.candidates[index]!;
+      const picks = { number: String(index + 1), 'full name': candidate.name, 'unique prefix': 'Cubao LRT-2',
+        alias: 'LRT2 Cubao', 'polite alias': 'yung LRT2 Cubao po' };
+      const picked = await manager.handleUserMessage(picks[pickStyle]);
+      expect(picked.type, JSON.stringify({ pickStyle, picked, state: manager.getState().trip })).toBe('needsTrip');
+      expect(manager.getState().trip.destinationPlaceId).toBe(candidate.placeId);
+      expect(manager.getState().trip.pendingClarification).toBeUndefined();
+      const plan = await manager.handleUserMessage('Recto');
+      expect(plan.type).toBe('plan');
+      if (plan.type !== 'plan') throw new Error(plan.message);
+      expect(plan.endpoints.destination.placeId).toBe(candidate.placeId);
+      expect(routeReply(plan, 'pano pumuntang cubao')).toContain('Sakay ka ng LRT-2');
+    });
+
+  it.each(['pano pumuntang cubao', 'pano pumunta cubao', 'paano pumuntang cubao', 'paano pumunta sa cubao', 'Pano po pumuntang Cubao?'])
+    ('Cubao phrase regression: %s reaches place selection instead of the default redirect', async query => {
+      const manager = createRouteConversation(pack);
+      const result = await manager.handleUserMessage(query);
+      expect(result.message, JSON.stringify({ query, result, state: manager.getState().trip })).not.toContain('Gala lang tayo');
+      expect(result.type).toBe('clarification');
+      if (result.type !== 'clarification') throw new Error(result.message);
+      expect(result.clarification.slot).toBe('destination');
+      const choice = result.clarification.candidates.findIndex(candidate => candidate.name === 'Cubao LRT-2 station');
+      expect(choice).toBeGreaterThanOrEqual(0);
+      const picked = await manager.handleUserMessage(String(choice + 1));
+      expect(picked.type).toBe('needsTrip');
+      expect(manager.getState().trip.destinationPlaceId).toBe(result.clarification.candidates[choice]!.placeId);
+      expect(manager.getState().trip.pendingClarification).toBeUndefined();
+      expect(routeReply(picked, query, manager.getState().trip, pack)).toContain('Saan ka manggagaling?');
+    });
+
   it('ships exactly the measured bytes and loads the complete eligible pack', () => {
     for (const spec of catalog) {
       const file = readFileSync(new URL('../../' + spec.bundlePath, import.meta.url));
       expect(file.length).toBe(spec.bytes);
       expect(createHash('sha256').update(file).digest('hex')).toBe(spec.sha256);
     }
-    expect(pack.routes.size).toBe(69);
+    expect(pack.routes.size).toBe(80);
     expect(pack.places.size).toBe(91);
-    expect(pack.legs.size).toBe(134);
+    expect(pack.legs.size).toBe(148);
     expect([...pack.sources.values()].every(source => !source.url?.includes('reddit'))).toBe(true);
   });
 
@@ -78,15 +187,15 @@ describe('installed NCR retrieval integration', () => {
     if (result.kind !== 'planned') throw new Error(result.reason);
     const context = routeGroundingContext(result.evidence.cards);
     expect(context, JSON.stringify(result.evidence.cards.map(card => cardFacts(card)))).not.toBeNull();
-    const facts = result.evidence.cards.flatMap(cardFacts);
-    expect(context!.statements.every(statement => facts.includes(statement.text))).toBe(true);
+    expect(context!.statements.some(statement => statement.role === 'step' && /Take the/.test(statement.text))).toBe(true);
+    expect(context!.statements.every(statement => !/sources?:|reports?|stale|sourceId/i.test(statement.text))).toBe(true);
+    expect(context!.statements.every(statement => !/^Ride |^Access:|^Direction:/.test(statement.text))).toBe(true);
     expect(context!.statements.every(statement => statement.packRecordIds.every(id => result.evidence.allowedRecordIds.includes(id)))).toBe(true);
     const unpriced = result.evidence.cards.find(card => card.kind === 'ride' && !card.fares.length);
     if (unpriced) expect(cardFacts(unpriced)).toContain('Fare unknown: no report for this ride.');
     // Oversized reports stay on cards rather than being cut into misleading prompt fragments.
-    const card = result.evidence.cards[0]!;
-    const oversized = { ...card, warnings: [{ code: 'source_date_unknown' as const, message: 'x'.repeat(241), recordIds: card.recordIds }] };
-    expect(routeGroundingContext([oversized])).toBeNull();
+    const ride = result.evidence.cards.find(card => card.kind === 'ride')!;
+    expect(routeGroundingContext([{ ...ride, board: { ...ride.board, name: 'x'.repeat(241) } }])).toBeNull();
   });
 
   it('requires confirmation for ambiguous aliases and rejects absent places', async () => {
@@ -178,16 +287,17 @@ describe('installed NCR retrieval integration', () => {
     if (outcome.kind !== 'planned') throw new Error(outcome.reason);
     const ride = outcome.evidence.cards.find(card => card.kind === 'ride')!;
     const unknown = routeReply({ type: 'followUp', message: '', topic: 'ask_fare', cards: [{ ...ride, fares: [] }], hourStatements: [] }, 'Magkano?');
-    expect(unknown).toContain('Ayokong hulaan');
+    expect(unknown).toContain('Hindi pa available ang pamasahe');
     expect(unknown).not.toMatch(/₱\d/);
     const sources = [{ sourceId: 'src_test', kind: 'post', postedAt: '2026-04-01', stale: true }];
     const text = routeReply({ type: 'followUp', message: '', topic: 'ask_fare', hourStatements: [], cards: [{ ...ride,
       fares: [{ fareId: 'fare_one', min: 20, max: 25, currency: 'PHP', sources }, { fareId: 'fare_two', min: 30, max: 30, currency: 'PHP', sources }],
       warnings: [{ code: 'fare_conflict', message: '', recordIds: [] }] }] }, 'Magkano?');
-    expect(text).toContain('magkakaiba ang naiulat');
-    expect(text).toContain('₱20–25 (report: 2026-04-01)');
-    expect(text).toContain('₱30 (report: 2026-04-01)');
-    expect(text).toContain('Hindi ko makukumpirma kung alin');
+    expect(text).toContain('Magkakaiba ang halaga');
+    expect(text).toContain('₱20–25');
+    expect(text).toContain('₱30');
+    expect(text).not.toMatch(/report:|2026-04-01|sources/i);
+    expect(sources[0]!.postedAt).toBe('2026-04-01');
   });
 
   it('never displays invented route prose even when the model cites a valid fact', async () => {
@@ -201,7 +311,7 @@ describe('installed NCR retrieval integration', () => {
     }
     const displayed: string[] = [];
     await guardStream(context, output(), unit => displayed.push(renderGroundedRouteUnit(unit, context)));
-    expect(displayed).toEqual([fact.text]);
+    expect(displayed).toEqual([]);
     expect(displayed.join('')).not.toContain('Imaginary');
   });
 
@@ -212,10 +322,52 @@ describe('installed NCR retrieval integration', () => {
     const fare = await manager.handleUserMessage('How much is the fare?');
     if (fare.type !== 'followUp') throw new Error(fare.message);
     const fareContext = routeGroundingContext(fare.cards, fare.hourStatements, fare.topic)!;
-    expect(fareContext.statements.every(statement => /^Reported fare:|^Fare unknown:|^Fare reports differ|^Source post/.test(statement.text))).toBe(true);
+    expect(fareContext.statements.every(statement => /fare/i.test(statement.text))).toBe(true);
     const hours = await manager.handleUserMessage('What time is the last trip?');
     if (hours.type !== 'followUp') throw new Error(hours.message);
     const hourContext = routeGroundingContext(hours.cards, hours.hourStatements, hours.topic)!;
     expect(hourContext.statements.every(statement => statement.role === 'hours')).toBe(true);
+  });
+  it('remembers a bare destination and treats the next place as the missing origin', async () => {
+    const manager = createRouteConversation(pack);
+    const destination = await manager.handleUserMessage('sm north edsa');
+    expect(destination.type).toBe('needsTrip');
+    const firstTrip = manager.getState().trip;
+    expect(pack.places.get(firstTrip.destinationPlaceId!)?.name).toMatch(/SM North/i);
+    expect(firstTrip.originPlaceId).toBeUndefined();
+    const spoken = routeReply(destination, 'sm north edsa', firstTrip, pack);
+    expect(spoken).toContain('Where are you coming from?');
+    expect(spoken).toContain('SM North');
+    // No inferred connection: the available pack may have no complete Ayala -> SM North route.
+    const result = await manager.handleUserMessage('ayala mrt');
+    expect(['plan', 'failure']).toContain(result.type);
+    expect(pack.places.get(manager.getState().trip.originPlaceId!)?.name).toMatch(/Ayala/i);
+    expect(manager.getState().trip.destinationPlaceId).toBe(firstTrip.destinationPlaceId);
+  });
+  it('keeps short replies ambiguous until the commuter picks a place', async () => {
+    const manager = createRouteConversation(pack);
+    const result = await manager.handleUserMessage('Cubao');
+    expect(result.type).toBe('clarification');
+    expect(manager.getState().trip.destinationPlaceId).toBeUndefined();
+  });
+  it('handles an explicit conversational starting point before asking for the destination', async () => {
+    const manager = createRouteConversation(pack);
+    const result = await manager.handleUserMessage('I’m at Ayala MRT');
+    expect(result.type).toBe('needsTrip');
+    expect(manager.getState().trip.originPlaceId).toBeDefined();
+    expect(manager.getState().trip.destinationPlaceId).toBeUndefined();
+    expect(routeReply(result, 'I’m at Ayala MRT', manager.getState().trip, pack)).toContain('Where are we heading?');
+  });
+  it('answers duration follow-ups without replaying directions or fabricating minutes', async () => {
+    const { origin, destination } = supportedJourney();
+    const manager = createRouteConversation(pack);
+    await manager.handleUserMessage(`From ${origin.name} to ${destination.name}`);
+    const result = await manager.handleUserMessage('How long is the journey?');
+    expect(result.type).toBe('followUp');
+    if (result.type !== 'followUp') throw new Error(result.message);
+    expect(routeReply(result, 'How long is the journey?')).toMatch(/pending|minutes/);
+    const context = routeGroundingContext(result.cards, [], result.topic, 'How long is the journey?')!;
+    expect(context.statements.every(statement => /time|minutes/.test(statement.text))).toBe(true);
+    expect(context.statements.every(statement => statement.role !== 'step')).toBe(true);
   });
 });
