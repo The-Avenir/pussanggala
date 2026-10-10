@@ -17,6 +17,7 @@ See [docs/index.md](docs/index.md) for the documentation map and
 | `tools/map-pack/` | Offline NCR basemap/tiles packaging | Member 4 |
 | `tools/eval/` | Route/place/retrieval and conversation evaluation fixtures (T26, T35, T45) | Shared |
 | `apps/mobile/` | Expo app — native adapters, assets, map, GPS, persistence, screens | Member 4 |
+| `apps/website/` | Interactive Gaile landing page, example journey and Android release link | Shared |
 | `apps/mobile/src/ai/` | Native model runtime and validated streaming | Member 3 |
 | `apps/mobile/src/conversation/` | Conversation state, intent and follow-ups | Member 3 |
 | `data/seed/` | Reviewed facts/paraphrases only — never raw Reddit wording or usernames (INV-4) | Member 1 |
@@ -33,6 +34,9 @@ Run from the repository root (prerequisite: Node.js >= 20):
 | `npm install` | Install workspace dependencies and update `package-lock.json` |
 | `npm run typecheck` | Type-check all workspaces (`tsc`, no emit) |
 | `npm test` | Run workspace tests (vitest in `packages/core`) |
+| `npm run website:dev` | Open the landing website at http://127.0.0.1:4173 |
+| `npm run website:build` | Build the static website into `apps/website/dist/` |
+| `npm run website:check` | Browser-check desktop/mobile interactions, keyboard support and release-link states |
 
 The Expo app scaffold, lint and device/build commands are added by later tasks
 (T40, T01); the layout above already reserves their locations.

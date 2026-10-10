@@ -12,6 +12,9 @@
     "node": ">=22.13.0"
   },
   "scripts": {
+    "website:dev": "node apps/website/server.mjs",
+    "website:build": "node apps/website/build.mjs",
+    "website:check": "node apps/website/verify.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "mobile:check": "npm run check --workspace @pusang-gala/mobile",

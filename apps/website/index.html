@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FFF0DD">
+  <meta name="description" content="Meet Gaile, your Pusang Gala commute companion. Explore supported NCR route information and an illustrative commuter journey.">
+  <title>Pusang Gala · Less guessing. More gala.</title>
+  <link rel="icon" type="image/png" href="./assets/mascot/gaile-idle.png">
+  <link rel="manifest" href="./site.webmanifest">
+  <meta property="og:title" content="Pusang Gala · Less guessing. More gala.">
+  <meta property="og:description" content="Meet Gaile, your curious NCR commute companion. Explore the illustrative commuter journey.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body id="top">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="Pusang Gala home">
+        <img class="brand-mascot" src="./assets/mascot/gaile-idle.png" width="38" height="50" alt="">
+        <span>Pusang Gala<span class="brand-dot" aria-hidden="true">.</span></span>
+      </a>
+      <button id="menu-toggle" class="menu-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Open navigation">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <span>Menu</span>
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="Main navigation">
+        <a href="#meet-gaile">Meet Gaile</a>
+        <a href="#try-it">Explore the journey</a>
+        <a href="#faq">Good to know</a>
+        <a class="button button-primary nav-cta" href="#get-app">Get the app <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Your curious commute companion</p>
+          <h1 id="hero-title">Less guessing.<br><span>More gala.</span></h1>
+          <p class="hero-description">New route? Tara, figure it out with Gaile. A friendly guide to supported NCR journeys, right in your pocket.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#get-app">Meet your travel buddy <span aria-hidden="true">↗</span></a>
+            <a class="button button-secondary" href="#try-it">Explore the journey <span aria-hidden="true">→</span></a>
+          </div>
+          <p class="hero-note">Made for Android. Public APK coming when it’s ready.</p>
+          <div class="hero-route-note"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-7 7-12a7 7 0 0 0-14 0c0 5 7 12 7 12Z M12 6a3 3 0 1 0 0 6 3 3 0 0 0 0-6"/></svg><span>A little less “saan na?”<br>A little more “tara na.”</span></div>
+        </div>
+        <div class="hero-art reveal">
+          <svg class="hero-route-art route-art" width="540" height="560" viewBox="0 0 540 560" fill="none" aria-hidden="true"><path d="M35 480C10 390 155 420 123 300S410 250 410 150 510 60 510 60" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 12"/><circle cx="35" cy="480" r="10" fill="currentColor"/><circle cx="510" cy="60" r="10" fill="currentColor"/></svg>
+          <div class="mascot-halo" aria-hidden="true"></div>
+          <img class="hero-mascot" src="./assets/mascot/gaile-map.png" width="404" height="506" alt="Gaile, an orange cat with a backpack, studying a map." fetchpriority="high">
+          <span class="mascot-bubble" aria-hidden="true">Tara, gala!</span>
+          <div class="phone-shell hero-phone" aria-label="Static example of the Pusang Gala app">
+            <div class="phone-top"><span>9:41</span><span class="phone-camera" aria-hidden="true"></span><span aria-hidden="true">● ▰</span></div>
+            <div class="phone-screen">
+              <div class="phone-brand phone-header"><img src="./assets/mascot/gaile-wave.png" width="34" height="45" alt=""><strong>Pusang Gala</strong></div>
+              <p class="phone-greeting">Hello, gala buddy!</p>
+              <h3>Where to go?</h3>
+              <p class="phone-hint">Kuwento mo kay Gaile.</p>
+              <div class="chat-bubble chat-bubble-gaile">Hi! I’m Gaile. Let’s take this one step at a time. 🐾</div>
+              <div class="chat-bubble chat-bubble-user">Monumento to Ayala?</div>
+              <div class="phone-route"><span class="route-mode">Walk · Bus · Train</span><strong>One step at a time.</strong><span>See an illustrative journey below.</span></div>
+              <a class="phone-demo-link" href="#try-it">Explore the journey <span aria-hidden="true">→</span></a>
+              <p class="phone-disclaimer">Example screen, not travel guidance.</p>
+            </div>
+          </div>
+          <span class="hero-sticker" aria-hidden="true">Small paws.<br>Big curiosity.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="meet-gaile" class="section meet-section" aria-labelledby="meet-title">
+      <div class="container meet-grid">
+        <div class="meet-art reveal">
+          <p class="section-kicker eyebrow">Meet your gala buddy</p>
+          <h2 id="meet-title">A friendly face.<br>A clearer next step.</h2>
+          <img class="meet-mascot" src="./assets/mascot/gaile-wave.png" width="383" height="507" alt="Gaile waving hello." loading="lazy">
+          <p class="meet-caption" id="gaile-greeting" aria-live="polite">“Kaya natin ’to. One stop at a time.”</p>
+          <button class="button button-secondary gaile-hello" id="say-hi" type="button">Say hi to Gaile <span aria-hidden="true">↗</span></button>
+        </div>
+        <ol class="benefit-list reveal">
+          <li class="benefit"><span class="benefit-number" aria-hidden="true">01</span><div><h3>Find the facts for your route.</h3><p>Explore supported NCR journeys using bundled route information. Check route reports and sources in the app, with unknown details kept honest.</p></div></li>
+          <li class="benefit"><span class="benefit-number" aria-hidden="true">02</span><div><h3>Ask the way you talk.</h3><p>English or Taglish, game. Ask about a destination, a transfer, or where to get off. Gaile phrases retrieved route facts in a familiar voice.</p></div></li>
+          <li class="benefit"><span class="benefit-number" aria-hidden="true">03</span><div><h3>Prepare once. Bring it along.</h3><p>Route data comes bundled. Set up the separate local assistant once for on-device example explanations, even without a data connection.</p><a class="text-link" href="#faq">What does offline need? <span aria-hidden="true">↗</span></a></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="try-it" class="section demo-section journey-section" aria-labelledby="demo-title" data-active-moment="0">
+      <div class="container demo-grid journey-grid">
+        <div class="demo-copy journey-copy reveal">
+          <p class="section-kicker eyebrow">Illustrative commuter story</p>
+          <h2 id="demo-title">Explore the journey.<br>One question at a time.</h2>
+          <p>Scroll through three moments of an unfamiliar trip. Follow the questions along the way, then discover what the commuter needs.</p>
+          <p class="demo-disclaimer journey-disclaimer">This story is imagined. It does not describe a real route or a user interview.</p>
+          <div class="demo-mascot-wrap journey-mascot-wrap"><img class="demo-mascot" src="./assets/mascot/gaile-think.png" width="363" height="499" alt="Gaile thinking about the next step." loading="lazy"><span class="demo-mascot-note" aria-hidden="true">Let's think it through.</span></div>
+          <noscript><p>The first moment is shown below. Enable JavaScript to explore the other moments and reveal their insights.</p></noscript>
+        </div>
+        <div class="journey-track">
+        <div class="demo-panel journey-panel reveal" role="group" aria-label="Illustrative commuter journey">
+          <div class="journey-scroll-progress" aria-hidden="true"><span></span></div>
+          <div class="journey-panel-heading"><span class="journey-panel-label">Along the way</span><span id="moment-count" class="journey-count" aria-live="polite" aria-atomic="true">1 of 3</span></div>
+          <div class="journey-moments" role="group" aria-label="Choose a journey moment">
+            <button class="journey-moment is-active" type="button" data-moment="0" aria-pressed="true"><span class="journey-moment-number" aria-hidden="true">01</span><span class="journey-moment-label">Choosing a ride</span></button>
+            <button class="journey-moment" type="button" data-moment="1" aria-pressed="false"><span class="journey-moment-number" aria-hidden="true">02</span><span class="journey-moment-label">Making a transfer</span></button>
+            <button class="journey-moment" type="button" data-moment="2" aria-pressed="false"><span class="journey-moment-number" aria-hidden="true">03</span><span class="journey-moment-label">Losing connection</span></button>
+          </div>
+          <div class="journey-story" role="group" aria-labelledby="moment-title">
+            <p id="moment-kicker" class="journey-kicker">Moment 01</p>
+            <h3 id="moment-title" aria-live="polite" aria-atomic="true">Choosing a ride</h3>
+            <p id="moment-question" class="journey-question">Which vehicle actually goes there?</p>
+            <p id="moment-description" class="journey-description">At a busy stop, a commuter sees several possible rides and has to decide which one reaches the destination.</p>
+          </div>
+          <button id="moment-reveal" class="button button-primary journey-reveal" type="button" aria-expanded="false" aria-controls="moment-insight">Reveal the insight <span aria-hidden="true">&rarr;</span></button>
+          <div id="moment-insight" class="journey-insight" role="region" aria-labelledby="moment-insight-title" hidden>
+            <p id="moment-insight-title" class="journey-insight-label">What this moment reveals</p>
+            <p>Before boarding, the commuter needs a clear way to connect a destination with the right ride.</p>
+          </div>
+          <div class="journey-controls" role="group" aria-label="Explore the journey">
+            <button id="journey-prev" class="button button-secondary button-small" type="button"><span aria-hidden="true">&larr;</span> Previous moment</button>
+            <button id="journey-next" class="button button-secondary button-small" type="button">Next moment <span aria-hidden="true">&rarr;</span></button>
+          </div>
+          <p class="journey-scroll-hint"><span aria-hidden="true">↓</span> Keep scrolling to follow the journey</p>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section faq-section" aria-labelledby="faq-title">
+      <div class="container faq-grid">
+        <div class="faq-copy reveal"><p class="section-kicker eyebrow">Before you head out</p><h2 id="faq-title">Good questions.<br>Honest answers.</h2><p>A few things to know about your new gala buddy.</p></div>
+        <div class="faq-list reveal">
+          <details><summary>Can Gaile help with every NCR destination?</summary><div class="faq-answer"><p>Gaile uses the app’s bundled NCR route pack for supported places and journeys. It does not cover every destination or provide live transport updates. Check the route report and dated sources in the app, and confirm current details before travelling.</p></div></details>
+          <details><summary>What do I need for offline use?</summary><div class="faq-answer"><p>Supported route data is included with the app. Ordinary route answers use those retrieved facts and local phrasing, without loading the assistant model.</p><p>For on-device example explanations, set up the separate local assistant in Settings → Offline resources. Download the approximately 491 MB model once, or import the matching GGUF file. Allow at least 560 MB of free space. The model is checked before use and kept in private app storage.</p></div></details>
+          <details><summary>Does my conversation go to a cloud assistant?</summary><div class="faq-answer"><p>Route retrieval and replies run locally. After setup, the assistant’s example explanations also run on your device. The app has no analytics, upload SDKs, or cloud fallback. The explicit model download needs internet; importing a matching local model does not.</p></div></details>
+          <details><summary>Where can I get the Android APK?</summary><div class="faq-answer"><p>Use View Android releases below to open the project’s GitHub releases page. Check the release notes and assets there for any published APK; this website does not verify an APK version or file size.</p><p>When installing an APK, Android may ask you to allow installation from the browser or file manager you use. Use the project’s release page as your source. Developers can find local build instructions in the project README.</p></div></details>
+          <details><summary>What is still being built?</summary><div class="faq-answer"><p>Basemaps, GPS integration, and persistent trip storage are not connected yet. Route information is not live travel guidance, and native model performance still needs phone testing. The commuter story above is illustrative and does not depict a real route or user interview.</p></div></details>
+        </div>
+      </div>
+    </section>
+
+    <section id="get-app" class="section download-section" aria-labelledby="download-title">
+      <div class="container download-grid">
+        <div class="download-copy reveal"><p class="section-kicker eyebrow">Your next adventure starts small</p><h2 id="download-title">Ready for your<br>next gala?</h2><p>Find release notes and any published Android APK assets on the project’s GitHub releases page.</p><a id="download-link" class="button button-primary" hidden>View Android releases <span aria-hidden="true">↗</span></a><div id="download-unavailable" class="download-unavailable"><span class="release-badge">Android release updates</span><p>The release link is currently unavailable.</p></div><p id="download-status" class="download-status" role="status">Enable JavaScript to view the configured Android release link.</p><p id="download-meta" class="download-meta">The local assistant model is installed separately from the app.</p><div class="download-actions"><a class="button button-secondary" href="#try-it">Explore the journey <span aria-hidden="true">→</span></a><a class="text-link" href="https://github.com/The-Avenir/pussanggala" target="_blank" rel="noopener">Explore the project <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></div></div>
+        <div class="download-art reveal"><span class="download-bubble" aria-hidden="true">See you out there!</span><img class="download-mascot" src="./assets/mascot/gaile-cheer.png" width="409" height="495" alt="Gaile cheering, ready for another adventure." loading="lazy"></div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="container footer-grid footer-inner"><a class="brand footer-brand" href="#top"><span>Pusang Gala.</span></a><p class="footer-tagline">A little curiosity goes a long way. 🐾</p><p class="copyright">© 2026 Pusang Gala</p><a class="back-to-top" href="#top">Back to top <span aria-hidden="true">↑</span></a></div></footer>
+</body>
+</html>

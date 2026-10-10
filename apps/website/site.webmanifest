@@ -1,0 +1,10 @@
+{
+  "name": "Pusang Gala",
+  "short_name": "Pusang Gala",
+  "description": "Meet Gaile, your NCR commute companion.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "browser",
+  "background_color": "#FFF9EF",
+  "theme_color": "#FFB729"
+}
