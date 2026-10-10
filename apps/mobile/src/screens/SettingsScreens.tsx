@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { Button, Gaile, Icon, ListRow, Notice, Section, palette, type, ui } from '../ui/travel';
+import { Button, Gaile, GaileMessage, Icon, ListRow, Notice, Section, palette, type, ui } from '../ui/travel';
 import { LocalAssistantResource } from './LocalAssistantResource';
 import type { LocalAssistant } from '../inference/useLocalAssistant';
 import type { SavedRouteRow, TripHistoryRow } from '../store/tripStore';
@@ -33,8 +33,8 @@ export function SettingsScreen({ preference, onPreference, onOpen, onLocation, a
 }
 export function OfflineDataScreen({ checkedAt, onCheck, assistant, routePack }: { checkedAt: string | null; onCheck: () => void; assistant: LocalAssistant; routePack: RoutePackResource }): React.JSX.Element {
   return <View style={ui.screen}>
-    <View style={{ gap: 8 }}><Text accessibilityRole="header" style={type.title}>What works{ '\n' }offline</Text>
-      <Text style={type.body}>NCR route data is bundled with the app. Import or download the local assistant for explanations. The basemap is not installed.</Text></View>
+    <Text accessibilityRole="header" style={type.title}>Before you head out</Text>
+    <GaileMessage pose="map"><Text style={type.body}>NCR route data is bundled with the app. Import or download the local assistant for explanations. The basemap is not installed.</Text></GaileMessage>
     <LocalAssistantResource assistant={assistant}/>
     <View>{[
       { name: 'Route data', status: routePack.phase === 'ready' ? 'Installed' : routePack.phase,
@@ -87,9 +87,10 @@ export function SavedScreen({ saved, history, segment, onSegment, onOpen, onOpen
       accessibilityLabel={value === 'saved' ? 'Saved routes' : 'Trip history'} accessibilityState={{ selected: segment === value }}
       onPress={() => onSegment(value)} style={[styles.segment, segment === value && styles.selected]}>
       <Text style={[type.label, segment === value && { color: palette.accent }]}>{value === 'saved' ? 'Saved' : 'History'}</Text></Pressable>)}</View>
-    {segment === 'saved' ? saved.length === 0 ? <View style={{ gap: 12, paddingVertical: 16 }}><Gaile pose="binoculars" height={115}/>
-      <Text style={type.heading}>A route worth keeping?</Text><Text style={type.body}>Save it from Directions. Your saved journeys will appear here.</Text>
-      <Button variant="text" label="Plan a journey" icon="arrow" onPress={onPlan}/></View>
+    <GaileMessage pose="map"><Text style={type.body}>{segment === 'saved' ? 'Your saved routes live here. Pick a journey to see its directions again.' : 'Here are the journeys you’ve looked up or taken.'}</Text></GaileMessage>
+    {segment === 'saved' ? saved.length === 0 ? <View style={{ gap: 12 }}><View style={styles.savedIllustration}><Gaile pose="binoculars" height={84}/>
+      <View style={ui.flex}><Text style={type.heading}>A route worth keeping?</Text><Text style={type.secondary}>Save it from Directions. Your saved journeys will appear here.</Text></View></View>
+      <Button label="Plan a journey" icon="arrow" onPress={onPlan}/></View>
       : <View>{saved.map(row => <View key={row.saved_id} style={styles.savedRow}>
         {editing === row.saved_id ? <View style={{ gap: 8 }}><TextInput accessibilityLabel="Saved route name" value={label} onChangeText={setLabel}
           style={[type.body, ui.input]} maxLength={80} autoFocus/>
@@ -111,9 +112,10 @@ export function SavedScreen({ saved, history, segment, onSegment, onOpen, onOpen
   </View>;
 }
 const styles = StyleSheet.create({
-  resource: { flexDirection: 'row', gap: 14, paddingVertical: 20, borderBottomWidth: 1, borderColor: palette.line },
+  resource: { flexDirection: 'row', gap: 14, padding: 16, marginBottom: 10, borderWidth: 1, borderRadius: 18, backgroundColor: palette.card, borderColor: palette.line },
   segments: { flexDirection: 'row', padding: 3, gap: 3, borderRadius: 10, backgroundColor: palette.background },
   segment: { flex: 1, minHeight: 46, alignItems: 'center', justifyContent: 'center', padding: 10, borderRadius: 8 },
   selected: { backgroundColor: palette.paper, borderWidth: 1, borderColor: palette.line },
-  savedRow: { paddingBottom: 12, borderBottomWidth: 1, borderColor: palette.line },
+  savedRow: { paddingBottom: 12, marginBottom: 8, borderBottomWidth: 1, borderColor: palette.line },
+  savedIllustration: { flexDirection: 'row', alignItems: 'center', padding: 16, gap: 12, borderRadius: 14, backgroundColor: palette.successSoft },
 });

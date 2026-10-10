@@ -3,24 +3,24 @@ import { Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native
 import type { StyleProp, ViewStyle } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
-// Sunset Playful identity, with darker text/action tones for outdoor readability.
+// Reference UI's warm paper and orange identity, with readable text/action tones.
 export const palette = {
-  ink: '#2E1C14', secondary: '#756052', accent: '#BA3B16', accentSoft: '#FFE9D8',
-  orange: '#F34B16', gold: '#FFB729', goldSoft: '#FFF0C6',
-  paper: '#FFF9EF', background: '#FFF0DD', line: '#E8D3BE',
-  rail: '#345D73', success: '#286249', warning: '#80531D', warningSoft: '#FBF2DD',
-  destructive: '#A83229', dark: '#253C36', white: '#FFFFFF',
+  ink: '#422D20', secondary: '#76634F', accent: '#B04A1B', accentSoft: '#FFEBD7',
+  orange: '#EE7B32', gold: '#F5DDA9', goldSoft: '#F8EBD3',
+  paper: '#FFF9ED', card: '#FFFDF7', background: '#F5E9CC', line: '#E0CFB6',
+  rail: '#3F7185', railSoft: '#E8F0F4', success: '#326C61', successSoft: '#EAF2E9', warning: '#80531D', warningSoft: '#FBF2DD',
+  destructive: '#A83229', dark: '#486159', white: '#FFFFFF',
 } as const;
 export const space = { xs: 4, sm: 8, md: 12, lg: 16, page: 20, xl: 24, xxl: 32 } as const;
 const fontFamily = Platform.select({ ios: 'DMSans', android: 'DMSans', default: 'DMSans' });
 export const type = StyleSheet.create({
-  display: { fontFamily: 'NunitoExtraBold', fontSize: 34, lineHeight: 40, fontWeight: '800', letterSpacing: -0.5, color: palette.ink },
-  title: { fontFamily: 'NunitoExtraBold', fontSize: 28, lineHeight: 34, fontWeight: '800', letterSpacing: -0.25, color: palette.ink },
-  heading: { fontFamily: 'NunitoBold', fontSize: 20, lineHeight: 27, fontWeight: '700', color: palette.ink },
-  body: { fontFamily, fontSize: 17, lineHeight: 25, color: palette.ink },
-  label: { fontFamily, fontSize: 16, lineHeight: 23, fontWeight: '600', color: palette.ink },
-  secondary: { fontFamily, fontSize: 15, lineHeight: 22, color: palette.secondary },
-  caption: { fontFamily, fontSize: 13, lineHeight: 19, color: palette.secondary },
+  display: { fontFamily: 'NunitoExtraBold', fontSize: 32, lineHeight: 38, fontWeight: '800', letterSpacing: -0.5, color: palette.ink },
+  title: { fontFamily: 'NunitoExtraBold', fontSize: 25, lineHeight: 31, fontWeight: '800', letterSpacing: -0.25, color: palette.ink },
+  heading: { fontFamily: 'NunitoBold', fontSize: 18, lineHeight: 24, fontWeight: '700', color: palette.ink },
+  body: { fontFamily, fontSize: 15, lineHeight: 23, color: palette.ink },
+  label: { fontFamily: 'DMSansBold', fontSize: 14, lineHeight: 20, color: palette.ink },
+  secondary: { fontFamily, fontSize: 13, lineHeight: 20, color: palette.secondary },
+  caption: { fontFamily, fontSize: 12, lineHeight: 18, color: palette.secondary },
 });
 export type IconName = 'arrow' | 'back' | 'pin' | 'map' | 'chat' | 'trips' | 'settings' | 'walk' | 'bus' | 'train' | 'save' | 'check' | 'close' | 'location' | 'info' | 'swap' | 'send' | 'plus' | 'minus';
 const paths: Record<IconName, string> = {
@@ -55,11 +55,17 @@ export function Gaile({ pose, height }: { pose: keyof typeof gaileArt; height: n
   return <Image testID={'gaile-' + pose} source={art.source} accessible={false} accessibilityIgnoresInvertColors resizeMode="contain"
     style={{ height, width: Math.round(height * art.width / art.height) }}/>
 }
+export function GaileMessage({ children, pose = 'idle' }: { children: ReactNode; pose?: keyof typeof gaileArt }): React.JSX.Element {
+  return <View style={ui.message}>
+    <View style={ui.messageAvatar}><Gaile pose={pose} height={39}/></View>
+    <View style={ui.messageBubble}><Text style={[type.caption, ui.speaker]}>Gaile</Text>{children}</View>
+  </View>;
+}
 export function Button({ label, onPress, variant = 'primary', icon, disabled = false, style }: {
   label: string; onPress: () => void; variant?: 'primary' | 'secondary' | 'text' | 'danger'; icon?: IconName;
   disabled?: boolean; style?: StyleProp<ViewStyle>;
 }): React.JSX.Element {
-  const color = variant === 'primary' ? palette.ink : variant === 'danger' ? palette.white : variant === 'text' ? palette.accent : palette.ink;
+  const color = variant === 'primary' || variant === 'danger' ? palette.white : palette.accent;
   return <Pressable accessibilityRole="button" accessibilityLabel={label} disabled={disabled} accessibilityState={{ disabled }}
     style={({ pressed }) => [ui.button, variant === 'primary' ? ui.primary : variant === 'danger' ? ui.danger : variant === 'secondary' ? ui.secondaryButton : ui.textButton,
       pressed && ui.pressed, disabled && ui.disabled, style]} onPress={onPress}>
@@ -80,10 +86,11 @@ export function Notice({ title, children, action, onAction }: { title?: string; 
 export function ListRow({ title, detail, value, icon, onPress, destructive = false }: {
   title: string; detail?: string; value?: string; icon?: IconName; onPress?: () => void; destructive?: boolean;
 }): React.JSX.Element {
-  const content = <>{icon ? <Icon name={icon} color={destructive ? palette.destructive : palette.secondary}/> : null}
-    <View style={ui.flex}><Text style={[type.body, destructive && { color: palette.destructive }]}>{title}</Text>
+  const content = <>{icon ? <View style={ui.rowIcon}><Icon name={icon} color={destructive ? palette.destructive : palette.accent} size={20}/></View> : null}
+    <View style={ui.flex}><View style={[ui.between, { gap: 8 }]}>
+      <Text style={[type.body, { maxWidth: '100%' }, destructive && { color: palette.destructive }]}>{title}</Text>
+      {value ? <Text style={[type.secondary, { maxWidth: '100%', flexShrink: 1 }]}>{value}</Text> : null}</View>
       {detail ? <Text style={type.secondary}>{detail}</Text> : null}</View>
-    {value ? <Text style={[type.secondary, { flexShrink: 1, textAlign: 'right' }]}>{value}</Text> : null}
     {onPress ? <Icon name="arrow" size={18} color={palette.secondary}/> : null}</>;
   return onPress ? <Pressable accessibilityRole="button" accessibilityLabel={title} accessibilityHint={detail} onPress={onPress} style={({ pressed }) => [ui.listRow, pressed && ui.pressed]}>{content}</Pressable>
     : <View style={ui.listRow}>{content}</View>;
@@ -92,16 +99,21 @@ export function Section({ title, children }: { title: string; children: ReactNod
   return <View style={{ gap: 4 }}><Text accessibilityRole="header" style={[type.caption, ui.sectionTitle]}>{title}</Text>{children}</View>;
 }
 export const ui = StyleSheet.create({
-  screen: { gap: 24 }, flex: { flex: 1 }, row: { flexDirection: 'row', alignItems: 'center', gap: 12, flexWrap: 'wrap' },
+  screen: { gap: 12 }, flex: { flex: 1, minWidth: 0 }, row: { flexDirection: 'row', alignItems: 'center', gap: 12, flexWrap: 'wrap' },
   between: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 },
-  button: { minWidth: 44, minHeight: 50, paddingHorizontal: 18, paddingVertical: 12, borderRadius: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 },
-  primary: { backgroundColor: palette.gold, borderBottomWidth: 4, borderBottomColor: '#D98C13' }, danger: { backgroundColor: palette.destructive },
-  secondaryButton: { backgroundColor: palette.goldSoft, borderWidth: 1, borderColor: palette.gold },
+  button: { minWidth: 44, maxWidth: '100%', minHeight: 48, paddingHorizontal: 18, paddingVertical: 12, borderRadius: 24, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10 },
+  primary: { backgroundColor: palette.accent }, danger: { backgroundColor: palette.destructive },
+  secondaryButton: { backgroundColor: palette.card, borderWidth: 1, borderColor: palette.line },
   textButton: { paddingHorizontal: 0, justifyContent: 'flex-start' }, pressed: { opacity: 0.7 }, disabled: { opacity: 0.45 },
   iconButton: { minWidth: 48, minHeight: 48, alignItems: 'center', justifyContent: 'center' },
-  listRow: { minHeight: 64, paddingVertical: 15, flexDirection: 'row', alignItems: 'center', gap: 12, borderBottomWidth: 1, borderBottomColor: palette.line },
-  notice: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, borderLeftWidth: 3, borderLeftColor: palette.warning, backgroundColor: palette.warningSoft, padding: 14 },
-  noticeAction: { minHeight: 44, paddingVertical: 8 }, sectionTitle: { fontWeight: '600', marginTop: 8, marginBottom: 4 },
-  input: { minHeight: 50, padding: 12, borderWidth: 1, borderColor: palette.secondary, borderRadius: 16, backgroundColor: palette.paper },
+  listRow: { minHeight: 64, padding: 14, marginVertical: 3, borderRadius: 16, backgroundColor: palette.card, flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, borderColor: palette.line },
+  rowIcon: { width: 36, height: 36, borderRadius: 12, alignItems: 'center', justifyContent: 'center', backgroundColor: palette.accentSoft },
+  notice: { flexDirection: 'row', alignItems: 'flex-start', gap: 10, borderWidth: 1, borderColor: palette.line, borderRadius: 14, backgroundColor: palette.warningSoft, padding: 14 },
+  noticeAction: { minHeight: 44, paddingVertical: 8 }, sectionTitle: { fontWeight: '600', letterSpacing: 1, marginTop: 8, marginBottom: 6 },
+  input: { minHeight: 50, padding: 12, borderWidth: 1, borderColor: palette.line, borderRadius: 16, backgroundColor: palette.card },
   rule: { height: 1, backgroundColor: palette.line },
+  message: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
+  messageAvatar: { width: 32, height: 32, borderRadius: 16, marginTop: 2, backgroundColor: palette.accentSoft, borderWidth: 1, borderColor: palette.line, overflow: 'hidden', alignItems: 'center' },
+  messageBubble: { flex: 1, minWidth: 0, padding: 12, backgroundColor: palette.card, borderWidth: 1, borderColor: palette.line, borderRadius: 14, borderTopLeftRadius: 3, gap: 4 },
+  speaker: { fontFamily: 'DMSansBold', color: palette.accent },
 });

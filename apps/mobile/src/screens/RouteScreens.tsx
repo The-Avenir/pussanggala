@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Button, Gaile, Icon, IconButton, Notice, palette, type, ui } from '../ui/travel';
+import { Button, Gaile, GaileMessage, Icon, IconButton, Notice, palette, type, ui } from '../ui/travel';
 import { PreferenceChips } from './Preferences';
 import { rankedPreviewRoutes } from './previewJourney';
 import type { Preference, PreviewRoute, PreviewStep } from './previewJourney';
@@ -20,14 +20,16 @@ export function RouteOptionsScreen({ selected, preference, onSelect, onPreferenc
   return <View style={ui.screen}>
     <View style={{ gap: 6 }}><Text style={type.caption}>FROM MONUMENTO</Text>
       <Text accessibilityRole="header" style={type.title}>To One Ayala</Text></View>
-    <View style={{ gap: 10 }}><Text style={type.secondary}>Compare the example estimates</Text>
+    <GaileMessage pose="map"><Text style={type.body}>Here are the example routes. Compare the fare, travel time, and transfers, then choose your sakay.</Text></GaileMessage>
+    <View style={{ gap: 10 }}><Text style={type.caption}>Compare the example estimates</Text>
       <PreferenceChips preference={preference} onSelect={onPreference}/></View>
-    <View accessibilityRole="radiogroup" accessibilityLabel="Choose a route">{rankedPreviewRoutes(preference).map(route =>
+    <View accessibilityRole="radiogroup" accessibilityLabel="Choose a route" style={styles.options}>{rankedPreviewRoutes(preference).map(route =>
       <Pressable key={route.id} accessibilityRole="radio" accessibilityLabel={route.title}
         accessibilityState={{ checked: selected.id === route.id }} aria-checked={selected.id === route.id}
         onPress={() => onSelect(route)} style={[styles.option, selected.id === route.id && styles.selectedOption]}>
-        <View style={styles.optionTitle}><View style={styles.radio}>{selected.id === route.id ? <View style={styles.radioDot}/> : null}</View>
-          <Text style={[type.heading, ui.flex]}>{route.title}</Text></View>
+        <View style={styles.optionTitle}><View style={styles.transport}><Icon name={route.title.includes('MRT') ? 'train' : 'bus'} color={palette.rail}/></View>
+          <View style={ui.flex}><Text style={type.label}>{route.title}</Text><Text style={type.caption}>{route.transfers === 0 ? 'Direct · one ride' : `${route.transfers} transfer · ${route.steps.filter(step => step.mode === 'ride').length} rides`}</Text></View>
+          <View style={styles.radio}>{selected.id === route.id ? <View style={styles.radioDot}/> : null}</View></View>
         <View style={styles.optionMetrics}><Text style={type.label}>{route.time}</Text><Text style={type.body}>{route.fare}</Text>
           <Text style={type.secondary}>{route.transfers === 0 ? 'No transfers' : route.transfers + ' transfer'}</Text></View>
         {route.id.endsWith('carousel-mrt') && preference === 'cheapest' ? <Text style={[type.secondary, styles.accent]}>Lowest example fare</Text>
@@ -49,6 +51,7 @@ export function RouteStepsScreen({ route, stepIndex, onStep, onMap, onSave, onAs
   return <View style={ui.screen}>
     <View style={{ gap: 8 }}><Text style={type.caption}>MONUMENTO → ONE AYALA</Text>
       <Text accessibilityRole="header" style={type.title}>{route.title}</Text><TripSummary route={route}/></View>
+    <GaileMessage pose="map"><Text style={type.body}>{route.steps[stepIndex]!.instruction}</Text></GaileMessage>
     <View style={styles.links}><Button variant="text" icon="map" label="Map / stop diagram" onPress={onMap}/>
       <Button variant="text" icon="save" label="Save route" onPress={onSave}/></View>
     <View>{route.steps.map((step, index) => <View key={step.id} style={styles.timelineRow}>
@@ -63,7 +66,7 @@ export function RouteStepsScreen({ route, stepIndex, onStep, onMap, onSave, onAs
             color={step.mode === 'walk' ? palette.secondary : palette.rail} size={19}/><Text style={type.caption}>{step.mode === 'walk' ? 'WALK / TRANSFER' : 'RIDE'}</Text></View>
           <Text style={type.heading}>{step.title}</Text><Text style={type.secondary}>{step.subtitle}</Text>
         </Pressable>
-        {index === stepIndex ? <View style={styles.stepDetail}><Signboard step={step}/><Text style={type.body}>{step.instruction}</Text>
+        {index === stepIndex ? <View style={styles.stepDetail}><Signboard step={step}/>
           {step.mode === 'ride' ? <Text style={type.secondary}>Alighting landmark: {step.stop}</Text> : null}
         </View> : null}
       </View>
@@ -136,9 +139,10 @@ export function ActiveTripScreen({ route, stepIndex, onEnd, onAsk, onSteps }: {
   const actionTitle = step.mode === 'ride'
     ? step.title.split(' southbound')[0]!.split(' northbound')[0]!.replace(' to One Ayala', '') : step.title;
   return <View style={ui.screen}>
-    <View style={{ gap: 12 }}><View style={ui.between}><Text style={type.secondary}>{'Step ' + (stepIndex + 1) + ' of ' + route.steps.length}</Text>
+    <View style={{ gap: 12 }}><View style={styles.journeyBar}><View style={ui.between}><Text style={type.secondary}>{'Step ' + (stepIndex + 1) + ' of ' + route.steps.length}</Text>
       <Text style={[type.caption, styles.accent]}>MANUAL PROGRESS</Text></View>
-      <View style={styles.progressTrack}><View style={[styles.progressFill, { width: ((stepIndex + 1) / route.steps.length * 100) + '%' as `${number}%` }]}/></View>
+      <Text style={type.label}>Monumento → One Ayala</Text>
+      <View style={styles.progressTrack}><View style={[styles.progressFill, { width: ((stepIndex + 1) / route.steps.length * 100) + '%' as `${number}%` }]}/></View></View>
       <View style={styles.mode}><Icon name={step.mode === 'walk' ? 'walk' : step.title.includes('MRT') || step.title.includes('LRT') ? 'train' : 'bus'} color={palette.accent}/>
         <Text style={[type.caption, styles.accent]}>{step.mode === 'walk' ? 'WALK / TRANSFER' : 'BOARD & RIDE'}</Text></View>
       <Text accessibilityRole="header" style={type.title}>{actionTitle}</Text>
@@ -146,7 +150,7 @@ export function ActiveTripScreen({ route, stepIndex, onEnd, onAsk, onSteps }: {
         <Text style={type.title}>{step.stop}</Text></View> : null}
       <Signboard step={step}/>
       {step.mode === 'ride' ? <Text style={type.secondary}>{step.title.includes('southbound') ? 'Southbound · ' : step.title.includes('northbound') ? 'Northbound · ' : ''}{step.subtitle}</Text> : null}
-      <Text style={type.body}>{step.instruction}</Text>
+      <GaileMessage pose="map"><Text style={type.body}>{step.instruction}</Text></GaileMessage>
     </View>
     {next ? <View style={styles.next}><Text style={type.caption}>NEXT</Text><Text style={type.label}>{next.title}</Text></View>
       : <Text style={type.secondary}>One Ayala is your final landmark. Finish only when you reach it.</Text>}
@@ -158,20 +162,22 @@ export function ActiveTripScreen({ route, stepIndex, onEnd, onAsk, onSteps }: {
   </View>;
 }
 export function TripCompleteScreen({ onSave, onReturn, onDone }: { onSave: () => void; onReturn: () => void; onDone: () => void }): React.JSX.Element {
-  return <View style={[ui.screen, { paddingVertical: 24 }]}><Gaile pose="cheer" height={90}/>
-    <Text accessibilityRole="header" style={type.display}>Nakarating ka!</Text>
-    <Text style={type.body}>You completed the example journey to One Ayala.</Text>
+  return <View style={[ui.screen, { paddingVertical: 24 }]}><View style={styles.arrival}><Gaile pose="cheer" height={200}/>
+    <Text accessibilityRole="header" style={[type.display, styles.center]}>Nakarating ka!</Text>
+    <Text style={[type.body, styles.center]}>You completed the example journey to One Ayala.</Text></View>
     <Button label="Save this route" icon="save" onPress={onSave}/>
     <Button label="Plan return trip" variant="secondary" onPress={onReturn}/>
     <Button label="Done" variant="text" onPress={onDone}/>
   </View>;
 }
 const styles = StyleSheet.create({
-  metrics: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 22, rowGap: 12, paddingVertical: 14 },
-  option: { paddingVertical: 20, paddingHorizontal: 12, gap: 10, borderBottomWidth: 1, borderColor: palette.line },
-  selectedOption: { backgroundColor: palette.accentSoft, borderRadius: 18, borderWidth: 1, borderColor: palette.gold, paddingHorizontal: 14 },
+  metrics: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 22, rowGap: 12, padding: 14, borderRadius: 14, borderWidth: 1, borderStyle: 'dashed', borderColor: palette.line, backgroundColor: palette.background },
+  options: { gap: 10 },
+  option: { padding: 12, gap: 8, borderWidth: 1, borderRadius: 14, borderColor: palette.line, backgroundColor: palette.card },
+  selectedOption: { backgroundColor: palette.accentSoft, borderColor: palette.accent },
+  transport: { width: 40, height: 40, borderRadius: 12, backgroundColor: palette.railSoft, alignItems: 'center', justifyContent: 'center' },
   optionTitle: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  optionMetrics: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 18, rowGap: 4, marginLeft: 32 },
+  optionMetrics: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 12, rowGap: 4, paddingTop: 8, borderTopWidth: 1, borderColor: palette.line },
   radio: { width: 20, height: 20, borderRadius: 10, borderWidth: 1.5, borderColor: palette.secondary, justifyContent: 'center', alignItems: 'center' },
   radioDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: palette.accent },
   accent: { color: palette.accent }, white: { color: palette.white },
@@ -195,9 +201,11 @@ const styles = StyleSheet.create({
   mapMode: { flexDirection: 'row', backgroundColor: palette.background, padding: 4, borderRadius: 16, gap: 4 },
   mapSegment: { flex: 1, minHeight: 48, padding: 10, alignItems: 'center', justifyContent: 'center', borderRadius: 12 },
   mapSegmentSelected: { backgroundColor: palette.paper, borderWidth: 1, borderColor: palette.gold },
-  mapUnavailable: { gap: 20, padding: 20, backgroundColor: palette.goldSoft, borderRadius: 20 }, mapCanvas: { backgroundColor: palette.background, marginHorizontal: -20, padding: 20 },
+  mapUnavailable: { gap: 20, padding: 20, backgroundColor: palette.goldSoft, borderRadius: 20 }, mapCanvas: { backgroundColor: palette.card, borderWidth: 1, borderColor: palette.line, borderRadius: 20, padding: 16 },
   zoomControls: { flexDirection: 'row', backgroundColor: palette.paper, borderRadius: 14 },
   mapSummary: { gap: 6, borderTopWidth: 1, borderColor: palette.line, paddingTop: 20 },
-  progressTrack: { height: 6, borderRadius: 6, backgroundColor: palette.line, overflow: 'hidden' }, progressFill: { height: 6, backgroundColor: palette.orange },
-  landmark: { padding: 16, gap: 4, borderRadius: 18, backgroundColor: palette.goldSoft }, next: { paddingVertical: 16, borderTopWidth: 1, borderBottomWidth: 1, borderColor: palette.line, gap: 5 },
+  journeyBar: { gap: 10, padding: 14, borderRadius: 16, backgroundColor: palette.goldSoft },
+  progressTrack: { height: 6, borderRadius: 6, backgroundColor: palette.line, overflow: 'hidden' }, progressFill: { height: 6, backgroundColor: palette.accent },
+  landmark: { padding: 16, gap: 4, borderRadius: 18, backgroundColor: palette.goldSoft }, next: { padding: 16, borderWidth: 1, borderRadius: 16, backgroundColor: palette.card, borderColor: palette.line, gap: 5 },
+  arrival: { alignItems: 'center', gap: 12, padding: 16 }, center: { textAlign: 'center' },
 });

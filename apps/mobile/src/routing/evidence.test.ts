@@ -40,6 +40,58 @@ function supportedJourney() {
 }
 
 describe('installed NCR retrieval integration', () => {
+  it.each(['One Ayala', 'SM North EDSA', 'Intramuros'])
+    ('a new destination request for %s replaces unresolved Cubao choices', async destination => {
+      const manager = createRouteConversation(pack);
+      const first = await manager.handleUserMessage('Paano pumunta sa Cubao?');
+      expect(first.type).toBe('clarification');
+      const query = `Paano pumunta sa ${destination}?`;
+      const next = await manager.handleUserMessage(query);
+      expect(next.type, JSON.stringify(next)).toBe('needsTrip');
+      const trip = manager.getState().trip;
+      expect(trip.pendingClarification).toBeUndefined();
+      expect(pack.places.get(trip.destinationPlaceId!)?.name).toContain(destination);
+      expect(routeReply(next, query, trip, pack)).toContain('Saan ka manggagaling?');
+      expect(trip.originPlaceId).toBeUndefined();
+    });
+  it('changing destination retains a confirmed origin and routes to the new place', async () => {
+    const destination = [...pack.places.values()].find(place => place.name === 'One Ayala transport hub')!;
+    const startingPoint = [...pack.places.values()].find(place => place.place_id !== destination.place_id
+      && route(place.place_id, destination.place_id, 'balanced', pack).status === 'ok')!;
+    expect(startingPoint).toBeDefined();
+    const manager = createRouteConversation(pack);
+    expect((await manager.handleUserMessage(`From ${startingPoint.name} to Cubao`)).type).toBe('clarification');
+    const origin = manager.getState().trip.originPlaceId;
+    expect(origin).toBe(startingPoint.place_id);
+    const next = await manager.handleUserMessage('Paano pumunta sa One Ayala?');
+    expect(next.type).toBe('plan');
+    expect(manager.getState().trip.originPlaceId).toBe(origin);
+    expect(pack.places.get(manager.getState().trip.destinationPlaceId!)?.name).toContain('One Ayala');
+    expect(manager.getState().trip.pendingClarification).toBeUndefined();
+  });
+  it('replacing an ambiguous origin retains the deferred destination choices', async () => {
+    const manager = createRouteConversation(pack);
+    expect((await manager.handleUserMessage('From Buendia to Cubao')).type).toBe('clarification');
+    const next = await manager.handleUserMessage('From Recto');
+    expect(next.type).toBe('clarification');
+    if (next.type !== 'clarification') throw new Error(next.message);
+    expect(next.clarification.slot).toBe('destination');
+    expect(next.clarification.text).toBe('Cubao');
+    expect(pack.places.get(manager.getState().trip.originPlaceId!)?.name).toContain('Recto');
+    const index = next.clarification.candidates.findIndex(candidate => candidate.name === 'Cubao LRT-2 station');
+    expect((await manager.handleClarificationPick(index)).type).toBe('plan');
+  });
+  it('changing destination during origin clarification discards the old deferred destination', async () => {
+    const manager = createRouteConversation(pack);
+    expect((await manager.handleUserMessage('From Buendia to Cubao')).type).toBe('clarification');
+    const next = await manager.handleUserMessage('Paano pumunta sa One Ayala?');
+    expect(next.type).toBe('clarification');
+    if (next.type !== 'clarification') throw new Error(next.message);
+    expect(next.clarification.slot).toBe('origin');
+    await manager.handleClarificationPick(0);
+    expect(manager.getState().trip.pendingClarification).toBeUndefined();
+    expect(pack.places.get(manager.getState().trip.destinationPlaceId!)?.name).toContain('One Ayala');
+  });
   it('grounds the prompt after an explicit Cubao button pick in the selected place and asks only for origin', async () => {
     const manager = createRouteConversation(pack);
     const question = 'pano pumuntang cubao';

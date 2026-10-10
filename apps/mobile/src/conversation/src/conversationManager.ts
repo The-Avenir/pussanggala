@@ -204,9 +204,11 @@ export class TripConversationManager {
       if (intent.kind === "clarify_answer" && intent.choiceIndex !== undefined) {
         return this.confirmCandidate(intent.choiceIndex);
       }
-      // A fresh new-trip request abandons the clarification; anything else
-      // (follow-ups, chit-chat, unstructurable text) re-presents candidates.
-      if (intent.kind === "new_trip") return this.applySlots(intent);
+      // Explicit endpoint requests can replace unresolved places. Bare names
+      // outside the displayed choices remain non-picks, as do follow-ups.
+      if (intent.kind === "new_trip" || intent.kind === "change_origin" || intent.kind === "change_destination") {
+        return this.applySlots(intent);
+      }
       return this.clarifyAgain();
     }
 
@@ -267,10 +269,17 @@ export class TripConversationManager {
         destinationFailure.place ?? mentionLabel(effective.destination),
       );
     }
-    this.deferredDestination = resolved.origin?.status === 'needs_clarification' && resolved.destination?.status === 'needs_clarification'
-      ? { intent: { kind: 'change_destination', source: effective.source, ...(effective.destination ? { destination: effective.destination } : {}) },
-        result: resolved.destination } : null;
-    return this.continueAfterApply(applyIntent(this.trip, effective, resolved));
+    if (effective.kind !== 'change_origin') {
+      this.deferredDestination = resolved.origin?.status === 'needs_clarification' && resolved.destination?.status === 'needs_clarification'
+        ? { intent: { kind: 'change_destination', source: effective.source, ...(effective.destination ? { destination: effective.destination } : {}) },
+          result: resolved.destination } : null;
+    }
+    let next = applyIntent(this.trip, effective, resolved);
+    if (this.deferredDestination && !next.pendingClarification) {
+      next = applyIntent(next, this.deferredDestination.intent, { destination: this.deferredDestination.result });
+      this.deferredDestination = null;
+    }
+    return this.continueAfterApply(next);
   }
 
   private async resolveSlots(intent: Intent): Promise<ResolvedSlots> {

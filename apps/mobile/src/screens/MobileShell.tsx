@@ -38,7 +38,7 @@ const TITLES: Record<Screen, string> = {
   offline: 'Offline resources', privacy: 'Storage & privacy', about: 'About',
 };
 const TABS: readonly { id: Tab; label: string; icon: IconName }[] = [
-  { id: 'plan', label: 'Plan', icon: 'pin' }, { id: 'map', label: 'Map', icon: 'map' }, { id: 'trips', label: 'Trips', icon: 'trips' },
+  { id: 'plan', label: 'Plan', icon: 'chat' }, { id: 'map', label: 'Map', icon: 'map' }, { id: 'trips', label: 'Trips', icon: 'trips' },
 ];
 const normalize = (value: string) => value.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
 const exampleQuestion = 'Paano pumunta sa One Ayala galing Monumento?';
@@ -53,7 +53,7 @@ export function MobileShell(): React.JSX.Element {
   const [preference, setPreference] = useState<Preference>('cheapest');
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
-  const [landmarksOpen, setLandmarksOpen] = useState(false);
+  const [landmarksOpen, setLandmarksOpen] = useState(true);
   const [exampleMode, setExampleMode] = useState(false);
   const [turns, setTurns] = useState<ConversationTurn[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
@@ -425,11 +425,12 @@ export function MobileShell(): React.JSX.Element {
     <KeyboardAvoidingView style={styles.page} behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       accessibilityElementsHidden={modalOpen} importantForAccessibility={modalOpen ? 'no-hide-descendants' : 'auto'}
       {...(Platform.OS === 'web' ? { inert: modalOpen ? true : undefined } : {})}>
-      <View style={styles.header} ref={returnFocus} tabIndex={-1}>
-        {isRoot ? screen === 'plan' || screen === 'welcome' ? <Gaile pose="idle" height={30}/> : <Icon name={tab === 'map' ? 'map' : 'trips'} color={palette.accent}/> : <IconButton name="back" label="Go back" onPress={back}/>}
-        <Text style={[type.label, ui.flex]}>{screen === 'welcome' ? 'Pusang Gala' : TITLES[screen]}</Text>
-        {screen === 'welcome' ? null : screen === 'ask' ? <Button label="New" variant="text" onPress={newConversation}/> : <IconButton name="settings" label="Open settings" onPress={() => { if (screen !== 'settings') navigate('settings'); }}/>}
-      </View>
+      {screen !== 'welcome' ? <View style={styles.header} ref={returnFocus} tabIndex={-1}>
+        {isRoot ? screen === 'plan' ? <View style={styles.headerAvatar}><Gaile pose="wave" height={43}/></View> : <Icon name={tab === 'map' ? 'map' : 'trips'} color={palette.accent}/> : <IconButton name="back" label="Go back" onPress={back}/>}
+        <View style={ui.flex}><Text style={type.heading}>{screen === 'plan' || screen === 'ask' ? 'Gaile' : TITLES[screen]}</Text>
+          {screen === 'plan' || screen === 'ask' ? <Text style={type.caption}>Your Metro Manila travel buddy</Text> : null}</View>
+        {screen === 'ask' ? <Button label="New" variant="text" onPress={newConversation}/> : <IconButton name="settings" label="Open settings" onPress={() => { if (screen !== 'settings') navigate('settings'); }}/>}
+      </View> : null}
       {exampleMode || activeRoute ? <View style={styles.preview}><Text style={[type.caption, ui.flex]}>Example mode · not travel guidance</Text>
         <Pressable accessibilityRole="button" accessibilityLabel="Leave example mode" onPress={() => {
           if (activeRoute) notice('Example trip in progress', 'End the example trip first. Your current manual progress has been kept.');
@@ -451,10 +452,9 @@ export function MobileShell(): React.JSX.Element {
           <Text style={type.caption}>{'Step ' + (activeStep + 1) + ' of ' + activeRoute.steps.length + ' · manual progress'}</Text></View>
       </Pressable> : null}
       {screen !== 'welcome' ? <View style={styles.tabs}>{TABS.map(item => <Pressable key={item.id} accessibilityRole="tab" accessibilityLabel={item.label}
-        accessibilityState={{ selected: tab === item.id }} aria-selected={tab === item.id} onPress={() => openTab(item.id)} style={styles.tab}>
+        accessibilityState={{ selected: tab === item.id }} aria-selected={tab === item.id} onPress={() => openTab(item.id)} style={[styles.tab, tab === item.id && styles.selectedTab]}>
         <Icon name={item.icon} color={tab === item.id ? palette.accent : palette.secondary}/>
         <Text style={[type.caption, tab === item.id && styles.activeTab]}>{item.label}</Text>
-        {tab === item.id ? <View style={styles.tabIndicator}/> : null}
       </Pressable>)}</View> : null}
     </KeyboardAvoidingView>
     {modalOpen ? <Modal transparent visible animationType="none" onRequestClose={() => { setSheet(null); setEditing(null); }}>
@@ -498,12 +498,13 @@ const styles = StyleSheet.create({
     ...(Platform.OS === 'web' ? { outlineWidth: 0 } : {}) },
   preview: { minHeight: 44, paddingLeft: 20, paddingRight: 10, backgroundColor: palette.background, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
   leave: { minWidth: 48, minHeight: 44, alignItems: 'center', justifyContent: 'center' },
-  content: { padding: 20, paddingTop: 24, paddingBottom: 32, gap: 20 },
-  footer: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 12, backgroundColor: palette.paper, borderTopWidth: 1, borderColor: palette.line },
-  homeFooter: { backgroundColor: palette.goldSoft, borderTopColor: palette.gold },
-  tabs: { flexDirection: 'row', borderTopWidth: 1, borderColor: palette.line, paddingHorizontal: 20, paddingTop: 7, paddingBottom: 5, backgroundColor: palette.paper },
-  tab: { flex: 1, minHeight: 58, alignItems: 'center', justifyContent: 'center', gap: 3 },
-  activeTab: { color: palette.accent, fontWeight: '600' }, tabIndicator: { position: 'absolute', top: -8, width: 30, height: 2, backgroundColor: palette.accent },
+  headerAvatar: { width: 34, height: 34, borderRadius: 17, overflow: 'hidden', alignItems: 'center', backgroundColor: palette.accentSoft },
+  content: { padding: 16, paddingTop: 12, paddingBottom: 24, gap: 12 },
+  footer: { paddingHorizontal: 16, paddingTop: 10, paddingBottom: 10, backgroundColor: palette.paper },
+  homeFooter: { backgroundColor: palette.paper },
+  tabs: { flexDirection: 'row', borderTopWidth: 1, borderColor: palette.line, paddingHorizontal: 16, paddingVertical: 6, gap: 8, backgroundColor: palette.paper },
+  tab: { flex: 1, minHeight: 52, padding: 4, borderRadius: 12, alignItems: 'center', justifyContent: 'center', gap: 3 },
+  selectedTab: { backgroundColor: palette.accentSoft }, activeTab: { color: palette.accent, fontWeight: '600' },
   resume: { minHeight: 68, paddingVertical: 10, paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: palette.accentSoft },
   scrim: { flex: 1, backgroundColor: 'rgba(20,30,25,0.35)', justifyContent: 'flex-end', alignItems: 'center' },
   sheet: { width: '100%', maxWidth: 480, maxHeight: '85%', backgroundColor: palette.paper, borderTopLeftRadius: 20, borderTopRightRadius: 20, padding: 24, paddingBottom: 32, gap: 16 },
