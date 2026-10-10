@@ -254,7 +254,7 @@ try {
     await send('Saan ako bababa?');
     assert.ok(await page.getByText(/In the example, get off at One Ayala/).isVisible());
     await send('Anong oras last trip?');
-    assert.ok(await page.getByText(/Operating hours aren’t reported/).isVisible());
+    assert.ok(await page.getByText(/I don’t have the operating hours/).isVisible());
     await button('Other options').click();
     await button('Sort by fare').click();
     await page.getByRole('radio', { name: 'Carousel + MRT-3', exact: true }).click();
@@ -263,9 +263,7 @@ try {
     await button('Show step 2').click();
     await capture('directions');
     await largeText('directions');
-    await button('Sources & limitations').click();
-    await capture('source-limitations');
-    await button('Got it').click();
+    assert.equal(await button('Sources & limitations').count(), 0, 'Directions keep source metadata out of the traveler flow');
     await button('Start example trip').click();
     await button('Start example trip').last().click();
     await button('I’m here · Next step').click();

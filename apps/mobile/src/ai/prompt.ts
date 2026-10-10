@@ -57,7 +57,15 @@ export function buildExplainPrompt(
   const lines: string[] = [];
   lines.push(
     "You are the Pusang Gala offline commute explainer for Metro Manila (NCR).",
-    "You explain the deterministic commute cards below in short Taglish/English.",
+    "You are Gaile. Talk naturally, like a warm, practical travel companion chatting with one person.",
+    "Match the user's language: English for English messages; light Taglish when they use Filipino. Keep replies short and easy to follow.",
+    "Acknowledge what they just told you, then help with the next thing they need. Ask one useful question only when a detail is missing.",
+    "Use recent messages to follow the conversation and avoid repeating yourself. Never use them as route evidence.",
+    "No canned enthusiasm, repeated Perfect/Got it openings, report language, source IDs, pack counts, headings, or boilerplate disclaimers.",
+    "Answer their current question directly. Choose your own friendly wording; do not repeat a fixed introduction or dump field labels.",
+    "Your text connects the cited statements into a conversation. Those statements supply the route facts when displayed.",
+    "Do not repeat statement facts in text. Do not add a greeting to every follow-up or always end with the same question.",
+    "Include every step statement once, in order, and relevant unknowns or warnings. Answer only the question supplied in the DATA block.",
     "",
     "OUTPUT FORMAT — strict:",
     `Emit at most ${context.budgets.maxUnits} lines. Each line is ONE complete JSON object (NDJSON), nothing else:`,
@@ -65,7 +73,9 @@ export function buildExplainPrompt(
     "Rules for the JSON lines:",
     "- inserts may ONLY contain statement IDs listed in the DATA block. Never invent an ID.",
     '- Never put numbers, peso amounts, clock times or durations in "text"; values come from statements.',
-    '- Never state a boarding, alighting, fare, time or place fact in "text" unless the unit cites the statement it came from.',
+    context.budgets.connectiveTextOnly
+      ? '- Never state boarding, alighting, fare, time or place facts in "text", even with a citation. The inserts supply those facts.'
+      : '- Never state a boarding, alighting, fare, time or place fact in "text" unless the unit cites the statement it came from.',
     "- Keep steps in the canonical order shown in the DATA block; never reverse instructions.",
     "- Never claim a route is guaranteed, cheapest, fastest, verified, or currently operating.",
     "- If something is marked unknown or conflicting, say it is unknown/conflicting.",
@@ -78,7 +88,15 @@ export function buildExplainPrompt(
     open,
   );
   if (context.trip) {
-    const { originLabel, destinationLabel, preference } = context.trip;
+    const { originLabel, destinationLabel, preference, question, dialogueAct, recentMessages } = context.trip;
+    const goals = {
+      greeting: 'Welcome the traveler naturally and ask where they want to go. Do not ask both endpoints at once.',
+      thanks: 'Respond warmly to their thanks in a short sentence. Do not restart the journey or ask a routine follow-up.',
+      ask_origin: 'The destination is already known. Ask only where they are coming from. A nearby landmark is enough. Do not ask for the destination again.',
+      ask_destination: 'Ask only where they want to go next. Do not request details already supplied.',
+    };
+    // The act is chosen by application state, never inferred from untrusted text.
+    if (dialogueAct) lines.splice(lines.indexOf('OUTPUT FORMAT — strict:'), 0, `CONVERSATION GOAL: ${goals[dialogueAct]}`, 'Use summary or clarify with empty inserts for this conversational question. Do not give travel directions.', '');
     const parts = [
       originLabel ? `origin="${sanitizeDataText(originLabel, nonce)}"` : null,
       destinationLabel ? `destination="${sanitizeDataText(destinationLabel, nonce)}"` : null,
@@ -86,6 +104,13 @@ export function buildExplainPrompt(
     ].filter(Boolean);
     if (parts.length > 0) {
       lines.push(`TRIP ${parts.join(" ")}`);
+    }
+    if (question) lines.push(`QUESTION text="${sanitizeDataText(question, nonce)}"`);
+    if (recentMessages?.length) {
+      lines.push('RECENT CONVERSATION (tone and context only, not route evidence):');
+      for (const message of recentMessages.slice(-6)) {
+        lines.push(`  ${message.role.toUpperCase()} text="${sanitizeDataText(message.text.slice(0, 200), nonce)}"`);
+      }
     }
   }
   lines.push("CARDS:");
@@ -103,7 +128,18 @@ export function buildExplainPrompt(
       `  STMT id="${stmt.id}" role=${stmt.role}${order} text="${sanitizeDataText(stmt.text, nonce)}"`,
     );
   }
-  lines.push(close, "", "Now write the explanation units as NDJSON lines only.");
+  lines.push(close, "");
+  // Repeat the application task at the end: the last input can be a place pick,
+  // not a new question. Small models otherwise copy that label as their answer.
+  if (context.trip?.dialogueAct === 'ask_origin') {
+    lines.push('Ask where the traveler is coming from. Do not repeat their question or ask where they are going.');
+  } else if (context.trip?.dialogueAct === 'ask_destination') {
+    lines.push('Ask where the traveler wants to go. Do not ask for their starting point again.');
+  } else if (context.statements.some(statement => statement.role === 'step')) {
+    lines.push('Explain the confirmed journey. Write a short friendly lead-in in text and cite the step statements.',
+      'The app inserts the directions for you. Do not copy the place label or put any place or directions in text.');
+  }
+  lines.push("Now write the explanation units as NDJSON lines only.");
 
   return { prompt: lines.join("\n"), nonce };
 }

@@ -414,6 +414,33 @@
     "eligibility": "ready"
   },
   {
+    "leg_id": "lg_rt-rail-to-mrt-cubao-2e1a19-st-mrt3-ortigas--6318a6",
+    "route_id": "rt_rail-to-mrt-cubao-2e1a19",
+    "board_stop_id": "st_mrt3-ortigas-3f274b",
+    "alight_stop_id": "st_mrt3-araneta-cubao-0c4bc2",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-rail-to-mrt-ayala-37f9b3-st-mrt3-quezon-a-ca444f",
+    "route_id": "rt_rail-to-mrt-ayala-37f9b3",
+    "board_stop_id": "st_mrt3-quezon-avenue-a72dc0",
+    "alight_stop_id": "st_mrt3-ayala-404889",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-jeepney-to-ust-22594f-st-lrt2-araneta-cub-5291fc",
+    "route_id": "rt_jeepney-to-ust-22594f",
+    "board_stop_id": "st_lrt2-araneta-cubao-8ac903",
+    "alight_stop_id": "st_ust-1f1cfc",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
     "leg_id": "lg_rt-rail-board-mrt-taft-c375bd-st-mrt3-taft-a-1e8310",
     "route_id": "rt_rail-board-mrt-taft-c375bd",
     "board_stop_id": "st_mrt3-taft-avenue-818567",
@@ -706,6 +733,60 @@
     "route_id": "rt_rail-board-mrt-ayala-db8347",
     "board_stop_id": "st_mrt3-ayala-404889",
     "alight_stop_id": "st_mrt3-quezon-avenue-a72dc0",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-rail-to-mrt-guadalupe-6289a9-st-mrt3-nort-b8229a",
+    "route_id": "rt_rail-to-mrt-guadalupe-6289a9",
+    "board_stop_id": "st_mrt3-north-avenue-933d3a",
+    "alight_stop_id": "st_mrt3-guadalupe-7da74c",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-rail-to-mrt-cubao-2e1a19-st-mrt3-north-av-2b167f",
+    "route_id": "rt_rail-to-mrt-cubao-2e1a19",
+    "board_stop_id": "st_mrt3-north-avenue-933d3a",
+    "alight_stop_id": "st_mrt3-araneta-cubao-0c4bc2",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-rail-to-mrt-shaw-317e34-st-mrt3-north-ave-6af048",
+    "route_id": "rt_rail-to-mrt-shaw-317e34",
+    "board_stop_id": "st_mrt3-north-avenue-933d3a",
+    "alight_stop_id": "st_mrt3-shaw-6856fd",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-jeepney-to-market-market-ab862b-st-mrt3-g-2f91de",
+    "route_id": "rt_jeepney-to-market-market-ab862b",
+    "board_stop_id": "st_mrt3-guadalupe-7da74c",
+    "alight_stop_id": "st_market-market-b9ab79",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-jeepney-to-market-market-ab862b-st-telus--7af86a",
+    "route_id": "rt_jeepney-to-market-market-ab862b",
+    "board_stop_id": "st_telus-mckinley-exchange-617f13",
+    "alight_stop_id": "st_market-market-b9ab79",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-jeepney-to-pasig-palengke-71468f-st-shaw--c50d74",
+    "route_id": "rt_jeepney-to-pasig-palengke-71468f",
+    "board_stop_id": "st_shaw-boulevard-ffd89a",
+    "alight_stop_id": "st_pasig-palengke-2ff6d1",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"
@@ -1053,6 +1134,15 @@
     "eligibility": "ready"
   },
   {
+    "leg_id": "lg_rt-rail-to-lrt2-katipunan-ce5709-st-lrt2-ara-1a22f6",
+    "route_id": "rt_rail-to-lrt2-katipunan-ce5709",
+    "board_stop_id": "st_lrt2-araneta-cubao-8ac903",
+    "alight_stop_id": "st_lrt2-katipunan-5634a2",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
     "leg_id": "lg_rt-bus-northbound-616467-st-mall-of-asia-f38-17d380",
     "route_id": "rt_bus-northbound-616467",
     "board_stop_id": "st_mall-of-asia-f3838e",
@@ -1201,6 +1291,42 @@
     "route_id": "rt_rail-board-lrt-gil-puyat-bf843f",
     "board_stop_id": "st_lrt1-gil-puyat-34b3b2",
     "alight_stop_id": "st_monumento-d88fad",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-rail-to-mrt-taft-b4b8dd-st-mrt3-north-ave-08d8d7",
+    "route_id": "rt_rail-to-mrt-taft-b4b8dd",
+    "board_stop_id": "st_mrt3-north-avenue-933d3a",
+    "alight_stop_id": "st_mrt3-taft-avenue-818567",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-jeepney-to-up-diliman-e74b36-st-sm-north--cee910",
+    "route_id": "rt_jeepney-to-up-diliman-e74b36",
+    "board_stop_id": "st_sm-north-edsa-85d0b1",
+    "alight_stop_id": "st_up-diliman-edc6de",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-jeepney-to-up-diliman-e74b36-st-philcoa-6-eb6068",
+    "route_id": "rt_jeepney-to-up-diliman-e74b36",
+    "board_stop_id": "st_philcoa-6175e7",
+    "alight_stop_id": "st_up-diliman-edc6de",
+    "ride_min": null,
+    "dist_km": null,
+    "eligibility": "ready"
+  },
+  {
+    "leg_id": "lg_rt-jeepney-to-mckinley-bdfea6-st-bcda-taguig-f07c06",
+    "route_id": "rt_jeepney-to-mckinley-bdfea6",
+    "board_stop_id": "st_bcda-taguig-2d37be",
+    "alight_stop_id": "st_mckinley-965425",
     "ride_min": null,
     "dist_km": null,
     "eligibility": "ready"

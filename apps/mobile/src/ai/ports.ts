@@ -60,6 +60,10 @@ export interface CardBundleInput {
 
 /** REPLACEME(T32): trip/session state supplied by the conversation manager. */
 export interface TripContextPort {
+  question?: string;
+  dialogueAct?: 'greeting' | 'thanks' | 'ask_origin' | 'ask_destination';
+  /** Recent turns inform tone and references only; route facts still come from statements. */
+  recentMessages?: Array<{ role: 'user' | 'assistant'; text: string }>;
   originLabel?: string;
   destinationLabel?: string;
   preference?: string;
@@ -74,6 +78,8 @@ export interface GroundingContext {
 }
 
 export interface ContextBudgets {
+  /** Route facts must be supplied through inserts, even when prose cites facts. */
+  connectiveTextOnly?: boolean;
   /** Max canonical statements carried in one context. */
   maxStatements: number;
   /** Max chars of one canonical statement text; oversize is rejected, never truncated (a truncated fact is a false fact). */

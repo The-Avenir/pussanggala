@@ -1,5 +1,5 @@
 {
-  "promoted_at": "2026-10-09T21:28:18.606Z",
+  "promoted_at": "2026-10-09T23:47:45.734Z",
   "source_snapshot_sha256": "d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3",
   "source_snapshot_sha256_bytes": "d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3",
   "source_snapshot_sha256_lf": "d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3",
@@ -7,7 +7,7 @@
   "dispositions": "data/seed/dispositions.json",
   "run": "data/seed/run.json",
   "companion": "data/seed/pack.manifest.json",
-  "pack_sha256": "3859023cfd63573c1a25f63b567897a7b96a16f98a67b3dce9b6abf34c362e2d",
+  "pack_sha256": "dd79be14ba939f769b0512383891acda5f562c1f2acbc24739f78138ee526d4e",
   "notes": [
     "Allowlisted eligible tables validated against the built pack and frozen input.",
     "No raw source URLs, Reddit wording, usernames or dataset imports; offline provenance is retained.",

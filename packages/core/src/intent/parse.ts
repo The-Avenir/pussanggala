@@ -27,13 +27,15 @@ export const MENTION_STOP_KEYWORDS = ["na", "po", "lang", "please", "pls", "usin
 
 const preferenceSource = PREFERENCE_KEYWORDS.map(([, source]) => source).join("|");
 const mentionEnd = new RegExp(`[?.!,;]|\\b(?:${MENTION_STOP_KEYWORDS.join("|")}|${preferenceSource})\\b`, "d");
+// Match colloquial spellings without rewriting input, so mention spans stay exact.
+const tagalogQuestion = "(?:paano|pa['’]?no)(?:\\s+po)?\\s+(?:pumunta(?:ng)?|pupunta(?:ng)?|makarating|mag-?commute)(?:\\s+po)?(?:\\s+(?:sa|papunta(?:ng)?(?:\\s+sa)?))?";
 const originFirst = /\b(?:from|galing(?:\s+(?:sa|ng))?|mula(?:\s+sa)?)\s+(.+?)\s+(?:to|papunta(?:ng)?(?:\s+sa)?|hanggang(?:\s+sa)?|pa)\s+(.+)/d;
-const destinationFirst = /\b(?:how (?:do i |can i |to )?(?:get|go|commute) to|paano (?:pumunta|pupunta|makarating|mag-?commute)(?:\s+(?:sa|papunta sa))?|papunta(?:ng)?\s+sa)\s+(.+?)\s+(?:from|galing(?:\s+sa)?|mula(?:\s+sa)?)\s+(.+)/d;
+const destinationFirst = new RegExp(`\\b(?:how (?:do i |can i |to )?(?:get|go|commute) to|${tagalogQuestion}|papunta(?:ng)?\\s+sa)\\s+(.+?)\\s+(?:from|galing(?:\\s+sa)?|mula(?:\\s+sa)?)\\s+(.+)`, "d");
 const originOnly = /\b(?:galing|mula|from)\s+(?:sa\s+)?(.+)/d;
 const destinationInstead = /\b(?:papunta(?:ng)?|pupunta|going to|to|sa)\s+(.+?)\s+(?:na lang|instead)\b/d;
-const destinationOnly = /\b(?:how (?:do i |can i |to )?(?:get|go|commute) to|paano (?:pumunta|pupunta|makarating|mag-?commute)(?:\s+(?:sa|papunta sa))?|papunta(?:ng)?|pupunta|going to|go to|get to)\s+(?:sa\s+)?(.+)/d;
+const destinationOnly = new RegExp(`\\b(?:how (?:do i |can i |to )?(?:get|go|commute) to|${tagalogQuestion}|papunta(?:ng)?|pumunta(?:ng)?|pupunta(?:ng)?|going to|go to|get to)\\s+(?:sa\\s+)?(.+)`, "d");
 const barePair = /^\s*(.+?)\s+to\s+(.+)/d;
-const questionPair = /^\s*(?:paano (?:pumunta|pupunta|makarating|mag-?commute)(?:\s+sa)?|how (?:do i |can i |to )?(?:get|go|commute))\s+(.+?)\s+to\s+(.+)/d;
+const questionPair = new RegExp(`^\\s*(?:${tagalogQuestion}|how (?:do i |can i |to )?(?:get|go|commute))\\s+(.+?)\\s+to\\s+(.+)`, "d");
 
 export function parse(query: string, trip?: TripState): Intent {
   const q = query.toLowerCase();
@@ -82,7 +84,7 @@ export function parse(query: string, trip?: TripState): Intent {
   if (explicitPair) return explicitPair;
   const singleOrigin = mention(originOnly.exec(q)?.indices?.[1]);
   const singleDestination = mention((destinationInstead.exec(q) ?? destinationOnly.exec(q))?.indices?.[1]);
-  if (!/^\s*(?:how|where|paano|going to|go to|get to|papunta(?:ng)?|pupunta|galing|mula|from|sa)\b/d.test(q)) {
+  if (!/^\s*(?:how|where|paano|pa['’]?no|going to|go to|get to|papunta(?:ng)?|pumunta(?:ng)?|pupunta(?:ng)?|galing|mula|from|sa)\b/d.test(q)) {
     const bare = pair(barePair.exec(q));
     if (bare) return bare;
   }

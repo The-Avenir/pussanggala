@@ -3,8 +3,8 @@
     "assetId": "A1-pack-db",
     "kind": "pack",
     "bundlePath": "assets/pack/pack.sqlite",
-    "sha256": "9431d79a74998e60e209669a6e4fabc5e4b15899316134b072ed25071483bed6",
-    "bytes": 811008,
+    "sha256": "dd79be14ba939f769b0512383891acda5f562c1f2acbc24739f78138ee526d4e",
+    "bytes": 851968,
     "version": "pack_ncr-2026-10",
     "license": "assets/licences/PACK-NOTICE.txt"
   },
@@ -12,7 +12,7 @@
     "assetId": "A2-pack-manifest",
     "kind": "pack",
     "bundlePath": "assets/pack/pack.manifest.json",
-    "sha256": "7bfc7b08fe218e85387f9405a880137d63bc45091dfa8032a3f4f9d7ce0cb92a",
+    "sha256": "daf39818620a34f81f48d52565e000544641c191295ef127c83b8dbdbf6ce700",
     "bytes": 1053,
     "version": "pack_ncr-2026-10",
     "license": "assets/licences/PACK-NOTICE.txt"

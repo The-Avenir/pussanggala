@@ -440,7 +440,7 @@ const jsonl = (rows) => rows.map((r) => JSON.stringify(r)).join("\n") + "\n";
 
 export function run({ out = path.join(ROOT, "data/raw/t12"), reportDir = path.join(HERE, "reports") } = {}) {
   const buf = readFileSync(path.join(ROOT, "howtogetthereph_dataset/ncr_routes.json"));
-  const sha = createHash("sha256").update(buf).digest("hex");
+  const sha = createHash("sha256").update(buf.toString("utf8").replace(/\r\n/g, "\n")).digest("hex");
   if (sha !== SNAPSHOT_SHA256) throw new Error(`snapshot sha256 mismatch: ${sha}`);
   const posts = JSON.parse(buf.toString("utf8"));
   const cands = readCandidates(path.join(ROOT, "data/raw/t11"));

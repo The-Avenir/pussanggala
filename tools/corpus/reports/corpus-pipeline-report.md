@@ -1,5 +1,8 @@
 # Member 1 — corpus and evidence pipeline report (T10–T16)
 
+Latest pack and validation: [seven curated NCR rail additions](../curated-routes-review.md).
+The artifact identity and counts below describe the preceding 134-leg pack.
+
 **Snapshot** `d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3` (`howtogetthereph_dataset/ncr_routes.json`)
 **Scope** T10–T16 (audit → extract → evidence → places → eligible → pack → acceptance → seed)
 **Status** Pipeline and technical acceptance completed on `feat/t14-t16-seed-handoff` via `node tools/corpus/run-pipeline.mjs`; INV-4 raw-URL shipping fix validated on base `44fe8657f7e9a1304cf1f58642a4d0524f2b26c3`.

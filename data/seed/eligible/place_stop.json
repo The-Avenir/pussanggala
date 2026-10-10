@@ -310,6 +310,16 @@
     "eligibility": "ready"
   },
   {
+    "access_id": "ac_ust-1f1cfc",
+    "place_id": "pl_ust-1f1cfc",
+    "stop_id": "st_ust-1f1cfc",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
     "access_id": "ac_pasig-palengke-2ff6d1",
     "place_id": "pl_pasig-palengke-2ff6d1",
     "stop_id": "st_pasig-palengke-2ff6d1",
@@ -400,6 +410,26 @@
     "eligibility": "ready"
   },
   {
+    "access_id": "ac_telus-mckinley-exchange-617f13",
+    "place_id": "pl_telus-mckinley-exchange-617f13",
+    "stop_id": "st_telus-mckinley-exchange-617f13",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
+    "access_id": "ac_shaw-boulevard-ffd89a",
+    "place_id": "pl_shaw-boulevard-ffd89a",
+    "stop_id": "st_shaw-boulevard-ffd89a",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
     "access_id": "ac_lrt1-vito-cruz-4870eb",
     "place_id": "pl_lrt1-vito-cruz-4870eb",
     "stop_id": "st_lrt1-vito-cruz-4870eb",
@@ -423,16 +453,6 @@
     "access_id": "ac_bgc-c6858b",
     "place_id": "pl_bgc-c6858b",
     "stop_id": "st_bgc-c6858b",
-    "direction": "both",
-    "walk_m": null,
-    "walk_min": null,
-    "walk_text": "Boarding point for this place.",
-    "eligibility": "ready"
-  },
-  {
-    "access_id": "ac_shaw-boulevard-ffd89a",
-    "place_id": "pl_shaw-boulevard-ffd89a",
-    "stop_id": "st_shaw-boulevard-ffd89a",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,
@@ -523,6 +543,46 @@
     "access_id": "ac_mrt3-kamuning-e7d051",
     "place_id": "pl_mrt3-kamuning-e7d051",
     "stop_id": "st_mrt3-kamuning-e7d051",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
+    "access_id": "ac_up-diliman-edc6de",
+    "place_id": "pl_up-diliman-edc6de",
+    "stop_id": "st_up-diliman-edc6de",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
+    "access_id": "ac_philcoa-6175e7",
+    "place_id": "pl_philcoa-6175e7",
+    "stop_id": "st_philcoa-6175e7",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
+    "access_id": "ac_bcda-taguig-2d37be",
+    "place_id": "pl_bcda-taguig-2d37be",
+    "stop_id": "st_bcda-taguig-2d37be",
+    "direction": "both",
+    "walk_m": null,
+    "walk_min": null,
+    "walk_text": "Boarding point for this place.",
+    "eligibility": "ready"
+  },
+  {
+    "access_id": "ac_mckinley-965425",
+    "place_id": "pl_mckinley-965425",
+    "stop_id": "st_mckinley-965425",
     "direction": "both",
     "walk_m": null,
     "walk_min": null,

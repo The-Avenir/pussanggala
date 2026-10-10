@@ -189,6 +189,27 @@
     "service_status": "unknown"
   },
   {
+    "route_id": "rt_rail-to-mrt-cubao-2e1a19",
+    "mode": "rail",
+    "signboard": null,
+    "direction_label": "To mrt cubao",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_rail-to-mrt-ayala-37f9b3",
+    "mode": "rail",
+    "signboard": null,
+    "direction_label": "To mrt ayala",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_jeepney-to-ust-22594f",
+    "mode": "jeepney",
+    "signboard": null,
+    "direction_label": "To ust",
+    "service_status": "unknown"
+  },
+  {
     "route_id": "rt_jeepney-board-mrt-boni-34a448",
     "mode": "jeepney",
     "signboard": null,
@@ -291,6 +312,34 @@
     "mode": "rail",
     "signboard": null,
     "direction_label": "westbound",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_rail-to-mrt-guadalupe-6289a9",
+    "mode": "rail",
+    "signboard": null,
+    "direction_label": "To mrt guadalupe",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_rail-to-mrt-shaw-317e34",
+    "mode": "rail",
+    "signboard": null,
+    "direction_label": "To mrt shaw",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_jeepney-to-market-market-ab862b",
+    "mode": "jeepney",
+    "signboard": null,
+    "direction_label": "To market market",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_jeepney-to-pasig-palengke-71468f",
+    "mode": "jeepney",
+    "signboard": null,
+    "direction_label": "To pasig palengke",
     "service_status": "unknown"
   },
   {
@@ -420,6 +469,13 @@
     "service_status": "unknown"
   },
   {
+    "route_id": "rt_rail-to-lrt2-katipunan-ce5709",
+    "mode": "rail",
+    "signboard": null,
+    "direction_label": "To lrt2 katipunan",
+    "service_status": "unknown"
+  },
+  {
     "route_id": "rt_bus-northbound-616467",
     "mode": "bus",
     "signboard": null,
@@ -480,6 +536,27 @@
     "mode": "rail",
     "signboard": null,
     "direction_label": "MRT-3 Buendia station to MRT-3 Magallanes station",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_rail-to-mrt-taft-b4b8dd",
+    "mode": "rail",
+    "signboard": null,
+    "direction_label": "To mrt taft",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_jeepney-to-up-diliman-e74b36",
+    "mode": "jeepney",
+    "signboard": null,
+    "direction_label": "To up diliman",
+    "service_status": "unknown"
+  },
+  {
+    "route_id": "rt_jeepney-to-mckinley-bdfea6",
+    "mode": "jeepney",
+    "signboard": null,
+    "direction_label": "To mckinley",
     "service_status": "unknown"
   }
 ]

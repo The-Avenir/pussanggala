@@ -42,7 +42,7 @@ describe('llama.rn bridge', () => {
     expect(init).not.toHaveBeenCalled();
   });
 
-  it('constrains native route output to known citation IDs and neutral prose', async () => {
+  it('constrains native output to known citation IDs while allowing generated prose', async () => {
     const native = context();
     const runtime = new LlamaRuntime(async () => native);
     await runtime.load(spec);
@@ -51,7 +51,8 @@ describe('llama.rn bridge', () => {
     const params = vi.mocked(native.completion).mock.calls[0]![0];
     expect(params.grammar).toContain('root ::= unit');
     expect(params.grammar).toContain('preview-answer-0');
-    expect(params.grammar).toContain('Here are the reported details.');
+    expect(params.grammar).not.toContain('Here are the reported details.');
+    expect(params.grammar).toContain('text-char');
     expect(params.grammar).not.toContain('connective prose');
     await runtime.dispose();
   });

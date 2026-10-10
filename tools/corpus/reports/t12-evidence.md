@@ -1,12 +1,12 @@
 # T12 evidence pass — counts
 
-Snapshot `d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3`. 5713 candidates checked deterministically (part A). Counts only; no source text.
+Snapshot `d3939475ebd250755fcdac776f703001480aeaa4b72d04b025fba54434c4fdf3`. 5727 candidates checked deterministically (part A). Counts only; no source text.
 
 ## Review state × record kind
 
 | state | place | ride | walk | fare | hours | service_status | note | total |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| second_passed | 4088 | 961 | 205 | 29 | 24 | 0 | 276 | 5583 |
+| second_passed | 4088 | 975 | 205 | 29 | 24 | 0 | 276 | 5597 |
 | needs_review | 0 | 91 | 0 | 31 | 4 | 4 | 0 | 130 |
 | rejected | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | accepted | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -59,9 +59,9 @@ Flagged by reason_code:
 | --- | ---: |
 | fare_unscoped | 21 |
 
-Effective review-state totals after overrides: second_passed 5562, needs_review 151.
+Effective review-state totals after overrides: second_passed 5576, needs_review 151.
 
-Part-A review-state totals (before overrides): second_passed 5583, needs_review 130.
+Part-A review-state totals (before overrides): second_passed 5597, needs_review 130.
 
 Part-A queue (before overrides): 85 posts / 130 items. The part-A counts above remain separate from the effective queue artifacts.
 

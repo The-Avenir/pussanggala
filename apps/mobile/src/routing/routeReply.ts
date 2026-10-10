@@ -1,62 +1,49 @@
-import type { Card, SourceRef } from '@pusang-gala/core';
+import type { Pack, TripState } from '@pusang-gala/core';
 import type { TurnResult } from '@pusang-gala/conversation';
+import { isDurationQuestion } from './conversationQuery';
+import { durationText, fareText, hoursText, isTaglish, isVisibleStep, stepText } from './routePresentation';
 
-type Ride = Extract<Card, { kind: 'ride' }>;
-function vehicle(card: Ride): string {
-  if (card.mode === 'rail') return /\b(?:LRT-[12]|MRT-3|PNR)\b/i.exec(card.directionLabel + ' ' + card.board.name)?.[0] ?? 'tren';
-  return card.mode === 'jeepney' ? 'jeep' : card.mode;
-}
-function date(sources: readonly SourceRef[]): string {
-  const dates = [...new Set(sources.map(source => source.postedAt?.slice(0, 10) ?? 'hindi nakasaad'))];
-  return ` (report: ${dates.join(', ')})`;
-}
-function rideText(card: Ride): string {
-  return `Sakay ka ng ${vehicle(card)} sa ${card.board.name}, tapos baba sa ${card.alight.name}.` +
-    (card.signboard ? ` Hanapin ang signboard na “${card.signboard}”.` : '');
-}
-function directions(cards: readonly Card[]): string {
-  return cards.flatMap(card => {
-    if (card.kind === 'ride') return [rideText(card)];
-    if (card.kind === 'walk') return [`Lakad mula ${card.from.name} papuntang ${card.to.name}. ${card.walkText}`];
-    // A station linked to its own boarding point isn't an extra walking instruction.
-    if (card.place.name.toLowerCase() === card.stop.name.toLowerCase()) return [];
-    return [card.direction === 'start' ? `Pumunta muna sa ${card.stop.name} mula sa ${card.place.name}. ${card.walkText}`
-      : `Pagbaba sa ${card.stop.name}, pumunta sa ${card.place.name}. ${card.walkText}`];
-  }).join('\n\n');
-}
-
-/** Conversational phrasing of retrieved facts; no model load or invented connections. */
-export function routeReply(result: TurnResult, query: string): string {
-  if (result.type === 'clarification') return `Alin sa mga ito ang ${result.clarification.slot === 'origin' ? 'panggagalingan' : 'pupuntahan'} mo? Pili ka sa ibaba para tama ang ruta natin.`;
-  if (result.type !== 'plan' && result.type !== 'followUp') return result.message;
-  const cards = result.type === 'plan' ? result.evidence.cards : result.cards;
-  const rides = cards.filter((card): card is Ride => card.kind === 'ride');
-  if (result.type === 'followUp') {
-    if (result.topic === 'ask_fare') return rides.map(card => {
-      const lead = `Para sa ${vehicle(card)} mula ${card.board.name} hanggang ${card.alight.name}, `;
-      if (!card.fares.length) return lead + 'wala akong naiulat na pamasahe. Ayokong hulaan ang halaga.';
-      const amounts = card.fares.map(fare => `₱${fare.min}${fare.max === fare.min ? '' : '–' + fare.max}` + date(fare.sources));
-      const conflict = card.warnings.some(warning => warning.code === 'fare_conflict');
-      return lead + (conflict ? 'magkakaiba ang naiulat: ' : 'ang naiulat na pamasahe ay ') + amounts.join('; ') +
-        (conflict ? '. Hindi ko makukumpirma kung alin ang kasalukuyang singil.' : '. Maaaring nagbago na ang singil.');
-    }).join('\n\n') || 'Walang sakay sa rutang ito, kaya wala akong pamasahe na maiuulat.';
-    if (result.topic === 'ask_hours') return result.hourStatements.map(hour => {
-      const card = rides.find(ride => ride.routeId === hour.routeId);
-      const label = card ? `${vehicle(card)} (${card.board.name} → ${card.alight.name})` : 'rutang ito';
-      if (hour.status === 'unknown') return `Wala akong naiulat na operating hours para sa ${label}, kaya hindi ko makukumpirma ang last trip.`;
-      return `Para sa ${label}, ${hour.conflict ? 'magkakaiba ang reports: ' : 'ito ang naiulat: '}` +
-        hour.reports.map(report => report.text + date(report.sources)).join('; ') + '. Report ito, hindi live na timetable.';
-    }).join('\n\n') || 'Wala akong naiulat na operating hours para sa rutang ito.';
-    if (result.topic === 'ask_boarding') return rides.map(card => `Sa ${card.board.name} ka sasakay ng ${vehicle(card)}.` +
-      (card.signboard ? ` Hanapin ang “${card.signboard}”.` : '')).join('\n\n') || 'Walang sakay sa rutang ito.';
-    if (result.topic === 'ask_transfer') {
-      if (/bababa|\bbaba\b|get off|alight/i.test(query)) return rides.map((card, index) =>
-        `Baba ka sa ${card.alight.name}${index < rides.length - 1 ? `, tapos sasakay ka ng ${vehicle(rides[index + 1]!)} sa ${rides[index + 1]!.board.name}` : ''}.`).join('\n\n') || 'Walang sakay sa rutang ito.';
-      if (rides.length === 1) return `Isang sakay lang ang nasa rutang ito—walang lipat. ${rideText(rides[0]!)}`;
-      return directions(cards);
+/** A human-readable recovery reply when local generation is unavailable. */
+export function routeReply(result: TurnResult, query: string, trip?: TripState, pack?: Pack): string {
+  const taglish = isTaglish(query);
+  if (result.type === 'clarification') return taglish
+    ? `May ilang lugar na “${result.clarification.text}”. Alin dito ang tinutukoy mo?`
+    : `I found a few places matching “${result.clarification.text}”. Which one do you mean?`;
+  if (result.type === 'needsTrip') {
+    const origin = trip?.originPlaceId ? pack?.places.get(trip.originPlaceId)?.name : undefined;
+    const destination = trip?.destinationPlaceId ? pack?.places.get(trip.destinationPlaceId)?.name : undefined;
+    if (destination && !origin) return taglish ? `${destination}—got it! Saan ka manggagaling? Kahit station, mall, o landmark malapit sa iyo.`
+      : `${destination}—got it! Where are you coming from? A station, mall, landmark, or nearby area is fine.`;
+    if (origin && !destination) return taglish ? `Sa ${origin} ka manggagaling. Saan tayo pupunta?`
+      : `Starting from ${origin}—got it. Where are we heading?`;
+    return taglish ? 'Saan tayo pupunta? Sabihin mo ang destination, tapos tulungan kitang hanapin ang ruta.'
+      : 'Where are we heading? Tell me your destination, and I’ll help you figure out how to get there.';
+  }
+  if (result.type === 'redirect') return taglish ? 'Tulungan kitang planuhin ang commute mo. Saan mo gustong pumunta?'
+    : 'I can help you find your way around Metro Manila. Where would you like to go?';
+  if (result.type === 'reset') return taglish ? 'Sige, bagong biyahe tayo. Saan tayo pupunta?' : 'Let’s start fresh. Where are we heading?';
+  if (result.type === 'failure') {
+    switch (result.reason) {
+      case 'same_place': return 'You’re already starting at that destination. Did you mean a different place?';
+      case 'outside_ncr': return 'That journey goes outside Metro Manila. I can help with the part within NCR—what landmark would you like to use?';
+      case 'unsupported_place': return 'I couldn’t find that place yet. Is there a nearby mall, station, or landmark we can use?';
+      case 'no_trip_context': return 'Let’s choose a destination first. Where are we heading?';
+      case 'needs_replan': return 'The available routes have changed. Let’s check your starting point and destination again.';
+      default: return 'I couldn’t find a complete route for that journey yet. Can we try a nearby landmark?';
     }
   }
-  return `Ganito ang ruta natin:\n\n${directions(cards)}\n\n` +
-    (cards.some(card => card.sources.some(source => source.stale)) ? 'May lumang report sa rutang ito. ' : '') +
-    'Ito ang nasa route reports; hindi ko makukumpirma ang live service. Gusto mo bang malaman ang pamasahe o oras ng biyahe?';
+  const cards = (result.type === 'plan' ? result.evidence.cards : result.cards).filter(isVisibleStep);
+  const rides = cards.filter(card => card.kind === 'ride');
+  if (result.type === 'followUp') {
+    if (result.topic === 'ask_fare') return rides.map(card => fareText(card, taglish)).join('\n\n') || 'There’s no vehicle fare on this route.';
+    if (result.topic === 'ask_hours') return result.hourStatements.map(hour => hoursText(hour, taglish)).join('\n\n') || 'I don’t have the operating hours yet.';
+    if (isDurationQuestion(query)) return cards.map(card => durationText(card, taglish)).join('\n\n');
+    if (result.topic === 'ask_boarding') return rides.map(card => stepText(card, taglish, true)).join('\n\n');
+    if (/bababa|\bbaba\b|get off|alight/i.test(query)) return rides.map(card => stepText(card, taglish, false, true)).join('\n\n');
+  }
+  const lead = result.type === 'plan' ? taglish
+    ? `Sige! Mula ${result.endpoints.origin.name} papuntang ${result.endpoints.destination.name}. Ganito ang biyahe natin:`
+    : `Got it! We’re going from ${result.endpoints.origin.name} to ${result.endpoints.destination.name}. Here’s how to get there:`
+    : taglish ? 'Tara, ganito ang biyahe natin:' : 'Let’s take it step by step:';
+  return lead + '\n\n' + cards.map(card => stepText(card, taglish)).join('\n\n');
 }
